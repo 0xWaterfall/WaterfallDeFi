@@ -1,0 +1,26 @@
+@font-face {
+  font-family: "Regular";
+  src: url("../assets/fonts/IBMPlexSans-Regular.otf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Regular.ttf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Regular.woff") format("woff");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Medium";
+  src: url("../assets/fonts/IBMPlexSans-Medium.otf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Medium.ttf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Medium.woff") format("woff");
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bold";
+  src: url("../assets/fonts/IBMPlexSans-Bold.otf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Bold.ttf") format("truetype"),
+    url("../assets/fonts/IBMPlexSans-Bold.woff") format("woff");
+  font-style: normal;
+  font-display: swap;
+}

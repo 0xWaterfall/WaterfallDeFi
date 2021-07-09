@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { loadableComponents } from "pages";
+import Header from "pages/Header/Header";
 import ConnectedRouteProvder from "providers/ConnectedRouteProvider/ConnectedRouteProvder";
 import React, { memo } from "react";
 import { connect } from "react-redux";
@@ -8,8 +9,6 @@ import { connect } from "react-redux";
 type TStateProps = ReturnType<typeof mapStateToProps>;
 type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
 type TProps = TStateProps & TDispatchProps;
-
-const { Header } = loadableComponents;
 
 const Layout = memo<TProps>(() => {
   return (

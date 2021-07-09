@@ -7,7 +7,7 @@ type TProps = TStateProps;
 
 const ConnectedIntlProvider: FC<TProps> = ({ children, i18n }) => {
   return (
-    <IntlProvider key={i18n?.locale || undefined} locale={i18n?.locale || "en"} messages={i18n?.messages || {}}>
+    <IntlProvider key={i18n?.locale ?? "en"} locale={i18n?.locale ?? "en"} messages={i18n?.messages ?? {}}>
       {children}
     </IntlProvider>
   );

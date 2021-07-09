@@ -1,6 +1,5 @@
 import loadable from "@loadable/component";
 
-const Header = loadable(() => import("./Header/Header"));
 const Dashboard = loadable(() => import("./Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("./Portfolio/Portfolio"));
 const Pool = loadable(() => import("./Pool/Pool"));
@@ -34,7 +33,6 @@ export const RouteComponents = [
 ];
 
 export const loadableComponents = {
-  Header,
   Dashboard,
   Portfolio,
   Pool,

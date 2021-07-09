@@ -6,7 +6,7 @@
     "start": "yarn translations && react-app-rewired start",
     "build": "yarn translations && react-app-rewired build",
     "dev": "react-app-rewired start",
-    "extract:i18n": "formatjs extract 'src/**/*.{js,ts,tsx}' --format simple --id-interpolation-pattern '[sha512:contenthash:base64:6]' --out-file i18n/messages.json",
+    "extract:i18n": "formatjs extract 'src/pages/**/*.{js,ts,tsx}' --format simple --id-interpolation-pattern '[sha512:contenthash:base64:6]' --out-file i18n/messages.json",
     "transform:i18n": "node scripts/transform-translations.js",
     "extract:pot": "react-intl-po json2pot 'i18n/messages.json' -o 'i18n/messages.pot'",
     "extract": "yarn extract:i18n && yarn transform:i18n && yarn extract:pot",

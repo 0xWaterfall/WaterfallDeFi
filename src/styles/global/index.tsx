@@ -1,6 +1,8 @@
 import { Global } from "@emotion/react";
+import { useTheme } from "hooks/useTheme";
 
 export default () => {
+  const { gray } = useTheme();
   return (
     <Global
       styles={{
@@ -24,6 +26,9 @@ export default () => {
         },
         "input[type=number]": {
           mozAppearance: "textfield"
+        },
+        ".ant-modal-mask": {
+          backgroundColor: gray.normal3
         }
       }}
     />

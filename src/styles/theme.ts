@@ -6,8 +6,9 @@ const theme = {
     Medium: "Medium",
     Bold: "Bold"
   },
-  fontBasic: {
+  gray: {
     normal: "#333333",
+    normal3: "rgba(51, 51, 51, 0.3)",
     normal7: "rgba(51, 51, 51, 0.7)"
   },
   primary: {

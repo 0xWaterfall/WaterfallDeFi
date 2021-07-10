@@ -7,13 +7,14 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
+import ConnectWalletModal from "./components/ConnectWalletModal";
 
 type TStateProps = ReturnType<typeof mapStateToProps>;
 type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
 type TProps = TStateProps & TDispatchProps & WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { fontBasic, primary, white, shadow, warn } = useTheme();
+  const { gray, primary, white, shadow, warn } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
 
@@ -53,7 +54,7 @@ const Header = memo<TProps>(({ intl }) => {
               height: "100%",
               display: "flex",
               alignItems: "center",
-              color: location.pathname === pathname ? primary.normal : fontBasic.normal7
+              color: location.pathname === pathname ? primary.normal : gray.normal7
             }}
             onClick={() => {
               push({ pathname });
@@ -103,6 +104,7 @@ const Header = memo<TProps>(({ intl }) => {
           <div css={{ width: 20, height: 20, borderRadius: "50%", backgroundColor: "#ccc", marginLeft: 10 }}></div>
         </div>
       </div>
+      <ConnectWalletModal />
     </div>
   );
 });

@@ -17,35 +17,31 @@ module.exports = {
       libraryDirectory: "es",
       style: "css"
     }),
-    // addBabelPlugin([
-    //   "import",
-    //   {
-    //     libraryName: "lodash",
-    //     customName: (name) => `lodash/${name.match(/(?!_).*/)[0]}`
-    //   },
-    //   "lodash"
-    // ]),
+    fixBabelImports("ahooks", {
+      libraryName: "ahooks",
+      libraryDirectory: "es",
+      camel2DashComponentName: false
+    }),
     addBabelPlugin([
       "import",
       {
         libraryName: "lodash",
-        libraryDirectory: "",
-        camel2DashComponentName: false
+        customName: (name) => `lodash/${name.match(/(?!_).*/)[0]}`
       },
       "lodash"
-    ]),
-    addBabelPlugin([
-      "formatjs",
-      {
-        idInterpolationPattern: "[sha512:contenthash:base64:6]",
-        ast: true
-      }
     ]),
     addWebpackPlugin(
       new LodashWebpackPlugin({
         collections: true,
         paths: true
       })
-    )
+    ),
+    addBabelPlugin([
+      "formatjs",
+      {
+        idInterpolationPattern: "[sha512:contenthash:base64:6]",
+        ast: true
+      }
+    ])
   )
 };

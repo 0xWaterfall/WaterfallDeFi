@@ -5,7 +5,7 @@ import { Button as ANTDButton, ButtonProps } from "antd";
 import { useTheme } from "hooks/useTheme";
 
 type TProps = ButtonProps;
-const Button: React.FC<TProps> = ({ className, children, ...props }) => {
+const Button: React.FC<TProps> = ({ className, ...props }) => {
   const { primary, linearGradient, shadow, white } = useTheme();
   return (
     <ANTDButton
@@ -30,9 +30,7 @@ const Button: React.FC<TProps> = ({ className, children, ...props }) => {
         className
       }}
       {...props}
-    >
-      {children}
-    </ANTDButton>
+    />
   );
 };
 export default Button;

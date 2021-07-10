@@ -2,6 +2,12 @@
   "name": "waterfall",
   "version": "1.0.0",
   "private": true,
+  "contributors": [
+    {
+      "name": "Hippo",
+      "email": "hippowuyufan@gmail.com"
+    }
+  ],
   "scripts": {
     "start": "yarn translations && react-app-rewired start",
     "build": "yarn translations && react-app-rewired build",

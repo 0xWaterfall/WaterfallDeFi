@@ -8,8 +8,11 @@ const theme = {
   },
   gray: {
     normal: "#333333",
+    normal04: "rgba(51, 51, 51, 0.04)",
+    normal08: "rgba(51, 51, 51, 0.08)",
     normal3: "rgba(51, 51, 51, 0.3)",
-    normal7: "rgba(51, 51, 51, 0.7)"
+    normal7: "rgba(51, 51, 51, 0.7)",
+    normal85: "rgba(51, 51, 51, 0.85)"
   },
   primary: {
     normal: "#167BFF",
@@ -17,7 +20,8 @@ const theme = {
     deep2: "rgba(0, 111, 255, 0.2)"
   },
   warn: {
-    normal: "#FCB500"
+    normal: "#FCB500",
+    deep: "#F0603C"
   },
   white: {
     normal: "#FFFFFF"

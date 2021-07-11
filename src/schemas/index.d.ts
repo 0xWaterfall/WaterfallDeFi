@@ -1,4 +1,4 @@
-declare module "@loadable/component";
+type Overwrite<T, U> = Rewrite<T, U> & U;
 
 type IAction<T> = {
   type: string;

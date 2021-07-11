@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
-import { loadableComponents } from "pages";
 import Header from "pages/Header/Header";
 import ConnectedRouteProvder from "providers/ConnectedRouteProvider/ConnectedRouteProvder";
 import React, { memo } from "react";

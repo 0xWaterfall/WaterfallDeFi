@@ -18,7 +18,7 @@ const Modal: React.FC<TProps> = ({ className, ...props }) => {
             justifyContent: "center"
           },
           ".ant-modal-body": {
-            padding: 16
+            padding: "16px 16px 20px"
           }
         },
         className

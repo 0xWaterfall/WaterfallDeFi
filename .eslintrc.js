@@ -29,6 +29,8 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "no-useless-escape": 0,
     "react/react-in-jsx-scope": 0,
-    "react/display-name": 0
+    "react/display-name": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-empty-function": 0
   }
 };

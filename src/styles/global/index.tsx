@@ -2,7 +2,7 @@ import { Global } from "@emotion/react";
 import { useTheme } from "hooks/useTheme";
 
 export default () => {
-  const { gray } = useTheme();
+  const { gray, primary } = useTheme();
   return (
     <Global
       styles={{
@@ -29,6 +29,9 @@ export default () => {
         },
         ".ant-modal-mask": {
           backgroundColor: gray.normal3
+        },
+        a: {
+          color: primary.deep
         }
       }}
     />

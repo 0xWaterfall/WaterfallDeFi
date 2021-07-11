@@ -4,6 +4,7 @@ import { WaterFall } from "assets/images";
 import Button from "components/Button/Button";
 import { useTheme } from "hooks/useTheme";
 import React, { memo } from "react";
+import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -17,6 +18,7 @@ const Header = memo<TProps>(({ intl }) => {
   const { gray, primary, white, shadow, warn } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
+  const [visible, setVisible] = useState(false);
 
   const MENU = [
     { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }) },
@@ -24,7 +26,6 @@ const Header = memo<TProps>(({ intl }) => {
     { pathname: "/pool", text: intl.formatMessage({ defaultMessage: "Pool" }) },
     { pathname: "/history", text: intl.formatMessage({ defaultMessage: "History" }) }
   ];
-
   return (
     <div
       css={{
@@ -65,7 +66,10 @@ const Header = memo<TProps>(({ intl }) => {
         ))}
       </div>
       <div css={{ display: "flex", flexDirection: "row", alignItems: "center", fontSize: 16, fontWeight: 600 }}>
-        <Button type="primary">{intl.formatMessage({ defaultMessage: "Connect wallet" })}</Button>
+        <Button type="primary" onClick={setVisible.bind(null, true)}>
+          {intl.formatMessage({ defaultMessage: "Connect wallet" })}
+        </Button>
+        <Button type="warn">{intl.formatMessage({ defaultMessage: "Wrong Network" })}</Button>
         <div
           css={{
             padding: "0 16px",
@@ -104,7 +108,7 @@ const Header = memo<TProps>(({ intl }) => {
           <div css={{ width: 20, height: 20, borderRadius: "50%", backgroundColor: "#ccc", marginLeft: 10 }}></div>
         </div>
       </div>
-      <ConnectWalletModal />
+      {visible && <ConnectWalletModal visible={visible} onCancel={setVisible} />}
     </div>
   );
 });

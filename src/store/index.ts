@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import i18n, { getI18nMiddleware } from "./i18n";
+import i18n, { fetchI18nMiddleware } from "./i18n";
 import { load, save } from "redux-localstorage-simple";
 
 const PERSISTED_KEYS: string[] = ["i18n.locale"];
@@ -16,7 +16,7 @@ export const store = configureStore({
       save({ states: PERSISTED_KEYS, debounce: 1000, namespace: "waterfall", namespaceSeparator: "." })
     )
 });
-store.dispatch(getI18nMiddleware(store.getState().i18n.locale));
+store.dispatch(fetchI18nMiddleware(store.getState().i18n.locale));
 
 /**
  * @see https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type

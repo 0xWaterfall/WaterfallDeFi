@@ -6,7 +6,7 @@ type IAction<T> = {
 };
 
 type IState = {
-  i18n: II18n | null;
+  i18n: II18n;
 };
 
 interface II18n {

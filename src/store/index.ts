@@ -1,38 +1,28 @@
-import { applyMiddleware, createStore, compose } from "redux";
-import createSagaMiddleware from "redux-saga";
-import _throttle from "lodash/throttle";
-import _pick from "lodash/pick";
-import reducers from "./reducers";
-import rootSaga from "./sagas";
+import { configureStore } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import i18n, { getI18nMiddleware } from "./i18n";
+import { load, save } from "redux-localstorage-simple";
 
-const sagaMiddleware = createSagaMiddleware();
-const middlewares = compose(
-  applyMiddleware(sagaMiddleware),
-  window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f: Function) => f
-);
-const loadState = () => {
-  const stateFromLocalStorage: string | null = localStorage.getItem("waterfall");
-  return stateFromLocalStorage ? JSON.parse(stateFromLocalStorage) : undefined;
-};
+const PERSISTED_KEYS: string[] = ["i18n.locale"];
 
-const saveStateToLocalStorage = <T>(state: T) => {
-  return localStorage.setItem("waterfall", JSON.stringify(state));
-};
+export const store = configureStore({
+  devTools: true,
+  preloadedState: load({ states: PERSISTED_KEYS, namespace: "waterfall", namespaceSeparator: "." }),
+  reducer: {
+    i18n
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ thunk: true }).concat(
+      save({ states: PERSISTED_KEYS, debounce: 1000, namespace: "waterfall", namespaceSeparator: "." })
+    )
+});
+store.dispatch(getI18nMiddleware(store.getState().i18n.locale));
 
-export const initStore = (initialState: IState) => createStore(reducers, initialState, middlewares);
+/**
+ * @see https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type
+ */
+export type AppState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-const store = initStore(loadState());
-
-store.subscribe(
-  _throttle(() => {
-    const stateToSaveToLocalStorage = _pick(store.getState(), [
-      // TODO: Fields that need to be cached
-      "i18n"
-    ]);
-    saveStateToLocalStorage(stateToSaveToLocalStorage);
-  }, 1000)
-);
-
-sagaMiddleware.run(rootSaga);
-
-export default store;
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;

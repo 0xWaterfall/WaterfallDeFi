@@ -1,15 +1,10 @@
 import React, { FC } from "react";
-import { connect } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import { loadableComponents, RouteComponents } from "pages";
 
 const { Dashboard } = loadableComponents;
 
-type TStateProps = ReturnType<typeof mapStateToProps>;
-type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
-type TProps = TStateProps & TDispatchProps;
-
-const ConnectedRouteProvider: FC<TProps> = ({ children }) => {
+const ConnectedRouteProvider: FC = () => {
   return (
     <Switch>
       {RouteComponents.map((item) => {
@@ -20,6 +15,4 @@ const ConnectedRouteProvider: FC<TProps> = ({ children }) => {
   );
 };
 
-const mapStateToProps = (state: IState) => ({});
-const mapDispatchToProps = (dispatch: Function) => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(ConnectedRouteProvider);
+export default ConnectedRouteProvider;

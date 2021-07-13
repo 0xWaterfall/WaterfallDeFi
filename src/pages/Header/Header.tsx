@@ -6,13 +6,10 @@ import { useTheme } from "hooks/useTheme";
 import React, { memo } from "react";
 import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { connect } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ConnectWalletModal from "./components/ConnectWalletModal";
 
-type TStateProps = ReturnType<typeof mapStateToProps>;
-type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
-type TProps = TStateProps & TDispatchProps & WrappedComponentProps;
+type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
   const { gray, primary, white, shadow, warn } = useTheme();
@@ -113,6 +110,4 @@ const Header = memo<TProps>(({ intl }) => {
   );
 });
 
-const mapStateToProps = (state: IState) => ({});
-const mapDispatchToProps = (dispatch: Function) => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Header));
+export default injectIntl(Header);

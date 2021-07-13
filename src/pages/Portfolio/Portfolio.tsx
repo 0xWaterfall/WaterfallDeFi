@@ -3,11 +3,8 @@
 import { Intersect } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { connect } from "react-redux";
 
-type TStateProps = ReturnType<typeof mapStateToProps>;
-type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
-type TProps = TStateProps & TDispatchProps & WrappedComponentProps;
+type TProps = WrappedComponentProps;
 
 const Portfolio = memo<TProps>(() => {
   return (
@@ -17,6 +14,4 @@ const Portfolio = memo<TProps>(() => {
   );
 });
 
-const mapStateToProps = (state: IState) => ({});
-const mapDispatchToProps = (dispatch: Function) => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Portfolio));
+export default injectIntl(Portfolio);

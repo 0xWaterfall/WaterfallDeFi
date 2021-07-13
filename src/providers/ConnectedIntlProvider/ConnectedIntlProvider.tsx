@@ -1,22 +1,14 @@
 import React, { FC } from "react";
-import { connect } from "react-redux";
 import { IntlProvider } from "react-intl";
+import { useAppSelector } from "store";
 
-type TStateProps = ReturnType<typeof mapStateToProps>;
-type TProps = TStateProps;
-
-const ConnectedIntlProvider: FC<TProps> = ({ children, i18n }) => {
+const ConnectedIntlProvider: FC = ({ children }) => {
+  const { locale, messages } = useAppSelector((state) => state.i18n);
   return (
-    <IntlProvider key={i18n?.locale ?? "en"} locale={i18n?.locale ?? "en"} messages={i18n?.messages ?? {}}>
+    <IntlProvider key={locale} locale={locale} messages={messages}>
       {children}
     </IntlProvider>
   );
 };
 
-const mapStateToProps = (state: IState) => {
-  return {
-    i18n: state.i18n
-  };
-};
-
-export default connect(mapStateToProps)(ConnectedIntlProvider);
+export default ConnectedIntlProvider;

@@ -5,10 +5,6 @@ type IAction<T> = {
   payload: T;
 };
 
-type IState = {
-  i18n: II18n;
-};
-
 interface II18n {
   locale: string;
   languages: string[];

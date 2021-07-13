@@ -11,14 +11,10 @@ import { useCallback } from "react";
 import { url } from "config";
 import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
 
-type TStateProps = ReturnType<typeof mapStateToProps>;
-type TDispatchProps = ReturnType<typeof mapDispatchToProps>;
-type TProps = TStateProps &
-  TDispatchProps &
-  WrappedComponentProps & {
-    visible?: boolean;
-    onCancel?: (e: boolean) => void;
-  };
+type TProps = WrappedComponentProps & {
+  visible?: boolean;
+  onCancel?: (e: boolean) => void;
+};
 
 const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
   const { gray, primary } = useTheme();
@@ -98,6 +94,4 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
   );
 });
 
-const mapStateToProps = (state: IState) => ({});
-const mapDispatchToProps = (dispatch: Function) => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ConnectWalletModal));
+export default injectIntl(ConnectWalletModal);

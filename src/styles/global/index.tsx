@@ -8,13 +8,12 @@ export default () => {
       styles={{
         "html, body, #root": {
           fontSize: 14,
-          fontFamily: "Regular",
+          fontFamily: "'Carter One', cursive",
           overflowX: "hidden",
           width: "100vw",
           height: "100vh"
         },
         "*": {
-          fontFamily: "Regular",
           boxSizing: "border-box"
         },
         "::selection": {

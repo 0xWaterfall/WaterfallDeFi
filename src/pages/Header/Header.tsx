@@ -21,7 +21,7 @@ const Header = memo<TProps>(({ intl }) => {
     { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }) },
     { pathname: "/portfolio", text: intl.formatMessage({ defaultMessage: "Portfolio" }) },
     { pathname: "/pool", text: intl.formatMessage({ defaultMessage: "Pool" }) },
-    { pathname: "/history", text: intl.formatMessage({ defaultMessage: "History" }) }
+    { pathname: "/staking", text: intl.formatMessage({ defaultMessage: "Staking" }) }
   ];
   return (
     <div

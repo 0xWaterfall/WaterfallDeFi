@@ -24,5 +24,6 @@ yarn-error.log*
 
 .eslintcache
 # Extracted i18n messages
-i18n
+/i18n
+/public/i18n
 package-lock.json

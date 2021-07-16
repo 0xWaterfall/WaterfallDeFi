@@ -2,6 +2,7 @@ import { Theme } from "@emotion/react";
 
 const theme = {
   gray: {
+    light: "#FAFAFA",
     normal: "#333333",
     normal04: "rgba(51, 51, 51, 0.04)",
     normal08: "rgba(51, 51, 51, 0.08)",
@@ -11,8 +12,9 @@ const theme = {
     normal85: "rgba(51, 51, 51, 0.85)"
   },
   primary: {
+    light: "#048FFF",
     normal: "#167BFF",
-    deep: "#006FFF",
+    deep: "#0066FF",
     deep2: "rgba(0, 111, 255, 0.2)"
   },
   warn: {

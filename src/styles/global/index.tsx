@@ -8,7 +8,7 @@ export default () => {
       styles={{
         "html, body, #root": {
           fontSize: 14,
-          fontFamily: "'Carter One', cursive",
+          fontFamily: "Carter One, sans-serif",
           overflowX: "hidden",
           width: "100vw",
           height: "100vh"

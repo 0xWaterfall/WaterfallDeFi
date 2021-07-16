@@ -5,7 +5,6 @@ import { Router } from "react-router-dom";
 import { history } from "utils/history";
 import Global from "styles/global";
 import ConnectedIntlProvider from "providers/ConnectedIntlProvider/ConnectedIntlProvider";
-// import "styles/fonts.css";
 import Layout from "pages/Layout/Layout";
 import { ThemeProvider } from "@emotion/react";
 import theme from "styles/theme";

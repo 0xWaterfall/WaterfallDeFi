@@ -1,5 +1,3 @@
-import { Theme } from "@emotion/react";
-
 const theme = {
   gray: {
     light: "#FAFAFA",
@@ -12,8 +10,9 @@ const theme = {
     normal85: "rgba(51, 51, 51, 0.85)"
   },
   primary: {
+    lightBrown: "#F5FAFF",
     light: "#048FFF",
-    normal: "#167BFF",
+    normal: "#2C5290",
     deep: "#0066FF",
     deep2: "rgba(0, 111, 255, 0.2)"
   },
@@ -28,9 +27,10 @@ const theme = {
     primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"
   },
   shadow: {
-    primary: "0px 4px 10px rgba(15, 96, 227, 0.1)"
+    primary: "0px 4px 10px rgba(15, 96, 227, 0.1)",
+    claim: "inset 0px 4px 10px rgba(79, 153, 250, 0.1), inset 0px 4px 10px rgba(0, 109, 255, 0.1)"
   }
 };
 
-export type ITheme = typeof theme & Theme;
+export type ITheme = typeof theme;
 export default theme;

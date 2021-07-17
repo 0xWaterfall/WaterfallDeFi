@@ -1,9 +1,6 @@
-type Overwrite<T, U> = Rewrite<T, U> & U;
+type Rewrite<T, U> = Pick<T, Exclude<keyof T, keyof U>>;
 
-type IAction<T> = {
-  type: string;
-  payload: T;
-};
+type Overwrite<T, U> = Rewrite<T, U> & U;
 
 interface II18n {
   locale: string;

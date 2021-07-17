@@ -1,21 +1,20 @@
-import { Global } from "@emotion/react";
-import { useTheme } from "hooks/useTheme";
+import { Global, useTheme } from "@emotion/react";
 
 export default () => {
   const { gray, primary } = useTheme();
   return (
     <Global
       styles={{
-        "html, body, #root": {
+        "html, body": {
           fontSize: 14,
           fontFamily: "Carter One, sans-serif",
           overflowX: "hidden",
-          width: "100vw",
-          height: "100vh"
+          height: "auto"
         },
         "*": {
           boxSizing: "border-box"
         },
+
         "::selection": {
           // backgroundColor: plain.normal
         },

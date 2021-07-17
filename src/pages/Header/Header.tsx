@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import { ClassNames } from "@emotion/react";
+import { ClassNames, useTheme } from "@emotion/react";
 import { I18n, WaterFall } from "assets/images";
 import Button from "components/Button/Button";
 import Dropdown from "components/Dropdown/Dropdown";
-import { useTheme } from "hooks/useTheme";
 import React, { memo } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
@@ -33,20 +32,26 @@ const Header = memo<TProps>(({ intl }) => {
 
   const I18nElement = useMemo(
     () => (
-      <ul css={{ cursor: "pointer", boxShadow: shadow.primary, borderRadius: 4, marginTop: 10 }}>
-        {languages?.map((l) => (
-          <li
-            key={l}
-            css={{
-              padding: "4px 10px",
-              color: locale === l ? gray.normal3 : gray.normal7,
-              ":hover": { color: locale === l ? gray.normal3 : primary.light }
-            }}
-            onClick={() => dispatch(fetchI18nMiddleware(l))}
-          >
-            {l}
-          </li>
-        ))}
+      <ul css={{ cursor: "pointer", boxShadow: shadow.primary, borderRadius: 4, marginTop: 10, padding: "4px 0" }}>
+        {languages
+          ?.filter((p) => p !== locale)
+          ?.map((l) => (
+            <li
+              key={l}
+              css={{
+                width: 140,
+                height: 32,
+                display: "flex",
+                alignItems: "center",
+                paddingLeft: 12,
+                color: gray.normal7,
+                ":hover": { backgroundColor: primary.lightBrown }
+              }}
+              onClick={() => dispatch(fetchI18nMiddleware(l))}
+            >
+              {l}
+            </li>
+          ))}
       </ul>
     ),
     [locale, languages]
@@ -134,7 +139,7 @@ const Header = memo<TProps>(({ intl }) => {
         <div css={{ display: "flex", flexDirection: "row" }}>
           <ClassNames>
             {({ css }) => (
-              <Dropdown overlay={I18nElement} openClassName={css({ color: primary.normal })}>
+              <Dropdown overlay={I18nElement} openClassName={css({ color: gray.normal85 })}>
                 <I18n css={{ color: gray.normal5, display: "block", marginLeft: 24, cursor: "pointer" }} />
               </Dropdown>
             )}

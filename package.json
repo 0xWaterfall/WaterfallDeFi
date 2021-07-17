@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
     "@loadable/component": "^5.14.1",
     "@metamask/detect-provider": "^1.2.0",
     "@reduxjs/toolkit": "^1.6.0",

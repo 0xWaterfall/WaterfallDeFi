@@ -7,7 +7,7 @@ import React, { FC } from "react";
 const Layout: FC = () => {
   return (
     <React.Fragment>
-      <header css={{ width: "100%", position: "fixed", top: 0, left: 0, zIndex: 99 }}>
+      <header css={{ width: "100%", position: "fixed", top: 0, left: 0, zIndex: 999 }}>
         <Header />
       </header>
       <ConnectedRouteProvder />

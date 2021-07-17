@@ -3,3 +3,8 @@ export { ReactComponent as Intersect } from "./Intersect.svg";
 export { ReactComponent as Close } from "./Close.svg";
 export { ReactComponent as MetaMask } from "./MetaMask.svg";
 export { ReactComponent as I18n } from "./I18n.svg";
+export { ReactComponent as Forest } from "./Forest.svg";
+export { ReactComponent as Unicorn } from "./Unicorn.svg";
+export { ReactComponent as Star } from "./Star.svg";
+export { default as wave } from "./wave.png";
+export { ReactComponent as Union } from "./Union.svg";

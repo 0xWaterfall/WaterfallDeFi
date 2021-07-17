@@ -2,13 +2,13 @@
 
 import { MetaMask } from "assets/images";
 import Modal from "components/Modal/Modal";
-import { useTheme } from "hooks/useTheme";
 import React, { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useCallback } from "react";
 import { url } from "config";
 import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
+import { useTheme } from "@emotion/react";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;

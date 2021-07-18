@@ -12,7 +12,7 @@ const theme = {
   primary: {
     lightBrown: "#F5FAFF",
     light: "#048FFF",
-    normal: "#2C5290",
+    normal: "#167BFF",
     deep: "#0066FF",
     deep2: "rgba(0, 111, 255, 0.2)"
   },
@@ -24,11 +24,15 @@ const theme = {
     normal: "#FFFFFF"
   },
   linearGradient: {
-    primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"
+    primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)",
+    theme: "linear-gradient(156.01deg, rgba(22, 143, 255, 0.05) 14.83%, rgba(255, 255, 255, 0) 40.87%)"
   },
   shadow: {
     primary: "0px 4px 10px rgba(15, 96, 227, 0.1)",
     claim: "inset 0px 4px 10px rgba(79, 153, 250, 0.1), inset 0px 4px 10px rgba(0, 109, 255, 0.1)"
+  },
+  filter: {
+    primary: "drop-shadow(0px 10px 20px rgba(15, 96, 227, 0.04))"
   }
 };
 

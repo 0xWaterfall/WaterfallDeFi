@@ -10,7 +10,7 @@ import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store";
-import { fetchI18nMiddleware, setI18n } from "store/i18n";
+import { fetchI18nMiddleware } from "store/i18n";
 import ConnectWalletModal from "./components/ConnectWalletModal";
 
 type TProps = WrappedComponentProps;
@@ -25,9 +25,13 @@ const Header = memo<TProps>(({ intl }) => {
   const { locale, languages } = useAppSelector((state) => state.i18n);
 
   const MENU = [
-    { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }) },
-    { pathname: "/portfolio", text: intl.formatMessage({ defaultMessage: "Portfolio" }) },
-    { pathname: "/staking", text: intl.formatMessage({ defaultMessage: "Staking" }) }
+    { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: ["/"] },
+    {
+      pathname: "/portfolio",
+      text: intl.formatMessage({ defaultMessage: "Portfolio" }),
+      checked: ["/portfolio", "/portfolio/details"]
+    },
+    { pathname: "/staking", text: intl.formatMessage({ defaultMessage: "Staking" }), checked: ["/staking"] }
   ];
 
   const I18nElement = useMemo(
@@ -74,7 +78,7 @@ const Header = memo<TProps>(({ intl }) => {
             push({ pathname: "/" });
           }}
         />
-        {MENU.map(({ pathname, text }) => (
+        {MENU.map(({ pathname, text, checked }) => (
           <section
             key={pathname}
             css={{
@@ -85,7 +89,7 @@ const Header = memo<TProps>(({ intl }) => {
               height: "100%",
               display: "flex",
               alignItems: "center",
-              color: location.pathname === pathname ? primary.normal : gray.normal7
+              color: checked.includes(location.pathname) ? primary.deep : gray.normal7
             }}
             onClick={() => {
               push({ pathname });

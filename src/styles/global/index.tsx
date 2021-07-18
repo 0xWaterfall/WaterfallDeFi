@@ -1,7 +1,7 @@
 import { Global, useTheme } from "@emotion/react";
 
 export default () => {
-  const { gray, primary } = useTheme();
+  const { gray, primary, linearGradient } = useTheme();
   return (
     <Global
       styles={{
@@ -9,7 +9,8 @@ export default () => {
           fontSize: 14,
           fontFamily: "Carter One, sans-serif",
           overflowX: "hidden",
-          height: "auto"
+          height: "auto",
+          background: linearGradient.theme
         },
         "*": {
           boxSizing: "border-box"

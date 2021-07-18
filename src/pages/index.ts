@@ -2,6 +2,7 @@ import loadable from "@loadable/component";
 
 const Dashboard = loadable(() => import("./Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("./Portfolio/Portfolio"));
+const PortfolioDetails = loadable(() => import("./PortfolioDetails/PortfolioDetails"));
 const Staking = loadable(() => import("./Staking/Staking"));
 
 export const RouteComponents = [
@@ -18,6 +19,12 @@ export const RouteComponents = [
     path: "/portfolio"
   },
   {
+    key: "PortfolioDetails",
+    component: PortfolioDetails,
+    exact: true,
+    path: "/portfolio/details"
+  },
+  {
     key: "Staking",
     component: Staking,
     exact: true,
@@ -28,5 +35,6 @@ export const RouteComponents = [
 export const loadableComponents = {
   Dashboard,
   Portfolio,
-  Staking
+  Staking,
+  PortfolioDetails
 };

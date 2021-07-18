@@ -27,6 +27,7 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
       window.open(url.metamask);
     }
   }, []);
+
   useEffect(() => {
     // Subscribe to accounts change
     window.ethereum?.on?.(["accountsChanged", "chainChanged"], (accounts: string[], chainId: number) => {

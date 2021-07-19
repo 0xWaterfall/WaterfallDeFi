@@ -12,8 +12,8 @@ type TProps = WrappedComponentProps;
 const Portfolio = memo<TProps>(({ intl }) => {
   return (
     <main css={{ position: "relative", minHeight: "100vh" }}>
-      <Intersect css={{ position: "absolute", top: 0, left: 0, zIndex: -1 }} />
-      <div css={{ padding: "64px 200px", margin: "0 auto" }}>
+      <Intersect css={{ position: "absolute", top: 0, left: 0 }} />
+      <div css={{ padding: "64px 24px", maxWidth: 1248, margin: "0 auto" }}>
         <Header />
         <Content />
       </div>

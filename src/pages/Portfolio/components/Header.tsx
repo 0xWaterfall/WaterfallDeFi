@@ -13,7 +13,7 @@ const Header = memo<TProps>(({ intl }) => {
   const { primary } = useTheme();
 
   return (
-    <div css={{ display: "flex", transform: "translate(46px,46px)", color: primary.deep }}>
+    <div css={{ display: "flex", transform: "translate(55px,55px)", color: primary.deep }}>
       <div css={{ display: "flex" }}>
         <Forest />
       </div>
@@ -24,7 +24,7 @@ const Header = memo<TProps>(({ intl }) => {
           alignItems: "center",
           marginTop: 137,
           marginLeft: 48,
-          paddingBottom: 20,
+          paddingBottom: 55,
           justifyContent: "space-between"
         }}
       >

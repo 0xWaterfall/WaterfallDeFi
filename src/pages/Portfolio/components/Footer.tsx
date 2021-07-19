@@ -11,9 +11,9 @@ const Footer = memo<TProps>(({ intl }) => {
   const { primary } = useTheme();
 
   return (
-    <div>
-      <Unicorn css={{ position: "absolute", right: 0, bottom: 0 }} />
-      <img src={wave} css={{ width: "100%", position: "absolute", bottom: 0, left: 0, zIndex: -1 }} />
+    <div css={{ display: "flex", direction: "rtl" }}>
+      <Unicorn css={{ textAlign: "right", position: "relative", zIndex: 1 }} />
+      <img src={wave} css={{ width: "100%", position: "absolute", bottom: 0, left: 0 }} />
     </div>
   );
 });

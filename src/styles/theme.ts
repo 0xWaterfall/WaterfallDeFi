@@ -14,7 +14,7 @@ const theme = {
     light: "#048FFF",
     normal: "#167BFF",
     deep: "#0066FF",
-    deep2: "rgba(0, 111, 255, 0.2)"
+    deepBrown: "#2C5290"
   },
   warn: {
     normal: "#FCB500",
@@ -24,8 +24,7 @@ const theme = {
     normal: "#FFFFFF"
   },
   linearGradient: {
-    primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)",
-    theme: "linear-gradient(156.01deg, rgba(22, 143, 255, 0.05) 14.83%, rgba(255, 255, 255, 0) 40.87%)"
+    primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"
   },
   shadow: {
     primary: "0px 4px 10px rgba(15, 96, 227, 0.1)",

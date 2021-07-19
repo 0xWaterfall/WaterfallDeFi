@@ -14,6 +14,7 @@ const TheadStyled = styled.thead`
   padding: 0 47px;
   height: 56px;
   color: ${({ theme }) => theme.gray.normal5};
+  display: flex;
 `;
 
 const ThStyled = styled.th`
@@ -23,10 +24,13 @@ const ThStyled = styled.th`
 
 const TbodyStyled = styled.tbody`
   padding: 0 47px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 90px;
 `;
 
 const TrStyled = styled.tr`
-  height: 90px;
+  flex: 1;
 `;
 
 const TdStyled = styled.td``;
@@ -38,7 +42,9 @@ const Table: React.FC<TProps> = ({ ...props }) => {
   return (
     <TableStyled>
       <TheadStyled>
-        <ThStyled>The table header</ThStyled>
+        <TrStyled>
+          <ThStyled>The table header</ThStyled>
+        </TrStyled>
       </TheadStyled>
       <TbodyStyled>
         <TrStyled>

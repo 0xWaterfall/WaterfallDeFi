@@ -1,58 +1,54 @@
 /** @jsxImportSource @emotion/react */
 
-import React from "react";
-import { ClassNames, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
-const TableStyled = styled.table`
+interface ITableStyledComponentProps {
+  scrollWidth?: number;
+}
+
+const Table = styled.div<ITableStyledComponentProps>`
   width: 100%;
   border-radius: 12px;
+  overflow: hidden;
+  overflow-x: auto;
+  background-color: ${({ theme }) => theme.primary.lightBrown};
   filter: ${({ theme }) => theme.filter.primary};
+  /* @media only screen and (max-width: ${({ scrollWidth }) => scrollWidth ?? 1024}px) {
+    overflow-x: auto;
+  } */
 `;
-
-const TheadStyled = styled.thead`
-  padding: 0 47px;
-  height: 56px;
+interface ITableRowStyledComponentProps {
+  height?: number;
+}
+const TableRow = styled.ul<ITableRowStyledComponentProps>`
+  /* padding: 0 47px; */
+  height: ${({ height }) => height ?? 56}px;
   color: ${({ theme }) => theme.gray.normal5};
+  background-color: ${({ theme }) => theme.white.normal};
   display: flex;
+  margin-bottom: 4px;
+  cursor: pointer;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &:first-of-type {
+    cursor: initial;
+  }
 `;
 
-const ThStyled = styled.th`
-  display: flex;
-  align-items: "center";
-`;
+interface ITableColumnStyledComponentProps {
+  minWidth?: number;
+}
 
-const TbodyStyled = styled.tbody`
-  padding: 0 47px;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 90px;
-`;
-
-const TrStyled = styled.tr`
+const TableColumn = styled.li<ITableColumnStyledComponentProps>`
   flex: 1;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  padding: 0 36px;
+  background-color: ${({ theme }) => theme.white.normal};
+  white-space: nowrap;
+  min-width: ${({ minWidth }) => minWidth ?? 120}px;
 `;
 
-const TdStyled = styled.td``;
-
-type TProps = React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>;
-
-const Table: React.FC<TProps> = ({ ...props }) => {
-  const { white, gray } = useTheme();
-  return (
-    <TableStyled>
-      <TheadStyled>
-        <TrStyled>
-          <ThStyled>The table header</ThStyled>
-        </TrStyled>
-      </TheadStyled>
-      <TbodyStyled>
-        <TrStyled>
-          <TdStyled>The table body</TdStyled>
-          <TdStyled>with two columns</TdStyled>
-        </TrStyled>
-      </TbodyStyled>
-    </TableStyled>
-  );
-};
-export default Table;
+export { Table, TableRow, TableColumn };

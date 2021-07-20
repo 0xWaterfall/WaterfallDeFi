@@ -6,10 +6,12 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Content from "./components/Content";
+import { useSize } from "ahooks";
 
 type TProps = WrappedComponentProps;
 
 const Portfolio = memo<TProps>(({ intl }) => {
+  const { width } = useSize(document.body);
   return (
     <main css={{ position: "relative", minHeight: "100vh" }}>
       <Intersect css={{ position: "absolute", top: 0, left: 0 }} />
@@ -17,7 +19,7 @@ const Portfolio = memo<TProps>(({ intl }) => {
         <Header />
         <Content />
       </div>
-      <Footer />
+      {width && width > 1024 && <Footer />}
     </main>
   );
 });

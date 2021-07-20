@@ -36,7 +36,16 @@ const Header = memo<TProps>(({ intl }) => {
 
   const I18nElement = useMemo(
     () => (
-      <ul css={{ cursor: "pointer", boxShadow: shadow.primary, borderRadius: 4, marginTop: 10, padding: "4px 0" }}>
+      <ul
+        css={{
+          cursor: "pointer",
+          boxShadow: shadow.primary,
+          backgroundColor: white.normal,
+          borderRadius: 4,
+          marginTop: 10,
+          padding: "4px 0"
+        }}
+      >
         {languages
           ?.filter((p) => p !== locale)
           ?.map((l) => (

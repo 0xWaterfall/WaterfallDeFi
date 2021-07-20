@@ -1,14 +1,37 @@
 /** @jsxImportSource @emotion/react */
 
-import Table from "components/Table/Table";
-import Tabs, { TabPane } from "components/Tabs/Tabs";
+import { useTheme } from "@emotion/react";
+import { Star } from "assets/images";
+import { Table, TableColumn, TableRow } from "components/Table/Table";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
-  return <Table></Table>;
+  const { gray } = useTheme();
+  return (
+    <Table scrollWidth={1024}>
+      <TableRow>
+        <TableColumn>{intl.formatMessage({ defaultMessage: "Portfolio" })}</TableColumn>
+        <TableColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableColumn>
+        <TableColumn>{intl.formatMessage({ defaultMessage: "Tenure" })}</TableColumn>
+        <TableColumn minWidth={280}>{intl.formatMessage({ defaultMessage: "Deposit APY" })}</TableColumn>
+        <TableColumn>{intl.formatMessage({ defaultMessage: "TVL" })}</TableColumn>
+      </TableRow>
+      {[1, 2, 3, 4].map((p) => (
+        <TableRow height={100} css={{ color: gray.normal85, fontSize: 16 }} key={p}>
+          <TableColumn>Cake Falls</TableColumn>
+          <TableColumn>
+            <Star /> Cake
+          </TableColumn>
+          <TableColumn>7 Days</TableColumn>
+          <TableColumn minWidth={280}>Senior → Mezzanine → Junior</TableColumn>
+          <TableColumn>1,000,000</TableColumn>
+        </TableRow>
+      ))}
+    </Table>
+  );
 });
 
 export default injectIntl(Markets);

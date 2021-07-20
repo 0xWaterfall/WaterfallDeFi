@@ -5,11 +5,13 @@ import { Star } from "assets/images";
 import { Table, TableColumn, TableRow } from "components/Table/Table";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { useHistory } from "react-router-dom";
 
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
   const { gray } = useTheme();
+  const { push } = useHistory();
   return (
     <Table>
       <TableRow>
@@ -20,7 +22,14 @@ const Markets = memo<TProps>(({ intl }) => {
         <TableColumn>{intl.formatMessage({ defaultMessage: "TVL" })}</TableColumn>
       </TableRow>
       {[1, 2, 3, 4].map((p) => (
-        <TableRow height={100} css={{ color: gray.normal85, fontSize: 16 }} key={p}>
+        <TableRow
+          height={100}
+          css={{ color: gray.normal85, fontSize: 16 }}
+          key={p}
+          onClick={() => {
+            push({ pathname: "/portfolio/details" });
+          }}
+        >
           <TableColumn>Cake Falls</TableColumn>
           <TableColumn>
             <Star /> Cake

@@ -11,7 +11,7 @@ type TProps = WrappedComponentProps;
 const Markets = memo<TProps>(({ intl }) => {
   const { gray } = useTheme();
   return (
-    <Table scrollWidth={1024}>
+    <Table>
       <TableRow>
         <TableColumn>{intl.formatMessage({ defaultMessage: "Portfolio" })}</TableColumn>
         <TableColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableColumn>

@@ -2,20 +2,13 @@
 
 import styled from "@emotion/styled";
 
-interface ITableStyledComponentProps {
-  scrollWidth?: number;
-}
-
-const Table = styled.div<ITableStyledComponentProps>`
+const Table = styled.div`
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
   overflow-x: auto;
   background-color: ${({ theme }) => theme.primary.lightBrown};
   filter: ${({ theme }) => theme.filter.primary};
-  /* @media only screen and (max-width: ${({ scrollWidth }) => scrollWidth ?? 1024}px) {
-    overflow-x: auto;
-  } */
 `;
 interface ITableRowStyledComponentProps {
   height?: number;

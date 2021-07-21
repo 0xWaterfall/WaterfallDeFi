@@ -31,6 +31,12 @@ module.exports = {
     "react/react-in-jsx-scope": 0,
     "react/display-name": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-empty-function": 0
+    "@typescript-eslint/no-empty-function": 0,
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto"
+      }
+    ]
   }
 };

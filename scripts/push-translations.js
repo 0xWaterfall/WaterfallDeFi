@@ -16,9 +16,9 @@ const exec = require("child_process").exec;
              -F tags="{\"obsolete\":\"removed-strings\"}"
         `,
         (err, stdout) => {
-          const response = JSON.parse(stdout);
-
           if (err) return reject(err);
+
+          const response = JSON.parse(stdout);
 
           if (response.response.status === "fail") {
             return reject(response.response.message);

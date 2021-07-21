@@ -21,12 +21,11 @@ if (outputArgIndex !== -1) {
       exec(
         `curl -X POST https://api.poeditor.com/v2/languages/list -d api_token="${API_TOKEN}" -d id="${APP_ID}"`,
         (err, stdout) => {
-          const response = JSON.parse(stdout);
-
           if (err) return reject(err);
 
-          if (response.response.status === "fail")
-            return reject(response.response.message);
+          const response = JSON.parse(stdout);
+
+          if (response.response.status === "fail") return reject(response.response.message);
 
           resolve(response.result);
         }
@@ -36,14 +35,11 @@ if (outputArgIndex !== -1) {
     const locales = result.languages.map(({ code }) => code);
 
     await new Promise((resolve, reject) =>
-      exec(
-        `echo '${JSON.stringify(locales)}' > public/i18n/languages.json`,
-        (err, stdout) => {
-          if (err) return reject(err);
-          console.log("🚀🚀🚀 Dowload languages successfully");
-          resolve();
-        }
-      )
+      exec(`echo '${JSON.stringify(locales)}' > public/i18n/languages.json`, (err, stdout) => {
+        if (err) return reject(err);
+        console.log("🚀🚀🚀 Dowload languages successfully");
+        resolve();
+      })
     );
 
     const downloadConf = await Promise.all(
@@ -62,29 +58,23 @@ if (outputArgIndex !== -1) {
     );
 
     await Promise.all(
-      downloadConf.map(({url,locale}) => {
+      downloadConf.map(({ url, locale }) => {
         return new Promise((resolve, reject) => {
-          exec(
-            `curl ${url} --output i18n/download/${locale}.po`,
-            (err, stdout) => {
-              if (err) return reject(err);
+          exec(`curl ${url} --output i18n/download/${locale}.po`, (err, stdout) => {
+            if (err) return reject(err);
 
-              console.log(`🚀🚀🚀 Dowload ${locale} successfully`);
-              resolve();
-            }
-          );
+            console.log(`🚀🚀🚀 Dowload ${locale} successfully`);
+            resolve();
+          });
         });
       })
     );
 
     await new Promise((resolve, reject) =>
-      exec(
-        `react-intl-po po2json 'i18n/download/*.po' -m 'i18n/**/*.json' -o '${outputPath}'`,
-        (err, stdout) => {
-          if (err) return reject(err);
-          resolve();
-        }
-      )
+      exec(`react-intl-po po2json 'i18n/download/*.po' -m 'i18n/**/*.json' -o '${outputPath}'`, (err, stdout) => {
+        if (err) return reject(err);
+        resolve();
+      })
     );
   } catch (error) {
     console.error(error);

@@ -28,10 +28,15 @@ const Header = memo<TProps>(({ intl }) => {
           justifyContent: "space-between"
         }}
       >
-        <div css={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <h1 css={{ fontSize: 40, color: primary.deep, marginBottom: 15, position: "relative" }}>
+        <div css={{ display: "auto", flexDirection: "column", alignItems: "center" }}>
+          <h1 css={{ display: "inline", fontSize: 40, color: primary.deep, marginBottom: 15, position: "relative" }}>
             {intl.formatMessage({ defaultMessage: "Redefining the revenue model" })}
             <Star css={{ position: "absolute", top: 0, right: 0, transform: "translate(35px,-25px)" }} />
+          </h1>
+
+          <h1 css={{ display: "inline", fontSize: 40, color: primary.deep, marginBottom: 10, position: "relative" }}>
+            {intl.formatMessage({ defaultMessage: "Redefining the revenue model" })}
+            <Star css={{ position: "absolute", top: 0, right: 0, transform: "translate(10px,-25px)" }} />
           </h1>
           <p css={{ width: 435, textAlign: "center", lineHeight: 1.5 }}>
             {intl.formatMessage({

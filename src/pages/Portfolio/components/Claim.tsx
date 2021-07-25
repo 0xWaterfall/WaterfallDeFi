@@ -21,6 +21,12 @@ const ClaimBlock = styled.div`
   color: ${({ theme }) => theme.primary.deep};
   line-height: 1.5;
   position: relative;
+  @media screen and (max-width: 678px) {
+    height: 68px;
+  }
+  @media screen and (max-width: 512px) {
+    margin-top: 12px;
+  }
 `;
 
 const ClaimBlockName = styled.div`
@@ -34,7 +40,19 @@ const Claim = memo<TProps>(({ intl }) => {
   const { primary } = useTheme();
 
   return (
-    <div css={{ display: "flex", color: primary.deep }}>
+    <div
+      css={{
+        display: "flex",
+        color: primary.deep,
+        "@media screen and (max-width: 1148px)": {
+          marginTop: 40
+        },
+        "@media screen and (max-width: 512px)": {
+          flexDirection: "column",
+          marginTop: 0
+        }
+      }}
+    >
       <ClaimBlock css={{ marginRight: 16 }}>
         <ClaimBlockName>
           <span css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Week Distribution" })}</span>
@@ -46,7 +64,16 @@ const Claim = memo<TProps>(({ intl }) => {
             <Union />
           </Tooltip>
         </ClaimBlockName>
-        <div css={{ fontSize: 20 }}>500000 WTF</div>
+        <div
+          css={{
+            fontSize: 20,
+            "@media screen and (max-width: 678px)": {
+              fontSize: 12
+            }
+          }}
+        >
+          500000 WTF
+        </div>
       </ClaimBlock>
 
       <ClaimBlock css={{ paddingRight: 60 }}>
@@ -75,11 +102,30 @@ const Claim = memo<TProps>(({ intl }) => {
             <Union />
           </Tooltip>
         </ClaimBlockName>
-        <div css={{ fontSize: 20 }}>500000 WTF</div>
+        <div
+          css={{
+            fontSize: 20,
+            "@media screen and (max-width: 678px)": {
+              fontSize: 12
+            }
+          }}
+        >
+          500000 WTF
+        </div>
 
         <Button
           type="primary"
-          css={{ width: "auto", position: "absolute", top: 0, right: 0, transform: "translate(50%,50%)" }}
+          css={{
+            width: "auto",
+            position: "absolute",
+            top: "50%",
+            right: 0,
+            transform: "translate(50%,-50%)",
+            "@media screen and (max-width: 678px)": {
+              fontSize: 12,
+              height: 32
+            }
+          }}
         >
           {intl.formatMessage({ defaultMessage: "Claim" })}
         </Button>

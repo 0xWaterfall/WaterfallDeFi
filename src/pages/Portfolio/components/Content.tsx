@@ -13,7 +13,7 @@ const Portfolio = memo<TProps>(({ intl }) => {
     { key: "MYPORTFOLIO", text: intl.formatMessage({ defaultMessage: "My Portfolio" }) }
   ];
   return (
-    <div>
+    <div css={{ position: "relative", zIndex: 1 }}>
       <Tabs defaultActiveKey="MARKETS">
         {TabTypes.map(({ key, text, component }) => (
           <TabPane tab={text} key={key}>

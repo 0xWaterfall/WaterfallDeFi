@@ -11,7 +11,7 @@ const ANTDButtonStyled = styled(ANTDButton)`
   border-radius: 8px;
   height: 40px;
   border: 0;
-  width: 100%;
+  /* width: 100%; */
   padding: 0 24px;
   font-weight: 600;
   font-size: 16px;

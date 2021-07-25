@@ -30,7 +30,10 @@ export default () => {
           backgroundColor: gray.normal3
         },
         a: {
-          color: primary.deep
+          color: primary.deep,
+          ":hover": {
+            color: primary.deep
+          }
         }
       }}
     />

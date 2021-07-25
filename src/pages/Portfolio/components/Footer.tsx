@@ -9,14 +9,14 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 type TProps = WrappedComponentProps;
 
 const Footer = memo<TProps>(({ intl }) => {
-  const { primary, gray } = useTheme();
+  const { gray } = useTheme();
   const { width } = useSize(document.body);
 
   const CONTACTS = [
-    { Icon: Discord, link: "discord" },
-    { Icon: Telegram, link: "Telegram" },
-    { Icon: Medium, link: "Medium" },
-    { Icon: Twitter, link: "Twitter" }
+    { Icon: Discord, link: "https://discord.gg/gS9Gda4sez" },
+    { Icon: Telegram, link: "https://t.me/joinchat/BYZHfIJv0eRjY2I0" },
+    { Icon: Medium, link: "https://medium.com/@WaterfallDefi" },
+    { Icon: Twitter, link: "https://twitter.com/waterfalldefi" }
   ];
   return (
     <div
@@ -65,7 +65,7 @@ const Footer = memo<TProps>(({ intl }) => {
           </div>
           <div css={{ display: "flex" }}>
             {CONTACTS.map(({ Icon, link }) => (
-              <a key={link} css={{ marginRight: 20 }}>
+              <a key={link} href={link} css={{ marginRight: 20 }}>
                 <Icon />
               </a>
             ))}

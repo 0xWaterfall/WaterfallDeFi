@@ -18,6 +18,7 @@ const Portfolio = memo<TProps>(() => {
           padding: "64px 24px",
           maxWidth: 1248,
           margin: "0 auto",
+          minHeight: "100vh",
           "@media screen and (max-width: 1024px)": {
             paddingBottom: 100
           }

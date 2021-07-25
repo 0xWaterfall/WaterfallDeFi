@@ -76,7 +76,7 @@ const Claim = memo<TProps>(({ intl }) => {
         </div>
       </ClaimBlock>
 
-      <ClaimBlock css={{ paddingRight: 60 }}>
+      {/* <ClaimBlock css={{ paddingRight: 60 }}>
         <ClaimBlockName>
           <span css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Activation bonus" })}</span>
           <Tooltip
@@ -129,7 +129,7 @@ const Claim = memo<TProps>(({ intl }) => {
         >
           {intl.formatMessage({ defaultMessage: "Claim" })}
         </Button>
-      </ClaimBlock>
+      </ClaimBlock> */}
     </div>
   );
 });

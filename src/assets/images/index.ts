@@ -13,3 +13,4 @@ export { ReactComponent as Discord } from "./Discord.svg";
 export { ReactComponent as Telegram } from "./Telegram.svg";
 export { ReactComponent as Medium } from "./Medium.svg";
 export { ReactComponent as Twitter } from "./Twitter.svg";
+export { ReactComponent as ArrowLeft } from "./ArrowLeft.svg";

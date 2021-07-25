@@ -20,6 +20,9 @@ const theme = {
     normal: "#FCB500",
     deep: "#F0603C"
   },
+  green: {
+    normal: "#00A14A"
+  },
   white: {
     normal: "#FFFFFF"
   },

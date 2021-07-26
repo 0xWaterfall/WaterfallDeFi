@@ -3,6 +3,8 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Header from "./components/Header";
+import CreateDeposit from "./components/CreateDeposit";
+import ContentCD from "./components/ContentCD";
 
 type TProps = WrappedComponentProps;
 
@@ -18,6 +20,8 @@ const PortfolioDetails = memo<TProps>(() => {
         }}
       >
         <Header />
+        <div css={{ padding: "220px" }}> </div>
+        <ContentCD />
       </div>
     </main>
   );

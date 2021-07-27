@@ -36,7 +36,7 @@
     "@web3-react/network-connector": "^6.1.9",
     "@web3-react/types": "^6.0.7",
     "ahooks": "^2.10.7",
-    "antd": "^4.9.2",
+    "antd": "^4.16.8",
     "axios": "^0.21.0",
     "clsx": "^1.1.1",
     "dayjs": "^1.9.7",
@@ -109,7 +109,7 @@
     "lint-staged": "^10.5.3",
     "lodash-webpack-plugin": "^0.11.5",
     "prettier": "^2.2.1",
-    "react-app-rewired": "^2.1.7",
+    "react-app-rewired": "^2.1.8",
     "react-intl-po": "^2.2.2"
   }
 }

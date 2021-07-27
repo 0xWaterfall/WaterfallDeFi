@@ -4,13 +4,14 @@ import Tabs, { TabPane } from "components/Tabs/Tabs";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Markets from "./Markets";
+import MyPortfolio from "./MyPortfolio";
 
 type TProps = WrappedComponentProps;
 
 const Portfolio = memo<TProps>(({ intl }) => {
   const TabTypes = [
     { key: "MARKETS", text: intl.formatMessage({ defaultMessage: "Markets" }), component: <Markets /> },
-    { key: "MYPORTFOLIO", text: intl.formatMessage({ defaultMessage: "My Portfolio" }) }
+    { key: "MYPORTFOLIO", text: intl.formatMessage({ defaultMessage: "My Portfolio" }), component: <MyPortfolio /> }
   ];
   return (
     <div css={{ position: "relative", zIndex: 1 }}>

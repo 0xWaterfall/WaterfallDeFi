@@ -11,36 +11,12 @@ import { useHistory } from "react-router-dom";
 import DepositBlock from "./DepositBlock";
 import { Progress } from "antd";
 import Percentage from "./Percentage";
+import Tooltip from "components/Tooltip/Tooltip";
+import { Union } from "assets/images";
 
 const APYStyled = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const ClaimBlock = styled.div`
-  min-width: 190px;
-  height: 78px;
-  background-color: ${({ theme }) => theme.primary.lightBrown};
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow.claim};
-  padding-left: 24px;
-  padding-top: 12px;
-  color: ${({ theme }) => theme.primary.deep};
-  line-height: 1.5;
-  position: relative;
-  @media screen and (max-width: 678px) {
-    height: 68px;
-  }
-  @media screen and (max-width: 512px) {
-    margin-top: 12px;
-  }
-`;
-
-const ClaimBlockName = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.primary.normal};
-  margin-bottom: 4px;
 `;
 
 type TProps = WrappedComponentProps;
@@ -51,7 +27,16 @@ const CreateDeposit = memo<TProps>(({ intl }) => {
   return (
     <Table>
       <TableRow>
-        <TableColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Series" })}</TableColumn>
+        <TableColumn minWidth={60}>
+          {intl.formatMessage({ defaultMessage: "Series" })}
+          <Tooltip
+            overlay={intl.formatMessage({
+              defaultMessage: "The difference between series is mainly the cycle, you can choose the cycle you like."
+            })}
+          >
+            <Union />
+          </Tooltip>
+        </TableColumn>
         <TableColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableColumn>
         <TableColumn minWidth={270}>{intl.formatMessage({ defaultMessage: "Deposit APY" })}</TableColumn>
         <TableColumn minWidth={170}>{intl.formatMessage({ defaultMessage: "Series TVL" })}</TableColumn>

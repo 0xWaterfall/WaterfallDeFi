@@ -2,9 +2,10 @@
 
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Header from "./components/Header";
 import CreateDeposit from "./components/CreateDeposit";
 import ContentCD from "./components/ContentCD";
+import Charts from "./components/Charts";
+import Information from "./components/Information";
 
 type TProps = WrappedComponentProps;
 
@@ -19,8 +20,8 @@ const PortfolioDetails = memo<TProps>(() => {
           minHeight: "100vh"
         }}
       >
-        <Header />
-        <div css={{ padding: "220px" }}> </div>
+        <Information />
+        <Charts />
         <ContentCD />
       </div>
     </main>

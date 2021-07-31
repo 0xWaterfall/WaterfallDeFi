@@ -1,73 +1,76 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
 import { useSize } from "ahooks";
 import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-
-const Block = styled.div`
-  padding: 62px 0 0 143px;
-  flex: 1;
-  display: flex;
-  color: ${({ theme }) => theme.gray.normal7};
-`;
+import { useHistory } from "react-router-dom";
 
 type TProps = WrappedComponentProps;
 
-const Header = memo<TProps>(({ intl }) => {
+const Information = memo<TProps>(({ intl }) => {
   const { primary, gray } = useTheme();
   const { width } = useSize(document.body);
+  const { goBack } = useHistory();
+
   return (
     <div
       css={{
-        paddingTop: 20
+        paddingTop: 20,
+        display: "flex"
       }}
     >
       <div
         css={{
-          display: "flex",
-          "@media screen and (max-width: 612px)": {
-            justifyContent: "space-between"
+          flex: 1,
+          position: "relative",
+          "@media screen and (max-width: 500px)": {
+            display: "flex",
+            justifyContent: "center"
           }
         }}
       >
         <ArrowLeft
           css={{
+            position: "absolute",
+            left: 0,
+            top: 5,
             color: gray.normal7,
             ":hover": { color: primary.deep },
             cursor: "pointer"
           }}
+          onClick={goBack}
         />
         <div
           css={{
-            paddingLeft: 123,
-            "@media screen and (max-width: 612px)": {
-              paddingLeft: 0,
-              paddingRight: 20
+            paddingLeft: 130,
+            "@media screen and (max-width: 500px)": {
+              paddingLeft: 0
             }
           }}
         >
           <h1 css={{ color: primary.deep, fontSize: 36 }}>USDC Falls</h1>
-          <div css={{ display: "flex", color: gray.normal7, fontSize: 16, marginTop: 16 }}>
+          <div
+            css={{
+              display: "flex",
+              color: gray.normal7,
+              fontSize: 16,
+              marginTop: 16,
+              "@media screen and (max-width: 500px)": {
+                flexDirection: "column",
+                lineHeight: 1.5
+              }
+            }}
+          >
             <span css={{ marginRight: 27 }}>USDC</span>
             <span css={{ marginRight: 15 }}>TVL: 1,000,000 USDC</span>
             <span>14 Days</span>
           </div>
         </div>
       </div>
-
-      <div css={{ display: "flex" }}>
-        <Block>
-          <div>{intl.formatMessage({ defaultMessage: "Portfolio" })}</div>
-        </Block>
-        <Block>
-          <div>{intl.formatMessage({ defaultMessage: "Tranche" })}</div>
-        </Block>
-      </div>
     </div>
   );
 });
 
-export default injectIntl(Header);
+export default injectIntl(Information);

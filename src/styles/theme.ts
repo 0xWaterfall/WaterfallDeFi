@@ -1,4 +1,8 @@
 const theme = {
+  fonts: {
+    Nunito: "Nunito",
+    CarterOne: "Carter One"
+  },
   gray: {
     light: "#FAFAFA",
     normal: "#333333",

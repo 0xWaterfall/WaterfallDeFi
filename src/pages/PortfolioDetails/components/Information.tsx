@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import { useSize } from "ahooks";
 import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -9,9 +8,8 @@ import { useHistory } from "react-router-dom";
 
 type TProps = WrappedComponentProps;
 
-const Information = memo<TProps>(({ intl }) => {
+const Information = memo<TProps>(() => {
   const { primary, gray } = useTheme();
-  const { width } = useSize(document.body);
   const { goBack } = useHistory();
 
   return (

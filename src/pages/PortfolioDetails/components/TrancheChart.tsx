@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import InitialRenderTransition from "components/InitialRenderTransition/InitialRenderTransition";
+import { InitialRenderTransition } from "components/Transitions";
 import React, { CSSProperties, memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { TransitionStatus } from "react-transition-group";

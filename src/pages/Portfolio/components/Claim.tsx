@@ -5,7 +5,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
-import Button from "components/Button/Button";
+// import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
 
 type TProps = WrappedComponentProps;
@@ -57,9 +57,32 @@ const Claim = memo<TProps>(({ intl }) => {
         <ClaimBlockName>
           <span css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Week Distribution" })}</span>
           <Tooltip
-            overlay={intl.formatMessage({
-              defaultMessage: "All position holders can get weekly WTF rewards. Distributed every 4 hours."
-            })}
+            overlay={
+              <React.Fragment>
+                <p>
+                  {intl.formatMessage({
+                    defaultMessage:
+                      "All position holders can get different proportions of rewards according to different tranche."
+                  })}
+                </p>
+                <br />
+                <p>
+                  {intl.formatMessage({
+                    defaultMessage: "• Senior: 25% of total WTF"
+                  })}
+                </p>
+                <p>
+                  {intl.formatMessage({
+                    defaultMessage: "• Mezzanine: 35% of total WTF"
+                  })}
+                </p>
+                <p>
+                  {intl.formatMessage({
+                    defaultMessage: "• Junior: 40% of total WTF"
+                  })}
+                </p>
+              </React.Fragment>
+            }
           >
             <Union />
           </Tooltip>

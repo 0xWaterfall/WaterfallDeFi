@@ -3,7 +3,10 @@
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Star } from "assets/images";
-import { Table, TableColumn, TableRow } from "components/Table/Table";
+import { Table } from "components/Table/Table";
+import TableHeader from "components/Table/TableHeader";
+import TableRow from "components/Table/TableRow";
+import TableColumn from "components/Table/TableColumn";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
@@ -23,7 +26,7 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
       <TableRow>
         <TableColumn>{intl.formatMessage({ defaultMessage: "Portfolio" })}</TableColumn>
         <TableColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableColumn>
-        <TableColumn>{intl.formatMessage({ defaultMessage: "Tenure" })}</TableColumn>
+        <TableColumn>{intl.formatMessage({ defaultMessage: "Lock-up period" })}</TableColumn>
         <TableColumn minWidth={320}>{intl.formatMessage({ defaultMessage: "Deposit APY" })}</TableColumn>
         <TableColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "TVL" })}</TableColumn>
       </TableRow>

@@ -15,6 +15,10 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store";
 import { fetchI18nMiddleware } from "store/i18n";
 import ConnectWalletModal from "./components/ConnectWalletModal";
+import { getLibrary } from "utils/web3React";
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
+import { Web3Provider } from "@ethersproject/providers";
 
 type TProps = WrappedComponentProps;
 
@@ -33,6 +37,18 @@ const Header = memo<TProps>(({ intl }) => {
   const [clientWidth, setClientWidth] = useState(0);
   const { width } = useSize(document.body);
 
+  // const library = getLibrary(ethers.providers.Web3Provider);
+  // const { account, library } = useWeb3React();
+  const { chainId, account, library, activate, active, connector } = useWeb3React<Web3Provider>();
+  console.log(account);
+  console.log(library);
+
+  if (window.ethereum?.isMetaMask && window.ethereum.request) {
+    const r = window.ethereum?.request({ method: "eth_requestAccounts" }).then((v) => {
+      console.log(v);
+    });
+    console.log(r);
+  }
   useEffect(() => {
     setClientWidth((headerLeftRef.current?.clientWidth ?? 0) + (headerRightRef.current?.clientWidth ?? 0));
   }, []);

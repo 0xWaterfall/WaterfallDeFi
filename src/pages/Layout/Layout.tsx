@@ -2,6 +2,7 @@
 
 import styled from "@emotion/styled";
 import Header from "pages/Header/Header";
+import Footer from "pages/Footer/Footer";
 import ConnectedRouteProvder from "providers/ConnectedRouteProvider/ConnectedRouteProvder";
 import React, { FC } from "react";
 
@@ -20,6 +21,7 @@ const Layout: FC = () => {
         <Header />
       </HeaderStyled>
       <ConnectedRouteProvder />
+      <Footer />
     </React.Fragment>
   );
 };

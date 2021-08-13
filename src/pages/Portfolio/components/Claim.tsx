@@ -13,11 +13,6 @@ type TProps = WrappedComponentProps;
 const ClaimBlock = styled.div`
   min-width: 190px;
   height: 78px;
-  background-color: ${({ theme }) => theme.primary.lightBrown};
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow.claim};
-  padding-left: 24px;
-  padding-top: 12px;
   color: ${({ theme }) => theme.primary.deep};
   line-height: 1.5;
   position: relative;
@@ -44,9 +39,6 @@ const Claim = memo<TProps>(({ intl }) => {
       css={{
         display: "flex",
         color: primary.deep,
-        "@media screen and (max-width: 1148px)": {
-          marginTop: 40
-        },
         "@media screen and (max-width: 512px)": {
           flexDirection: "column",
           marginTop: 0

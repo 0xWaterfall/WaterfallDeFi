@@ -6,6 +6,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Content from "./components/Content";
+import WorkFlow from "./components/WorkFlow";
 
 type TProps = WrappedComponentProps;
 
@@ -25,9 +26,9 @@ const Portfolio = memo<TProps>(() => {
         }}
       >
         <Header />
+        <WorkFlow />
         <Content />
       </div>
-      <Footer />
     </main>
   );
 });

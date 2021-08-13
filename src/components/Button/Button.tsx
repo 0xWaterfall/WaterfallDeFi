@@ -15,6 +15,7 @@ const ANTDButtonStyled = styled(ANTDButton)`
   padding: 0 24px;
   font-weight: 600;
   font-size: 16px;
+  filter: drop-shadow(0px 8px 20px rgba(0, 108, 253, 0.3));
   color: ${({ theme }) => theme.gray.normal7};
   &[ant-click-animating-without-extra-node="true"]::after {
     --antd-wave-shadow-color: none;

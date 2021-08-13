@@ -72,7 +72,9 @@ const Footer = memo<TProps>(({ intl }) => {
           </div>
         </div>
 
-        {Boolean(width && width > 1024) && <Unicorn css={{ position: "absolute", bottom: 0, right: 0 }} />}
+        {Boolean(width && width > 1024) && (
+          <Unicorn css={{ position: "fixed", top: "40vh", right: 0, width: 170, height: 220 }} />
+        )}
       </div>
     </div>
   );

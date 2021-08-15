@@ -5,69 +5,67 @@ import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
+import styled from "@emotion/styled";
 
 type TProps = WrappedComponentProps;
 
 const Information = memo<TProps>(() => {
   const { primary, gray } = useTheme();
   const { goBack } = useHistory();
-
+  const InformationWrapper = styled.div`
+    display: flex;
+    padding-top: 20px;
+    & > div {
+      padding: 0px 20px;
+    }
+    & span {
+      font-size: 14px;
+      line-height: 19px;
+      color: ${gray.normal7};
+    }
+  `;
+  const Arrow = styled(ArrowLeft)`
+    color: ${gray.normal7};
+    & :hover {
+      color: ${primary.deep};
+    }
+    margin-top: 20px;
+    margin-right: 20px;
+    cursor: pointer;
+  `;
+  const Text1 = styled.div`
+    font-size: 24px;
+    line-height: 33px;
+    height: 30px;
+    color: ${gray.normal85};
+  `;
+  const Text2 = styled.div`
+    font-size: 20px;
+    line-height: 27px;
+    height: 30px;
+    color: ${gray.normal85};
+  `;
+  const TvlDiv = styled.div`
+    font-size: 16px;
+    line-height: 22px;
+    color: ${primary.deep};
+  `;
   return (
-    <div
-      css={{
-        paddingTop: 20,
-        display: "flex"
-      }}
-    >
-      <div
-        css={{
-          flex: 1,
-          position: "relative",
-          "@media screen and (max-width: 500px)": {
-            display: "flex",
-            justifyContent: "center"
-          }
-        }}
-      >
-        <ArrowLeft
-          css={{
-            position: "absolute",
-            left: 0,
-            top: 5,
-            color: gray.normal7,
-            ":hover": { color: primary.deep },
-            cursor: "pointer"
-          }}
-          onClick={goBack}
-        />
-        <div
-          css={{
-            paddingLeft: 130,
-            "@media screen and (max-width: 500px)": {
-              paddingLeft: 0
-            }
-          }}
-        >
-          <h1 css={{ color: primary.deep, fontSize: 36 }}>USDC Falls</h1>
-          <div
-            css={{
-              display: "flex",
-              color: gray.normal7,
-              fontSize: 16,
-              marginTop: 16,
-              "@media screen and (max-width: 500px)": {
-                flexDirection: "column",
-                lineHeight: 1.5
-              }
-            }}
-          >
-            <span css={{ marginRight: 27 }}>USDC</span>
-            <span css={{ marginRight: 15 }}>TVL: 1,000,000 USDC</span>
-            <span>14 Days</span>
-          </div>
-        </div>
+    <InformationWrapper>
+      <Arrow onClick={goBack} />
+      <div>
+        <Text1>BUSD Vault</Text1>
+        <span>Listing date: 2021/07/30</span>
       </div>
-    </div>
+      <div>
+        <Text2>BUSD</Text2>
+        <span>Lock-up period: 14 Days</span>
+      </div>
+      <div>
+        <Text2></Text2>
+        <TvlDiv>TVL: 1,000,000 USDC</TvlDiv>
+      </div>
+    </InformationWrapper>
   );
 });
 

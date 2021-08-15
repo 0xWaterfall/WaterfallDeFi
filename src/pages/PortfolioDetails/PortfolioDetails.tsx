@@ -6,24 +6,26 @@ import CreateDeposit from "./components/CreateDeposit";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
 import Information from "./components/Information";
-
+import { useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
 type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
+  const { fonts } = useTheme();
+  const PortfolioDetailsWrapper = styled.div`
+    padding: 64px 24px;
+    max-width: 1248;
+    margin: 0 auto;
+    min-height: 100vh;
+    font-family: ${fonts.Nunito};
+  `;
   return (
     <main css={{ minHeight: "100vh" }}>
-      <div
-        css={{
-          padding: "64px 24px",
-          maxWidth: 1248,
-          margin: "0 auto",
-          minHeight: "100vh"
-        }}
-      >
+      <PortfolioDetailsWrapper>
         <Information />
         <Charts />
         <ContentCD />
-      </div>
+      </PortfolioDetailsWrapper>
     </main>
   );
 });

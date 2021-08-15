@@ -133,7 +133,7 @@ const Positions = memo<TProps>(({ intl }) => {
                     left: 0
                   }}
                 />
-                <div css={{ display: "flex", alignItems: "flex-end" }}>
+                <div css={{ display: "flex", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
                   <div
                     css={{
                       padding: "16px 19px",
@@ -146,7 +146,25 @@ const Positions = memo<TProps>(({ intl }) => {
                       <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
                         {intl.formatMessage({ defaultMessage: "Max withdrawal principal+Interest" })}
                       </span>
-                      <Tooltip overlay={<React.Fragment></React.Fragment>}>
+                      <Tooltip
+                        overlay={
+                          <React.Fragment>
+                            <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
+                            <p>
+                              {intl.formatMessage({
+                                defaultMessage:
+                                  "1. Before the cycle starts, the principal can be withdrawn in the Pending state"
+                              })}
+                            </p>
+                            <p>
+                              {intl.formatMessage({
+                                defaultMessage:
+                                  "2. After the period expires, the principal + interest can be withdrawn in the Metured state"
+                              })}
+                            </p>
+                          </React.Fragment>
+                        }
+                      >
                         <Union css={{ color: gray.normal3 }} />
                       </Tooltip>
                     </div>

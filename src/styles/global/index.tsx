@@ -7,10 +7,10 @@ export default () => {
       styles={{
         "html, body": {
           fontSize: 14,
-          fontFamily: "Carter One, sans-serif",
+          fontFamily: "Nunito, sans-serif",
           overflowX: "hidden",
-          height: "auto",
-          backgroundColor: gray.light
+          height: "auto"
+          // backgroundColor: gray.light
         },
         "*": {
           boxSizing: "border-box"

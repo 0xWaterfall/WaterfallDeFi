@@ -14,13 +14,20 @@ const HeaderStyled = styled.header`
   z-index: 999;
 `;
 
+const MainStyled = styled.main`
+  min-height: 100vh;
+  position: relative;
+`;
+
 const Layout: FC = () => {
   return (
     <React.Fragment>
       <HeaderStyled>
         <Header />
       </HeaderStyled>
-      <ConnectedRouteProvder />
+      <MainStyled>
+        <ConnectedRouteProvder />
+      </MainStyled>
       <Footer />
     </React.Fragment>
   );

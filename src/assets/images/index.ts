@@ -23,3 +23,4 @@ export { ReactComponent as ArrowLine } from "./ArrowLine.svg";
 export { ReactComponent as LogoFooter } from "./LogoFooter.svg";
 export { ReactComponent as FooterLine1 } from "./FooterLine1.svg";
 export { ReactComponent as FooterLine2 } from "./FooterLine2.svg";
+export { ReactComponent as CaretDown } from "./CaretDown.svg";

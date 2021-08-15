@@ -12,7 +12,7 @@ type TProps = WrappedComponentProps;
 
 const Portfolio = memo<TProps>(() => {
   return (
-    <main css={{ position: "relative", minHeight: "100vh" }}>
+    <React.Fragment>
       <Intersect css={{ position: "absolute", top: 0, left: 0 }} />
       <div
         css={{
@@ -29,7 +29,7 @@ const Portfolio = memo<TProps>(() => {
         <WorkFlow />
         <Content />
       </div>
-    </main>
+    </React.Fragment>
   );
 });
 

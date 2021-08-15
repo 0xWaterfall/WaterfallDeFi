@@ -8,7 +8,63 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 
 type TProps = WrappedComponentProps;
+const FooterWrapper = styled.div`
+  background-color: ${({ theme }) => theme.footer.background};
+  position: relative;
+  height: 500px;
+  @media screen and (max-width: 1024px) : {
+    height: auto;
+  }
+`;
 
+const LogoWrapper = styled.div`
+  width: 152px;
+  height: 76px;
+`;
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 80vw;
+  margin: auto;
+  padding-top: 100px;
+  height: 100%;
+  padding-bottom: 40px;
+`;
+
+const ConnectDiv = styled.div`
+  font-size: 14px;
+  line-height: 19px;
+  font-family: ${({ theme }) => theme.fonts.Nunito};
+  color: ${({ theme }) => theme.white.normal};
+  display: flex;
+  opacity: 0.8;
+  & span {
+    margin-right: 50px;
+  }
+`;
+const CopyrightDiv = styled.div`
+  font-size: 16px;
+  line-height: 25px;
+  font-family: ${({ theme }) => theme.fonts.CarterOne};
+  color: ${({ theme }) => theme.white.normal};
+  opacity: 0.8;
+  display: flex;
+`;
+const FooterLineDiv = styled.div`
+  position: absolute;
+  right: 100px;
+  bottom: 50px;
+  width: 500px;
+  height: 200px;
+  & > svg {
+    position: absolute;
+  }
+  & > svg:nth-of-type(2) {
+    top: -29px;
+    right: 36px;
+  }
+`;
 const Footer = memo<TProps>(({ intl }) => {
   const { gray, footer, fonts, white } = useTheme();
   const { width } = useSize(document.body);
@@ -20,63 +76,6 @@ const Footer = memo<TProps>(({ intl }) => {
     { Icon: Twitter, link: "https://twitter.com/waterfalldefi" }
   ];
 
-  const FooterWrapper = styled.div`
-    background-color: ${footer.background};
-    position: relative;
-    height: 500px;
-    @media screen and (max-width: 1024px) : {
-      height: auto;
-    }
-  `;
-
-  const LogoWrapper = styled.div`
-    width: 152px;
-    height: 76px;
-  `;
-  const ContentWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 80vw;
-    margin: auto;
-    padding-top: 100px;
-    height: 100%;
-    padding-bottom: 40px;
-  `;
-
-  const ConnectDiv = styled.div`
-    font-size: 14px;
-    line-height: 19px;
-    font-family: ${fonts.Nunito};
-    color: ${white.normal};
-    display: flex;
-    opacity: 0.8;
-    & span {
-      margin-right: 50px;
-    }
-  `;
-  const CopyrightDiv = styled.div`
-    font-size: 16px;
-    line-height: 25px;
-    font-family: ${fonts.CarterOne};
-    color: ${white.normal};
-    opacity: 0.8;
-    display: flex;
-  `;
-  const FooterLineDiv = styled.div`
-    position: absolute;
-    right: 100px;
-    bottom: 50px;
-    width: 500px;
-    height: 200px;
-    & > svg {
-      position: absolute;
-    }
-    & > svg:nth-of-type(2) {
-      top: -29px;
-      right: 36px;
-    }
-  `;
   return (
     <FooterWrapper>
       <ContentWrapper>

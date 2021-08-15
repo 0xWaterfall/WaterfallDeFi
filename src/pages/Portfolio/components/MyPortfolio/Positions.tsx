@@ -4,8 +4,6 @@ import { useTheme } from "@emotion/react";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
-import TrancheChart from "./TrancheChart";
-import AssetChart from "./AssetChart";
 import Button from "components/Button/Button";
 import { useState } from "react";
 import { IType } from "./type";
@@ -17,8 +15,7 @@ import Tooltip from "components/Tooltip/Tooltip";
 type TProps = WrappedComponentProps;
 
 const Positions = memo<TProps>(({ intl }) => {
-  const { gray, warn, green, primary, fonts, shadow, linearGradient, white } = useTheme();
-  const { push } = useHistory();
+  const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [activedTab, setActivedTab] = useState<IType>("ALL");
   const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
 

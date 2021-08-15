@@ -10,7 +10,7 @@ const TableHeader = styled.div`
   font-size: 14px;
   line-height: 19px;
   color: ${({ theme }) => theme.gray.normal7};
-  & li:first-child {
+  & li:first-of-type {
     border-top-left-radius: ${({ theme }) => theme.table.borderRadius};
     border-bottom-left-radius: ${({ theme }) => theme.table.borderRadius};
   }

@@ -4,7 +4,7 @@ import Tabs, { TabPane } from "components/Tabs/Tabs";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Markets from "./Markets";
-import MyPortfolio from "./MyPortfolio";
+import MyPortfolio from "./MyPortfolio/MyPortfolio";
 
 type TProps = WrappedComponentProps;
 
@@ -15,7 +15,7 @@ const Portfolio = memo<TProps>(({ intl }) => {
   ];
   return (
     <div css={{ position: "relative", zIndex: 1 }}>
-      <Tabs defaultActiveKey="MARKETS">
+      <Tabs defaultActiveKey="MYPORTFOLIO">
         {TabTypes.map(({ key, text, component }) => (
           <TabPane tab={text} key={key}>
             {component}

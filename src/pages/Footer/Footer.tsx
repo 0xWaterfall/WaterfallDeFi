@@ -92,7 +92,13 @@ const Footer = memo<TProps>(({ intl }) => {
           ))}
         </ConnectDiv>
         <CopyrightDiv>
-          {intl.formatMessage({ defaultMessage: "Copyright 2021 - 2022 - All Rights Reserved" })}
+          {intl.formatMessage(
+            { defaultMessage: "Copyright {currentYear} - {nextYear} - All Rights Reserved" },
+            {
+              currentYear: new Date().getFullYear(),
+              nextYear: new Date().getFullYear() + 1
+            }
+          )}
         </CopyrightDiv>
         <FooterLineDiv>
           <FooterLine1 />

@@ -2,41 +2,91 @@
 
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Star } from "assets/images";
-import { Table } from "components/Table/Table";
-import TableHeader from "components/Table/TableHeader";
-import TableRow from "components/Table/TableRow";
-import TableColumn from "components/Table/TableColumn";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router-dom";
 import TrancheChart from "./TrancheChart";
 import AssetChart from "./AssetChart";
 import Button from "components/Button/Button";
 import Positions from "./Positions";
 
 type TProps = WrappedComponentProps;
+const TitleDiv = styled.div`
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.gray.normal};
+`;
+const MainGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-column-gap: 20px;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+`;
+const MainGridContainer2 = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-row-gap: 20px;
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    padding-inline: 24px;
+    border: 1px solid ${({ theme }) => theme.primary.deep2};
+  }
+  @media screen and (max-width: 768px) {
+    & > div {
+      align-items: flex-start;
+    }
+  }
+`;
 
+const GridItem1 = styled.div`
+  padding-inline: 24px;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.primary.deep2};
+  & > div:nth-of-type(1) {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid ${({ theme }) => theme.primary.deep2};
+  }
+  @media screen and (max-width: 768px) {
+    border: none;
+    padding-inline: 0;
+    & > div:nth-of-type(1) {
+      border-bottom: none;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+`;
+const ChartDiv = styled.div`
+  display: flex;
+  padding-block: 35px;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    & > div {
+      background-color: ${({ theme }) => theme.primary.lightBrown};
+      margin: 10px 0px;
+      border-radius: 12px;
+      padding: 20px;
+    }
+  }
+`;
 const MyPortfolio = memo<TProps>(({ intl }) => {
-  const { gray, warn, green, primary, fonts } = useTheme();
-  const { push } = useHistory();
+  const { gray, primary, fonts } = useTheme();
   return (
     <div>
       {/* overview */}
-      <div css={{ marginBottom: 24, fontSize: 20, fontWeight: 600, color: gray.normal85 }}>
-        {intl.formatMessage({ defaultMessage: "Overview" })}
-      </div>
-      <div css={{ display: "grid", gridTemplateColumns: "2fr 1fr", gridColumnGap: 20 }}>
-        <div css={{ paddingInline: 24, borderRadius: 12, border: `1px solid ${primary.deep2}` }}>
-          <div
-            css={{
-              height: 70,
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              borderBottom: `1px solid ${primary.deep2}`
-            }}
-          >
+      <TitleDiv>{intl.formatMessage({ defaultMessage: "Overview" })}</TitleDiv>
+      <MainGridContainer>
+        <GridItem1>
+          <div>
             <div>
               <span css={{ color: gray.normal7 }}>{intl.formatMessage({ defaultMessage: "Total notional:" })}</span>
               <span css={{ fontWeight: 700 }}> $100,000,000.1234</span>
@@ -46,22 +96,13 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
               <span css={{ fontWeight: 700 }}>3D 12H</span>
             </div>
           </div>
-          <div css={{ display: "flex", paddingBlock: 35 }}>
+          <ChartDiv>
             <TrancheChart />
             <AssetChart />
-          </div>
-        </div>
-        <div css={{ display: "grid", gridTemplateRows: "1fr 1fr", gridRowGap: 20 }}>
-          <div
-            css={{
-              border: `1px solid ${primary.deep2}`,
-              borderRadius: 12,
-              paddingInline: 24,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between"
-            }}
-          >
+          </ChartDiv>
+        </GridItem1>
+        <MainGridContainer2>
+          <div>
             <div>
               <div css={{ paddingBlock: 24, color: gray.normal7 }}>
                 {intl.formatMessage({ defaultMessage: "Return principal+Interest" })}
@@ -72,16 +113,7 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
               <Button type="primary">{intl.formatMessage({ defaultMessage: "Withdraw All" })}</Button>
             </div>
           </div>
-          <div
-            css={{
-              border: `1px solid ${primary.deep2}`,
-              borderRadius: 12,
-              paddingInline: 24,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between"
-            }}
-          >
+          <div>
             <div>
               <div css={{ paddingBlock: 24, color: gray.normal7 }}>
                 {intl.formatMessage({ defaultMessage: "WTF Reward" })}
@@ -92,8 +124,8 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
               <Button type="default">{intl.formatMessage({ defaultMessage: "Approve" })}</Button>
             </div>
           </div>
-        </div>
-      </div>
+        </MainGridContainer2>
+      </MainGridContainer>
 
       {/* position */}
       <div css={{ margin: "24px 0", fontSize: 20, fontWeight: 600, color: gray.normal85 }}>

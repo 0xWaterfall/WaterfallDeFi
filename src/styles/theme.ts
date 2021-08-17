@@ -46,7 +46,8 @@ const theme = {
   shadow: {
     primary: "0px 4px 10px rgba(15, 96, 227, 0.1)",
     positionsTab: "0px 0px 10px rgba(0, 102, 255, 0.1)",
-    claim: "inset 0px 4px 10px rgba(79, 153, 250, 0.1), inset 0px 4px 10px rgba(0, 109, 255, 0.1)"
+    claim: "inset 0px 4px 10px rgba(79, 153, 250, 0.1), inset 0px 4px 10px rgba(0, 109, 255, 0.1)",
+    marketItem: "0px 0px 10px rgba(22, 122, 255, 0.1)"
   },
   filter: {
     primary: "drop-shadow(0px 10px 20px rgba(15, 96, 227, 0.04))"

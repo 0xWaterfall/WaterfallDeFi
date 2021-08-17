@@ -23,6 +23,13 @@ const Information = memo<TProps>(() => {
       line-height: 19px;
       color: ${gray.normal7};
     }
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      & > div {
+        padding: 10px 0;
+      }
+    }
   `;
   const Arrow = styled(ArrowLeft)`
     color: ${gray.normal7};

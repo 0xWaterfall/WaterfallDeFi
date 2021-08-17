@@ -1,8 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { Button as ANTDButton, ButtonProps } from "antd";
-import { ClassNames, useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 
 type TProps = { color?: "red" | "yellow" | "green"; value: String };
@@ -10,6 +8,7 @@ type TProps = { color?: "red" | "yellow" | "green"; value: String };
 const Tag = styled.div`
   border-radius: ${({ theme }) => theme.tags.borderRadius};
   height: 24px;
+  line-height: 24px;
   border: 0;
   font-weight: 600;
   font-size: 12px;

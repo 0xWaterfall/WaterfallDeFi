@@ -1,16 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Star } from "assets/images";
-import { Table, TableColumn, TableRow } from "components/Table/Table";
-import { size } from "lodash";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router-dom";
 import { Mountain } from "assets/images";
 import { Row, Col } from "antd";
 import TranchesCard from "./TranchesCard";
+import ApproveCard from "./ApproveCard";
 
 type TProps = WrappedComponentProps;
 const Text1 = styled.div`
@@ -35,10 +31,29 @@ const Box = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background: ${({ theme }) => theme.white.normal};
+  width: calc(100% - 20px);
+  height: calc(33% - 12px);
+`;
+const Box2 = styled.div`
+  border: ${({ theme }) => theme.table.border};
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.white.normal};
+  width: calc(100% - 20px);
+  height: 100%;
+  @media screen and (max-width: 768px) {
+    margin: 20px 0px;
+    height: auto;
+  }
+`;
+
+const TranchesCol = styled(Col)`
+  height: 600px;
+  & > div:nth-of-type(2) {
+    margin: 20px 0;
+  }
 `;
 const Deposit = memo<TProps>(({ intl }) => {
-  const { push } = useHistory();
-
   return (
     <div>
       <NextTimeWrapper>
@@ -47,7 +62,7 @@ const Deposit = memo<TProps>(({ intl }) => {
         <Text2>Active cycle: 2021/07/01-2021/07/08</Text2>
       </NextTimeWrapper>
       <Row>
-        <Col md={8}>
+        <TranchesCol md={8} xs={23} offset={1}>
           <Box>
             <TranchesCard color="red" />
           </Box>
@@ -57,9 +72,11 @@ const Deposit = memo<TProps>(({ intl }) => {
           <Box>
             <TranchesCard color="red" />
           </Box>
-        </Col>
-        <Col md={16}>
-          <Box css={{ height: "100%" }}></Box>
+        </TranchesCol>
+        <Col md={14} xs={23} offset={1}>
+          <Box2>
+            <ApproveCard />
+          </Box2>
         </Col>
       </Row>
     </div>

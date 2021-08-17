@@ -2,15 +2,11 @@
 
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Star } from "assets/images";
 import { Table, TableColumn, TableRow } from "components/Table/Table";
-import { size } from "lodash";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import DepositBlock from "./DepositBlock";
-import { Progress } from "antd";
-import Percentage from "./Percentage";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union } from "assets/images";
 

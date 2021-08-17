@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import { useSize } from "ahooks";
 import { WaterFallMountain, Boxes } from "assets/images";
 import React, { memo } from "react";
@@ -16,22 +15,30 @@ const TitleH1 = styled.h1`
   color: ${({ theme }) => theme.gray.normal85};
   margin-bottom: 15px;
   position: relative;
-  width: 600px;
   max-height: 300px;
   margin: 0 auto;
   padding: 10px;
   text-align: center;
-  @media screen and (max-width: 678px) : {
-    font-size: 30px;
+  font-family: ${({ theme }) => theme.fonts.CarterOne};
+  @media screen and (min-width: 768px) {
+    max-width: 600px;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 36px;
+    text-align: left;
+    padding: 0px;
   }
 `;
 const DescText = styled.p`
-  max-width: 500px;
-  color: ${({ theme }) => theme.gray.normal85};
+  @media screen and (min-width: 768px) {
+    max-width: 500px;
+  }
+  color: ${({ theme }) => theme.gray.normal7};
   font-family: ${({ theme }) => theme.fonts.Nunito};
   text-align: center;
-  line-height: 1.5;
-  @media screen and (max-width: 512px) : {
+  font-size: 14px;
+  line-height: 24px;
+  @media screen and (max-width: 768px) {
     text-align: left;
   }
 `;
@@ -39,30 +46,44 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 137px;
   padding-bottom: 55px;
   justify-content: space-between;
-  @media screen and (max-width: 1148px) : {
-    margin: "60px 0 20px";
+
+  @media screen and (min-width: 768px) {
+    margin-top: 137px;
+  }
+  @media screen and (max-width: 768px) {
     padding: 0;
+    margin-top: 20px;
   }
   ,
-    @media screen and (max-width: 512px) : {
+  @media screen and (max-width: 512px) : {
     align-items: flex-start;
   }
 `;
 const WaterFallMountainWrapper = styled.div`
-  position: absolute;
-  top: 0px;
-  left: 100%;
   width: 165px;
   height: 200px;
   padding: 10px;
+  @media screen and (min-width: 768px) {
+    position: absolute;
+    top: 0px;
+    left: 100%;
+  }
+  @media screen and (max-width: 768px) {
+    position: relative;
+  }
 `;
 const DistributionWrapper = styled.div`
-  position: absolute;
-  top: 180px;
-  left: 100%;
+  @media screen and (min-width: 768px) {
+    position: absolute;
+    top: 180px;
+    left: 100%;
+  }
+  @media screen and (max-width: 768px) {
+    position: relative;
+  }
+
   width: 210px;
   height: 95px;
   padding: 10px 0px;
@@ -85,34 +106,47 @@ const DistributionWrapper = styled.div`
     line-height: 37px;
     letter-spacing: -0.015em;
     color: ${({ theme }) => theme.primary.deep};
+    font-family: ${({ theme }) => theme.fonts.CarterOne};
   }
 `;
 const BoxesWrapper = styled.div`
-  position: absolute;
-  top: 60px;
-  right: 100%;
   width: 165px;
   height: 200px;
   padding: 10px;
   background-image: url(Boxes.png);
+  position: absolute;
+  @media screen and (min-width: 768px) {
+    top: 60px;
+    right: 100%;
+  }
+  @media screen and (max-width: 768px) {
+    transform: scaleX(-1);
+    right: 40px;
+    top: 250px;
+    z-index: -1;
+  }
 `;
 const Header = memo<TProps>(({ intl }) => {
-  const { primary, fonts, gray, white } = useTheme();
+  const { width } = useSize(document.body);
 
   return (
     <div>
       <Wrapper>
         <div css={{ position: "relative" }}>
           <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit Together, enjoy the distribution" })}</TitleH1>
-          <WaterFallMountainWrapper>
-            <WaterFallMountain />
-          </WaterFallMountainWrapper>
-          <DistributionWrapper>
-            <Claim />
-          </DistributionWrapper>
-          <BoxesWrapper>
-            <Boxes />
-          </BoxesWrapper>
+          {Boolean(width && width > 768) && (
+            <>
+              <WaterFallMountainWrapper>
+                <WaterFallMountain />
+              </WaterFallMountainWrapper>
+              <DistributionWrapper>
+                <Claim />
+              </DistributionWrapper>
+              <BoxesWrapper>
+                <Boxes />
+              </BoxesWrapper>
+            </>
+          )}
         </div>
         <DescText>
           {intl.formatMessage({
@@ -120,6 +154,19 @@ const Header = memo<TProps>(({ intl }) => {
               "Through cash flow distribution, it will ensure that Senior users get a fixed income, while Junior can get more leveraged income."
           })}
         </DescText>
+        {Boolean(width && width <= 768) && (
+          <>
+            <WaterFallMountainWrapper>
+              <WaterFallMountain />
+            </WaterFallMountainWrapper>
+            <DistributionWrapper>
+              <Claim />
+            </DistributionWrapper>
+            <BoxesWrapper>
+              <Boxes />
+            </BoxesWrapper>
+          </>
+        )}
       </Wrapper>
     </div>
   );

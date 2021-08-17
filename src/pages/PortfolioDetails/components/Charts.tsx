@@ -11,8 +11,20 @@ const Block = styled.div`
   flex: 1;
   display: flex;
   color: ${({ theme }) => theme.gray.normal7};
+
   @media screen and (max-width: 1024px) {
+    background-color: ${({ theme }) => theme.primary.lightBrown};
     padding-left: 0;
+    margin: auto;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+
+    display: flex;
+    justfify-content: space-between;
+    & > * {
+    }
   }
 `;
 
@@ -24,7 +36,8 @@ const Charts = memo<TProps>(() => {
       css={{
         display: "flex",
         paddingTop: 62,
-        "@media screen and (max-width: 825px)": {
+        "@media screen and (max-width: 1024px)": {
+          paddingTop: 10,
           flexDirection: "column"
         }
       }}

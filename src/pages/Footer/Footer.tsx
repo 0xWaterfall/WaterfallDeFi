@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import { useSize } from "ahooks";
-import { Discord, Medium, Telegram, Twitter, Unicorn, Wave, LogoFooter, FooterLine1, FooterLine2 } from "assets/images";
-import React, { memo } from "react";
+import { Discord, Medium, Telegram, Twitter, Unicorn, LogoFooter, FooterLine1, FooterLine2 } from "assets/images";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 
@@ -66,7 +65,6 @@ const FooterLineDiv = styled.div`
   }
 `;
 const Footer = memo<TProps>(({ intl }) => {
-  const { gray, footer, fonts, white } = useTheme();
   const { width } = useSize(document.body);
 
   const CONTACTS = [

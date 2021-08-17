@@ -1,12 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
-import { Union } from "assets/images";
-import Button from "components/Button/Button";
-import Tooltip from "components/Tooltip/Tooltip";
 
 type TProps = WrappedComponentProps;
 
@@ -26,13 +23,6 @@ const ClaimBlock = styled.div`
   @media screen and (max-width: 512px) {
     margin-top: 12px;
   }
-`;
-
-const ClaimBlockName = styled.div`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.primary.normal};
-  margin-bottom: 4px;
 `;
 
 const DepositBlock = memo<TProps>(({ intl }) => {

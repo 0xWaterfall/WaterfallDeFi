@@ -6,7 +6,6 @@ import { I18n, Menu, WaterFall } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import Dropdown from "components/Dropdown/Dropdown";
-import Tooltip from "components/Tooltip/Tooltip";
 import React, { memo, useEffect, useRef } from "react";
 import { useMemo } from "react";
 import { useState } from "react";

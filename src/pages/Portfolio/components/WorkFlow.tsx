@@ -1,26 +1,34 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import { Deposit, Wait, Withdraw, ArrowLine } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { Row, Col, Layout } from "antd";
+import { Row, Col } from "antd";
+import { useSize } from "ahooks";
 
 type TProps = WrappedComponentProps;
 const TitleH2 = styled.h2`
   font-size: 16px;
-  line-height: 25px;
+  line-height: 32px;
   text-align: center;
-  letter-spacing: -0.015em;
   color: ${({ theme }) => theme.gray.normal};
+  font-family: ${({ theme }) => theme.fonts.CarterOne};
 `;
 const ImgWrapper = styled.div`
   display: flex;
   justify-content: center;
+
+  align-items: center;
   & > svg {
     height: 74px;
     width: 74px;
+  }
+  @media screen and (max-width: 768px) {
+    & > svg {
+      height: 48px;
+      width: 48px;
+    }
   }
 `;
 const DescText = styled.p`
@@ -53,14 +61,42 @@ const RowWrapper = styled.div`
   width: 100%;
   height: 100%;
 `;
-const WorkFlow = memo<TProps>(({ intl }) => {
-  const { fonts, gray } = useTheme();
 
+const ColWrapper = styled(Col)`
+  @media screen and (max-width: 768px) {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    grid-auto-rows: minmax(30px, auto);
+    background: ${({ theme }) => theme.white.normal};
+    border: 1px solid ${({ theme }) => theme.primary.lightBrown};
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border-radius: 12px;
+    & > div {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    & > h2 {
+      grid-column: 2 / 6;
+      grid-row: 1;
+      text-align: left;
+    }
+    & > p {
+      grid-column: 2 / 6;
+      grid-row: 2;
+      text-align: left;
+    }
+  }
+`;
+const WorkFlow = memo<TProps>(({ intl }) => {
+  const { width } = useSize(document.body);
   return (
     <div css={{ marginTop: 50, position: "relative" }}>
       <RowWrapper />
       <Row>
-        <Col span={8} md={8} xs={24} sm={24}>
+        <ColWrapper span={8} md={8} xs={24}>
           <ImgWrapper>
             <Deposit />
           </ImgWrapper>
@@ -68,11 +104,13 @@ const WorkFlow = memo<TProps>(({ intl }) => {
           <DescText>
             {intl.formatMessage({ defaultMessage: "Choose the tranche that suits you and get started!" })}
           </DescText>
-          <ArrowWrapper>
-            <ArrowLine />
-          </ArrowWrapper>
-        </Col>
-        <Col span={8} md={8} xs={24} sm={24}>
+          {Boolean(width && width > 768) && (
+            <ArrowWrapper>
+              <ArrowLine />
+            </ArrowWrapper>
+          )}
+        </ColWrapper>
+        <ColWrapper span={8} md={8} xs={24}>
           <ImgWrapper>
             <Wait />
           </ImgWrapper>
@@ -82,11 +120,13 @@ const WorkFlow = memo<TProps>(({ intl }) => {
               defaultMessage: "When all the tranche is full, the waterfall will start to set off."
             })}
           </DescText>
-          <ArrowWrapper>
-            <ArrowLine />
-          </ArrowWrapper>
-        </Col>
-        <Col span={8} md={8} xs={24} sm={24}>
+          {Boolean(width && width > 768) && (
+            <ArrowWrapper>
+              <ArrowLine />
+            </ArrowWrapper>
+          )}
+        </ColWrapper>
+        <ColWrapper span={8} md={8} xs={24}>
           <ImgWrapper>
             <Withdraw />
           </ImgWrapper>
@@ -94,7 +134,7 @@ const WorkFlow = memo<TProps>(({ intl }) => {
           <DescText>
             {intl.formatMessage({ defaultMessage: "When the period expires, you can get all your funds back." })}
           </DescText>
-        </Col>
+        </ColWrapper>
       </Row>
     </div>
   );

@@ -12,6 +12,7 @@ type TProps = WrappedComponentProps;
 
 const Wrapper = styled.div`
   paddinng: 24px 32px;
+
   position: relative;
   display: flex;
   flex-direction: column;

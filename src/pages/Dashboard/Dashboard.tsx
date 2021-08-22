@@ -7,7 +7,7 @@ import styled from "@emotion/styled";
 type TProps = WrappedComponentProps;
 
 const Dashboard = memo<TProps>(() => {
-  return <main css={{ position: "relative", minHeight: "100vh" }}></main>;
+  return <div></div>;
 });
 
 export default injectIntl(Dashboard);

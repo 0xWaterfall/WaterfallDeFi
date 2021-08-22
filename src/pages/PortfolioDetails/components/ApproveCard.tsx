@@ -12,7 +12,7 @@ const RowDiv = styled.div`
   line-height: 27px;
   color: ${({ theme }) => theme.gray.normal7};
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 35px;
   justify-content: space-between;
   & > div:nth-of-type(2) {
     font-size: 24px;
@@ -50,7 +50,7 @@ const Max = styled.div`
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 56px;
   & button {
     width: 100%;
   }
@@ -84,7 +84,9 @@ const ApproveCard = memo<TProps>(({ intl, isRe }) => {
         <Input placeholder="" defaultValue={0} suffix={<Max>{intl.formatMessage({ defaultMessage: "Max" })}</Max>} />
       </div>
       <ButtonDiv>
-        <Button type="primary">{intl.formatMessage({ defaultMessage: "Close Deposit" })}</Button>
+        <Button type="primary" css={{ height: 56 }}>
+          {intl.formatMessage({ defaultMessage: "Close Deposit" })}
+        </Button>
       </ButtonDiv>
     </Container>
   );

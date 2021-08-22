@@ -34,9 +34,9 @@ const DepositItem = memo<TProps>(({ intl, isRe }) => {
       }}
     >
       <div css={{ display: "grid", gridTemplateRows: "1fr 1fr 1fr", gridRowGap: 20 }}>
-        <TranchesCard type="Junior" />
-        <TranchesCard type="Mezzanine" />
         <TranchesCard type="Senior" />
+        <TranchesCard type="Mezzanine" />
+        <TranchesCard type="Junior" />
       </div>
       <ApproveCard isRe={isRe} />
     </div>

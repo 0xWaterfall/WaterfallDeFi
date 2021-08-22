@@ -19,7 +19,7 @@ const Box2 = styled.div`
   background: ${({ theme }) => theme.white.normal};
 `;
 
-const DepositItem = memo<TProps>(({ intl }) => {
+const DepositItem = memo<TProps>(({ intl, isRe }) => {
   const { primary } = useTheme();
   return (
     <div
@@ -38,7 +38,7 @@ const DepositItem = memo<TProps>(({ intl }) => {
         <TranchesCard type="Mezzanine" />
         <TranchesCard type="Senior" />
       </div>
-      <ApproveCard />
+      <ApproveCard isRe={isRe} />
     </div>
   );
 });

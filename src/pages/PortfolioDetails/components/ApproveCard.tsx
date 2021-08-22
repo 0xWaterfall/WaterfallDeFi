@@ -6,7 +6,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Input } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
-type TProps = WrappedComponentProps;
+
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -60,9 +60,14 @@ const ButtonDiv = styled.div`
     }
   }
 `;
-const ApproveCard = memo<TProps>(({ intl }) => {
+
+type TProps = WrappedComponentProps & {
+  isRe?: boolean;
+};
+
+const ApproveCard = memo<TProps>(({ intl, isRe }) => {
   return (
-    <Container>
+    <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
         <div>10,000 USDC</div>

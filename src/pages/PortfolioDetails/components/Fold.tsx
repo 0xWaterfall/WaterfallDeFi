@@ -11,7 +11,7 @@ import styled from "@emotion/styled";
 type TProps = WrappedComponentProps;
 
 const Wrapper = styled.div`
-  paddinng: 24px 32px;
+  padding: 24px 32px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   border-radius: 12px;
   padding: 20px;
 `;
+
 const WithdrawDiv = styled.div`
   padding: 16px 19px;
   margin-right: 27;
@@ -31,21 +32,24 @@ const WithdrawDiv = styled.div`
   width: 100%;
   margin-bottom: 20px;
 `;
+
 const RewardDiv = styled.div`
   padding: 16px 19px;
   width: 100%;
-  margi-right: 23px;
+  margin-right: 23px;
   background-color: ${({ theme }) => theme.white.normal};
   border: 1px solid ${({ theme }) => theme.primary.deep2};
   border-radius: 8px;
   margin-bottom: 20px;
 `;
+
 const NoteDiv = styled.div`
   display: flex;
   padding: 16px 19px;
   background-color: ${({ theme }) => theme.white.normal};
   border-radius: 8px;
 `;
+
 const Fold = memo<TProps>(({ intl }) => {
   const { gray, primary } = useTheme();
 

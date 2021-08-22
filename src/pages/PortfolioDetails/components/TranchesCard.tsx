@@ -73,6 +73,10 @@ const Container = styled.div`
   padding: 20px;
   position: relative;
   cursor: pointer;
+  border: ${({ theme }) => theme.table.border};
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.white.normal};
   @media screen and (max-width: 768px) {
     & {
       height: auto;

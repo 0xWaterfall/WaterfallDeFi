@@ -21,18 +21,19 @@ const RowDiv = styled.div`
 `;
 const Container = styled.div`
   position: relative;
+  border: ${({ theme }) => theme.table.border};
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.white.normal};
+  padding: 77px 81px;
+
   & input {
     color: ${({ theme }) => theme.primary.normal};
     font-size: 24px;
     line-height: 33px;
   }
-  @media screen and (max-width: 768px) {
-    padding: 30px 20px;
-    height: auto;
-  }
-  @media screen and (min-width: 768px) {
-    padding: 77px 81px;
-    height: 500px;
+  @media screen and (max-width: 675px) {
+    padding: 24px;
   }
 `;
 const Max = styled.div`

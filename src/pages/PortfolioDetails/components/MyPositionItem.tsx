@@ -45,12 +45,13 @@ const CaretDiv = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  border: 2px solid ${({ theme }) => theme.primary.deep2}
+  border: 2px solid ${({ theme }) => theme.primary.deep2};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 `;
+
 const MyPositionItem = memo<TProps>(({ intl }) => {
   const [isFold, setFold] = useState(true);
   return (

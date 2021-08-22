@@ -20,7 +20,7 @@ const Tooltip: React.FC<TProps> = ({ overlayInnerStyle, ...props }) => {
             lineHeight: 1.25,
             fontSize: 12,
             wordBreak: "break-all",
-            fontFamily: fonts.Nunito,
+            // fontFamily: fonts.Nunito,
             ...overlayInnerStyle
           }}
           overlayClassName={css({

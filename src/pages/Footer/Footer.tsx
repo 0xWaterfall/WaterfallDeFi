@@ -27,7 +27,7 @@ const ContentWrapper = styled.div`
 const ConnectDiv = styled.div`
   font-size: 14px;
   line-height: 19px;
-  font-family: ${({ theme }) => theme.fonts.Nunito};
+  /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
   color: ${({ theme }) => theme.white.normal};
   display: grid;
   grid-template-columns: 240px 240px;

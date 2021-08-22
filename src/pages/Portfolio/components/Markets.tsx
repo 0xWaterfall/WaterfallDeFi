@@ -52,14 +52,7 @@ const Markets = memo<TProps>(({ intl }) => {
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Action" })}</TableHeaderColumn>
           </TableRow>
           {[1, 2, 3, 4].map((p, i) => (
-            <TableRowMarket
-              height={100}
-              css={{ color: gray.normal85, fontSize: 16 }}
-              key={p}
-              onClick={() => {
-                push({ pathname: "/portfolio/details" });
-              }}
-            >
+            <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} key={p}>
               <TableColumn>Cake Falls</TableColumn>
               <TableColumn minWidth={80}>
                 <Star /> CAKE
@@ -91,7 +84,14 @@ const Markets = memo<TProps>(({ intl }) => {
               </TableColumn>
               <TableColumn minWidth={240}>
                 <APYStyled>
-                  <Button type="primary">Deposit</Button>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      push({ pathname: "/portfolio/details" });
+                    }}
+                  >
+                    Deposit
+                  </Button>
                   <span css={{ fontSize: 10, marginTop: 10 }}>Next Time: 0D 12H 24M 56S</span>
                 </APYStyled>
               </TableColumn>

@@ -55,10 +55,7 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
           <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Terms of Service" })}</a>&nbsp;
           <span>{intl.formatMessage({ defaultMessage: "and acknowledge that you have read and understand the" })}</span>
           <br />
-          <a css={{ fontWeight: 600 }}>
-            {intl.formatMessage({ defaultMessage: "Waterfall DeFi protocol disclaimer" })}
-          </a>
-          .
+          <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Privacy Policy" })}</a>.
         </div>
         <div
           css={{

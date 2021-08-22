@@ -29,13 +29,14 @@ interface ITableColumnStyledComponentProps {
 }
 
 const TableColumn = styled.li<ITableColumnStyledComponentProps>`
-  flex: 1;
   display: flex;
   align-items: center;
   /* justify-content: center; */
   padding: 0 36px;
   white-space: nowrap;
+  flex: 1;
   min-width: ${({ minWidth }) => minWidth ?? 120}px;
+  width: ${({ minWidth }) => minWidth ?? 120}px;
 `;
 
 const TableHeaderColumn = styled(TableColumn)`

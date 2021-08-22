@@ -7,6 +7,7 @@ import { Mountain } from "assets/images";
 import { Row, Col } from "antd";
 import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
+import { useTheme } from "@emotion/react";
 
 type TProps = WrappedComponentProps;
 const Text1 = styled.div`
@@ -54,23 +55,24 @@ const TranchesCol = styled(Col)`
   }
 `;
 const Deposit = memo<TProps>(({ intl }) => {
+  const { primary } = useTheme();
   return (
     <div>
       <NextTimeWrapper>
         <Mountain />
-        <Text1>Next time: 2021/08/07</Text1>
-        <Text2>Active cycle: 2021/07/01-2021/07/08</Text2>
+        <Text1>{intl.formatMessage({ defaultMessage: "Next Cycle" })}: 2021/08/07</Text1>
+        <Text2>{intl.formatMessage({ defaultMessage: "Active Cycle" })}: 2021/07/01-2021/07/08</Text2>
       </NextTimeWrapper>
       <Row>
         <TranchesCol md={8} xs={23} offset={1}>
           <Box>
-            <TranchesCard color="red" />
+            <TranchesCard type="Junior" />
           </Box>
           <Box>
-            <TranchesCard color="red" />
+            <TranchesCard type="Mezzanine" />
           </Box>
           <Box>
-            <TranchesCard color="red" />
+            <TranchesCard type="Senior" />
           </Box>
         </TranchesCol>
         <Col md={14} xs={23} offset={1}>

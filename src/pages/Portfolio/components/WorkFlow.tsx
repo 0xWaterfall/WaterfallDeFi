@@ -93,7 +93,15 @@ const ColWrapper = styled(Col)`
 const WorkFlow = memo<TProps>(({ intl }) => {
   const { width } = useSize(document.body);
   return (
-    <div css={{ marginTop: 50, position: "relative" }}>
+    <div
+      css={{
+        position: "relative",
+        marginBottom: 90,
+        "@media screen and (max-width: 1024px)": {
+          marginBottom: 45
+        }
+      }}
+    >
       <RowWrapper />
       <Row>
         <ColWrapper span={8} md={8} xs={24}>
@@ -117,7 +125,7 @@ const WorkFlow = memo<TProps>(({ intl }) => {
           <TitleH2>{intl.formatMessage({ defaultMessage: "Wait" })}</TitleH2>
           <DescText>
             {intl.formatMessage({
-              defaultMessage: "When all the tranche is full, the waterfall will start to set off."
+              defaultMessage: "When all the tranches are filled, it will set off the portfolio deployment."
             })}
           </DescText>
           {Boolean(width && width > 768) && (
@@ -132,7 +140,7 @@ const WorkFlow = memo<TProps>(({ intl }) => {
           </ImgWrapper>
           <TitleH2>{intl.formatMessage({ defaultMessage: "Withdraw" })}</TitleH2>
           <DescText>
-            {intl.formatMessage({ defaultMessage: "When the period expires, you can get all your funds back." })}
+            {intl.formatMessage({ defaultMessage: "When the deployment period expires, you can claim your returns." })}
           </DescText>
         </ColWrapper>
       </Row>

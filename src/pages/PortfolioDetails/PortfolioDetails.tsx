@@ -14,7 +14,7 @@ const PortfolioDetails = memo<TProps>(() => {
   const { fonts } = useTheme();
   const PortfolioDetailsWrapper = styled.div`
     padding: 64px 24px;
-    max-width: 1248;
+    max-width: 1248px;
     margin: 0 auto;
     min-height: 100vh;
     font-family: ${fonts.Nunito};

@@ -34,7 +34,7 @@ const WithdrawDiv = styled.div`
 const RewardDiv = styled.div`
   padding: 16px 19px;
   width: 100%;
-  margi-right: 23px;
+  margin-right: 23px;
   background-color: ${({ theme }) => theme.white.normal};
   border: 1px solid ${({ theme }) => theme.primary.deep2};
   border-radius: 8px;

@@ -22,7 +22,7 @@ import { Web3Provider } from "@ethersproject/providers";
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { gray, primary, white, shadow, warn } = useTheme();
+  const { gray, primary, white, shadow, warn, fonts } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
   const [visible, setVisible] = useState(false);
@@ -200,7 +200,8 @@ const Header = memo<TProps>(({ intl }) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: white.normal
+        backgroundColor: white.normal,
+        fontFamily: fonts.CarterOne
       }}
     >
       {isPc ? (

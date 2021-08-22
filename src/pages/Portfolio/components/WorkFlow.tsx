@@ -35,6 +35,7 @@ const DescText = styled.p`
   font-size: 14px;
   line-height: 19px;
   text-align: center;
+  color: ${({ theme }) => theme.gray.normal7};
   /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
 `;
 const ArrowWrapper = styled.div`

@@ -44,18 +44,24 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
     //   console.log(error);
     // });
   }, []);
+
   return (
-    <Modal visible={visible} width={428} onCancel={onCancel?.bind(null, false)}>
+    <Modal visible={visible} width={440} onCancel={onCancel?.bind(null, false)}>
       <title css={{ color: gray.normal, fontWeight: 600, fontSize: 16, marginBottom: 14 }}>
         {intl.formatMessage({ defaultMessage: "Connect wallet" })}
       </title>
-      <section css={{ display: "flex", flexDirection: "column", wordBreak: "break-all" }}>
+      <section css={{ display: "flex", flexDirection: "column" }}>
         <div css={{ padding: 16, backgroundColor: gray.normal04, borderRadius: 12, color: gray.normal7 }}>
-          <span>{intl.formatMessage({ defaultMessage: "By connecting a wallet, you agree to" })}</span>&nbsp;
-          <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Terms of Service" })}</a>&nbsp;
-          <span>{intl.formatMessage({ defaultMessage: "and acknowledge that you have read and understand the" })}</span>
-          <br />
-          <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Privacy Policy" })}</a>.
+          {intl.formatMessage(
+            {
+              defaultMessage:
+                "By connecting a wallet, you agree to {terms} and acknowledge that you have read and understand the {privacy}."
+            },
+            {
+              terms: <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Terms of Service" })}</a>,
+              privacy: <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Privacy Policy" })}</a>
+            }
+          )}
         </div>
         <div
           css={{

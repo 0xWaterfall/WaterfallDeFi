@@ -38,7 +38,8 @@ const theme = {
     normal: "#00A14A"
   },
   white: {
-    normal: "#FFFFFF"
+    normal: "#FFFFFF",
+    normal1: "rgba(255, 255, 255, .1)"
   },
   linearGradient: {
     primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"

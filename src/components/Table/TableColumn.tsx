@@ -13,7 +13,7 @@ const TableColumn = styled.li<ITableColumnStyledComponentProps>`
   white-space: nowrap;
   padding: 20px 10px;
   min-width: ${({ minWidth }) => minWidth ?? 120}px;
-  font-family: ${({ theme }) => theme.fonts.Nunito};
+  /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
   color: ${({ theme }) => theme.gray.normal85};
   vertical-align: middle;
 

@@ -21,7 +21,6 @@ export { ReactComponent as Withdraw } from "./Withdraw.svg";
 export { ReactComponent as Wait } from "./Wait.svg";
 export { ReactComponent as ArrowLine } from "./ArrowLine.svg";
 export { ReactComponent as LogoFooter } from "./LogoFooter.svg";
-export { ReactComponent as FooterLine1 } from "./FooterLine1.svg";
-export { ReactComponent as FooterLine2 } from "./FooterLine2.svg";
+export { ReactComponent as FooterLine } from "./FooterLine.svg";
 export { ReactComponent as Mountain } from "./Mountain.svg";
 export { ReactComponent as CaretDown } from "./CaretDown.svg";

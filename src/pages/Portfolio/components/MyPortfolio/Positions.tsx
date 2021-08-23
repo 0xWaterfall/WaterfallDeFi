@@ -13,6 +13,7 @@ import Tooltip from "components/Tooltip/Tooltip";
 import styled from "@emotion/styled";
 import MyPortfolioItem from "./MyPortfolioItem";
 import { useSize } from "ahooks";
+import ReDeposit from "../ReDeposit/ReDeposit";
 type TProps = WrappedComponentProps;
 const FilterDiv = styled.div`
   display: flex;
@@ -97,8 +98,21 @@ const Positions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
           {[1, 2, 3, 4].map((p) => (
-            <div key={p}>
-              <TableRow css={{ color: gray.normal85, fontSize: 16, borderBottom: `1px solid ${primary.lightBrown}` }}>
+            <div
+              key={p}
+              css={{
+                ":hover": {
+                  boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
+                }
+              }}
+            >
+              <TableRow
+                css={{
+                  color: gray.normal85,
+                  fontSize: 16,
+                  borderBottom: `1px solid ${primary.lightBrown}`
+                }}
+              >
                 <TableColumn>Cake Fall 1</TableColumn>
                 <TableColumn>BUSD</TableColumn>
                 <TableColumn minWidth={240}>2021/07/01→2021/07/08</TableColumn>
@@ -256,6 +270,7 @@ const Positions = memo<TProps>(({ intl }) => {
           ))}
         </>
       )}
+      <ReDeposit visible={false} />
     </React.Fragment>
   );
 });

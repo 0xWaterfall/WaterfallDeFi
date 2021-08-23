@@ -1,92 +1,78 @@
 /** @jsxImportSource @emotion/react */
 
 import { useSize } from "ahooks";
-import { Discord, Medium, Telegram, Twitter, Unicorn, LogoFooter, FooterLine1, FooterLine2 } from "assets/images";
+import { Discord, Medium, Telegram, Twitter, Unicorn, LogoFooter, FooterLine } from "assets/images";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
+import { useTheme } from "@emotion/react";
 
 type TProps = WrappedComponentProps;
 const FooterWrapper = styled.div`
   background-color: ${({ theme }) => theme.footer.background};
-  position: relative;
   height: 500px;
-  @media screen and (max-width: 1024px) : {
-    height: auto;
-  }
 `;
 
-const LogoWrapper = styled.div`
-  width: 152px;
-  height: 76px;
-`;
 const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 80vw;
   margin: auto;
-  padding-top: 100px;
   height: 100%;
-  padding-bottom: 40px;
+  padding: 82px 24px 75px;
+  max-width: 1248px;
+  position: relative;
 `;
 
 const ConnectDiv = styled.div`
   font-size: 14px;
   line-height: 19px;
-  font-family: ${({ theme }) => theme.fonts.Nunito};
+  /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
   color: ${({ theme }) => theme.white.normal};
-  display: flex;
+  display: grid;
+  grid-template-columns: 240px 240px;
+  grid-column-gap: 32px;
   opacity: 0.8;
-  & span {
-    margin-right: 50px;
+  @media screen and (max-width: 678px) {
+    grid-template-columns: 240px;
   }
 `;
+
+const ConnectDivSub = styled.div`
+  padding-top: 32px;
+  border-top: 2px solid ${({ theme }) => theme.white.normal1};
+  opacity: 0.8;
+`;
+
 const CopyrightDiv = styled.div`
   font-size: 16px;
   line-height: 25px;
   font-family: ${({ theme }) => theme.fonts.CarterOne};
   color: ${({ theme }) => theme.white.normal};
-  opacity: 0.8;
   display: flex;
 `;
-const FooterLineDiv = styled.div`
-  position: absolute;
-  right: 100px;
-  bottom: 50px;
-  width: 500px;
-  height: 200px;
-  & > svg {
-    position: absolute;
-  }
-  & > svg:nth-of-type(2) {
-    top: -29px;
-    right: 36px;
-  }
-`;
-const Footer = memo<TProps>(({ intl }) => {
-  const { width } = useSize(document.body);
 
+const Footer = memo<TProps>(({ intl }) => {
   const CONTACTS = [
     { Icon: Discord, link: "https://discord.gg/gS9Gda4sez" },
     { Icon: Telegram, link: "https://t.me/joinchat/BYZHfIJv0eRjY2I0" },
     { Icon: Medium, link: "https://medium.com/@WaterfallDefi" },
     { Icon: Twitter, link: "https://twitter.com/waterfalldefi" }
   ];
-
+  const { white } = useTheme();
   return (
     <FooterWrapper>
       <ContentWrapper>
-        <LogoWrapper>
-          <LogoFooter />
-        </LogoWrapper>
+        <LogoFooter />
         <ConnectDiv>
-          <span>{intl.formatMessage({ defaultMessage: "Connect" })}</span>
-          {CONTACTS.map(({ Icon, link }) => (
-            <a key={link} href={link} css={{ marginRight: 20, color: "white" }}>
-              <Icon />
-            </a>
-          ))}
+          <ConnectDivSub>{intl.formatMessage({ defaultMessage: "Connect" })}</ConnectDivSub>
+          <ConnectDivSub css={{ "@media screen and (max-width: 678px)": { borderTop: 0 } }}>
+            {CONTACTS.map(({ Icon, link }) => (
+              <a key={link} href={link} css={{ marginRight: 20, color: white.normal }}>
+                <Icon />
+              </a>
+            ))}
+          </ConnectDivSub>
         </ConnectDiv>
         <CopyrightDiv>
           {intl.formatMessage(
@@ -97,19 +83,15 @@ const Footer = memo<TProps>(({ intl }) => {
             }
           )}
         </CopyrightDiv>
-        <FooterLineDiv>
-          <FooterLine1 />
-          <FooterLine2 />
-        </FooterLineDiv>
+        <FooterLine
+          css={{
+            position: "absolute",
+            right: 24,
+            bottom: 100,
+            "@media screen and (max-width: 1024px)": { display: "none" }
+          }}
+        />
       </ContentWrapper>
-
-      <div>
-        <div></div>
-
-        {Boolean(width && width > 1024) && (
-          <Unicorn css={{ position: "fixed", top: "40vh", right: 0, width: 170, height: 220 }} />
-        )}
-      </div>
     </FooterWrapper>
   );
 });

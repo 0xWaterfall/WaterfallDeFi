@@ -7,56 +7,57 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 
+const InformationWrapper = styled.div`
+  display: flex;
+  padding-top: 20px;
+  & > div {
+    padding: 0px 20px;
+  }
+  & span {
+    font-size: 14px;
+    line-height: 19px;
+    color: ${({ theme }) => theme.gray.normal7};
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    & > div {
+      padding: 10px 0;
+    }
+  }
+`;
+const Arrow = styled(ArrowLeft)`
+  color: ${({ theme }) => theme.gray.normal7};
+  & :hover {
+    color: ${({ theme }) => theme.primary.deep};
+  }
+  margin-top: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+`;
+const Text1 = styled.div`
+  font-size: 24px;
+  line-height: 33px;
+  height: 30px;
+  color: ${({ theme }) => theme.gray.normal85};
+`;
+const Text2 = styled.div`
+  font-size: 20px;
+  line-height: 27px;
+  height: 30px;
+  color: ${({ theme }) => theme.gray.normal85};
+`;
+const TvlDiv = styled.div`
+  font-size: 16px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.primary.deep};
+`;
+
 type TProps = WrappedComponentProps;
 
 const Information = memo<TProps>(() => {
-  const { primary, gray } = useTheme();
   const { goBack } = useHistory();
-  const InformationWrapper = styled.div`
-    display: flex;
-    padding-top: 20px;
-    & > div {
-      padding: 0px 20px;
-    }
-    & span {
-      font-size: 14px;
-      line-height: 19px;
-      color: ${gray.normal7};
-    }
-    @media screen and (max-width: 768px) {
-      display: flex;
-      flex-direction: column;
-      & > div {
-        padding: 10px 0;
-      }
-    }
-  `;
-  const Arrow = styled(ArrowLeft)`
-    color: ${gray.normal7};
-    & :hover {
-      color: ${primary.deep};
-    }
-    margin-top: 20px;
-    margin-right: 20px;
-    cursor: pointer;
-  `;
-  const Text1 = styled.div`
-    font-size: 24px;
-    line-height: 33px;
-    height: 30px;
-    color: ${gray.normal85};
-  `;
-  const Text2 = styled.div`
-    font-size: 20px;
-    line-height: 27px;
-    height: 30px;
-    color: ${gray.normal85};
-  `;
-  const TvlDiv = styled.div`
-    font-size: 16px;
-    line-height: 22px;
-    color: ${primary.deep};
-  `;
+
   return (
     <InformationWrapper>
       <Arrow onClick={goBack} />

@@ -4,16 +4,16 @@ import styled from "@emotion/styled";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Mountain } from "assets/images";
-import { Row, Col } from "antd";
-import TranchesCard from "./TranchesCard";
-import ApproveCard from "./ApproveCard";
+import DepositItem from "./DepositItem";
 
 type TProps = WrappedComponentProps;
+
 const Text1 = styled.div`
   font-size: 20px;
   line-height: 27px;
   color: ${({ theme }) => theme.primary.deep};
 `;
+
 const NextTimeWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -26,59 +26,16 @@ const Text2 = styled.div`
   line-height: 27px;
   color: ${({ theme }) => theme.gray.normal85};
 `;
-const Box = styled.div`
-  border: ${({ theme }) => theme.table.border};
-  box-sizing: border-box;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
-  width: calc(100% - 20px);
-  height: calc(33% - 12px);
-`;
-const Box2 = styled.div`
-  border: ${({ theme }) => theme.table.border};
-  box-sizing: border-box;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
-  width: calc(100% - 20px);
-  height: 100%;
-  @media screen and (max-width: 768px) {
-    margin: 20px 0px;
-    height: auto;
-  }
-`;
 
-const TranchesCol = styled(Col)`
-  height: 600px;
-  & > div:nth-of-type(2) {
-    margin: 20px 0;
-  }
-`;
 const Deposit = memo<TProps>(({ intl }) => {
   return (
-    <div>
+    <div css={{ padding: "0 20px" }}>
       <NextTimeWrapper>
         <Mountain />
-        <Text1>Next time: 2021/08/07</Text1>
-        <Text2>Active cycle: 2021/07/01-2021/07/08</Text2>
+        <Text1>{intl.formatMessage({ defaultMessage: "Next Cycle" })}: 2021/08/07</Text1>
+        <Text2>{intl.formatMessage({ defaultMessage: "Active Cycle" })}: 2021/07/01-2021/07/08</Text2>
       </NextTimeWrapper>
-      <Row>
-        <TranchesCol md={8} xs={23} offset={1}>
-          <Box>
-            <TranchesCard color="red" />
-          </Box>
-          <Box>
-            <TranchesCard color="red" />
-          </Box>
-          <Box>
-            <TranchesCard color="red" />
-          </Box>
-        </TranchesCol>
-        <Col md={14} xs={23} offset={1}>
-          <Box2>
-            <ApproveCard />
-          </Box2>
-        </Col>
-      </Row>
+      <DepositItem />
     </div>
   );
 });

@@ -22,7 +22,7 @@ import { Web3Provider } from "@ethersproject/providers";
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { gray, primary, white, shadow, warn } = useTheme();
+  const { gray, primary, white, shadow, warn, fonts } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
   const [visible, setVisible] = useState(false);
@@ -42,12 +42,12 @@ const Header = memo<TProps>(({ intl }) => {
   console.log(account);
   console.log(library);
 
-  if (window.ethereum?.isMetaMask && window.ethereum.request) {
-    const r = window.ethereum?.request({ method: "eth_requestAccounts" }).then((v) => {
-      console.log(v);
-    });
-    console.log(r);
-  }
+  // if (window.ethereum?.isMetaMask && window.ethereum.request) {
+  //   const r = window.ethereum?.request({ method: "eth_requestAccounts" }).then((v) => {
+  //     console.log(v);
+  //   });
+  //   console.log(r);
+  // }
   useEffect(() => {
     setClientWidth((headerLeftRef.current?.clientWidth ?? 0) + (headerRightRef.current?.clientWidth ?? 0));
   }, []);
@@ -200,7 +200,8 @@ const Header = memo<TProps>(({ intl }) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: white.normal
+        backgroundColor: white.normal,
+        fontFamily: fonts.CarterOne
       }}
     >
       {isPc ? (

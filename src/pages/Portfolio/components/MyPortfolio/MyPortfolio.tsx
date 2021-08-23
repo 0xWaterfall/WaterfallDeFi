@@ -32,7 +32,6 @@ const MainGridContainer2 = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    align-items: center;
     border-radius: 12px;
     padding-inline: 24px;
     border: 1px solid ${({ theme }) => theme.primary.deep2};
@@ -78,6 +77,7 @@ const ChartDiv = styled.div`
     }
   }
 `;
+
 const MyPortfolio = memo<TProps>(({ intl }) => {
   const { gray, primary, fonts } = useTheme();
   return (

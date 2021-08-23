@@ -13,32 +13,29 @@ const TitleH1 = styled.h1`
   line-height: 74px;
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.gray.normal85};
-  margin-bottom: 15px;
   position: relative;
-  max-height: 300px;
+  max-width: 626px;
   margin: 0 auto;
-  padding: 10px;
   text-align: center;
   font-family: ${({ theme }) => theme.fonts.CarterOne};
-  @media screen and (min-width: 768px) {
-    max-width: 600px;
-  }
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 678px) {
     font-size: 36px;
+    line-height: 55px;
     text-align: left;
-    padding: 0px;
   }
 `;
+
 const DescText = styled.p`
-  @media screen and (min-width: 768px) {
-    max-width: 500px;
-  }
+  max-width: 510px;
   color: ${({ theme }) => theme.gray.normal7};
-  font-family: ${({ theme }) => theme.fonts.Nunito};
   text-align: center;
   font-size: 14px;
   line-height: 24px;
-  @media screen and (max-width: 768px) {
+  margin-top: 8px;
+  @media screen and (max-width: 1024px) {
+    margin: 40px 0 24px;
+  }
+  @media screen and (max-width: 678px) {
     text-align: left;
   }
 `;
@@ -46,129 +43,58 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 55px;
-  justify-content: space-between;
+  margin-top: 40px;
+  margin-bottom: 150px;
 
-  @media screen and (min-width: 768px) {
-    margin-top: 137px;
-  }
-  @media screen and (max-width: 768px) {
-    padding: 0;
-    margin-top: 20px;
-  }
-  ,
-  @media screen and (max-width: 512px) : {
-    align-items: flex-start;
+  @media screen and (max-width: 1024px) {
+    margin-bottom: 0;
   }
 `;
-const WaterFallMountainWrapper = styled.div`
-  width: 165px;
-  height: 200px;
-  padding: 10px;
-  @media screen and (min-width: 768px) {
-    position: absolute;
-    top: 0px;
-    left: 100%;
-  }
-  @media screen and (max-width: 768px) {
-    position: relative;
-  }
-`;
-const DistributionWrapper = styled.div`
-  @media screen and (min-width: 768px) {
-    position: absolute;
-    top: 180px;
-    left: 100%;
-  }
-  @media screen and (max-width: 768px) {
-    position: relative;
-  }
 
-  width: 210px;
-  height: 95px;
-  padding: 10px 0px;
-  padding-left: 20px;
-  border: 2px solid rgba(0, 102, 255, 0.2);
-  box-sizing: border-box;
-  box-shadow: 0px 4px 10px rgba(15, 96, 227, 0.1);
-  border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
-  & > div > div > div:nth-of-type(1) {
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: -0.015em;
-    color: ${({ theme }) => theme.primary.deep};
-    font-family: ${({ theme }) => theme.fonts.Nunito};
-    margin-top: 10px;
-  }
-  & > div > div > div:nth-of-type(2) {
-    font-size: 24px;
-    line-height: 37px;
-    letter-spacing: -0.015em;
-    color: ${({ theme }) => theme.primary.deep};
-    font-family: ${({ theme }) => theme.fonts.CarterOne};
-  }
-`;
-const BoxesWrapper = styled.div`
-  width: 165px;
-  height: 200px;
-  padding: 10px;
-  background-image: url(Boxes.png);
-  position: absolute;
-  @media screen and (min-width: 768px) {
-    top: 60px;
-    right: 100%;
-  }
-  @media screen and (max-width: 768px) {
-    transform: scaleX(-1);
-    right: 40px;
-    top: 250px;
-    z-index: -1;
-  }
-`;
 const Header = memo<TProps>(({ intl }) => {
-  const { width } = useSize(document.body);
-
   return (
-    <div>
-      <Wrapper>
-        <div css={{ position: "relative" }}>
-          <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit Together, enjoy the distribution" })}</TitleH1>
-          {Boolean(width && width > 768) && (
-            <>
-              <WaterFallMountainWrapper>
-                <WaterFallMountain />
-              </WaterFallMountainWrapper>
-              <DistributionWrapper>
-                <Claim />
-              </DistributionWrapper>
-              <BoxesWrapper>
-                <Boxes />
-              </BoxesWrapper>
-            </>
-          )}
+    <Wrapper>
+      <div css={{ position: "relative", "@media screen and (max-width: 1024px)": {} }}>
+        <div css={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit together, enjoy the distribution" })}</TitleH1>
+          <DescText>
+            {intl.formatMessage({
+              defaultMessage:
+                "Yield will be distributed in a way such that users of more senior tranches get a fixed return, while users of more junior tranches get a leveraged return"
+            })}
+          </DescText>
         </div>
-        <DescText>
-          {intl.formatMessage({
-            defaultMessage:
-              "Through cash flow distribution, it will ensure that Senior users get a fixed income, while Junior can get more leveraged income."
-          })}
-        </DescText>
-        {Boolean(width && width <= 768) && (
-          <>
-            <WaterFallMountainWrapper>
-              <WaterFallMountain />
-            </WaterFallMountainWrapper>
-            <DistributionWrapper>
-              <Claim />
-            </DistributionWrapper>
-            <BoxesWrapper>
-              <Boxes />
-            </BoxesWrapper>
-          </>
-        )}
-      </Wrapper>
-    </div>
+        <Boxes
+          css={{
+            position: "absolute",
+            top: 80,
+            right: "95%",
+            "@media screen and (max-width: 1024px)": {
+              display: "none"
+            }
+          }}
+        />
+
+        <div
+          css={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            transform: "translateX(100%)",
+            "@media screen and (max-width: 1024px)": {
+              position: "static",
+              transform: "translateX(0)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }
+          }}
+        >
+          <WaterFallMountain />
+          <Claim />
+        </div>
+      </div>
+    </Wrapper>
   );
 });
 

@@ -21,6 +21,7 @@ const Container = styled.div`
   padding: 20px 0px 40px 0px;
   margin-bottom: 20px;
 `;
+
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -71,6 +72,7 @@ const NextTime = styled.div`
   color: ${({ theme }) => theme.primary.deep};
   justify-content: center;
 `;
+
 const MarketItem = memo<TProps>(({ intl }) => {
   const { warn, green, primary } = useTheme();
   const { push } = useHistory();

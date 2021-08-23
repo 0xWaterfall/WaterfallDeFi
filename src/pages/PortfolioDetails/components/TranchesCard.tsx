@@ -4,11 +4,13 @@ import styled from "@emotion/styled";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Separator from "components/Separator/Separator";
+import { useMemo } from "react";
+import { useTheme } from "@emotion/react";
 
-type TProps = WrappedComponentProps;
-interface Props {
+type TProps = WrappedComponentProps & {
   color?: string;
-}
+  type: "Senior" | "Mezzanine" | "Junior";
+};
 
 type ProgressBarProps = {
   current: number;
@@ -70,6 +72,11 @@ const SoldOut = styled.div`
 const Container = styled.div`
   padding: 20px;
   position: relative;
+  cursor: pointer;
+  border: ${({ theme }) => theme.table.border};
+  box-sizing: border-box;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.white.normal};
   @media screen and (max-width: 768px) {
     & {
       height: auto;
@@ -90,22 +97,32 @@ const ProgressBar = styled.div<ProgressBarProps>`
     position: absolute;
   }
 `;
-const TranchesCard = memo<TProps & Props>(({ intl, color }) => {
+
+const TranchesCard = memo<TProps>(({ intl, type }) => {
+  const { tags, primary } = useTheme();
+  const Types = {
+    Senior: { color: tags.yellowText, text: intl.formatMessage({ defaultMessage: "Senior" }) },
+    Mezzanine: { color: tags.greenText, text: intl.formatMessage({ defaultMessage: "Mezzanine" }) },
+    Junior: { color: primary.deep, text: intl.formatMessage({ defaultMessage: "Junior" }) }
+  };
+
   return (
     <Container>
       <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
-      <Text1>
-        <Dot color={color} />
-        Senior
-      </Text1>
-      <Text2 color={color}>APY 3% + 25% WTF</Text2>
-      <Text3>Low Risk ; Fixed</Text3>
-      <Separator margin={15} />
-      <StatusDiv>
-        <Text3>TVL: 200,000 BUSD</Text3>
-        <Text4>Remaining: 100,000 USDC</Text4>
-      </StatusDiv>
-      <ProgressBar color={color} current={66} total={100} />
+      <div>
+        <Text1>
+          <Dot color={Types[type].color} />
+          {Types[type].text}
+        </Text1>
+        <Text2 color={Types[type].color}>APY 3% + 25% WTF</Text2>
+        <Text3>Low Risk ; Fixed</Text3>
+        <Separator margin={15} />
+        <StatusDiv>
+          <Text3>TVL: 200,000 BUSD</Text3>
+          <Text4>Remaining: 100,000 USDC</Text4>
+        </StatusDiv>
+        <ProgressBar color={Types[type].color} current={66} total={100} />
+      </div>
     </Container>
   );
 });

@@ -63,13 +63,14 @@ const Fold = memo<TProps>(({ intl }) => {
                 <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
                 <p>
                   {intl.formatMessage({
-                    defaultMessage: "1. Before the cycle starts, the principal can be withdrawn in the Pending state"
+                    defaultMessage:
+                      '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
                   })}
                 </p>
                 <p>
                   {intl.formatMessage({
                     defaultMessage:
-                      "2. After the period expires, the principal + interest can be withdrawn in the Metured state"
+                      '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
                   })}
                 </p>
               </React.Fragment>
@@ -113,7 +114,7 @@ const Fold = memo<TProps>(({ intl }) => {
         </div>
         <div css={{ color: gray.normal7, fontSize: 12 }}>
           {intl.formatMessage({
-            defaultMessage: `After maturity, you can choose to withdraw all the principal + interest. You can also choose to re-deposit to the next cycle. You can change the tranche and the number in next cycle, it's completely up to you.`
+            defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
           })}
         </div>
       </NoteDiv>

@@ -34,6 +34,10 @@ export default () => {
           ":hover": {
             color: primary.deep
           }
+        },
+        ".ant-tooltip-inner > p": {
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word"
         }
       }}
     />

@@ -39,8 +39,8 @@ const Header = memo<TProps>(({ intl }) => {
   // const library = getLibrary(ethers.providers.Web3Provider);
   // const { account, library } = useWeb3React();
   const { chainId, account, library, activate, active, connector } = useWeb3React<Web3Provider>();
-  console.log(account);
-  console.log(library);
+  // console.log(account);
+  // console.log(library);
 
   // if (window.ethereum?.isMetaMask && window.ethereum.request) {
   //   const r = window.ethereum?.request({ method: "eth_requestAccounts" }).then((v) => {

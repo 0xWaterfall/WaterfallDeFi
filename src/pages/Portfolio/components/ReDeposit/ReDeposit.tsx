@@ -19,7 +19,7 @@ const Claim = memo<TProps>(({ intl, visible, onCancel }) => {
       <title css={{ color: gray.normal, fontWeight: 600, fontSize: 20, marginBottom: 32, textAlign: "center" }}>
         {intl.formatMessage({ defaultMessage: "Re-deposit" })}
       </title>
-      <DepositItem isRe={true} />
+      {/* <DepositItem isRe={true} /> */}
     </Modal>
   );
 });

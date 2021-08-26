@@ -4,12 +4,18 @@ import styled from "@emotion/styled";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Separator from "components/Separator/Separator";
-import { useMemo } from "react";
 import { useTheme } from "@emotion/react";
+import { Market, Pool, Tranche } from "types";
+import { formatAPY, formatAllocPoint, formatTVL } from "utils/formatNumbers";
 
 type TProps = WrappedComponentProps & {
   color?: string;
   type: "Senior" | "Mezzanine" | "Junior";
+  tranche: Tranche;
+  pool: Pool;
+  totalAllocPoint: number | undefined;
+  trancheIndex: number;
+  assets: string;
 };
 
 type ProgressBarProps = {
@@ -98,30 +104,42 @@ const ProgressBar = styled.div<ProgressBarProps>`
   }
 `;
 
-const TranchesCard = memo<TProps>(({ intl, type }) => {
+const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets }) => {
   const { tags, primary } = useTheme();
   const Types = {
     Senior: { color: tags.yellowText, text: intl.formatMessage({ defaultMessage: "Senior" }) },
     Mezzanine: { color: tags.greenText, text: intl.formatMessage({ defaultMessage: "Mezzanine" }) },
     Junior: { color: primary.deep, text: intl.formatMessage({ defaultMessage: "Junior" }) }
   };
-
   return (
     <Container>
-      <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
+      {parseInt(formatTVL(tranche.principal)) >= parseInt(formatTVL(tranche.target)) ? (
+        <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
+      ) : null}
+
       <div>
         <Text1>
           <Dot color={Types[type].color} />
           {Types[type].text}
         </Text1>
-        <Text2 color={Types[type].color}>APY 3% + 25% WTF</Text2>
+        <Text2 color={Types[type].color}>
+          APY {formatAPY(tranche.apy)} + {formatAllocPoint(pool.allocPoint, totalAllocPoint)}% WTF
+        </Text2>
         <Text3>Low Risk ; Fixed</Text3>
         <Separator margin={15} />
         <StatusDiv>
-          <Text3>TVL: 200,000 BUSD</Text3>
-          <Text4>Remaining: 100,000 USDC</Text4>
+          <Text3>
+            TVL: {formatTVL(tranche.principal)} {assets}
+          </Text3>
+          <Text4>
+            Remaining: {formatTVL(tranche.target)} {assets}
+          </Text4>
         </StatusDiv>
-        <ProgressBar color={Types[type].color} current={66} total={100} />
+        <ProgressBar
+          color={Types[type].color}
+          current={parseInt(formatTVL(tranche.principal))}
+          total={parseInt(formatTVL(tranche.target))}
+        />
       </div>
     </Container>
   );

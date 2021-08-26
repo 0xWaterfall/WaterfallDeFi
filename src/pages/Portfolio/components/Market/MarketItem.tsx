@@ -2,15 +2,20 @@
 
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union } from "assets/images";
+import { Market } from "types";
+import { formatAPY } from "utils/formatNumbers";
+import { useMarket } from "hooks";
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: Market;
+};
 
 const Container = styled.div`
   background: ${({ theme }) => theme.white.normal};
@@ -73,22 +78,34 @@ const NextTime = styled.div`
   justify-content: center;
 `;
 
-const MarketItem = memo<TProps>(({ intl }) => {
+const MarketItem = memo<TProps>(({ intl, data }) => {
   const { warn, green, primary } = useTheme();
   const { push } = useHistory();
+  const [marketData, setMarketData] = useState<Market>(data);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const _md = await useMarket({ ...data });
+      if (_md) setMarketData(_md);
+    };
+    fetchData();
+  }, []);
+
+  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+  const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
     <Container>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Portfolio" })}</div>
-        <div>Cake Vaults 1</div>
+        <div>{marketData.portfolio}</div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
-        <div>BUSD</div>
+        <div>{marketData.assets}</div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Lock-up period" })}</div>
-        <div>7 Days</div>
+        <div>{marketData.lockupPeriod}</div>
       </RowDiv>
       <RowDiv>
         <div>
@@ -104,25 +121,22 @@ const MarketItem = memo<TProps>(({ intl }) => {
           </Tooltip>
         </div>
         <div css={{ display: "flex" }}>
-          <APYStyled>
-            <span>{intl.formatMessage({ defaultMessage: "Senior" })}</span>
-            <span css={{ marginTop: 15, color: warn.normal }}>5%</span>
-          </APYStyled>
-          <div>&nbsp;→&nbsp;</div>
-          <APYStyled>
-            <span>{intl.formatMessage({ defaultMessage: "Mezzanine" })}</span>
-            <span css={{ marginTop: 15, color: green.normal }}>7.5%</span>
-          </APYStyled>
-          <div>&nbsp;→&nbsp;</div>
-          <APYStyled>
-            <span>{intl.formatMessage({ defaultMessage: "Junior" })}</span>
-            <span css={{ marginTop: 15, color: primary.deep }}>30%</span>
-          </APYStyled>
+          {marketData?.tranches.map((_t, _i) => {
+            return (
+              <div css={{ display: "flex" }} key={_i}>
+                <APYStyled>
+                  <span>{tranchesDisplayText[_i]}</span>
+                  <span css={{ marginTop: 15, color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
+                </APYStyled>
+                {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null}
+              </div>
+            );
+          })}
         </div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
-        <div>501,120</div>
+        <div>{marketData.tvl}</div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
@@ -132,7 +146,7 @@ const MarketItem = memo<TProps>(({ intl }) => {
       </RowDiv>
 
       <ButtonDiv>
-        <Button type="primary" onClick={() => push({ pathname: "/portfolio/details" })}>
+        <Button type="primary" onClick={() => push({ pathname: "/portfolio/details", state: marketData })}>
           {intl.formatMessage({ defaultMessage: "Deposit" })}
         </Button>
       </ButtonDiv>

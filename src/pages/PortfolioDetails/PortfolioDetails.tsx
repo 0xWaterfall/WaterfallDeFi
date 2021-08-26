@@ -7,6 +7,7 @@ import Charts from "./components/Charts";
 import Information from "./components/Information";
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
+import { Market } from "types";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;

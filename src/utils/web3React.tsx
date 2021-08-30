@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import { InjectedConnector } from "@web3-react/injected-connector";
+import { ConnectorNames } from "schemas/enum";
 
 const POLLING_INTERVAL = 12000;
 

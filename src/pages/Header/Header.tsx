@@ -18,6 +18,8 @@ import { getLibrary } from "utils/web3React";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
+import useAuth from "utils/useAuth";
+import { formatAccountAddress } from "utils/formatAddress";
 
 type TProps = WrappedComponentProps;
 
@@ -36,20 +38,16 @@ const Header = memo<TProps>(({ intl }) => {
   const [clientWidth, setClientWidth] = useState(0);
   const { width } = useSize(document.body);
 
-  // const library = getLibrary(ethers.providers.Web3Provider);
-  // const { account, library } = useWeb3React();
-  const { chainId, account, library, activate, active, connector } = useWeb3React<Web3Provider>();
-  // console.log(account);
-  // console.log(library);
+  const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
+  console.log(active, account, chainId, p);
+  const { login } = useAuth();
 
-  // if (window.ethereum?.isMetaMask && window.ethereum.request) {
-  //   const r = window.ethereum?.request({ method: "eth_requestAccounts" }).then((v) => {
-  //     console.log(v);
-  //   });
-  //   console.log(r);
-  // }
   useEffect(() => {
     setClientWidth((headerLeftRef.current?.clientWidth ?? 0) + (headerRightRef.current?.clientWidth ?? 0));
+  }, []);
+
+  useEffect(() => {
+    login();
   }, []);
 
   const MENU = [
@@ -111,13 +109,20 @@ const Header = memo<TProps>(({ intl }) => {
     />
   );
 
-  const MetaMaskElement = useMemo(
-    () => (
-      <React.Fragment>
+  const MetaMaskElement = useMemo(() => {
+    console.log(active, account, chainId);
+    if (!active) {
+      return (
         <Button type="primary" onClick={setVisible.bind(null, true)}>
           {intl.formatMessage({ defaultMessage: "Connect wallet" })}
         </Button>
-        {/* <Button type="warn">{intl.formatMessage({ defaultMessage: "Wrong Network" })}</Button>
+      );
+    }
+    if (chainId?.toString() !== process.env.REACT_APP_CHAIN_ID) {
+      return <Button type="warn">{intl.formatMessage({ defaultMessage: "Wrong Network" })}</Button>;
+    }
+    return (
+      <>
         <div
           css={{
             padding: "0 16px",
@@ -151,13 +156,12 @@ const Header = memo<TProps>(({ intl }) => {
             zIndex: 1
           }}
         >
-          <span>0x810f...95BB</span>
+          <span>{formatAccountAddress(account)}</span>
           <div css={{ width: 20, height: 20, borderRadius: "50%", backgroundColor: "#ccc", marginLeft: 10 }}></div>
-        </div> */}
-      </React.Fragment>
-    ),
-    []
-  );
+        </div>
+      </>
+    );
+  }, [account, active, chainId]);
 
   const MenuLink = useMemo(
     () =>

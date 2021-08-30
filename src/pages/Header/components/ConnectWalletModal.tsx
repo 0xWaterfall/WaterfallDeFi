@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { url } from "config";
 import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
 import { useTheme } from "@emotion/react";
+import useAuth from "utils/useAuth";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;
@@ -17,33 +18,19 @@ type TProps = WrappedComponentProps & {
 
 const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
   const { gray, primary } = useTheme();
-  const web3 = useWeb3ReactCore();
-  console.log(web3);
+  const { active } = useWeb3ReactCore();
+  const { login } = useAuth();
   const onConnect = useCallback(async () => {
     if (window.ethereum?.isMetaMask && window.ethereum.request) {
-      const r = await window.ethereum?.request({ method: "eth_requestAccounts" });
-      console.log(r);
+      login();
     } else {
       window.open(url.metamask);
     }
   }, []);
 
   useEffect(() => {
-    // Subscribe to accounts change
-    window.ethereum?.on?.(["accountsChanged", "chainChanged"], (accounts: string[], chainId: number) => {
-      console.log(accounts, chainId);
-    });
-
-    // Subscribe to provider connection
-    window.ethereum?.on?.("connect", (info: any) => {
-      console.log(info);
-    });
-
-    // // Subscribe to provider disconnection
-    // window.ethereum?.on?.("disconnect", (error: { code: number; message: string }) => {
-    //   console.log(error);
-    // });
-  }, []);
+    active && onCancel?.(false);
+  }, [active]);
 
   return (
     <Modal visible={visible} width={440} onCancel={onCancel?.bind(null, false)}>

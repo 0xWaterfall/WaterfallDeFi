@@ -7,3 +7,5 @@ export const url = {
 };
 
 export const BASE_BSC_SCAN_URL = "https://bscscan.com";
+
+export const isPod = process.env.NODE_ENV;

@@ -1,5 +1,6 @@
-import { Market } from "types";
-import { getPortfolioTvl, getTotalAllocPoints } from "utils/formatNumbers";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { Market, PORTFOLIO_STATUS } from "types";
+import { formatBalance, getPortfolioTvl, getTotalAllocPoints, getPortfolioTotalTarget } from "utils/formatNumbers";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 
@@ -15,7 +16,11 @@ export const useMarket = async (marketData: Market) => {
       contractTranches.methods.tranches(1).call(),
       contractTranches.methods.tranches(2).call()
     ]);
+
+    const active = await contractTranches.methods.active().call();
+    marketData.status = active ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
     marketData.tranches = _tranches;
+    marketData.totalTranchesTarget = getPortfolioTotalTarget(_tranches);
     marketData.tvl = getPortfolioTvl(_tranches);
   }
   if (contractMasterChef) {
@@ -28,4 +33,49 @@ export const useMarket = async (marketData: Market) => {
     marketData.totalAllocPoints = getTotalAllocPoints(_poolInfos);
   }
   return marketData;
+};
+export const useBalance = (abi: any, address: string) => {
+  const [balance, setBalance] = useState("0");
+  // Using React ref here to prevent component re-rendering when changing
+  // previous balance value
+  const prevBalanceRef = useRef("0");
+  const provider = Web3.givenProvider;
+
+  const fetchBalance = useCallback(async () => {
+    console.log("fetching balance..");
+    if (!Web3.givenProvider) return;
+    if (!(window.ethereum?.isMetaMask && window.ethereum.request)) return;
+    const web3 = new Web3(Web3.givenProvider);
+    const contract = new web3.eth.Contract(abi as AbiItem[], address);
+    const accounts = await window?.ethereum?.request({ method: "eth_requestAccounts" });
+
+    const myAccount = accounts?.[0] || "";
+    if (!myAccount) return;
+
+    const BUSDBalance = await contract.methods.balanceOf(myAccount).call();
+    console.log("BUSD", BUSDBalance);
+    const value = formatBalance(BUSDBalance);
+
+    if (value !== prevBalanceRef.current) {
+      prevBalanceRef.current = value;
+      setBalance(value);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
+
+  // useEffect(() => {
+  //   // Fetch user balance on each block
+  //   provider.on("block", fetchBalance);
+
+  //   // Cleanup function is used to unsubscribe from 'block' event and prevent
+  //   // a possible memory leak in your application.
+  //   return () => {
+  //     provider.off("block", fetchBalance);
+  //   };
+  // }, [fetchBalance]);
+
+  return balance;
 };

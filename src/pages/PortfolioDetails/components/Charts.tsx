@@ -3,6 +3,8 @@
 import styled from "@emotion/styled";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { useLocation } from "react-router-dom";
+import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
 
@@ -31,6 +33,8 @@ const Block = styled.div`
 type TProps = WrappedComponentProps;
 
 const Charts = memo<TProps>(() => {
+  const location = useLocation<Market>();
+  const data = location.state;
   return (
     <div
       css={{

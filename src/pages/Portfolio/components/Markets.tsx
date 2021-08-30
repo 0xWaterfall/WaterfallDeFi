@@ -23,7 +23,7 @@ const Markets = memo<TProps>(({ intl }) => {
         <Table css={{ display: "grid", gridRowGap: 32 }}>
           <TableRow>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio" })}</TableHeaderColumn>
-            <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
+            <TableHeaderColumn minWidth={120}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={140}>
               {intl.formatMessage({ defaultMessage: "Lock-up period" })}
             </TableHeaderColumn>

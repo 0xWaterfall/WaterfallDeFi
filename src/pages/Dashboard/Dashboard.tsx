@@ -9,7 +9,8 @@ import { abi as WTFAbi } from "config/abi/WTF.json";
 import { abi as BUSDAbi } from "config/abi/IbBUSD.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
-import { WTFAddress, BUSDAddress, MasterChefAddress, TranchesAddress } from "config/address";
+import { abi as StrategyAbi } from "config/abi/Strategy.json";
+import { WTFAddress, BUSDAddress, MasterChefAddress, TranchesAddress, StrategyAddress } from "config/address";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 
@@ -30,6 +31,7 @@ const Dashboard = memo<TProps>(() => {
       const contractBUSD = new web3.eth.Contract(WTFAbi as AbiItem[], BUSDAddress);
       const contractTrancheMaster = new web3.eth.Contract(TrancheMasterAbi as AbiItem[], TranchesAddress);
       const contractMasterChef = new web3.eth.Contract(MasterChefAbi as AbiItem[], MasterChefAddress);
+      const contractStrategy = new web3.eth.Contract(StrategyAbi as AbiItem[], StrategyAddress);
       if (myAccount) {
         const WTFbalance = await contractWTF.methods.balanceOf(myAccount).call();
         const BUSDBalance = await contractBUSD.methods.balanceOf(myAccount).call();
@@ -42,6 +44,9 @@ const Dashboard = memo<TProps>(() => {
       console.log(tranches1);
       const tranches2 = await contractTrancheMaster.methods.tranches(2).call();
       console.log(tranches2);
+
+      const active = await contractTrancheMaster.methods.active().call();
+      console.log("active", active);
 
       //BUSD
       const currency = await contractTrancheMaster.methods.currency().call();
@@ -59,6 +64,9 @@ const Dashboard = memo<TProps>(() => {
       console.log(currency, staker, strategy, cycle, actualStartAt);
 
       console.log(contractTrancheMaster);
+
+      // const _result = contractTrancheMaster.methods.percentageScale().call();
+      // console.log(_result);
       console.log(contractMasterChef);
 
       // const result = await contractTrancheMaster.getPastEvents("TrancheAdd", {
@@ -100,6 +108,10 @@ const Dashboard = memo<TProps>(() => {
 
       // const reserves = await contract.methods.getReserves().call();
       // console.log(reserves);
+
+      console.log(contractStrategy);
+      // const farm = await contractStrategy.methods.farms().call();
+      // console.log(farm);
     }
   }, []);
   useEffect(() => {

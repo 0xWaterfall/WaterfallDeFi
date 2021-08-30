@@ -8,10 +8,12 @@ import { useHistory } from "react-router-dom";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
-import { Union } from "assets/images";
-import { Market } from "types";
-import { formatAPY } from "utils/formatNumbers";
+import { Union, WTFToken } from "assets/images";
+import { Market, PORTFOLIO_STATUS } from "types";
+import { formatAllocPoint, formatAPY } from "utils/formatNumbers";
 import { useMarket } from "hooks";
+import Coin from "components/Coin";
+import Column from "antd/lib/table/Column";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -69,6 +71,33 @@ const APYStyled = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const APYStyled2 = styled.div`
+  display: flex;
+  font-size: 12px;
+  margin-bottom: 10px;
+  & > span:nth-of-type(1) {
+    width: 70px;
+    text-align: left;
+  }
+  & > span:nth-of-type(2) {
+    text-align: left;
+  }
+  & > span {
+    min-width: 40px;
+    margin-left: 5px;
+  }
+  & > span:nth-of-type(3) {
+    background-color: ${({ theme }) => theme.white.normal};
+    border-radius: 4px;
+    text-align: center;
+    color: ${({ theme }) => theme.primary.light};
+    width: 60px;
+    margin-left: 0px;
+  }
+  & svg {
+    margin-left: 0;
+  }
+`;
 const NextTime = styled.div`
   font-size: 12px;
   line-height: 16px;
@@ -101,7 +130,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
-        <div>{marketData.assets}</div>
+        <div style={{ display: "flex" }}>
+          <Coin size={18} assetName={marketData.assets} /> {marketData.assets}
+        </div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Lock-up period" })}</div>
@@ -113,23 +144,32 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
           <Tooltip
             overlay={
               <React.Fragment>
-                <p></p>
+                <p>
+                  All position holders can get different proportions of rewards according to different tranche. Senior:{" "}
+                  {formatAllocPoint(marketData?.pools[0]?.allocPoint, marketData?.totalAllocPoints)}% of total WTF
+                  Mezzanine: {formatAllocPoint(marketData?.pools[1]?.allocPoint, marketData?.totalAllocPoints)}% of
+                  total WTF Junior: {formatAllocPoint(marketData?.pools[2]?.allocPoint, marketData?.totalAllocPoints)}%
+                  of total WTF Typography
+                </p>
               </React.Fragment>
             }
           >
             <Union />
           </Tooltip>
         </div>
-        <div css={{ display: "flex" }}>
+        <div css={{ display: "flex", flexDirection: "column" }}>
           {marketData?.tranches.map((_t, _i) => {
             return (
-              <div css={{ display: "flex" }} key={_i}>
-                <APYStyled>
-                  <span>{tranchesDisplayText[_i]}</span>
-                  <span css={{ marginTop: 15, color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
-                </APYStyled>
-                {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null}
-              </div>
+              // <div css={{ display: "flex" }} key={_i}>
+              <APYStyled2 key={_i}>
+                <span>{tranchesDisplayText[_i]}</span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
+                <span>
+                  <WTFToken />+{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                </span>
+              </APYStyled2>
+              //{/* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */}
+              // </div>
             );
           })}
         </div>
@@ -141,7 +181,8 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
         <div>
-          <Tag color="yellow" value="Pending" />
+          {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
+          {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null}
         </div>
       </RowDiv>
 
@@ -150,7 +191,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
           {intl.formatMessage({ defaultMessage: "Deposit" })}
         </Button>
       </ButtonDiv>
-      <NextTime>Next time: 2D 12:56:56</NextTime>
+      <NextTime>{marketData.status === PORTFOLIO_STATUS.ACTIVE ? `Next Time: 0D 12H 24M 56S` : ``}</NextTime>
     </Container>
   );
 });

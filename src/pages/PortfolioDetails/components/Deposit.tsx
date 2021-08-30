@@ -31,13 +31,7 @@ const Text2 = styled.div`
 
 const Deposit = memo<TProps>(({ intl }) => {
   const location = useLocation<Market>();
-  const { push } = useHistory();
   const data = location.state;
-  useEffect(() => {
-    if (!data) {
-      push({ pathname: "/portfolio/" });
-    }
-  }, []);
 
   return (
     <div css={{ padding: "0 20px" }}>

@@ -7,6 +7,7 @@ import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
 import { Market, Pool, Tranche } from "types";
 import { formatAPY, formatAllocPoint, formatTVL } from "utils/formatNumbers";
+import { CheckCircleTwoTone, CheckCircleOutlined } from "@ant-design/icons";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -16,6 +17,7 @@ type TProps = WrappedComponentProps & {
   totalAllocPoint: number | undefined;
   trancheIndex: number;
   assets: string;
+  selected: boolean;
 };
 
 type ProgressBarProps = {
@@ -104,18 +106,36 @@ const ProgressBar = styled.div<ProgressBarProps>`
   }
 `;
 
-const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets }) => {
-  const { tags, primary } = useTheme();
+const CheckDiv = styled.div`
+  position: absolute;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  & svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets, selected }) => {
+  const { tags, primary, gray } = useTheme();
   const Types = {
     Senior: { color: tags.yellowText, text: intl.formatMessage({ defaultMessage: "Senior" }) },
     Mezzanine: { color: tags.greenText, text: intl.formatMessage({ defaultMessage: "Mezzanine" }) },
     Junior: { color: primary.deep, text: intl.formatMessage({ defaultMessage: "Junior" }) }
   };
   return (
-    <Container>
+    <Container style={selected ? { borderColor: primary.deep } : undefined}>
       {parseInt(formatTVL(tranche.principal)) >= parseInt(formatTVL(tranche.target)) ? (
         <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
       ) : null}
+      <CheckDiv>
+        {selected ? (
+          <CheckCircleTwoTone twoToneColor={primary.deep} />
+        ) : (
+          <CheckCircleOutlined style={{ color: gray.normal3 }} />
+        )}
+      </CheckDiv>
 
       <div>
         <Text1>

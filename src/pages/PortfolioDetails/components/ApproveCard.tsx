@@ -63,22 +63,27 @@ const ButtonDiv = styled.div`
 
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
+  assets: string;
+  remaining: string;
+  myBalance: string;
 };
 
-const ApproveCard = memo<TProps>(({ intl, isRe }) => {
+const ApproveCard = memo<TProps>(({ intl, isRe, assets, remaining, myBalance }) => {
   return (
     <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
-        <div>10,000 USDC</div>
+        <div>
+          {myBalance} {assets}
+        </div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Remaining" })}</div>
-        <div>--</div>
+        <div>{remaining}</div>
       </RowDiv>
       <Separator />
       <RowDiv>
-        <div>USDC</div>
+        <div>{assets}</div>
       </RowDiv>
       <div>
         <Input placeholder="" defaultValue={0} suffix={<Max>{intl.formatMessage({ defaultMessage: "Max" })}</Max>} />

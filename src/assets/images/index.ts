@@ -24,3 +24,4 @@ export { ReactComponent as LogoFooter } from "./LogoFooter.svg";
 export { ReactComponent as FooterLine } from "./FooterLine.svg";
 export { ReactComponent as Mountain } from "./Mountain.svg";
 export { ReactComponent as CaretDown } from "./CaretDown.svg";
+export { ReactComponent as WTFToken } from "./WtfToken.svg";

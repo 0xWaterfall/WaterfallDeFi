@@ -4,9 +4,9 @@ import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Tabl
 import styled from "@emotion/styled";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import React, { memo, useState, useEffect } from "react";
-import { Star } from "assets/images";
-import { Market } from "types";
-import { formatAPY, getPortfolioTvl } from "utils/formatNumbers";
+import { Star, WTFToken } from "assets/images";
+import { Market, PORTFOLIO_STATUS } from "types";
+import { formatAllocPoint, formatAPY, getPortfolioTvl } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
@@ -14,12 +14,47 @@ import { useHistory } from "react-router-dom";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { useMarket } from "hooks";
+import Coin from "components/Coin";
 type TProps = WrappedComponentProps & {
   data: Market;
 };
 const APYStyled = styled.div`
   display: flex;
   flex-direction: column;
+`;
+// const APYStyled2 = styled.div`
+//   display: flex;
+//   & > span:nth-of-type(1) {
+//     width: 90px;
+//   }
+// `;
+const APYStyled2 = styled.div`
+  display: flex;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  & > span:nth-of-type(1) {
+    width: 70px;
+    text-align: left;
+  }
+  & > span:nth-of-type(2) {
+    text-align: left;
+  }
+  & > span {
+    min-width: 40px;
+    margin-left: 5px;
+  }
+  & > span:nth-of-type(3) {
+    background-color: ${({ theme }) => theme.white.normal};
+    border-radius: 4px;
+    text-align: center;
+    color: ${({ theme }) => theme.primary.light};
+    width: 60px;
+    margin-left: 0px;
+  }
+  & svg {
+    margin-left: 0;
+  }
 `;
 
 const TableRowMarket = styled(TableRow)`
@@ -46,22 +81,24 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
   return (
     <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }}>
       <TableColumn>{marketData.portfolio}</TableColumn>
-      <TableColumn minWidth={80}>
-        <Star /> {marketData.assets}
+      <TableColumn minWidth={120}>
+        <Coin assetName={marketData.assets} /> {marketData.assets}
       </TableColumn>
       <TableColumn minWidth={140}>{marketData.lockupPeriod}</TableColumn>
       <TableColumn minWidth={240} css={{ display: "flex" }}>
-        <div css={{ display: "flex" }}>
-          {marketData.tranches.length}
+        <div css={{ display: "flex", flexDirection: "column" }}>
           {marketData?.tranches.map((_t, _i) => {
             return (
-              <div css={{ display: "flex" }} key={_i}>
-                <APYStyled>
-                  <span>{tranchesDisplayText[_i]}</span>
-                  <span css={{ marginTop: 15, color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
-                </APYStyled>
-                {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null}
-              </div>
+              // <div css={{ display: "flex" }} key={_i}>
+              <APYStyled2 key={_i}>
+                <span>{tranchesDisplayText[_i]}</span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
+                <span>
+                  <WTFToken />+{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                </span>
+              </APYStyled2>
+              /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */
+              // </div>
             );
           })}
         </div>
@@ -70,7 +107,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
         {marketData.tvl} {marketData.assets}
       </TableColumn>
       <TableColumn minWidth={80}>
-        <Tag color="yellow" value={"Pending"}></Tag>
+        {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
+        {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null}
+
         {/* <Tag color="red" value={"Expired"}></Tag> */}
         {/* {i === 2 ? <Tag color="yellow" value={"Pending"}></Tag> : null} */}
         {/* {i === 3 ? <Tag color="green" value={"Active"}></Tag> : null} */}
@@ -85,7 +124,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
           >
             Deposit
           </Button>
-          <span css={{ fontSize: 10, marginTop: 10 }}>Next Time: 0D 12H 24M 56S</span>
+          <span css={{ fontSize: 10, marginTop: 10 }}>
+            {marketData.status === PORTFOLIO_STATUS.ACTIVE ? `Next Time: 0D 12H 24M 56S` : ``}
+          </span>
         </APYStyled>
       </TableColumn>
     </TableRowMarket>

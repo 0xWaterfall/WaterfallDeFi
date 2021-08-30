@@ -4,8 +4,9 @@ import { useTheme } from "@emotion/react";
 import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
+import { Market } from "types";
 
 const InformationWrapper = styled.div`
   display: flex;
@@ -57,21 +58,25 @@ type TProps = WrappedComponentProps;
 
 const Information = memo<TProps>(() => {
   const { goBack } = useHistory();
+  const location = useLocation<Market>();
+  const data = location.state;
 
   return (
     <InformationWrapper>
       <Arrow onClick={goBack} />
       <div>
-        <Text1>BUSD Vault</Text1>
+        <Text1>{data.portfolio}</Text1>
         <span>Listing date: 2021/07/30</span>
       </div>
       <div>
-        <Text2>BUSD</Text2>
+        <Text2>{data.assets}</Text2>
         <span>Lock-up period: 14 Days</span>
       </div>
       <div>
         <Text2></Text2>
-        <TvlDiv>TVL: 1,000,000 USDC</TvlDiv>
+        <TvlDiv>
+          TVL: {data.tvl} {data.assets}
+        </TvlDiv>
       </div>
     </InformationWrapper>
   );

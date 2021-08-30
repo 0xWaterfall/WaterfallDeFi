@@ -1,6 +1,8 @@
-import { TranchesAddress, MasterChefAddress } from "./address";
+import { TranchesAddress, MasterChefAddress, BUSDAddress, WTFAddress, StrategyAddress } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
+import { abi as WTFAbi } from "./abi/WTF.json";
+import { abi as StrategyAbi } from "./abi/Strategy.json";
 import { Market } from "types";
 export const MarketList: Market[] = [
   {
@@ -9,12 +11,17 @@ export const MarketList: Market[] = [
     lockupPeriod: "7 Days",
     tranches: [],
     tvl: "",
+    totalTranchesTarget: "",
     status: "",
     nextTime: "",
     address: TranchesAddress,
     abi: TranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefAddress,
-    pools: []
+    pools: [],
+    depositAssetAddress: BUSDAddress,
+    depositAssetAbi: WTFAbi,
+    strategyAddress: StrategyAddress,
+    strategyAbi: StrategyAbi
   }
 ];

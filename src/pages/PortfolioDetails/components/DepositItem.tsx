@@ -11,7 +11,7 @@ import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSize } from "ahooks";
-import { formatTVL, getRemaining } from "utils/formatNumbers";
+import { compareNum, formatTVL, getRemaining } from "utils/formatNumbers";
 import { useBalance } from "hooks";
 
 type TProps = WrappedComponentProps & {
@@ -36,6 +36,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
   const myBalance = useBalance(data.depositAssetAbi, data.depositAssetAddress);
+
   return (
     <div
       css={{
@@ -89,6 +90,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
         myBalance={myBalance}
         data={data}
         fetchMarketData={fetchMarketData}
+        isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
       />
     </div>
   );

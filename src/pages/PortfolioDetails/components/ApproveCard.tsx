@@ -85,10 +85,12 @@ type TProps = WrappedComponentProps & {
   data: Market;
   selectTrancheIdx?: number;
   fetchMarketData: Function;
+  isSoldOut: boolean;
 };
 
 const ApproveCard = memo<TProps>(
-  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, fetchMarketData }) => {
+  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, fetchMarketData, isSoldOut }) => {
+    console.log("isSoldOut", isSoldOut);
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
     const [validateText, setValidateText] = useState("");
@@ -234,6 +236,7 @@ const ApproveCard = memo<TProps>(
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
         {!enabled && <BlockDiv />}
+        {isSoldOut && <BlockDiv />}
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
           <div>

@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Input } from "antd";
+import { Input, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
@@ -14,6 +14,7 @@ import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market } from "types";
+import { NotificationApi } from "antd/lib/notification";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -108,6 +109,12 @@ const ApproveCard = memo<TProps>(
     useEffect(() => {
       setBalanceInput(0);
     }, [enabled]);
+    const openNotification = (title: string, desc: string) => {
+      notification["success"]({
+        message: title,
+        description: desc
+      });
+    };
     const handleApprove = () => {
       setApproveLoading(true);
       const approve = async () => {
@@ -120,6 +127,7 @@ const ApproveCard = memo<TProps>(
           console.log(result);
           if (result.status) {
             setApproved(true);
+            openNotification("Approve Success", "");
           }
         } catch (e) {
           console.log(e);
@@ -151,6 +159,9 @@ const ApproveCard = memo<TProps>(
           console.log(invest);
           fetchMarketData();
           setBalanceInput(0);
+          if (invest.status) {
+            openNotification("Deposit Success", "");
+          }
         } catch (e) {
           console.log(e);
         } finally {

@@ -9,6 +9,8 @@ import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -53,6 +55,7 @@ export const useBalance = (abi: any, address: string) => {
   // previous balance value
   const prevBalanceRef = useRef("0");
   const provider = Web3.givenProvider;
+  const { account, ...p } = useWeb3React<Web3Provider>();
 
   const fetchBalance = useCallback(async () => {
     console.log("fetching balance..");
@@ -78,7 +81,7 @@ export const useBalance = (abi: any, address: string) => {
 
   useEffect(() => {
     fetchBalance();
-  }, [fetchBalance]);
+  }, [fetchBalance, account]);
 
   // useEffect(() => {
   //   // Fetch user balance on each block

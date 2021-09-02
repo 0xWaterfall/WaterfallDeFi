@@ -12,6 +12,10 @@ export interface Tranche {
   principal: string;
   target: string;
 }
+export interface Invest {
+  cycle: string;
+  principal: string;
+}
 
 export interface Pool {
   accRewardPerShare: string;
@@ -23,7 +27,10 @@ export interface Pool {
 export interface Market {
   portfolio: string;
   assets: string;
-  lockupPeriod: string;
+  listingDate: string;
+  // lockupPeriod: string;
+  duration?: number;
+  actualStartAt?: number;
   tranches: Tranche[];
   totalTranchesTarget: string;
   tvl: string;

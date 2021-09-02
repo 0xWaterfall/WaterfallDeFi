@@ -7,6 +7,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
+import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
 
 const InformationWrapper = styled.div`
   display: flex;
@@ -66,16 +67,16 @@ const Information = memo<TProps>(() => {
       <Arrow onClick={goBack} />
       <div>
         <Text1>{data.portfolio}</Text1>
-        <span>Listing date: 2021/07/30</span>
+        <span>Listing date: {data.listingDate}</span>
       </div>
       <div>
         <Text2>{data.assets}</Text2>
-        <span>Lock-up period: 14 Days</span>
+        <span>Lock-up period: {data.duration ? getLockupPeriod(data.duration) : "-"}</span>
       </div>
       <div>
         <Text2></Text2>
         <TvlDiv>
-          TVL: {data.tvl} {data.assets}
+          TVL: {formatDisplayTVL(data.tvl)} {data.assets}
         </TvlDiv>
       </div>
     </InformationWrapper>

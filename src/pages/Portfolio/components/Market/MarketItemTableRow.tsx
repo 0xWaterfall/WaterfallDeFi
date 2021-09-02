@@ -6,7 +6,15 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import React, { memo, useState, useEffect } from "react";
 import { Star, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { formatAllocPoint, formatAPY, getPortfolioTvl } from "utils/formatNumbers";
+import {
+  formatAllocPoint,
+  formatAPY,
+  formatDisplayTVL,
+  formatTVL,
+  getJuniorAPY,
+  getLockupPeriod,
+  getPortfolioTvl
+} from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
@@ -15,6 +23,8 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { useMarket } from "hooks";
 import Coin from "components/Coin";
+import Countdown from "react-countdown";
+
 type TProps = WrappedComponentProps & {
   data: Market;
 };
@@ -51,6 +61,12 @@ const APYStyled2 = styled.div`
     color: ${({ theme }) => theme.primary.light};
     width: 60px;
     margin-left: 0px;
+    display: flex;
+    justify-content: center;
+    & > div {
+      display: flex;
+      align-items: center;
+    }
   }
   & svg {
     margin-left: 0;
@@ -84,7 +100,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}
       </TableColumn>
-      <TableColumn minWidth={140}>{marketData.lockupPeriod}</TableColumn>
+      <TableColumn minWidth={140}>{marketData.duration ? getLockupPeriod(marketData.duration) : "-"}</TableColumn>
       <TableColumn minWidth={240} css={{ display: "flex" }}>
         <div css={{ display: "flex", flexDirection: "column" }}>
           {marketData?.tranches.map((_t, _i) => {
@@ -92,9 +108,16 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
-                <span css={{ color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>
+                  {_i !== marketData.tranches.length - 1
+                    ? formatAPY(_t.apy)
+                    : getJuniorAPY(marketData.tranches, marketData.duration)}
+                </span>
                 <span>
-                  <WTFToken />+{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                  <div>
+                    <WTFToken />
+                  </div>
+                  +{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
                 </span>
               </APYStyled2>
               /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */
@@ -104,7 +127,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
         </div>
       </TableColumn>
       <TableColumn minWidth={160}>
-        {marketData.tvl} {marketData.assets}
+        {formatDisplayTVL(marketData.tvl)} {marketData.assets}
       </TableColumn>
       <TableColumn minWidth={80}>
         {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
@@ -125,7 +148,18 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
             Deposit
           </Button>
           <span css={{ fontSize: 10, marginTop: 10 }}>
-            {marketData.status === PORTFOLIO_STATUS.ACTIVE ? `Next Time: 0D 12H 24M 56S` : ``}
+            {marketData.status === PORTFOLIO_STATUS.ACTIVE && marketData.duration && marketData.actualStartAt && (
+              <Countdown
+                date={marketData.duration + marketData.actualStartAt}
+                renderer={({ days, hours, minutes, seconds, completed }) => {
+                  return (
+                    <span>
+                      {days}D {hours}H {minutes}M {seconds}S
+                    </span>
+                  );
+                }}
+              />
+            )}
           </span>
         </APYStyled>
       </TableColumn>

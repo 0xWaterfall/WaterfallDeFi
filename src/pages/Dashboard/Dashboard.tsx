@@ -12,11 +12,19 @@ import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as StrategyAbi } from "config/abi/Strategy.json";
 import { WTFAddress, BUSDAddress, MasterChefAddress, TranchesAddress, StrategyAddress } from "config/address";
 import Web3 from "web3";
+import { ethers } from "ethers";
 import { AbiItem } from "web3-utils";
 
+import { Web3Provider } from "@ethersproject/providers";
+import getRpcUrl from "utils/getRpcUrl";
+import { useWTF } from "hooks";
+
 const Dashboard = memo<TProps>(() => {
-  const { account } = useWeb3React();
-  console.log(account);
+  // const { account } = useWeb3React();
+  const { active, account, chainId, library, connector, ...p } = useWeb3React<Web3Provider>();
+  const { weekDistribution } = useWTF();
+  console.log("weekDistribution", weekDistribution.toString());
+  console.log(connector);
   const testContract = useCallback(async () => {
     if (window.ethereum?.isMetaMask && window.ethereum.request) {
       const accounts = await window.ethereum?.request({ method: "eth_requestAccounts" });
@@ -24,8 +32,19 @@ const Dashboard = memo<TProps>(() => {
       console.log(myAccount);
 
       // const provider = new Web3.providers.HttpProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+      // console.log(Web3.givenProvider);
       const web3 = new Web3(Web3.givenProvider);
 
+      // const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
+      // const currentBlock = await simpleRpcProvider.getBlockNumber();
+      // console.log("currentBlock", currentBlock);
+
+      // const contractTrancheMaster = new ethers.Contract(TranchesAddress, TrancheMasterAbi, simpleRpcProvider);
+      // console.log(contractTrancheMaster);
+      // const tranches = await contractTrancheMaster.tranches(0);
+      // console.log(tranches);
+      // const __ = await contractTrancheMaster.methods.balanceOf(myAccount).call();
+      // console.log(__);
       // const accounts = await web3.eth.getAccounts();
       const contractWTF = new web3.eth.Contract(WTFAbi as AbiItem[], WTFAddress);
       const contractBUSD = new web3.eth.Contract(WTFAbi as AbiItem[], BUSDAddress);
@@ -45,8 +64,8 @@ const Dashboard = memo<TProps>(() => {
       const tranches2 = await contractTrancheMaster.methods.tranches(2).call();
       console.log(tranches2);
 
-      const active = await contractTrancheMaster.methods.active().call();
-      console.log("active", active);
+      const duration = await contractTrancheMaster.methods.duration().call();
+      console.log("duration", duration);
 
       //BUSD
       const currency = await contractTrancheMaster.methods.currency().call();
@@ -91,8 +110,8 @@ const Dashboard = memo<TProps>(() => {
       console.log(rewardToken);
 
       //1000000000000000000
-      const rewardPerBlock = await contractMasterChef.methods.rewardPerBlock().call();
-      console.log(rewardPerBlock);
+      // const rewardPerBlock = await contractMasterChef.methods.rewardPerBlock().call();
+      // console.log(rewardPerBlock);
 
       //0
       const startBlock = await contractMasterChef.methods.startBlock().call();
@@ -112,10 +131,62 @@ const Dashboard = memo<TProps>(() => {
       console.log(contractStrategy);
       // const farm = await contractStrategy.methods.farms().call();
       // console.log(farm);
+
+      console.log(contractTrancheMaster);
+      // contractTrancheMaster.methods.deposit(0)
+
+      console.log(contractBUSD);
+      const BUSDBalance = await contractBUSD.methods.balanceOf(myAccount).call();
+      console.log(BUSDBalance);
+
+      //approve
+      // const re = await contractBUSD.methods
+      //   .approve("0x18dD65280baabAf85fB875036f90d1ea794ABF6e", web3.utils.toWei("999999999", "ether"))
+      //   .send({ from: myAccount });
+      // console.log(re);
+
+      //allowance
+      const allowance = await contractBUSD.methods
+        .allowance("0x4324DcFA175bcccabB5f85b1531e23dCF218dC93", "0x18dD65280baabAf85fB875036f90d1ea794ABF6e")
+        .call();
+      console.log(allowance); // > 0
+
+      // //deposit
+      // const deposit = await contractTrancheMaster.methods.deposit(200000).send({ from: myAccount });
+      // console.log(deposit);
+
+      //check deposit balance
+      // const ret = await contractTrancheMaster.methods.balanceOf(myAccount).call();
+      // console.log(ret);
+
+      //invest
+      // const invest = await contractTrancheMaster.methods.investDirect(1, 200000, false).send({ from: myAccount });
+      // console.log(invest);
+
+      //userInfo
+      const userInfo = await contractTrancheMaster.methods.userInfo(myAccount).call();
+      console.log(userInfo);
+
+      //userInvest
+      const userInvest = await contractTrancheMaster.methods.userInvest(myAccount, 0).call();
+      console.log(userInvest);
+
+      userInvest;
+      const userInvest2 = await contractTrancheMaster.methods.userInvest(myAccount, 1).call();
+      console.log(userInvest2);
+
+      //userInvest
+      const userInvest3 = await contractTrancheMaster.methods.userInvest(myAccount, 2).call();
+      console.log(userInvest3);
+
+      console.log(contractTrancheMaster.methods);
+
+      const rewardPerBlock = await contractMasterChef.methods.rewardPerBlock().call();
+      console.log(rewardPerBlock);
     }
   }, []);
   useEffect(() => {
-    testContract();
+    // testContract();
   }, []);
   return <div style={{ marginTop: 100 }}>dashboard</div>;
 });

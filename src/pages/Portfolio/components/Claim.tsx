@@ -7,6 +7,8 @@ import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 // import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
+import { useWTF } from "hooks";
+import { formatNumberSeparator } from "utils/formatNumbers";
 
 type TProps = WrappedComponentProps;
 
@@ -19,7 +21,7 @@ const ClaimBlockName = styled.div`
 
 const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white } = useTheme();
-
+  const { weekDistribution } = useWTF();
   return (
     <div
       css={{
@@ -79,7 +81,7 @@ const Claim = memo<TProps>(({ intl }) => {
           }
         }}
       >
-        500,000 WTF
+        {formatNumberSeparator(weekDistribution.toString())} WTF
       </div>
     </div>
   );

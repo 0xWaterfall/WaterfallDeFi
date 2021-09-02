@@ -5,12 +5,15 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import MyPositions from "./MyPositions";
 import Deposit from "./Deposit";
+import { Market } from "types";
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: Market;
+};
 
-const ContentCD = memo<TProps>(({ intl }) => {
+const ContentCD = memo<TProps>(({ intl, data }) => {
   const TabTypes = [
-    { key: "DEPOSIT", text: intl.formatMessage({ defaultMessage: "Deposit" }), component: <Deposit /> },
+    { key: "DEPOSIT", text: intl.formatMessage({ defaultMessage: "Deposit" }), component: <Deposit data={data} /> },
     { key: "POSITIONS", text: intl.formatMessage({ defaultMessage: "My Positions" }), component: <MyPositions /> }
   ];
   return (

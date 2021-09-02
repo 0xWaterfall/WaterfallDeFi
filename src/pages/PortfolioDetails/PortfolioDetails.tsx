@@ -35,7 +35,7 @@ const PortfolioDetails = memo<TProps>(() => {
     <PortfolioDetailsWrapper>
       <Information />
       <Charts />
-      <ContentCD />
+      <ContentCD data={data} />
     </PortfolioDetailsWrapper>
   );
 });

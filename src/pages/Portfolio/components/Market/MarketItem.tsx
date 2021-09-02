@@ -10,7 +10,7 @@ import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { formatAllocPoint, formatAPY } from "utils/formatNumbers";
+import { formatAllocPoint, formatAPY, getLockupPeriod } from "utils/formatNumbers";
 import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
@@ -93,6 +93,12 @@ const APYStyled2 = styled.div`
     color: ${({ theme }) => theme.primary.light};
     width: 60px;
     margin-left: 0px;
+    display: flex;
+    justify-content: center;
+    & > div {
+      display: flex;
+      align-items: center;
+    }
   }
   & svg {
     margin-left: 0;
@@ -136,7 +142,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Lock-up period" })}</div>
-        <div>{marketData.lockupPeriod}</div>
+        <div>{marketData.duration ? getLockupPeriod(marketData.duration) : "-"}</div>
       </RowDiv>
       <RowDiv>
         <div>
@@ -165,7 +171,10 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
                 <span>{tranchesDisplayText[_i]}</span>
                 <span css={{ color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
                 <span>
-                  <WTFToken />+{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                  <div>
+                    <WTFToken />
+                  </div>
+                  +{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
                 </span>
               </APYStyled2>
               //{/* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */}

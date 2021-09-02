@@ -1,8 +1,14 @@
+import { MasterChefAddress } from "config/address";
+import { ethers } from "ethers";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Market, PORTFOLIO_STATUS } from "types";
 import { formatBalance, getPortfolioTvl, getTotalAllocPoints, getPortfolioTotalTarget } from "utils/formatNumbers";
+import getRpcUrl from "utils/getRpcUrl";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
+import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
+import BigNumber from "bignumber.js";
+import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -19,6 +25,13 @@ export const useMarket = async (marketData: Market) => {
 
     const active = await contractTranches.methods.active().call();
     marketData.status = active ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
+
+    const duration = await contractTranches.methods.duration().call();
+    marketData.duration = duration;
+
+    const actualStartAt = await contractTranches.methods.actualStartAt().call();
+    marketData.actualStartAt = actualStartAt;
+
     marketData.tranches = _tranches;
     marketData.totalTranchesTarget = getPortfolioTotalTarget(_tranches);
     marketData.tvl = getPortfolioTvl(_tranches);
@@ -45,6 +58,7 @@ export const useBalance = (abi: any, address: string) => {
     console.log("fetching balance..");
     if (!Web3.givenProvider) return;
     if (!(window.ethereum?.isMetaMask && window.ethereum.request)) return;
+
     const web3 = new Web3(Web3.givenProvider);
     const contract = new web3.eth.Contract(abi as AbiItem[], address);
     const accounts = await window?.ethereum?.request({ method: "eth_requestAccounts" });
@@ -78,4 +92,25 @@ export const useBalance = (abi: any, address: string) => {
   // }, [fetchBalance]);
 
   return balance;
+};
+export const useWTF = () => {
+  const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+      const rewardPerBlock = await contractMasterChef.rewardPerBlock();
+      const _weekDistribution = new BigNumber(rewardPerBlock.toString()).dividedBy(BIG_TEN.pow(18)).times(28800 * 7);
+      setWeekDistribution(_weekDistribution);
+    };
+
+    fetchBalance();
+  }, [MasterChefAddress]);
+
+  return { weekDistribution };
+};
+export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
+  const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
+  const signerOrProvider = signer ?? simpleRpcProvider;
+  return new ethers.Contract(address, abi, signerOrProvider);
 };

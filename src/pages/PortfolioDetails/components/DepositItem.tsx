@@ -7,16 +7,17 @@ import { Row, Col } from "antd";
 import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
 import { useTheme } from "@emotion/react";
-import { Market, Tranche } from "types";
+import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSize } from "ahooks";
-import { formatTVL } from "utils/formatNumbers";
+import { formatTVL, getRemaining } from "utils/formatNumbers";
 import { useBalance } from "hooks";
 
 type TProps = WrappedComponentProps & {
   data: Market;
   isRe?: boolean;
+  fetchMarketData: Function;
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
@@ -28,7 +29,7 @@ const Box2 = styled.div`
   background: ${({ theme }) => theme.white.normal};
 `;
 
-const DepositItem = memo<TProps>(({ intl, isRe, data }) => {
+const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
   const { primary } = useTheme();
   const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
   const [marketData, setMarketData] = useState(data);
@@ -53,12 +54,14 @@ const DepositItem = memo<TProps>(({ intl, isRe, data }) => {
             <div
               key={_i}
               onClick={() => {
-                if (_i === selectTrancheIdx) {
-                  setSelectTrancheIdx(undefined);
-                  setSelectTranche(undefined);
-                } else {
-                  setSelectTrancheIdx(_i);
-                  setSelectTranche(_d);
+                if (data.status === PORTFOLIO_STATUS.PENDING) {
+                  if (selectTranche) {
+                    setSelectTrancheIdx(undefined);
+                    setSelectTranche(undefined);
+                  } else {
+                    setSelectTrancheIdx(_i);
+                    setSelectTranche(_d);
+                  }
                 }
               }}
             >
@@ -71,6 +74,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data }) => {
                 trancheIndex={_i}
                 assets={data.assets}
                 selected={selectTrancheIdx === _i}
+                data={data}
               />
             </div>
           );
@@ -79,8 +83,12 @@ const DepositItem = memo<TProps>(({ intl, isRe, data }) => {
       <ApproveCard
         isRe={isRe}
         assets={data.assets}
-        remaining={formatTVL(selectTranche?.target)}
+        remaining={getRemaining(selectTranche?.target, selectTranche?.principal)}
+        enabled={selectTranche !== undefined}
+        selectTrancheIdx={selectTrancheIdx}
         myBalance={myBalance}
+        data={data}
+        fetchMarketData={fetchMarketData}
       />
     </div>
   );

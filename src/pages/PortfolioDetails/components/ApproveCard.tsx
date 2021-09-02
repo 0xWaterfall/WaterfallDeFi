@@ -6,6 +6,14 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Input } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
+import { useState } from "react";
+import { formatBalance, formatNumberSeparator } from "utils/formatNumbers";
+import { useEffect } from "react";
+import Web3 from "web3";
+import { AbiItem } from "web3-utils";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { Market } from "types";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -60,41 +68,184 @@ const ButtonDiv = styled.div`
     }
   }
 `;
-
+const BlockDiv = styled.div`
+  background-color: #ffffff7a;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 10;
+`;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
   assets: string;
   remaining: string;
   myBalance: string;
+  enabled: boolean;
+  data: Market;
+  selectTrancheIdx?: number;
+  fetchMarketData: Function;
 };
 
-const ApproveCard = memo<TProps>(({ intl, isRe, assets, remaining, myBalance }) => {
-  return (
-    <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
-        <div>
-          {myBalance} {assets}
-        </div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Remaining" })}</div>
-        <div>{remaining}</div>
-      </RowDiv>
-      <Separator />
-      <RowDiv>
-        <div>{assets}</div>
-      </RowDiv>
-      <div>
-        <Input placeholder="" defaultValue={0} suffix={<Max>{intl.formatMessage({ defaultMessage: "Max" })}</Max>} />
-      </div>
-      <ButtonDiv>
-        <Button type="primary" css={{ height: 56 }}>
-          {intl.formatMessage({ defaultMessage: "Close Deposit" })}
+const ApproveCard = memo<TProps>(
+  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, fetchMarketData }) => {
+    const [balanceInput, setBalanceInput] = useState(0);
+    const [approved, setApproved] = useState(false);
+    const [validateText, setValidateText] = useState("");
+    const [depositLoading, setDepositLoading] = useState(false);
+    const [approveLoading, setApproveLoading] = useState(false);
+    const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
+    const web3 = new Web3(Web3.givenProvider);
+    const contractBUSD = new web3.eth.Contract(data.depositAssetAbi as AbiItem[], data.depositAssetAddress);
+    const contractTrancheMaster = new web3.eth.Contract(data.abi as AbiItem[], data.address);
+    useEffect(() => {
+      const checkApproved = async () => {
+        const allowance = await contractBUSD.methods.allowance(account, "0x" + data.address).call();
+        console.log(allowance); // > 0
+        setApproved(allowance > 0 ? true : false);
+      };
+      checkApproved();
+    }, []);
+    useEffect(() => {
+      setBalanceInput(0);
+    }, [enabled]);
+    const handleApprove = () => {
+      setApproveLoading(true);
+      const approve = async () => {
+        const result = await contractBUSD.methods
+          .approve("0x" + data.address, web3.utils.toWei("999999999", "ether"))
+          .send({ from: account });
+        console.log(result);
+        setApproveLoading(false);
+
+        if (result.status) {
+          setApproved(true);
+        }
+      };
+      approve();
+    };
+    const handleDeposit = () => {
+      if (!validateInput()) return;
+      const deposit = async () => {
+        if (balanceInput <= 0) return;
+        if (selectTrancheIdx === undefined) return;
+
+        setDepositLoading(true);
+        const amount = web3.utils.toWei(balanceInput.toString(), "ether");
+        console.log("amount", amount);
+        console.log("invest tranche", selectTrancheIdx);
+        // // //deposit
+        // const deposit = await contractTrancheMaster.methods.deposit(amount).send({ from: account });
+        // console.log(deposit);
+
+        // invest
+        const invest = await contractTrancheMaster.methods
+          .investDirect(amount, selectTrancheIdx, amount)
+          .send({ from: account });
+        console.log(invest);
+        fetchMarketData();
+        setBalanceInput(0);
+        setDepositLoading(false);
+        // if (invest.status) {
+        // }
+      };
+      deposit();
+    };
+    const handleDeposit100 = () => {
+      const deposit = async () => {
+        const amount = web3.utils.toWei("100", "ether");
+        console.log("amount", amount);
+        console.log("invest tranche", selectTrancheIdx);
+        // //deposit
+        const deposit = await contractTrancheMaster.methods.deposit(amount).send({ from: account });
+        console.log(deposit);
+      };
+      deposit();
+    };
+    const handleMaxInput = () => {
+      const _myBalance = parseInt(myBalance);
+      const _remaining = parseInt(remaining);
+      let input = 0;
+      if (_myBalance <= _remaining) {
+        input = _myBalance;
+      } else if (_myBalance > _remaining) {
+        input = _remaining;
+      }
+      if (input) setBalanceInput(input);
+    };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      let input = parseInt(value);
+      if (isNaN(input)) input = 0;
+      setBalanceInput(input);
+    };
+    const validateInput = () => {
+      const _myBalance = parseInt(myBalance);
+      const _remaining = parseInt(remaining);
+      const _balanceInput = balanceInput;
+
+      if (_balanceInput > _myBalance) {
+        console.log("Insufficient balance");
+        setValidateText("Insufficient Balance");
+        return false;
+      }
+      if (_balanceInput > _remaining) {
+        console.log(`Maximum deposit amount = ${remaining}`);
+        setValidateText(`Maximum deposit amount = ${remaining}`);
+        return false;
+      }
+      return true;
+    };
+    return (
+      <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
+        {!enabled && <BlockDiv />}
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
+          <div>
+            {formatNumberSeparator(myBalance)} {assets}
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}</div>
+          <div>{formatNumberSeparator(remaining)}</div>
+        </RowDiv>
+        <Separator />
+        <RowDiv>
+          <div>{assets}</div>
+        </RowDiv>
+        {approved && (
+          <div>
+            <div>
+              <Input
+                placeholder=""
+                value={balanceInput}
+                onChange={handleInputChange}
+                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "Max" })}</Max>}
+              />
+            </div>
+            <div>{validateText}</div>
+          </div>
+        )}
+        {approved ? (
+          <ButtonDiv>
+            <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
+              {intl.formatMessage({ defaultMessage: "Deposit" })}
+            </Button>
+          </ButtonDiv>
+        ) : (
+          <ButtonDiv>
+            <Button type="primary" css={{ height: 56 }} onClick={handleApprove} loading={depositLoading}>
+              {intl.formatMessage({ defaultMessage: "Approve" })}
+            </Button>
+          </ButtonDiv>
+        )}
+        {/* <ButtonDiv>
+        <Button type="primary" css={{ height: 56 }} onClick={handleDeposit100}>
+          {intl.formatMessage({ defaultMessage: "Deposit 100" })}
         </Button>
-      </ButtonDiv>
-    </Container>
-  );
-});
+      </ButtonDiv> */}
+      </Container>
+    );
+  }
+);
 
 export default injectIntl(ApproveCard);

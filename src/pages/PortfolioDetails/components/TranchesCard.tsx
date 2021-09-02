@@ -6,7 +6,16 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
 import { Market, Pool, Tranche } from "types";
-import { formatAPY, formatAllocPoint, formatTVL } from "utils/formatNumbers";
+import {
+  formatAPY,
+  formatAllocPoint,
+  formatTVL,
+  formatNumberSeparator,
+  getJuniorAPY,
+  getRemaining,
+  compareNum,
+  getPercentage
+} from "utils/formatNumbers";
 import { CheckCircleTwoTone, CheckCircleOutlined } from "@ant-design/icons";
 
 type TProps = WrappedComponentProps & {
@@ -18,11 +27,11 @@ type TProps = WrappedComponentProps & {
   trancheIndex: number;
   assets: string;
   selected: boolean;
+  data: Market;
 };
 
 type ProgressBarProps = {
-  current: number;
-  total: number;
+  percentage: string;
 };
 
 const Text1 = styled.div`
@@ -100,7 +109,7 @@ const ProgressBar = styled.div<ProgressBarProps>`
   &:after {
     content: "";
     background-color: ${({ color }) => color};
-    width: ${({ current, total }) => (current / total) * 100}%;
+    width: ${({ percentage }) => percentage}%;
     height: 6px;
     position: absolute;
   }
@@ -117,16 +126,28 @@ const CheckDiv = styled.div`
   }
 `;
 
-const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets, selected }) => {
+const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets, selected, data }) => {
   const { tags, primary, gray } = useTheme();
   const Types = {
-    Senior: { color: tags.yellowText, text: intl.formatMessage({ defaultMessage: "Senior" }) },
-    Mezzanine: { color: tags.greenText, text: intl.formatMessage({ defaultMessage: "Mezzanine" }) },
-    Junior: { color: primary.deep, text: intl.formatMessage({ defaultMessage: "Junior" }) }
+    Senior: {
+      color: tags.yellowText,
+      text: intl.formatMessage({ defaultMessage: "Senior" }),
+      riskText: "Low Risk ; Fixed"
+    },
+    Mezzanine: {
+      color: tags.greenText,
+      text: intl.formatMessage({ defaultMessage: "Mezzanine" }),
+      riskText: "Medium Risk ; Fixed"
+    },
+    Junior: {
+      color: primary.deep,
+      text: intl.formatMessage({ defaultMessage: "Junior" }),
+      riskText: "Multiple Leverage ; Variable"
+    }
   };
   return (
     <Container style={selected ? { borderColor: primary.deep } : undefined}>
-      {parseInt(formatTVL(tranche.principal)) >= parseInt(formatTVL(tranche.target)) ? (
+      {compareNum(tranche.principal, tranche.target) ? (
         <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
       ) : null}
       <CheckDiv>
@@ -143,23 +164,20 @@ const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint,
           {Types[type].text}
         </Text1>
         <Text2 color={Types[type].color}>
-          APY {formatAPY(tranche.apy)} + {formatAllocPoint(pool.allocPoint, totalAllocPoint)}% WTF
+          APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches, data.duration)} +{" "}
+          {formatAllocPoint(pool.allocPoint, totalAllocPoint)}% WTF
         </Text2>
-        <Text3>Low Risk ; Fixed</Text3>
+        <Text3>{Types[type].riskText}</Text3>
         <Separator margin={15} />
         <StatusDiv>
           <Text3>
-            TVL: {formatTVL(tranche.principal)} {assets}
+            TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
           </Text3>
           <Text4>
-            Remaining: {formatTVL(tranche.target)} {assets}
+            Remaining:{getRemaining(tranche?.target, tranche?.principal)} {assets}
           </Text4>
         </StatusDiv>
-        <ProgressBar
-          color={Types[type].color}
-          current={parseInt(formatTVL(tranche.principal))}
-          total={parseInt(formatTVL(tranche.target))}
-        />
+        <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />
       </div>
     </Container>
   );

@@ -8,7 +8,10 @@ export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls",
     assets: "BUSD",
-    lockupPeriod: "7 Days",
+    listingDate: "2021/08/29",
+    // lockupPeriod: "7 Days",
+    // duration: 0,
+    // actualStartAt:
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",

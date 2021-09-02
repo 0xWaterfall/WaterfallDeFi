@@ -103,8 +103,8 @@ const ApproveCard = memo<TProps>(
         console.log(allowance); // > 0
         setApproved(allowance > 0 ? true : false);
       };
-      checkApproved();
-    }, []);
+      if (account) checkApproved();
+    }, [account]);
     useEffect(() => {
       setBalanceInput(0);
     }, [enabled]);
@@ -174,13 +174,16 @@ const ApproveCard = memo<TProps>(
       deposit();
     };
     const handleMaxInput = () => {
-      const _myBalance = parseInt(myBalance);
-      const _remaining = parseInt(remaining);
+      const _myBalance = myBalance.replace(/\,/g, "");
+      const _remaining = remaining.replace(/\,/g, "");
+      const _balanceInput = balanceInput;
       let input = 0;
-      if (_myBalance <= _remaining) {
-        input = _myBalance;
-      } else if (_myBalance > _remaining) {
-        input = _remaining;
+      if (compareNum(_remaining, _myBalance)) {
+        // if (_myBalance <= _remaining) {
+        input = parseInt(_myBalance);
+      } else if (compareNum(_myBalance, _remaining, true)) {
+        // } else if (_myBalance > _remaining) {
+        input = parseInt(_remaining);
       }
       if (input) setBalanceInput(input);
     };

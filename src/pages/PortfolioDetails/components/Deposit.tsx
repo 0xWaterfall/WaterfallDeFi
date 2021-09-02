@@ -45,6 +45,9 @@ const Deposit = memo<TProps>(({ intl, data }) => {
     };
     fetchData();
   };
+  useEffect(() => {
+    fetchMarketData();
+  }, []);
   return (
     <div css={{ padding: "0 20px" }}>
       <NextTimeWrapper>

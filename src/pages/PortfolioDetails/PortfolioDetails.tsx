@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
@@ -9,6 +9,7 @@ import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Market } from "types";
 import { useHistory, useLocation } from "react-router-dom";
+import { useMarket } from "hooks";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;
@@ -24,8 +25,15 @@ const PortfolioDetails = memo<TProps>(() => {
   const { push } = useHistory();
 
   const data = location.state;
-  console.log(data);
+  const [marketData, setMarketData] = useState<Market>(data);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const _md = await useMarket({ ...data });
+      if (_md) setMarketData(_md);
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     if (!data) {
       push({ pathname: "/portfolio/" });
@@ -35,7 +43,7 @@ const PortfolioDetails = memo<TProps>(() => {
     <PortfolioDetailsWrapper>
       <Information />
       <Charts />
-      <ContentCD data={data} />
+      <ContentCD data={marketData} />
     </PortfolioDetailsWrapper>
   );
 });

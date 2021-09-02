@@ -105,6 +105,7 @@ const ProgressBar = styled.div<ProgressBarProps>`
   border-radius: 2px;
   width: 100%;
   height: 6px;
+  position: relative;
   background-color: ${({ theme }) => theme.primary.lightBrown};
   &:after {
     content: "";

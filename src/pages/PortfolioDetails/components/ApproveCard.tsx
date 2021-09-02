@@ -160,7 +160,7 @@ const ApproveCard = memo<TProps>(
         // if (invest.status) {
         // }
       };
-      // deposit();
+      deposit();
     };
     const handleDeposit100 = () => {
       const deposit = async () => {

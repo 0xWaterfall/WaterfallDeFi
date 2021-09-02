@@ -141,10 +141,12 @@ export const getRemaining = (target: string | undefined, principal: string | und
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
-export const compareNum = (num1: string | undefined, num2: string | undefined) => {
+export const compareNum = (num1: string | number | undefined, num2: string | undefined, largerOnly = false) => {
   if (num1 === undefined) return;
   if (num2 === undefined) return;
   const _num1 = new BigNumber(num1);
   const _num2 = new BigNumber(num2);
+
+  if (largerOnly) return _num1.comparedTo(_num2) > 0 ? true : false;
   return _num1.comparedTo(_num2) >= 0 ? true : false;
 };

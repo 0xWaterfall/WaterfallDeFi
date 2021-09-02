@@ -7,7 +7,7 @@ import { Input } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
-import { formatBalance, formatNumberSeparator } from "utils/formatNumbers";
+import { compareNum, formatBalance, formatNumberSeparator } from "utils/formatNumbers";
 import { useEffect } from "react";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
@@ -111,14 +111,20 @@ const ApproveCard = memo<TProps>(
     const handleApprove = () => {
       setApproveLoading(true);
       const approve = async () => {
-        const result = await contractBUSD.methods
-          .approve("0x" + data.address, web3.utils.toWei("999999999", "ether"))
-          .send({ from: account });
-        console.log(result);
-        setApproveLoading(false);
-
-        if (result.status) {
-          setApproved(true);
+        console.log("start approve");
+        try {
+          const result = await contractBUSD.methods
+            .approve("0x" + data.address, web3.utils.toWei("999999999", "ether"))
+            .send({ from: account });
+          console.log("start approve2");
+          console.log(result);
+          if (result.status) {
+            setApproved(true);
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setApproveLoading(false);
         }
       };
       approve();
@@ -138,17 +144,23 @@ const ApproveCard = memo<TProps>(
         // console.log(deposit);
 
         // invest
-        const invest = await contractTrancheMaster.methods
-          .investDirect(amount, selectTrancheIdx, amount)
-          .send({ from: account });
-        console.log(invest);
-        fetchMarketData();
-        setBalanceInput(0);
-        setDepositLoading(false);
+        try {
+          const invest = await contractTrancheMaster.methods
+            .investDirect(amount, selectTrancheIdx, amount)
+            .send({ from: account });
+          console.log(invest);
+          fetchMarketData();
+          setBalanceInput(0);
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setDepositLoading(false);
+        }
+
         // if (invest.status) {
         // }
       };
-      deposit();
+      // deposit();
     };
     const handleDeposit100 = () => {
       const deposit = async () => {
@@ -176,23 +188,33 @@ const ApproveCard = memo<TProps>(
       const { value } = e.target;
       let input = parseInt(value);
       if (isNaN(input)) input = 0;
+      if (input == 0) setValidateText("");
       setBalanceInput(input);
     };
     const validateInput = () => {
-      const _myBalance = parseInt(myBalance);
-      const _remaining = parseInt(remaining);
+      // console.log(myBalance);
+      const _myBalance = myBalance.replace(/\,/g, "");
+      const _remaining = remaining.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-
-      if (_balanceInput > _myBalance) {
+      console.log("AAA");
+      console.log(_myBalance);
+      console.log(_remaining);
+      console.log(_balanceInput);
+      // console.log("_myBalance", _myBalance);
+      if (compareNum(_balanceInput, _myBalance, true)) {
+        // if (_balanceInput > _myBalance) {
         console.log("Insufficient balance");
         setValidateText("Insufficient Balance");
         return false;
       }
-      if (_balanceInput > _remaining) {
+      if (compareNum(_balanceInput, _remaining, true)) {
+        // if (_balanceInput > _remaining) {
         console.log(`Maximum deposit amount = ${remaining}`);
         setValidateText(`Maximum deposit amount = ${remaining}`);
         return false;
       }
+
+      setValidateText("");
       return true;
     };
     return (
@@ -233,7 +255,7 @@ const ApproveCard = memo<TProps>(
           </ButtonDiv>
         ) : (
           <ButtonDiv>
-            <Button type="primary" css={{ height: 56 }} onClick={handleApprove} loading={depositLoading}>
+            <Button type="primary" css={{ height: 56 }} onClick={handleApprove} loading={approveLoading}>
               {intl.formatMessage({ defaultMessage: "Approve" })}
             </Button>
           </ButtonDiv>

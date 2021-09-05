@@ -36,7 +36,11 @@ const DescText = styled.p`
   line-height: 19px;
   text-align: center;
   color: ${({ theme }) => theme.gray.normal7};
-  /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
+  max-width: 270px;
+  margin: 0 auto;
+  @media screen and (max-width: 1024px) {
+    margin: 0;
+  }
 `;
 const ArrowWrapper = styled.div`
   position: absolute;

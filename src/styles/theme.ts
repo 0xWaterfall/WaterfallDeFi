@@ -1,7 +1,8 @@
 const theme = {
   fonts: {
     Nunito: "Nunito",
-    CarterOne: "Carter One"
+    CarterOne: "Carter One",
+    IBMPlexSans: "IBM Plex Sans"
   },
   gray: {
     light: "#FAFAFA",
@@ -19,6 +20,7 @@ const theme = {
     normal: "#167BFF",
     deep: "#0066FF",
     deep2: "rgba(0, 102, 255, 0.2)",
+    deep04: "rgba(0, 102, 255, 0.04)",
     deepBrown: "#2C5290"
   },
   tags: {

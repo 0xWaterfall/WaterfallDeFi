@@ -5,6 +5,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import Header from "./components/Header";
 import Content from "./components/Content";
 import WorkFlow from "./components/WorkFlow";
+import Loading from "components/Loading/Loading";
 
 type TProps = WrappedComponentProps;
 

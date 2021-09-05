@@ -12,16 +12,16 @@ import { formatNumberSeparator } from "utils/formatNumbers";
 
 type TProps = WrappedComponentProps;
 
-const ClaimBlockName = styled.div`
+const AirdropBlockName = styled.div`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.primary.normal};
   margin-bottom: 8px;
 `;
 
-const Claim = memo<TProps>(({ intl }) => {
+const Airdrop = memo<TProps>(({ intl }) => {
   const { primary, fonts, white } = useTheme();
-  const { weekDistribution } = useWTF();
+  // const { weekDistribution } = useWTF();
   return (
     <div
       css={{
@@ -37,31 +37,17 @@ const Claim = memo<TProps>(({ intl }) => {
         backgroundColor: white.normal
       }}
     >
-      <ClaimBlockName>
-        <span css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Weekly reward" })}</span>
+      <AirdropBlockName>
+        <span css={{ marginRight: 4 }}>
+          {intl.formatMessage({ defaultMessage: "Airdrop bonus for early deposit" })}
+        </span>
         <Tooltip
           overlay={
             <React.Fragment>
               <p>
                 {intl.formatMessage({
                   defaultMessage:
-                    "All position holders can get different proportions of rewards according to different tranche."
-                })}
-              </p>
-              <br />
-              <p>
-                {intl.formatMessage({
-                  defaultMessage: "• Senior: 25% of total WTF"
-                })}
-              </p>
-              <p>
-                {intl.formatMessage({
-                  defaultMessage: "• Mezzanine: 35% of total WTF"
-                })}
-              </p>
-              <p>
-                {intl.formatMessage({
-                  defaultMessage: "• Junior: 40% of total WTF"
+                    "In each cycle, users who deposit funds in the first 12 hours will be allocated 100,000 WTF in proportion to the size of the principal."
                 })}
               </p>
             </React.Fragment>
@@ -69,7 +55,7 @@ const Claim = memo<TProps>(({ intl }) => {
         >
           <Union />
         </Tooltip>
-      </ClaimBlockName>
+      </AirdropBlockName>
       <div
         css={{
           fontSize: 20,
@@ -79,10 +65,10 @@ const Claim = memo<TProps>(({ intl }) => {
           }
         }}
       >
-        {formatNumberSeparator(weekDistribution.toString())} WTF
+        100,000 WTF
       </div>
     </div>
   );
 });
 
-export default injectIntl(Claim);
+export default injectIntl(Airdrop);

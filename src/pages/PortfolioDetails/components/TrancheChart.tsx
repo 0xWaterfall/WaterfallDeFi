@@ -29,17 +29,17 @@ const TrancheChart = memo<TProps>(({ intl }) => {
     {
       key: "Senior",
       name: intl.formatMessage({ defaultMessage: "Senior" }),
-      value: getPercentage(tranches[0].target, totalTranchesTarget)
+      value: getPercentage(tranches[0]?.target, totalTranchesTarget)
     },
     {
       key: "Mezzanine",
       name: intl.formatMessage({ defaultMessage: "Mezzanine" }),
-      value: getPercentage(tranches[1].target, totalTranchesTarget)
+      value: getPercentage(tranches[1]?.target, totalTranchesTarget)
     },
     {
       key: "Junior",
       name: intl.formatMessage({ defaultMessage: "Junior" }),
-      value: getPercentage(tranches[2].target, totalTranchesTarget)
+      value: getPercentage(tranches[2]?.target, totalTranchesTarget)
     }
   ];
 

@@ -2,7 +2,7 @@
 
 import { ClassNames, useTheme } from "@emotion/react";
 import { useSize } from "ahooks";
-import { I18n, Menu, WaterFall } from "assets/images";
+import { CaretDown, I18n, Menu, ShortRight, Wallet, WaterFall } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import Dropdown from "components/Dropdown/Dropdown";
@@ -14,12 +14,12 @@ import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store";
 import { fetchI18nMiddleware } from "store/i18n";
 import ConnectWalletModal from "./components/ConnectWalletModal";
-import { getLibrary } from "utils/web3React";
 import { useWeb3React } from "@web3-react/core";
-import { ethers } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import useAuth from "utils/useAuth";
 import { formatAccountAddress } from "utils/formatAddress";
+import { languages } from "config";
+import Tooltip from "components/Tooltip/Tooltip";
 
 type TProps = WrappedComponentProps;
 
@@ -31,7 +31,7 @@ const Header = memo<TProps>(({ intl }) => {
   const [isDrawerShow, setDrawerShow] = useState(false);
 
   const dispatch = useAppDispatch();
-  const { locale, languages } = useAppSelector((state) => state.i18n);
+  const { locale } = useAppSelector((state) => state.i18n);
 
   const headerLeftRef = useRef<HTMLDivElement>(null);
   const headerRightRef = useRef<HTMLDivElement>(null);
@@ -39,7 +39,6 @@ const Header = memo<TProps>(({ intl }) => {
   const { width } = useSize(document.body);
 
   const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
-  console.log(active, account, chainId, p);
   const { login } = useAuth();
 
   useEffect(() => {
@@ -55,7 +54,17 @@ const Header = memo<TProps>(({ intl }) => {
     {
       pathname: "/portfolio",
       text: intl.formatMessage({ defaultMessage: "Portfolio" }),
-      checked: ["/portfolio", "/portfolio/details"]
+      checked: ["/portfolio/markets", "/portfolio/myPortfolio", "/portfolioDetails"],
+      subMenu: [
+        {
+          pathname: "/portfolio/markets",
+          text: intl.formatMessage({ defaultMessage: "Markets" })
+        },
+        {
+          pathname: "/portfolio/myPortfolio",
+          text: intl.formatMessage({ defaultMessage: "My Portfolio" })
+        }
+      ]
     },
     { pathname: "/staking", text: intl.formatMessage({ defaultMessage: "Staking" }), checked: ["/staking"] }
   ];
@@ -66,21 +75,12 @@ const Header = memo<TProps>(({ intl }) => {
 
   const I18nElement = useMemo(
     () => (
-      <ul
-        css={{
-          cursor: "pointer",
-          boxShadow: shadow.primary,
-          backgroundColor: white.normal,
-          borderRadius: 4,
-          marginTop: 10,
-          padding: "4px 0"
-        }}
-      >
+      <>
         {languages
-          ?.filter((p) => p !== locale)
+          ?.filter((p) => p.code !== locale)
           ?.map((l) => (
             <li
-              key={l}
+              key={l.code}
               css={{
                 width: 140,
                 height: 32,
@@ -90,14 +90,14 @@ const Header = memo<TProps>(({ intl }) => {
                 color: gray.normal7,
                 ":hover": { backgroundColor: primary.lightBrown }
               }}
-              onClick={() => dispatch(fetchI18nMiddleware(l))}
+              onClick={() => dispatch(fetchI18nMiddleware(l.code))}
             >
-              {l}
+              {l.name}
             </li>
           ))}
-      </ul>
+      </>
     ),
-    [locale, languages]
+    [locale]
   );
 
   const WaterFallDeFi = (
@@ -110,7 +110,6 @@ const Header = memo<TProps>(({ intl }) => {
   );
 
   const MetaMaskElement = useMemo(() => {
-    console.log(active, account, chainId);
     if (!active) {
       return (
         <Button type="primary" onClick={setVisible.bind(null, true)}>
@@ -122,7 +121,7 @@ const Header = memo<TProps>(({ intl }) => {
       return <Button type="warn">{intl.formatMessage({ defaultMessage: "Wrong Network" })}</Button>;
     }
     return (
-      <>
+      <div css={{ display: "flex", alignItems: "center" }}>
         <div
           css={{
             padding: "0 16px",
@@ -134,10 +133,11 @@ const Header = memo<TProps>(({ intl }) => {
             color: warn.normal,
             borderTopLeftRadius: 8,
             borderBottomLeftRadius: 8,
-            transform: "translateX(10px)"
+            transform: "translateX(10px)",
+            whiteSpace: "normal"
           }}
         >
-          BSC
+          BSC Testnet
         </div>
         <div
           css={{
@@ -157,16 +157,16 @@ const Header = memo<TProps>(({ intl }) => {
           }}
         >
           <span>{formatAccountAddress(account)}</span>
-          <div css={{ width: 20, height: 20, borderRadius: "50%", backgroundColor: "#ccc", marginLeft: 10 }}></div>
+          <Wallet css={{ marginLeft: 10 }} />
         </div>
-      </>
+      </div>
     );
   }, [account, active, chainId]);
 
   const MenuLink = useMemo(
     () =>
-      MENU.map(({ pathname, text, checked }) => (
-        <Link
+      MENU.map(({ pathname, text, checked, subMenu }) => (
+        <div
           key={pathname}
           css={{
             fontWeight: 600,
@@ -174,13 +174,84 @@ const Header = memo<TProps>(({ intl }) => {
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            color: checked.includes(location.pathname) ? primary.deep : gray.normal7,
-            ...(isPc ? { marginLeft: 36, height: "100%" } : { padding: "12px 20px" })
+            position: "relative",
+            ...(isPc ? { marginLeft: 36, height: "100%" } : { padding: "12px 20px" }),
+            ":hover": {
+              "&>div": {
+                display: "block"
+              }
+            }
           }}
-          to={pathname}
         >
-          {text}
-        </Link>
+          <Link
+            to={pathname}
+            css={{
+              display: "flex",
+              alignItems: "center",
+              color: checked.includes(location.pathname) ? primary.deep : gray.normal7,
+              ":hover": {
+                "&>svg": {
+                  transform: "rotate(180deg)"
+                }
+              }
+            }}
+          >
+            {text} {Boolean(subMenu) && <CaretDown css={{ transition: "transform .2s" }} />}
+          </Link>
+          {Boolean(subMenu) && (
+            <div
+              css={{
+                minWidth: 250,
+                position: "absolute",
+                zIndex: 1,
+                bottom: 0,
+                left: 0,
+                padding: 20,
+                background: white.normal,
+                borderRadius: 12,
+                transform: isPc ? "translate(-20%,100%)" : "translate(0,100%)",
+                filter: "drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04))",
+                display: "none",
+                fontFamily: fonts.IBMPlexSans
+              }}
+            >
+              {subMenu?.map((r) => (
+                <Link
+                  key={r.pathname}
+                  css={{
+                    fontWeight: 500,
+                    fontSize: 16,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    color: gray.normal85,
+                    height: 52,
+                    padding: "0 20px",
+                    borderRadius: 10,
+                    ":hover": {
+                      background: primary.deep04,
+                      color: primary.normal,
+                      fontWeight: 700,
+                      svg: {
+                        display: "block"
+                      }
+                    }
+                  }}
+                  to={r.pathname}
+                >
+                  <div css={{ display: "flex", alignItems: "center" }}>
+                    <div
+                      css={{ width: 6, height: 6, borderRadius: "50%", background: primary.normal, marginRight: 8 }}
+                    />
+                    {r.text}
+                  </div>
+                  <ShortRight css={{ display: "none" }} />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       )),
     [isPc, location.pathname]
   );
@@ -189,9 +260,13 @@ const Header = memo<TProps>(({ intl }) => {
     <div css={{ display: "flex", flexDirection: "row" }}>
       <ClassNames>
         {({ css }) => (
-          <Dropdown overlay={I18nElement} openClassName={css({ color: gray.normal85 })}>
+          <Tooltip
+            overlay={I18nElement}
+            openClassName={css({ color: gray.normal85 })}
+            overlayInnerStyle={{ padding: "4px 0" }}
+          >
             <I18n css={{ color: gray.normal5, display: "block", marginLeft: 24, cursor: "pointer" }} />
-          </Dropdown>
+          </Tooltip>
         )}
       </ClassNames>
     </div>

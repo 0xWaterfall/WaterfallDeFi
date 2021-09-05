@@ -6,11 +6,12 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import Claim from "./Claim";
+import Airdrop from "./Airdrop";
 
 type TProps = WrappedComponentProps;
 const TitleH1 = styled.h1`
-  font-size: 48px;
-  line-height: 74px;
+  font-size: 36px;
+  line-height: 55px;
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.gray.normal85};
   position: relative;
@@ -41,57 +42,70 @@ const DescText = styled.p`
 `;
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
-  margin-bottom: 150px;
+  /* flex-direction: column; */
+  /* align-items: center; */
+  margin-top: 20px;
+  margin-bottom: 100px;
 
   @media screen and (max-width: 1024px) {
-    margin-bottom: 0;
+    margin-bottom: 20px;
+    flex-direction: column;
   }
 `;
 
 const Header = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
-      <div css={{ position: "relative", "@media screen and (max-width: 1024px)": {} }}>
-        <div css={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit together, enjoy the distribution" })}</TitleH1>
-          <DescText>
-            {intl.formatMessage({
-              defaultMessage:
-                "Yield will be distributed in a way such that users of more senior tranches get a fixed return, while users of more junior tranches get a leveraged return"
-            })}
-          </DescText>
-        </div>
-        <Boxes
+      <Boxes
+        css={{
+          // position: "absolute",
+          // top: 80,
+          // right: "95%",
+          marginTop: 120,
+          "@media screen and (max-width: 1024px)": {
+            display: "none"
+          }
+        }}
+      />
+      <div css={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 60 }}>
+        <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit together, enjoy the distribution" })}</TitleH1>
+        <DescText>
+          {intl.formatMessage({
+            defaultMessage:
+              "Yield will be distributed in a way such that users of more senior tranches get a fixed return, while users of more junior tranches get a leveraged return"
+          })}
+        </DescText>
+      </div>
+
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          "@media screen and (max-width: 1024px)": {
+            position: "static",
+            transform: "translateX(0)"
+          }
+        }}
+      >
+        <WaterFallMountain
           css={{
-            position: "absolute",
-            top: 80,
-            right: "95%",
-            "@media screen and (max-width: 1024px)": {
-              display: "none"
-            }
+            transform: "translate(-20px,20px)"
           }}
         />
-
         <div
           css={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            transform: "translateX(100%)",
+            display: "grid",
+            gridTemplateColumns: "206px 270px",
+            gridColumnGap: 16,
             "@media screen and (max-width: 1024px)": {
-              position: "static",
-              transform: "translateX(0)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center"
+              gridTemplateColumns: "none",
+              gridRowGap: 16
             }
           }}
         >
-          <WaterFallMountain />
           <Claim />
+          <Airdrop />
         </div>
       </div>
     </Wrapper>

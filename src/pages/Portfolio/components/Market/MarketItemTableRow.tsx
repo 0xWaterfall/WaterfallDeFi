@@ -142,7 +142,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
           <Button
             type="primary"
             onClick={() => {
-              push({ pathname: "/portfolio/details", state: marketData });
+              push({ pathname: "/portfolioDetails", state: marketData });
             }}
           >
             Deposit

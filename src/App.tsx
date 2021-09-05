@@ -11,21 +11,24 @@ import theme from "styles/theme";
 import { Web3ReactProvider } from "@web3-react/core";
 import { getLibrary } from "utils/web3React";
 import Reset from "styles/global/Reset";
+import ConnectedDataProvider from "providers/ConnectedDataProvider/ConnectedDataProvider";
 
 const App: FC = () => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
-      <Router history={history}>
-        <Provider store={store}>
+      <Provider store={store}>
+        <ConnectedDataProvider>
           <ConnectedIntlProvider>
-            <ThemeProvider theme={theme}>
-              <Reset />
-              <Global />
-              <Layout />
-            </ThemeProvider>
+            <Router history={history}>
+              <ThemeProvider theme={theme}>
+                <Reset />
+                <Global />
+                <Layout />
+              </ThemeProvider>
+            </Router>
           </ConnectedIntlProvider>
-        </Provider>
-      </Router>
+        </ConnectedDataProvider>
+      </Provider>
     </Web3ReactProvider>
   );
 };

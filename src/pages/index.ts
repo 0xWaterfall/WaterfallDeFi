@@ -15,14 +15,15 @@ export const RouteComponents = [
   {
     key: "Portfolio",
     component: Portfolio,
-    exact: true,
-    path: "/portfolio"
+    exact: false,
+    path: "/portfolio",
+    redirect: "/portfolio/markets"
   },
   {
     key: "PortfolioDetails",
     component: PortfolioDetails,
     exact: true,
-    path: "/portfolio/details"
+    path: "/portfolioDetails"
   },
   {
     key: "Staking",

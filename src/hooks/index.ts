@@ -47,6 +47,7 @@ export const useMarket = async (marketData: Market) => {
     marketData.pools = _poolInfos;
     marketData.totalAllocPoints = getTotalAllocPoints(_poolInfos);
   }
+
   return marketData;
 };
 export const useBalance = (abi: any, address: string) => {
@@ -93,7 +94,6 @@ export const useBalance = (abi: any, address: string) => {
   //     provider.off("block", fetchBalance);
   //   };
   // }, [fetchBalance]);
-
   return balance;
 };
 export const useWTF = () => {

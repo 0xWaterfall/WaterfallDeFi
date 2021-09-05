@@ -45,8 +45,26 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
                 "By connecting a wallet, you agree to {terms} and acknowledge that you have read and understand the {privacy}."
             },
             {
-              terms: <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Terms of Service" })}</a>,
-              privacy: <a css={{ fontWeight: 600 }}>{intl.formatMessage({ defaultMessage: "Privacy Policy" })}</a>
+              terms: (
+                <a
+                  css={{ fontWeight: 600 }}
+                  href="https://waterfalldefi.org/terms-of-service/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {intl.formatMessage({ defaultMessage: "Terms of Service" })}
+                </a>
+              ),
+              privacy: (
+                <a
+                  css={{ fontWeight: 600 }}
+                  href="https://waterfalldefi.org/privacy-policy/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {intl.formatMessage({ defaultMessage: "Privacy Policy" })}
+                </a>
+              )
             }
           )}
         </div>

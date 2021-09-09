@@ -8,6 +8,8 @@ import * as echarts from "echarts/core";
 import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
+import { useStrategyFarm } from "hooks";
+import BigNumber from "bignumber.js";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -17,12 +19,22 @@ let chart: echarts.ECharts;
 
 const PortfolioChart = memo<TProps>(({ intl }) => {
   const { white, gray, fonts } = useTheme();
+  const result = useStrategyFarm();
 
-  const payload = [
-    { name: "BTC/USDC-LP", value: 15 },
-    { name: "BTC/USDT-LP", value: 30 },
-    { name: "BTC/BUSD-LP", value: 40 }
-  ];
+  const payload: any[] = [];
+  if (result && result.length > 0) {
+    console.log(result);
+
+    result.map((r: any) => {
+      payload.push({ name: r?.addr, value: new BigNumber(r?.shares.toString()).toNumber() });
+    });
+  }
+
+  // const payload = [
+  //   { name: "BTC/USDC-LP", value: 15 },
+  //   { name: "BTC/USDT-LP", value: 30 },
+  //   { name: "BTC/BUSD-LP", value: 40 }
+  // ];
   const COLORS = ["#FFB0E3", "#4A63B9", "#85C872", "#F7C05F"];
   const options = useMemo(() => {
     const res = payload.map((p, i) => ({ value: p.value, name: p.name, itemStyle: { color: COLORS[i] } }));

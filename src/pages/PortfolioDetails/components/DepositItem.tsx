@@ -61,7 +61,8 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
                     setSelectTranche(undefined);
                   } else {
                     setSelectTrancheIdx(_i);
-                    setSelectTranche(_d);
+                    console.log(_d);
+                    setSelectTranche({ ..._d });
                   }
                 }
               }}
@@ -84,11 +85,15 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
       <ApproveCard
         isRe={isRe}
         assets={data.assets}
-        remaining={getRemaining(selectTranche?.target, selectTranche?.principal)}
+        remaining={
+          selectTrancheIdx !== undefined
+            ? getRemaining(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+            : "0"
+        }
         enabled={selectTranche !== undefined}
         selectTrancheIdx={selectTrancheIdx}
         myBalance={myBalance}
-        data={data}
+        data={marketData}
         fetchMarketData={fetchMarketData}
         isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
       />

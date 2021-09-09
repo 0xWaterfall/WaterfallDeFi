@@ -17,7 +17,7 @@ import { AbiItem } from "web3-utils";
 
 import { Web3Provider } from "@ethersproject/providers";
 import getRpcUrl from "utils/getRpcUrl";
-import { useWTF } from "hooks";
+import { usePendingWTFReward, useStrategyFarm, useWTF } from "hooks";
 
 const Dashboard = memo<TProps>(() => {
   // const { account } = useWeb3React();
@@ -25,6 +25,9 @@ const Dashboard = memo<TProps>(() => {
   const { weekDistribution } = useWTF();
   console.log("weekDistribution", weekDistribution.toString());
   console.log(connector);
+
+  // const pendingReward_ = usePendingWTFReward();
+  // console.log("pendingReward_", pendingReward_);
   const testContract = useCallback(async () => {
     if (window.ethereum?.isMetaMask && window.ethereum.request) {
       const accounts = await window.ethereum?.request({ method: "eth_requestAccounts" });
@@ -35,12 +38,12 @@ const Dashboard = memo<TProps>(() => {
       // console.log(Web3.givenProvider);
       const web3 = new Web3(Web3.givenProvider);
 
-      // const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
+      const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
       // const currentBlock = await simpleRpcProvider.getBlockNumber();
       // console.log("currentBlock", currentBlock);
 
-      // const contractTrancheMaster = new ethers.Contract(TranchesAddress, TrancheMasterAbi, simpleRpcProvider);
-      // console.log(contractTrancheMaster);
+      const contractTrancheMaster2 = new ethers.Contract(TranchesAddress, TrancheMasterAbi, simpleRpcProvider);
+      console.log(contractTrancheMaster2);
       // const tranches = await contractTrancheMaster.tranches(0);
       // console.log(tranches);
       // const __ = await contractTrancheMaster.methods.balanceOf(myAccount).call();
@@ -77,10 +80,11 @@ const Dashboard = memo<TProps>(() => {
 
       //0
       const cycle = await contractTrancheMaster.methods.cycle().call();
+      console.log("cycle", cycle);
       //0
       const actualStartAt = await contractTrancheMaster.methods.actualStartAt().call();
 
-      console.log(currency, staker, strategy, cycle, actualStartAt);
+      console.log(currency, staker, strategy, cycle, actualStartAt, duration);
 
       console.log(contractTrancheMaster);
 
@@ -156,8 +160,12 @@ const Dashboard = memo<TProps>(() => {
       // console.log(deposit);
 
       //check deposit balance
-      // const ret = await contractTrancheMaster.methods.balanceOf(myAccount).call();
-      // console.log(ret);
+      const ret = await contractTrancheMaster.methods.balanceOf(myAccount).call();
+      console.log("deposit balance", ret);
+
+      //check getInvest
+      const getInvest = await contractTrancheMaster.methods.getInvest(1).call();
+      console.log("getInvest", getInvest);
 
       //invest
       // const invest = await contractTrancheMaster.methods.investDirect(1, 200000, false).send({ from: myAccount });
@@ -183,10 +191,34 @@ const Dashboard = memo<TProps>(() => {
 
       const rewardPerBlock = await contractMasterChef.methods.rewardPerBlock().call();
       console.log(rewardPerBlock);
+
+      console.log("myAccount", myAccount);
+
+      const pendingReward = await contractMasterChef.methods.pendingReward(myAccount, 0).call();
+      console.log(pendingReward);
+      const pendingReward1 = await contractMasterChef.methods.pendingReward(myAccount, 1).call();
+      console.log(pendingReward1);
+      const pendingReward2 = await contractMasterChef.methods.pendingReward(myAccount, 2).call();
+
+      // const claimAll = await contractMasterChef.methods.claimAll().send({ from: myAccount });
+      // console.log(claimAll);
+      const activeCycle = await contractTrancheMaster.methods.active().call();
+      console.log(activeCycle);
+
+      // const stop = await contractTrancheMaster.methods.stop().send({ from: myAccount });
+      // console.log(stop);
+
+      const farms = await contractStrategy.methods.farms(0).call();
+      console.log(farms);
+
+      const farms1 = await contractStrategy.methods.farms(1).call();
+      console.log(farms1);
+      const farms2 = await contractStrategy.methods.farms(2).call();
+      console.log(farms2);
     }
   }, []);
   useEffect(() => {
-    // testContract();
+    testContract();
   }, []);
   return <div style={{ marginTop: 100 }}>dashboard</div>;
 });

@@ -1,15 +1,48 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useLocation } from "react-router-dom";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
+import { useTheme } from "@emotion/react";
+import Button from "components/Button/Button";
+import { usePendingWTFReward, useTrancheBalance } from "hooks";
+import { formatNumberDisplay } from "utils/formatNumbers";
+import { successNotification } from "utils/notification";
 
+import { AbiItem } from "web3-utils";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import Web3 from "web3";
+const Block2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  & > div {
+    padding-top: 12px;
+    padding-left: 36px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    color: ${({ theme }) => theme.gray.normal7};
+    filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
+  }
+  & > div:after {
+    content: "";
+    position: absolute;
+    background-color: ${({ theme }) => theme.primary.deep};
+    top: 12px;
+    left: 0;
+    height: calc(100% - 24px);
+    width: 5px;
+  }
+`;
 const Block = styled.div`
-  padding-left: 130px;
+  // padding-left: 130px;
   flex: 1;
   display: flex;
   color: ${({ theme }) => theme.gray.normal7};
@@ -32,9 +65,61 @@ const Block = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const Charts = memo<TProps>(() => {
+const Charts = memo<TProps>(({ intl }) => {
+  const { gray, primary, fonts } = useTheme();
+  const [claimRewardLoading, setClaimRewardLoading] = useState(false);
+  const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
+
   const location = useLocation<Market>();
   const data = location.state;
+  const { account, active } = useWeb3React<Web3Provider>();
+  const web3 = new Web3(Web3.givenProvider);
+  const contractMasterChef = new web3.eth.Contract(data.masterChefAbi as AbiItem[], data.masterChefAddress);
+  const contractTrancheMaster = new web3.eth.Contract(data.abi as AbiItem[], data.address);
+
+  const { balance, invested } = useTrancheBalance();
+
+  const pendingReward = usePendingWTFReward();
+  const claimReward = () => {
+    setClaimRewardLoading(true);
+
+    const claim = async () => {
+      console.log("start claim");
+      try {
+        const result = await contractMasterChef.methods.claimAll().send({ from: account });
+        console.log(result);
+        if (result.status) {
+          successNotification("Claim Success", "");
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setClaimRewardLoading(false);
+      }
+    };
+    claim();
+  };
+  const withdrawAll = () => {
+    setWithdrawAllLoading(true);
+
+    const withdraw = async () => {
+      console.log("withdraw all");
+      try {
+        if (!balance) return;
+        // console.log(balance.toString());
+        const result = await contractTrancheMaster.methods.withdraw(balance.toString()).send({ from: account });
+        console.log(result);
+        if (result.status) {
+          successNotification("Withdraw All Success", "");
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setWithdrawAllLoading(false);
+      }
+    };
+    withdraw();
+  };
   return (
     <div
       css={{
@@ -46,6 +131,36 @@ const Charts = memo<TProps>(() => {
         }
       }}
     >
+      <Block2>
+        <div>
+          <div>
+            <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
+            <div css={{ padding: "16px 0", fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>
+              {balance ? formatNumberDisplay(balance.toString()) : "-"} {data.assets}
+            </div>
+          </div>
+          <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
+            <Button type="primary" onClick={() => withdrawAll()} loading={withdrawAllLoading}>
+              {intl.formatMessage({ defaultMessage: "Withdraw All" })}
+            </Button>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div css={{ paddingBlock: 24, color: gray.normal7 }}>
+              {intl.formatMessage({ defaultMessage: "WTF Reward" })}
+            </div>
+            <div css={{ fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>
+              {pendingReward ? formatNumberDisplay(pendingReward.toString()) : "-"} WTF
+            </div>
+          </div>
+          <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
+            <Button type="default" onClick={() => claimReward()} loading={claimRewardLoading}>
+              {intl.formatMessage({ defaultMessage: "Claim" })}
+            </Button>
+          </div>
+        </div>
+      </Block2>
       <Block>
         <PortfolioChart />
       </Block>

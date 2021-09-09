@@ -7,13 +7,13 @@ import { Input, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
-import { compareNum, formatBalance, formatNumberSeparator } from "utils/formatNumbers";
+import { compareNum, formatBalance, formatNumberSeparator, getRemaining } from "utils/formatNumbers";
 import { useEffect } from "react";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { Market } from "types";
+import { Market, Tranche } from "types";
 import { NotificationApi } from "antd/lib/notification";
 
 const RowDiv = styled.div`
@@ -90,7 +90,6 @@ type TProps = WrappedComponentProps & {
 
 const ApproveCard = memo<TProps>(
   ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, fetchMarketData, isSoldOut }) => {
-    console.log("isSoldOut", isSoldOut);
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
     const [validateText, setValidateText] = useState("");

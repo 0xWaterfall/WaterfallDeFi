@@ -31,6 +31,7 @@ export interface Market {
   // lockupPeriod: string;
   duration?: number;
   actualStartAt?: number;
+  cycle?: number;
   tranches: Tranche[];
   totalTranchesTarget: string;
   tvl: string;

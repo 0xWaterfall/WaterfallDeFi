@@ -24,6 +24,7 @@ import { AbiItem } from "web3-utils";
 import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
+import _ from "lodash";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -88,6 +89,11 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
   useEffect(() => {
     const fetchData = async () => {
       const _md = await useMarket({ ...data });
+      console.log(_md);
+      console.log(_md?.duration);
+      console.log(_md?.actualStartAt);
+
+      if (_md?.duration && _md.actualStartAt) console.log((Number(_md?.duration) + Number(_md?.actualStartAt)) * 1000);
       if (_md) setMarketData(_md);
     };
     fetchData();
@@ -150,11 +156,15 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
           <span css={{ fontSize: 10, marginTop: 10 }}>
             {marketData.status === PORTFOLIO_STATUS.ACTIVE && marketData.duration && marketData.actualStartAt && (
               <Countdown
-                date={marketData.duration + marketData.actualStartAt}
+                date={(Number(marketData.duration) + Number(marketData.actualStartAt)) * 1000}
                 renderer={({ days, hours, minutes, seconds, completed }) => {
                   return (
                     <span>
-                      {days}D {hours}H {minutes}M {seconds}S
+                      {!completed && (
+                        <>
+                          {days}D {hours}H {minutes}M {seconds}S
+                        </>
+                      )}
                     </span>
                   );
                 }}

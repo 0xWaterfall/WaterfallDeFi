@@ -129,6 +129,7 @@ const CheckDiv = styled.div`
 
 const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets, selected, data }) => {
   const { tags, primary, gray } = useTheme();
+  console.log(tranche);
   const Types = {
     Senior: {
       color: tags.yellowText,

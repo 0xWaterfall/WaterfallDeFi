@@ -14,7 +14,7 @@ export const fetchI18nMiddleware = createAsyncThunk<II18n | undefined, string>("
       return { locale, languages, messages };
     }
   } catch (e) {
-    console.error(new Error(e));
+    console.error(e);
   }
 });
 

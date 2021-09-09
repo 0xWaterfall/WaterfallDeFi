@@ -7,3 +7,7 @@ interface II18n {
   languages: string[];
   messages: { [key: string]: string };
 }
+
+interface ISelected {
+  marketKey: string;
+}

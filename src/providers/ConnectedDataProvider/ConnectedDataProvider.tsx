@@ -6,7 +6,7 @@ import { getMarkets } from "store/markets";
 const ConnectedDataProvider: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    // dispatch(getMarkets(MarketList));
+    dispatch(getMarkets(MarketList));
   }, []);
   return <>{children}</>;
 };

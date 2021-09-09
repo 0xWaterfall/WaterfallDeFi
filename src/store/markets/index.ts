@@ -1,58 +1,56 @@
+import { getContract } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market, PORTFOLIO_STATUS } from "types";
 import { getPortfolioTotalTarget, getPortfolioTvl, getTotalAllocPoints } from "utils/formatNumbers";
 import Web3 from "web3";
-import { AbiItem } from "web3-utils/types";
 
 const initialState: Market[] = [];
 
 export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("markets/getMarket", async (payload) => {
   try {
     if (!Web3.givenProvider) return;
+    const _payload: Market[] = JSON.parse(JSON.stringify(payload));
+
     const markets = await Promise.all(
-      payload.map(async (marketData) => {
-        const web3 = new Web3(Web3.givenProvider);
-        const contractTranches = new web3.eth.Contract(marketData.abi as AbiItem[], marketData.address);
-        const contractMasterChef = new web3.eth.Contract(
-          marketData.masterChefAbi as AbiItem[],
-          marketData.masterChefAddress
-        );
+      _payload.map(async (marketData) => {
+        const contractTranches = getContract(marketData.abi, marketData.address);
+        const contractMasterChef = getContract(marketData.masterChefAbi, marketData.masterChefAddress);
 
         if (contractTranches) {
-          const _tranches = await Promise.all([
-            contractTranches.methods.tranches(0).call(),
-            contractTranches.methods.tranches(1).call(),
-            contractTranches.methods.tranches(2).call()
+          const tranches = await Promise.all([
+            contractTranches.tranches(0),
+            contractTranches.tranches(1),
+            contractTranches.tranches(2)
           ]);
 
-          const active = await contractTranches.methods.active().call();
-          marketData.status = active ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
+          const [active, duration, actualStartAt] = await Promise.all([
+            contractTranches.active(),
+            contractTranches.duration(),
+            contractTranches.actualStartAt()
+          ]);
 
-          const duration = await contractTranches.methods.duration().call();
-          marketData.duration = duration;
+          const status = active ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
+          const totalTranchesTarget = getPortfolioTotalTarget(tranches);
+          const tvl = getPortfolioTvl(tranches);
 
-          const actualStartAt = await contractTranches.methods.actualStartAt().call();
-          marketData.actualStartAt = actualStartAt;
-
-          marketData.tranches = _tranches;
-          marketData.totalTranchesTarget = getPortfolioTotalTarget(_tranches);
-          marketData.tvl = getPortfolioTvl(_tranches);
+          marketData = { ...marketData, tranches, duration, actualStartAt, status, totalTranchesTarget, tvl };
         }
         if (contractMasterChef) {
-          const _poolInfos = await Promise.all([
-            contractMasterChef.methods.poolInfo(0).call(),
-            contractMasterChef.methods.poolInfo(1).call(),
-            contractMasterChef.methods.poolInfo(2).call()
+          const pools = await Promise.all([
+            contractMasterChef.poolInfo(0),
+            contractMasterChef.poolInfo(1),
+            contractMasterChef.poolInfo(2)
           ]);
-          marketData.pools = _poolInfos;
-          marketData.totalAllocPoints = getTotalAllocPoints(_poolInfos);
+          const totalAllocPoints = getTotalAllocPoints(pools);
+
+          marketData = { ...marketData, pools, totalAllocPoints };
         }
         return marketData;
       })
     );
-    return markets;
+    return JSON.parse(JSON.stringify(markets));
   } catch (e) {
-    console.error(new Error(e));
+    console.error(e);
   }
 });
 

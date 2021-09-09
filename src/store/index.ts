@@ -3,15 +3,17 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import i18n, { fetchI18nMiddleware } from "./i18n";
 import markets from "./markets";
 import { load, save } from "redux-localstorage-simple";
+import selectedKeys from "./selectedKeys";
 
-const PERSISTED_KEYS: string[] = ["i18n.locale"];
+const PERSISTED_KEYS: string[] = ["i18n.locale", "selectedKeys"];
 
 export const store = configureStore({
   devTools: true,
   preloadedState: load({ states: PERSISTED_KEYS, namespace: "waterfall", namespaceSeparator: "." }),
   reducer: {
     i18n,
-    markets
+    markets,
+    selectedKeys
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(

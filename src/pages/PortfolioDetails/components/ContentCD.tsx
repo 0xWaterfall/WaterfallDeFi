@@ -14,7 +14,11 @@ type TProps = WrappedComponentProps & {
 const ContentCD = memo<TProps>(({ intl, data }) => {
   const TabTypes = [
     { key: "DEPOSIT", text: intl.formatMessage({ defaultMessage: "Deposit" }), component: <Deposit data={data} /> },
-    { key: "POSITIONS", text: intl.formatMessage({ defaultMessage: "My Positions" }), component: <MyPositions /> }
+    {
+      key: "POSITIONS",
+      text: intl.formatMessage({ defaultMessage: "My Positions" }),
+      component: <MyPositions data={data} />
+    }
   ];
   return (
     <Tabs defaultActiveKey="DEPOSIT">

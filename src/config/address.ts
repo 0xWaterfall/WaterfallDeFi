@@ -16,8 +16,14 @@
 // export const MasterChefAddress = "8f5371ab64F003Ea8B12ab8342F1b3104F31d50D";
 // export const BUSDAddress = "b7E9b0bc3Ad96C03fb83F62095A1432028cE68ae";
 
-export const WTFAddress = "2b97E3FEBa73169339Ef830Ca0d0F23f22E9055E";
-export const StrategyAddress = "A2329dD6078096283D7E491714458f10b6E0b543";
-export const TranchesAddress = "1e7c338A21B15B33511D363D036Be431f73Fbcc5";
-export const MasterChefAddress = "04049BD9819c9F0396537B3Bd93080490D979Ab7";
-export const BUSDAddress = "7b5cec049A037d26914ea845B8E46f0C7689aaa8";
+// export const WTFAddress = "2b97E3FEBa73169339Ef830Ca0d0F23f22E9055E";
+// export const StrategyAddress = "A2329dD6078096283D7E491714458f10b6E0b543";
+// export const TranchesAddress = "1e7c338A21B15B33511D363D036Be431f73Fbcc5";
+// export const MasterChefAddress = "04049BD9819c9F0396537B3Bd93080490D979Ab7";
+// export const BUSDAddress = "7b5cec049A037d26914ea845B8E46f0C7689aaa8";
+
+export const StrategyAddress = "2E91d400672794B1f121B54289A0b299308774c4";
+export const TranchesAddress = "aaAfebF363839DdB04Bd0eA649e48a7515228B4f";
+export const MasterChefAddress = "16B4B2a2d1A503a41aA1AfF157F40766730B9D11";
+export const BUSDAddress = "8dF107fb383d4C25fec36C9a6EbB06097C1135DB";
+export const WTFAddress = "a9F302953082Fb8412F55D5bCa3714A51E5b9A97";

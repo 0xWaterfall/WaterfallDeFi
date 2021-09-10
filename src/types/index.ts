@@ -29,9 +29,9 @@ export interface Market {
   assets: string;
   listingDate: string;
   // lockupPeriod: string;
-  duration?: number;
-  actualStartAt?: number;
-  cycle?: number;
+  duration?: string;
+  actualStartAt?: string;
+  cycle?: string;
   tranches: Tranche[];
   totalTranchesTarget: string;
   tvl: string;
@@ -43,8 +43,9 @@ export interface Market {
   masterChefAddress: string;
   masterChefAbi: any;
   masterChefContract?: Contract;
-  pools: Pool[];
-  totalAllocPoints?: number;
+  pools: string[];
+  // pools: Pool[];
+  totalAllocPoints?: string;
   depositAssetAddress: string;
   depositAssetAbi: any;
   depositAssetContract?: Contract;

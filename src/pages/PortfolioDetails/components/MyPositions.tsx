@@ -20,7 +20,9 @@ import Web3 from "web3";
 import { formatAllocPoint, formatAPY, formatNumberDisplay, getJuniorAPY } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: Market;
+};
 const Text2 = styled.div`
   font-size: 16px;
   line-height: 22px;
@@ -121,7 +123,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                           ? formatAPY(data.tranches[i].apy)
                           : getJuniorAPY(data.tranches, data.duration)}
                       </Text2>
-                      + {formatAllocPoint(data.pools[i].allocPoint, data.totalAllocPoints)}% WTF
+                      + {formatAllocPoint(data.pools[i], data.totalAllocPoints)}% WTF
                     </TableColumn>
                     <TableColumn minWidth={200}>
                       {formatNumberDisplay(p?.principal)} {data.assets}

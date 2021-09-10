@@ -55,28 +55,30 @@ const TvlDiv = styled.div`
   color: ${({ theme }) => theme.primary.deep};
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: Market;
+};
 
-const Information = memo<TProps>(() => {
+const Information = memo<TProps>(({ data }) => {
   const { goBack } = useHistory();
-  const location = useLocation<Market>();
-  const data = location.state;
+  // const location = useLocation<Market>();
+  // const data = location.state;
 
   return (
     <InformationWrapper>
       <Arrow onClick={goBack} />
       <div>
-        <Text1>{data.portfolio}</Text1>
-        <span>Listing date: {data.listingDate}</span>
+        <Text1>{data?.portfolio}</Text1>
+        <span>Listing date: {data?.listingDate}</span>
       </div>
       <div>
-        <Text2>{data.assets}</Text2>
-        <span>Lock-up period: {data.duration ? getLockupPeriod(data.duration) : "-"}</span>
+        <Text2>{data?.assets}</Text2>
+        <span>Lock-up period: {data?.duration ? getLockupPeriod(data?.duration) : "-"}</span>
       </div>
       <div>
         <Text2></Text2>
         <TvlDiv>
-          TVL: {formatDisplayTVL(data.tvl)} {data.assets}
+          TVL: {formatDisplayTVL(data?.tvl)} {data?.assets}
         </TvlDiv>
       </div>
     </InformationWrapper>

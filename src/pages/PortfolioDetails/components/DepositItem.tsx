@@ -35,7 +35,8 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
   const [marketData, setMarketData] = useState(data);
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
-  const myBalance = useBalance(data.depositAssetAbi, data.depositAssetAddress);
+  const myBalance = useBalance(data.depositAssetAddress);
+  // const myBalance = "0";
 
   return (
     <div
@@ -70,7 +71,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
               <TranchesCard
                 key={_i}
                 type={tranchesDisplayText[_i]}
-                pool={data.pools?.[_i]}
+                allocPoint={data.pools?.[_i]}
                 tranche={data.tranches?.[_i]}
                 totalAllocPoint={data?.totalAllocPoints}
                 trancheIndex={_i}

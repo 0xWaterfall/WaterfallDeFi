@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 import { Market } from "types";
 import { useHistory, useLocation } from "react-router-dom";
 import { useMarket } from "hooks";
+import { useSelectedMarket } from "hooks/useSelectors";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;
@@ -21,29 +22,23 @@ const PortfolioDetailsWrapper = styled.div`
 type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
-  const location = useLocation<Market>();
-  const { push } = useHistory();
-
-  const data = location.state;
-  const [marketData, setMarketData] = useState<Market>(data);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const _md = await useMarket({ ...data });
-      if (_md) setMarketData(_md);
-    };
-    fetchData();
-  }, []);
-  useEffect(() => {
-    if (!data) {
-      push({ pathname: "/portfolio/" });
-    }
-  }, []);
+  const data = useSelectedMarket();
+  // const location = useLocation<Market>();
+  // const { push } = useHistory();
+  // useEffect(() => {
+  //   if (!data) {
+  //     push({ pathname: "/portfolio/" });
+  //   }
+  // }, []);
   return (
     <PortfolioDetailsWrapper>
-      <Information />
-      <Charts />
-      <ContentCD data={marketData} />
+      {data && (
+        <>
+          <Information data={data} />
+          <Charts data={data} />
+          <ContentCD data={data} />
+        </>
+      )}
     </PortfolioDetailsWrapper>
   );
 });

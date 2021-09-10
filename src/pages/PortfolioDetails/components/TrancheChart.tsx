@@ -6,7 +6,7 @@ import React, { CSSProperties, memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useLocation } from "react-router-dom";
 import { TransitionStatus } from "react-transition-group";
-import { Market } from "types";
+import { Market, Tranche } from "types";
 import { getPercentage } from "utils/formatNumbers";
 
 const transitionStyles: Partial<{ [key in TransitionStatus]: CSSProperties }> = {
@@ -16,12 +16,15 @@ const transitionStyles: Partial<{ [key in TransitionStatus]: CSSProperties }> = 
   exited: { height: 0 }
 };
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  tranches: Tranche[];
+  totalTranchesTarget: string;
+};
 
-const TrancheChart = memo<TProps>(({ intl }) => {
+const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
   const location = useLocation<Market>();
-  const { tranches, totalTranchesTarget } = location.state;
-  console.log(tranches, totalTranchesTarget);
+  // const { tranches, totalTranchesTarget } = location.state;
+  // console.log(tranches, totalTranchesTarget);
 
   const { white } = useTheme();
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };

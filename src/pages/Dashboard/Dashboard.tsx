@@ -21,6 +21,7 @@ import { getContract, usePendingWTFReward, useStrategyFarm, useWTF } from "hooks
 import { useMarkets, useSelectedMarket } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { setMarketKey } from "store/selectedKeys";
+import useWithdraw from "pages/PortfolioDetails/hooks/useWithdraw";
 
 const Dashboard = memo<TProps>(() => {
   // const { account } = useWeb3React();
@@ -28,19 +29,42 @@ const Dashboard = memo<TProps>(() => {
   const { weekDistribution } = useWTF();
   console.log("weekDistribution", weekDistribution.toString());
   console.log(connector);
-
+  const { onWithdraw } = useWithdraw();
   const markets = useMarkets();
   console.log(markets);
 
   const selectedMarket = useSelectedMarket();
   console.log(selectedMarket);
   if (selectedMarket) {
-    const web3 = new Web3(Web3.givenProvider);
-    const contractWTF = getContract(selectedMarket.abi as AbiItem[], selectedMarket.address);
-    console.log(contractWTF);
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contractTrancheMaster2 = new ethers.Contract(selectedMarket.address, selectedMarket.abi, signer);
+      console.log(contractTrancheMaster2);
+    }
   }
   const dispatch = useAppDispatch();
   dispatch(setMarketKey("0"));
+
+  const handleConfirmClick = async () => {
+    console.log("AAA");
+    try {
+      // staking
+      await onWithdraw("100");
+      // toastSuccess(
+      //   `${t('Staked')}!`,
+      //   t('Your %symbol% funds have been staked in the pool!', {
+      //     symbol: stakingToken.symbol,
+      //   }),
+      // )
+      // setPendingTx(false)
+      // onDismiss()
+    } catch (e) {
+      console.log(e);
+      // toastError(t('Error'), t('Please try again. Confirm the transaction and make sure you are paying enough gas!'))
+      // setPendingTx(false)
+    }
+  };
 
   // const pendingReward_ = usePendingWTFReward();
   // console.log("pendingReward_", pendingReward_);
@@ -114,16 +138,20 @@ const Dashboard = memo<TProps>(() => {
       // });
       // console.log(result);
 
+      const poolLength = await contractMasterChef.methods.poolLength().call();
+      console.log(poolLength);
       const poolInfo = await contractMasterChef.methods.poolInfo(0).call();
-      const poolInfo2 = await contractMasterChef.methods.poolInfo(1).call();
-      const poolInfo3 = await contractMasterChef.methods.poolInfo(2).call();
+      console.log(poolInfo);
+      // const poolInfo2 = await contractMasterChef.methods.poolInfo(1).call();
+      // console.log(poolInfo2);
+      // const poolInfo3 = await contractMasterChef.methods.poolInfo(2).call();
+      // console.log(poolInfo3);
       /*
       accRewardPerShare: "0"
       allocPoint: "30"
       lastRewardBlock: "11732849"
       totalSupply
       */
-      console.log(poolInfo, poolInfo2, poolInfo3);
 
       //WTF
       const rewardToken = await contractMasterChef.methods.rewardToken().call();
@@ -234,9 +262,13 @@ const Dashboard = memo<TProps>(() => {
     }
   }, []);
   useEffect(() => {
-    // testContract();
+    testContract();
   }, []);
-  return <div style={{ marginTop: 100 }}>dashboard</div>;
+  return (
+    <div style={{ marginTop: 100 }}>
+      dashboard<div onClick={handleConfirmClick}>click</div>
+    </div>
+  );
 });
 
 export default injectIntl(Dashboard);

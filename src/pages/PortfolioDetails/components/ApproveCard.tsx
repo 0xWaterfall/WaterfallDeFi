@@ -15,6 +15,10 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
 import { NotificationApi } from "antd/lib/notification";
+import useCheckApprove from "../hooks/useCheckApprove";
+import useApprove from "../hooks/useApprove";
+import { successNotification } from "utils/notification";
+import useInvestDirect from "../hooks/useInvestDirect";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -97,93 +101,54 @@ const ApproveCard = memo<TProps>(
     const [approveLoading, setApproveLoading] = useState(false);
     const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
     const web3 = new Web3(Web3.givenProvider);
-    const contractBUSD = new web3.eth.Contract(data.depositAssetAbi as AbiItem[], data.depositAssetAddress);
-    const contractTrancheMaster = new web3.eth.Contract(data.abi as AbiItem[], data.address);
+
+    const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
+    const { onApprove } = useApprove(data.depositAssetAddress, data.address);
+    const { onInvestDirect } = useInvestDirect();
     useEffect(() => {
-      const checkApproved = async () => {
-        const allowance = await contractBUSD.methods.allowance(account, "0x" + data.address).call();
-        console.log(allowance); // > 0
-        setApproved(allowance > 0 ? true : false);
+      const checkApproved = async (account: string) => {
+        const approved = await onCheckApprove();
+        setApproved(approved ? true : false);
       };
-      if (account) checkApproved();
+      if (account) checkApproved(account);
     }, [account]);
     useEffect(() => {
       setBalanceInput(0);
     }, [enabled]);
-    const openNotification = (title: string, desc: string) => {
-      notification["success"]({
-        message: title,
-        description: desc
-      });
-    };
-    const handleApprove = () => {
+    const handleApprove = async () => {
       setApproveLoading(true);
-      const approve = async () => {
-        console.log("start approve");
-        try {
-          const result = await contractBUSD.methods
-            .approve("0x" + data.address, web3.utils.toWei("999999999", "ether"))
-            .send({ from: account });
-          console.log("start approve2");
-          console.log(result);
-          if (result.status) {
-            setApproved(true);
-            openNotification("Approve Success", "");
-          }
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setApproveLoading(false);
-        }
-      };
-      approve();
+      try {
+        await onApprove();
+        successNotification("Approve Success", "");
+        setApproved(true);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setApproveLoading(false);
+      }
     };
-    const handleDeposit = () => {
+    const handleDeposit = async () => {
       if (!validateInput()) return;
-      const deposit = async () => {
-        if (balanceInput <= 0) return;
-        if (selectTrancheIdx === undefined) return;
+      if (balanceInput <= 0) return;
+      if (selectTrancheIdx === undefined) return;
 
-        setDepositLoading(true);
-        const amount = web3.utils.toWei(balanceInput.toString(), "ether");
-        console.log("amount", amount);
-        console.log("invest tranche", selectTrancheIdx);
-        // // //deposit
-        // const deposit = await contractTrancheMaster.methods.deposit(amount).send({ from: account });
-        // console.log(deposit);
-
-        // invest
-        try {
-          const invest = await contractTrancheMaster.methods
-            .investDirect(amount, selectTrancheIdx, amount)
-            .send({ from: account });
-          console.log(invest);
-          fetchMarketData();
+      setDepositLoading(true);
+      const amount = balanceInput.toString();
+      console.log("amount", amount);
+      console.log("invest tranche", selectTrancheIdx);
+      try {
+        const success = await onInvestDirect(amount, selectTrancheIdx.toString());
+        if (success) {
           setBalanceInput(0);
-          if (invest.status) {
-            openNotification("Deposit Success", "");
-          }
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setDepositLoading(false);
+          successNotification("Deposit Success", "");
+        } else {
+          successNotification("Deposit Fail", "");
         }
-
-        // if (invest.status) {
-        // }
-      };
-      deposit();
-    };
-    const handleDeposit100 = () => {
-      const deposit = async () => {
-        const amount = web3.utils.toWei("100", "ether");
-        console.log("amount", amount);
-        console.log("invest tranche", selectTrancheIdx);
-        // //deposit
-        const deposit = await contractTrancheMaster.methods.deposit(amount).send({ from: account });
-        console.log(deposit);
-      };
-      deposit();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setDepositLoading(false);
+      }
     };
     const handleMaxInput = () => {
       const _myBalance = myBalance.replace(/\,/g, "");
@@ -211,10 +176,6 @@ const ApproveCard = memo<TProps>(
       const _myBalance = myBalance.replace(/\,/g, "");
       const _remaining = remaining.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      console.log("AAA");
-      console.log(_myBalance);
-      console.log(_remaining);
-      console.log(_balanceInput);
       // console.log("_myBalance", _myBalance);
       if (compareNum(_balanceInput, _myBalance, true)) {
         // if (_balanceInput > _myBalance) {

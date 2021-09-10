@@ -2,12 +2,13 @@ import { MasterChefAddress, TranchesAddress, WTFAddress, BUSDAddress, StrategyAd
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { formatBalance, getPortfolioTvl, getTotalAllocPoints, getPortfolioTotalTarget } from "utils/formatNumbers";
+import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
 import getRpcUrl from "utils/getRpcUrl";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
+import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as StrategyAbi } from "config/abi/Strategy.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
@@ -50,7 +51,7 @@ export const useMarket = async (marketData: Market) => {
       contractMasterChef.methods.poolInfo(2).call()
     ]);
     marketData.pools = _poolInfos;
-    marketData.totalAllocPoints = getTotalAllocPoints(_poolInfos);
+    // marketData.totalAllocPoints = getTotalAllocPoints(_poolInfos) + "";
   }
 
   return marketData;
@@ -91,7 +92,7 @@ export const useTrancheBalance = () => {
     const fetchBalance = async () => {
       const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
       const result = await contractMasterChef.balanceOf(account);
-      setBalance(result.balance);
+      setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
       setInvested(result.invested);
     };
 
@@ -136,50 +137,21 @@ export const usePendingWTFReward = (poolId?: number) => {
 
   return pendingReward;
 };
-export const useBalance = (abi: any, address: string) => {
+export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
-  // Using React ref here to prevent component re-rendering when changing
-  // previous balance value
-  const prevBalanceRef = useRef("0");
-  const provider = Web3.givenProvider;
   const { account, ...p } = useWeb3React<Web3Provider>();
 
-  const fetchBalance = useCallback(async () => {
-    console.log("fetching balance..");
-    if (!Web3.givenProvider) return;
-    if (!(window.ethereum?.isMetaMask && window.ethereum.request)) return;
-
-    const web3 = new Web3(Web3.givenProvider);
-    const contract = new web3.eth.Contract(abi as AbiItem[], address);
-    const accounts = await window?.ethereum?.request({ method: "eth_requestAccounts" });
-
-    const myAccount = accounts?.[0] || "";
-    if (!myAccount) return;
-
-    const BUSDBalance = await contract.methods.balanceOf(myAccount).call();
-    console.log("BUSD", BUSDBalance);
-    const value = formatBalance(BUSDBalance);
-
-    if (value !== prevBalanceRef.current) {
-      prevBalanceRef.current = value;
-      setBalance(value);
-    }
-  }, []);
-
   useEffect(() => {
+    const fetchBalance = async () => {
+      const contract = getContract(ERC20Abi, address);
+      const tokenBalance = await contract.balanceOf(account);
+      const value = formatBalance(tokenBalance.toString());
+      setBalance(value);
+    };
+
     fetchBalance();
-  }, [fetchBalance, account]);
+  }, [address, account]);
 
-  // useEffect(() => {
-  //   // Fetch user balance on each block
-  //   provider.on("block", fetchBalance);
-
-  //   // Cleanup function is used to unsubscribe from 'block' event and prevent
-  //   // a possible memory leak in your application.
-  //   return () => {
-  //     provider.off("block", fetchBalance);
-  //   };
-  // }, [fetchBalance]);
   return balance;
 };
 export const useWTF = () => {
@@ -202,4 +174,13 @@ export const getContract = (abi: any, address: string, signer?: ethers.Signer | 
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
   const signerOrProvider = signer ?? simpleRpcProvider;
   return new ethers.Contract(address, abi, signerOrProvider);
+};
+
+export const getSigner = () => {
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    return signer;
+  }
+  return;
 };

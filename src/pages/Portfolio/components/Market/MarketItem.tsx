@@ -17,6 +17,7 @@ import Column from "antd/lib/table/Column";
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectId: number;
 };
 
 const Container = styled.div`
@@ -118,13 +119,13 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
   const { push } = useHistory();
   const [marketData, setMarketData] = useState<Market>(data);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const _md = await useMarket({ ...data });
-      if (_md) setMarketData(_md);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const _md = await useMarket({ ...data });
+  //     if (_md) setMarketData(_md);
+  //   };
+  //   fetchData();
+  // }, []);
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
@@ -152,10 +153,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
               <React.Fragment>
                 <p>
                   All position holders can get different proportions of rewards according to different tranche. Senior:{" "}
-                  {formatAllocPoint(marketData?.pools[0]?.allocPoint, marketData?.totalAllocPoints)}% of total WTF
-                  Mezzanine: {formatAllocPoint(marketData?.pools[1]?.allocPoint, marketData?.totalAllocPoints)}% of
-                  total WTF Junior: {formatAllocPoint(marketData?.pools[2]?.allocPoint, marketData?.totalAllocPoints)}%
-                  of total WTF Typography
+                  {formatAllocPoint(marketData?.pools[0], marketData?.totalAllocPoints)}% of total WTF Mezzanine:{" "}
+                  {formatAllocPoint(marketData?.pools[1], marketData?.totalAllocPoints)}% of total WTF Junior:{" "}
+                  {formatAllocPoint(marketData?.pools[2], marketData?.totalAllocPoints)}% of total WTF Typography
                 </p>
               </React.Fragment>
             }
@@ -174,7 +174,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
                   <div>
                     <WTFToken />
                   </div>
-                  +{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                  {formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints)}%
                 </span>
               </APYStyled2>
               //{/* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */}

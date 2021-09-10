@@ -9,13 +9,15 @@ import { useSize } from "ahooks";
 import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
 import { Market } from "types";
 import { MarketList } from "config/market";
+import { useMarkets } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
   const { gray, warn, green, primary } = useTheme();
   const { width } = useSize(document.body);
-  const [market, setMarket] = useState<Array<Market>>([...MarketList]);
+  const markets = useMarkets();
+  console.log(markets);
 
   return (
     <>
@@ -34,16 +36,16 @@ const Markets = memo<TProps>(({ intl }) => {
             <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Action" })}</TableHeaderColumn>
           </TableRow>
-          {market.map((_m, i) => (
-            <MarketItemTableRow data={_m} key={i} />
+          {markets.map((_m, i) => (
+            <MarketItemTableRow key={i} selectId={i} data={_m} />
           ))}
         </Table>
       )}
       {Boolean(width && width <= 768) && (
         <>
-          {market.map((_m, i) => (
+          {markets.map((_m, i) => (
             <div key={i}>
-              <MarketItem data={_m} />
+              <MarketItem selectId={i} data={_m} />
             </div>
           ))}
         </>

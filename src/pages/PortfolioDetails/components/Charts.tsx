@@ -17,6 +17,8 @@ import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3 from "web3";
+import useClaimAll from "../hooks/useClaimAll";
+import useWithdraw from "../hooks/useWithdraw";
 const Block2 = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,62 +65,46 @@ const Block = styled.div`
   }
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: Market;
+};
 
-const Charts = memo<TProps>(({ intl }) => {
+const Charts = memo<TProps>(({ intl, data }) => {
   const { gray, primary, fonts } = useTheme();
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
 
-  const location = useLocation<Market>();
-  const data = location.state;
-  const { account, active } = useWeb3React<Web3Provider>();
-  const web3 = new Web3(Web3.givenProvider);
-  const contractMasterChef = new web3.eth.Contract(data.masterChefAbi as AbiItem[], data.masterChefAddress);
-  const contractTrancheMaster = new web3.eth.Contract(data.abi as AbiItem[], data.address);
+  const { onWithdraw } = useWithdraw();
+
+  const { onClaimAll } = useClaimAll();
 
   const { balance, invested } = useTrancheBalance();
 
   const pendingReward = usePendingWTFReward();
-  const claimReward = () => {
+  const claimReward = async () => {
     setClaimRewardLoading(true);
-
-    const claim = async () => {
-      console.log("start claim");
-      try {
-        const result = await contractMasterChef.methods.claimAll().send({ from: account });
-        console.log(result);
-        if (result.status) {
-          successNotification("Claim Success", "");
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setClaimRewardLoading(false);
-      }
-    };
-    claim();
+    try {
+      await onClaimAll();
+      successNotification("Claim Success", "");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setClaimRewardLoading(false);
+    }
   };
-  const withdrawAll = () => {
+  const withdrawAll = async () => {
     setWithdrawAllLoading(true);
-
-    const withdraw = async () => {
-      console.log("withdraw all");
-      try {
-        if (!balance) return;
-        // console.log(balance.toString());
-        const result = await contractTrancheMaster.methods.withdraw(balance.toString()).send({ from: account });
-        console.log(result);
-        if (result.status) {
-          successNotification("Withdraw All Success", "");
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setWithdrawAllLoading(false);
-      }
-    };
-    withdraw();
+    console.log(balance);
+    console.log(balance.toString());
+    try {
+      if (!balance) return;
+      await onWithdraw(balance.toString());
+      successNotification("Withdraw All Success", "");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setWithdrawAllLoading(false);
+    }
   };
   return (
     <div
@@ -165,7 +151,7 @@ const Charts = memo<TProps>(({ intl }) => {
         <PortfolioChart />
       </Block>
       <Block css={{ paddingTop: 8 }}>
-        <TrancheChart />
+        <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
       </Block>
     </div>
   );

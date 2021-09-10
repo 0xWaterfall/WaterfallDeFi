@@ -25,9 +25,13 @@ import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
 import _ from "lodash";
+import { useSelectedMarket } from "hooks/useSelectors";
+import { setMarketKey } from "store/selectedKeys";
+import { useDispatch } from "react-redux";
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectId: number;
 };
 const APYStyled = styled.div`
   display: flex;
@@ -81,23 +85,28 @@ const TableRowMarket = styled(TableRow)`
   background-color: ${({ theme }) => theme.primary.lightBrown};
 `;
 
-const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
+const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const [marketData, setMarketData] = useState(data);
   const { warn, green, primary, gray } = useTheme();
   const { push } = useHistory();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const _md = await useMarket({ ...data });
-      console.log(_md);
-      console.log(_md?.duration);
-      console.log(_md?.actualStartAt);
+  const navigateMarketDetail = () => {
+    dispatch(setMarketKey(selectId.toString()));
+    push({ pathname: "/portfolioDetails" });
+  };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const _md = await useMarket({ ...data });
+  //     console.log(_md);
+  //     console.log(_md?.duration);
+  //     console.log(_md?.actualStartAt);
 
-      if (_md?.duration && _md.actualStartAt) console.log((Number(_md?.duration) + Number(_md?.actualStartAt)) * 1000);
-      if (_md) setMarketData(_md);
-    };
-    fetchData();
-  }, []);
+  //     if (_md?.duration && _md.actualStartAt) console.log((Number(_md?.duration) + Number(_md?.actualStartAt)) * 1000);
+  //     if (_md) setMarketData(_md);
+  //   };
+  //   fetchData();
+  // }, []);
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
@@ -123,7 +132,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
                   <div>
                     <WTFToken />
                   </div>
-                  +{formatAllocPoint(marketData?.pools[_i]?.allocPoint, marketData?.totalAllocPoints)}%
+                  {formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints)}%
                 </span>
               </APYStyled2>
               /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */
@@ -145,12 +154,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, data }) => {
       </TableColumn>
       <TableColumn minWidth={240}>
         <APYStyled>
-          <Button
-            type="primary"
-            onClick={() => {
-              push({ pathname: "/portfolioDetails", state: marketData });
-            }}
-          >
+          <Button type="primary" onClick={navigateMarketDetail}>
             Deposit
           </Button>
           <span css={{ fontSize: 10, marginTop: 10 }}>

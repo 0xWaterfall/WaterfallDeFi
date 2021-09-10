@@ -39,9 +39,10 @@ export const getPercentage = (num: string | undefined, total: string | undefined
   return new BigNumber(num).dividedBy(new BigNumber(total)).times(100).toFormat(2).toString();
 };
 
-export const formatAllocPoint = (allocPoint: string | undefined, totalAllocPoints: number | undefined) => {
+export const formatAllocPoint = (allocPoint: string | undefined, totalAllocPoints: string | undefined) => {
+  console.log(allocPoint, totalAllocPoints);
   if (!allocPoint || !totalAllocPoints) return "- -";
-  return Math.floor((parseInt(allocPoint) / totalAllocPoints) * 100);
+  return "+ " + Math.floor((parseInt(allocPoint) / parseInt(totalAllocPoints)) * 100);
 };
 
 export const getPortfolioTvl = (tranches: Tranche[]) => {
@@ -57,74 +58,61 @@ export const getPortfolioTotalTarget = (tranches: Tranche[]) => {
 
   tranches.map((_t) => {
     const _p = new BigNumber(_t.target);
+    console.log(_p);
     totalTarget = totalTarget.plus(_p);
   });
   return totalTarget.toString();
 };
 
-export const getTotalAllocPoints = (pools: Pool[]) => {
-  let totalAllocPoints = 0;
-  pools.map((p) => {
-    totalAllocPoints += parseInt(p.allocPoint);
-  });
-  return totalAllocPoints;
-};
+// export const getTotalAllocPoints = (pools: Pool[]) => {
+//   let totalAllocPoints = 0;
+//   pools.map((p) => {
+//     totalAllocPoints += parseInt(p.allocPoint);
+//   });
+//   return totalAllocPoints;
+// };
 
-export const getLockupPeriod = (duration: number) => {
-  const lockupPeriod = duration / 86400;
+export const getLockupPeriod = (duration: string) => {
+  const lockupPeriod = Number(duration) / 86400;
   //for testing
-  return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : duration / 60 + " Mins";
+  return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : Number(duration) / 60 + " Mins";
 };
 
-export const getJuniorAPY = (tranches: Tranche[], duration: number | undefined) => {
+export const getJuniorAPY = (tranches: Tranche[], duration: string | undefined) => {
   // if (!duration) return "-";
   let totalTarget = new BigNumber(0);
   const decimals = 18;
 
   //"500000000000000000" 50%
   let expectedAPY = new BigNumber("500000000000000000").dividedBy(BIG_TEN.pow(decimals));
-  // console.log(expectedAPY.toString());
   expectedAPY = expectedAPY.plus(new BigNumber(1));
   const juniorTVL = new BigNumber(tranches[tranches.length - 1].target).dividedBy(BIG_TEN.pow(decimals));
-  // const _duration = new BigNumber(duration);
   const _duration = new BigNumber(86400 * 7);
   const _durationYear = new BigNumber(365 * 86400);
   const durationInYear = _duration.dividedBy(_durationYear);
 
   tranches.map((_t, _i) => {
     const _target = new BigNumber(_t.target).dividedBy(BIG_TEN.pow(decimals));
-    console.log(_target.toNumber());
-    console.log("-----");
     totalTarget = totalTarget.plus(_target);
   });
 
   // totalTarget = totalTarget.dividedBy(BIG_TEN.pow(decimals));
-  console.log(expectedAPY.toNumber());
   totalTarget = totalTarget.times(expectedAPY);
-  console.log("A", totalTarget.toNumber());
 
   tranches.map((_t, _i) => {
     if (_i === tranches.length - 1) return;
     let _apy = new BigNumber(_t.apy).dividedBy(BIG_TEN.pow(decimals));
     _apy = _apy.plus(new BigNumber(1));
-    console.log(_apy.toNumber());
     const _target = new BigNumber(_t.target).dividedBy(BIG_TEN.pow(decimals));
     const _result = _target.times(_apy);
-    console.log("_result");
-    console.log(_result.toNumber());
     totalTarget = totalTarget.minus(_apy.times(_target));
   });
-  console.log("now", totalTarget.toNumber());
   totalTarget = totalTarget.dividedBy(juniorTVL);
-  console.log(totalTarget);
-  // console.log("durationInYear", durationInYear.toNumber());
-  // totalTarget = totalTarget.times(durationInYear);
-  console.log(totalTarget);
 
   //(0.0748 - 0.0449*0.6 - 0.0673*0.3) / 0.1
   //{[300,000*(1+0.5) - 100,000*(1+0.1) - 100,000*(1+0.2)] - 100,000}/100,000
-
-  return totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString() + "%";
+  const result = totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString();
+  return result !== "NaN" ? result + "%" : "- -";
 };
 export const getRemaining = (target: string | undefined, principal: string | undefined, decimals = 18) => {
   if (target === undefined) return "";

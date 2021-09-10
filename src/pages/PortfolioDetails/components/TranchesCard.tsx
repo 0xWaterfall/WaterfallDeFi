@@ -5,7 +5,7 @@ import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
-import { Market, Pool, Tranche } from "types";
+import { Market, Tranche } from "types";
 import {
   formatAPY,
   formatAllocPoint,
@@ -22,12 +22,13 @@ type TProps = WrappedComponentProps & {
   color?: string;
   type: "Senior" | "Mezzanine" | "Junior";
   tranche: Tranche;
-  pool: Pool;
-  totalAllocPoint: number | undefined;
+  // pool: Pool;
+  totalAllocPoint: string | undefined;
   trancheIndex: number;
   assets: string;
   selected: boolean;
   data: Market;
+  allocPoint: string;
 };
 
 type ProgressBarProps = {
@@ -127,7 +128,7 @@ const CheckDiv = styled.div`
   }
 `;
 
-const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint, assets, selected, data }) => {
+const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
   console.log(tranche);
   const Types = {
@@ -167,7 +168,7 @@ const TranchesCard = memo<TProps>(({ intl, type, pool, tranche, totalAllocPoint,
         </Text1>
         <Text2 color={Types[type].color}>
           APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches, data.duration)} +{" "}
-          {formatAllocPoint(pool.allocPoint, totalAllocPoint)}% WTF
+          {formatAllocPoint(allocPoint, totalAllocPoint)}% WTF
         </Text2>
         <Text3>{Types[type].riskText}</Text3>
         <Separator margin={15} />

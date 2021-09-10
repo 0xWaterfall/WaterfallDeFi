@@ -8,9 +8,7 @@ export const useMarkets = () => {
 
 export const useSelectedMarket = () => {
   const marketKey = useAppSelector((state) => state.selectedKeys.marketKey);
-
   const markets = useAppSelector((state) => state.markets);
-  // const selectedMarket = markets.find((p, i) => parseInt(marketKey) == i);
   return useMemo(() => {
     if (marketKey) {
       return markets.find((p, i) => parseInt(marketKey) == i);

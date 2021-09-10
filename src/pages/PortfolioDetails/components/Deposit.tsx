@@ -8,6 +8,7 @@ import DepositItem from "./DepositItem";
 import { useHistory, useLocation } from "react-router-dom";
 import { Market } from "types";
 import { useMarket } from "hooks";
+import { useSelectedMarket } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -35,15 +36,17 @@ const Text2 = styled.div`
 const Deposit = memo<TProps>(({ intl, data }) => {
   // const location = useLocation<Market>();
   // const data = location.state;
-  const [marketData, setMarketData] = useState(data);
+  // const marketData = useSelectedMarket();
+  // const [marketData, setMarketData] = useState(data);
+  const marketData = data;
   const fetchMarketData = () => {
-    const fetchData = async () => {
-      const _md = await useMarket({ ...data });
-      console.log("fetched");
-      console.log(_md);
-      if (_md) setMarketData(_md);
-    };
-    fetchData();
+    // const fetchData = async () => {
+    //   const _md = await useMarket({ ...data });
+    //   console.log("fetched");
+    //   console.log(_md);
+    //   if (_md) setMarketData(_md);
+    // };
+    // fetchData();
   };
   useEffect(() => {
     fetchMarketData();

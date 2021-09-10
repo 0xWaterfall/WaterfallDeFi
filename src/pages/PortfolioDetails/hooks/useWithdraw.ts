@@ -14,7 +14,7 @@ const options = {
 const withdraw = async (trancheContract: Contract, amount: string, decimals = 18) => {
   console.log(amount);
   // const tx = await trancheContract.withdraw(new BigNumber(amount).times(BIG_TEN.pow(decimals)).toString(), options);
-  const tx = await trancheContract.withdraw(amount, options);
+  const tx = await trancheContract.withdraw(amount);
   const receipt = await tx.wait();
   return receipt.status;
 };

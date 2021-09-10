@@ -11,7 +11,7 @@ const options = {
 };
 
 const approve = async (contract: Contract, address: string) => {
-  const tx = await contract.approve(address, utils.parseEther("999999999").toString(), options);
+  const tx = await contract.approve(address, utils.parseEther("999999999").toString());
   const receipt = await tx.wait();
   return receipt.status;
 };

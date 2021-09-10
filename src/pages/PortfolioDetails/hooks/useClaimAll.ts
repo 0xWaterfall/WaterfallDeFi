@@ -12,7 +12,7 @@ const options = {
 };
 
 const claim = async (masterChefContract: Contract) => {
-  const tx = await masterChefContract.claimAll(options);
+  const tx = await masterChefContract.claimAll();
   const receipt = await tx.wait();
   return receipt.status;
 };

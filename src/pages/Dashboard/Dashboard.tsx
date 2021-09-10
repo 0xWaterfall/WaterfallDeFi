@@ -18,6 +18,9 @@ import { AbiItem } from "web3-utils";
 import { Web3Provider } from "@ethersproject/providers";
 import getRpcUrl from "utils/getRpcUrl";
 import { usePendingWTFReward, useStrategyFarm, useWTF } from "hooks";
+import { useMarkets, useSelectedMarket } from "hooks/useSelectors";
+import { useAppDispatch } from "store";
+import { setMarketKey } from "store/selectedKeys";
 
 const Dashboard = memo<TProps>(() => {
   // const { account } = useWeb3React();
@@ -25,6 +28,19 @@ const Dashboard = memo<TProps>(() => {
   const { weekDistribution } = useWTF();
   console.log("weekDistribution", weekDistribution.toString());
   console.log(connector);
+
+  const markets = useMarkets();
+  console.log(markets);
+
+  const selectedMarket = useSelectedMarket();
+  console.log(selectedMarket);
+  if (selectedMarket) {
+    const web3 = new Web3(Web3.givenProvider);
+    const contractWTF = new web3.eth.Contract(selectedMarket.abi as AbiItem[], selectedMarket.address);
+    console.log(contractWTF);
+  }
+  const dispatch = useAppDispatch();
+  dispatch(setMarketKey("0"));
 
   // const pendingReward_ = usePendingWTFReward();
   // console.log("pendingReward_", pendingReward_);
@@ -218,7 +234,7 @@ const Dashboard = memo<TProps>(() => {
     }
   }, []);
   useEffect(() => {
-    testContract();
+    // testContract();
   }, []);
   return <div style={{ marginTop: 100 }}>dashboard</div>;
 });

@@ -17,7 +17,7 @@ import { AbiItem } from "web3-utils";
 
 import { Web3Provider } from "@ethersproject/providers";
 import getRpcUrl from "utils/getRpcUrl";
-import { usePendingWTFReward, useStrategyFarm, useWTF } from "hooks";
+import { getContract, usePendingWTFReward, useStrategyFarm, useWTF } from "hooks";
 import { useMarkets, useSelectedMarket } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { setMarketKey } from "store/selectedKeys";
@@ -36,7 +36,7 @@ const Dashboard = memo<TProps>(() => {
   console.log(selectedMarket);
   if (selectedMarket) {
     const web3 = new Web3(Web3.givenProvider);
-    const contractWTF = new web3.eth.Contract(selectedMarket.abi as AbiItem[], selectedMarket.address);
+    const contractWTF = getContract(selectedMarket.abi as AbiItem[], selectedMarket.address);
     console.log(contractWTF);
   }
   const dispatch = useAppDispatch();

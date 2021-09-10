@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useAppSelector } from "store";
 
 export const useMarkets = () => {
@@ -7,9 +8,12 @@ export const useMarkets = () => {
 
 export const useSelectedMarket = () => {
   const marketKey = useAppSelector((state) => state.selectedKeys.marketKey);
-  if (!marketKey) return;
 
   const markets = useAppSelector((state) => state.markets);
-  const selectedMarket = markets.find((p, i) => parseInt(marketKey) == i);
-  return selectedMarket;
+  // const selectedMarket = markets.find((p, i) => parseInt(marketKey) == i);
+  return useMemo(() => {
+    if (marketKey) {
+      return markets.find((p, i) => parseInt(marketKey) == i);
+    }
+  }, [marketKey, markets]);
 };

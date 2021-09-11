@@ -14,6 +14,7 @@ import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import farmsConfig from "config/farms";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -59,6 +60,13 @@ export const useMarket = async (marketData: Market) => {
 export const useStrategyFarm = () => {
   const [result, setResult] = useState<any>([]);
 
+  const getFarmResult = (shares: BigNumber, addr: string) => {
+    console.log(shares);
+    return {
+      shares: new BigNumber(shares.toString()).dividedBy(BIG_TEN.pow(16)).toNumber(),
+      farmName: farmsConfig[addr]
+    };
+  };
   useEffect(() => {
     const fetchFarms = async () => {
       const contractStrategy = getContract(StrategyAbi, StrategyAddress);
@@ -66,12 +74,11 @@ export const useStrategyFarm = () => {
       try {
         const farm0 = await contractStrategy.farms(0);
         console.log(farm0);
-        if (farm0) _result.push(farm0);
+        if (farm0) _result.push(getFarmResult(farm0.shares, farm0.addr));
         const farm1 = await contractStrategy.farms(1);
-        if (farm1) _result.push(farm1);
+        if (farm1) _result.push(getFarmResult(farm1.shares, farm1.addr));
         const farm2 = await contractStrategy.farms(2);
-        if (farm2) _result.push(farm2);
-
+        if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
         setResult(_result);
       } catch (e) {
         console.log(e);

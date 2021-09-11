@@ -50,7 +50,7 @@ const Dashboard = memo<TProps>(() => {
     console.log("AAA");
     try {
       // staking
-      await onWithdraw("100");
+      // await onWithdraw("100");
       // toastSuccess(
       //   `${t('Staked')}!`,
       //   t('Your %symbol% funds have been staked in the pool!', {

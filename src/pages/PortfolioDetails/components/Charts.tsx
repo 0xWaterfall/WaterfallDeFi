@@ -10,7 +10,7 @@ import TrancheChart from "./TrancheChart";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import { usePendingWTFReward, useTrancheBalance } from "hooks";
-import { formatNumberDisplay } from "utils/formatNumbers";
+import { formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 
 import { AbiItem } from "web3-utils";
@@ -94,11 +94,9 @@ const Charts = memo<TProps>(({ intl, data }) => {
   };
   const withdrawAll = async () => {
     setWithdrawAllLoading(true);
-    console.log(balance);
-    console.log(balance.toString());
     try {
       if (!balance) return;
-      await onWithdraw(balance.toString());
+      await onWithdraw(formatBigNumber2HexString(balance));
       successNotification("Withdraw All Success", "");
     } catch (e) {
       console.log(e);

@@ -10,6 +10,7 @@ import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 import { useStrategyFarm } from "hooks";
 import BigNumber from "bignumber.js";
+import { BIG_TEN } from "utils/bigNumber";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -26,7 +27,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
     console.log(result);
 
     result.map((r: any) => {
-      payload.push({ name: r?.addr, value: new BigNumber(r?.shares.toString()).toNumber() });
+      payload.push({ name: r?.farmName, value: r?.shares });
     });
   }
 
@@ -140,7 +141,9 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
               }}
             >
               <div css={{ width: 8, height: 8, borderRadius: 2, backgroundColor: COLORS[i] }} />
-              <div css={{ marginLeft: 4 }}>{p.name} -15%</div>
+              <div css={{ marginLeft: 4 }}>
+                {p.name} -{p.value}%
+              </div>
             </div>
           ))}
         </div>

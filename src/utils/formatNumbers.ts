@@ -45,6 +45,9 @@ export const formatAllocPoint = (allocPoint: string | undefined, totalAllocPoint
   return "+ " + Math.floor((parseInt(allocPoint) / parseInt(totalAllocPoints)) * 100);
 };
 
+export const formatBigNumber2HexString = (bn: BigNumber) => {
+  return "0x" + bn.toString(16);
+};
 export const getPortfolioTvl = (tranches: Tranche[]) => {
   let tvl = new BigNumber(0);
   tranches.map((_t) => {

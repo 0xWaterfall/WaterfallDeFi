@@ -23,6 +23,7 @@ import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import { getPosition } from "store/position";
 import { usePosition, useSelectedMarket } from "hooks/useSelectors";
+import useRedeemDirect from "../hooks/useRedeemDirect";
 type TProps = WrappedComponentProps & {
   data: Market;
 };
@@ -42,29 +43,37 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const dispatch = useAppDispatch();
   const market = useSelectedMarket();
   const position = usePosition();
+  const { onRedeemDirect } = useRedeemDirect();
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
 
-  // const redeemDirect = (i: number) => {
-  //   setRedeemLoading(true);
-
-  //   const redeem = async () => {
-  //     console.log("start redeem");
-  //     try {
-  //       const result = await contractTrancheMaster.methods.redeemDirect(i).send({ from: account });
-  //       console.log(result);
-  //       if (result.status) {
-  //         successNotification("Redeem Success", "");
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     } finally {
-  //       setRedeemLoading(false);
-  //     }
-  //   };
-  //   redeem();
-  // };
+  const redeemDirect = async (i: number) => {
+    setRedeemLoading(true);
+    try {
+      await onRedeemDirect(i);
+      successNotification("Redeem Success", "");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRedeemLoading(false);
+    }
+    // const redeem = async () => {
+    //   console.log("start redeem");
+    //   try {
+    //     const result = await contractTrancheMaster.methods.redeemDirect(i).send({ from: account });
+    //     console.log(result);
+    //     if (result.status) {
+    //       successNotification("Redeem Success", "");
+    //     }
+    //   } catch (e) {
+    //     console.log(e);
+    //   } finally {
+    //     setRedeemLoading(false);
+    //   }
+    // };
+    // redeem();
+  };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayTextColor = [tags.yellowText, tags.greenText, primary.deep];
 
@@ -88,6 +97,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
           </TableRow>
           {position &&
             position?.map((p, i) => {
+              console.log(p);
               return (
                 <div
                   key={i}
@@ -115,7 +125,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       &nbsp;{formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
                     </TableColumn>
                     <TableColumn minWidth={200}>
-                      {formatNumberDisplay(p?.[1].hex)} {market?.assets}
+                      {formatNumberDisplay(p?.principal._hex)} {market?.assets}
                     </TableColumn>
                     <TableColumn>
                       {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
@@ -198,14 +208,14 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             </Tooltip>
                           </div>
                           <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                            {formatNumberDisplay(p?.principal)} {market?.assets}
+                            {formatNumberDisplay(p?.principal._hex)} {market?.assets}
                           </div>
                           <div css={{ display: "flex" }}>
                             {market?.status === PORTFOLIO_STATUS.PENDING && (
                               <Button
                                 css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                                 type="primary"
-                                // onClick={() => redeemDirect(i)}
+                                onClick={() => redeemDirect(i)}
                                 loading={redeemLoading}
                               >
                                 {intl.formatMessage({ defaultMessage: "Redeem" })}

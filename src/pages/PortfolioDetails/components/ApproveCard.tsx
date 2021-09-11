@@ -88,12 +88,11 @@ type TProps = WrappedComponentProps & {
   enabled: boolean;
   data: Market;
   selectTrancheIdx?: number;
-  fetchMarketData: Function;
   isSoldOut: boolean;
 };
 
 const ApproveCard = memo<TProps>(
-  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, fetchMarketData, isSoldOut }) => {
+  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut }) => {
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
     const [validateText, setValidateText] = useState("");
@@ -141,6 +140,7 @@ const ApproveCard = memo<TProps>(
         if (success) {
           setBalanceInput(0);
           successNotification("Deposit Success", "");
+          // dispatch(getPosition({ market, account }));
         } else {
           successNotification("Deposit Fail", "");
         }

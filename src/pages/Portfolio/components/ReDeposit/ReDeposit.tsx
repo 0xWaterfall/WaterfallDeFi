@@ -5,13 +5,15 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useTheme } from "@emotion/react";
 import Modal from "components/Modal/Modal";
 import DepositItem from "pages/PortfolioDetails/components/DepositItem";
+import { Market } from "types";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;
   onCancel?: (e: boolean) => void;
+  data: Market;
 };
 
-const Claim = memo<TProps>(({ intl, visible, onCancel }) => {
+const Claim = memo<TProps>(({ intl, visible, onCancel, data }) => {
   const { primary, fonts, white, gray } = useTheme();
 
   return (
@@ -19,7 +21,7 @@ const Claim = memo<TProps>(({ intl, visible, onCancel }) => {
       <title css={{ color: gray.normal, fontWeight: 600, fontSize: 20, marginBottom: 32, textAlign: "center" }}>
         {intl.formatMessage({ defaultMessage: "Re-deposit" })}
       </title>
-      {/* <DepositItem isRe={true} /> */}
+      <DepositItem isRe={true} data={data} />
     </Modal>
   );
 });

@@ -270,7 +270,6 @@ const Positions = memo<TProps>(({ intl }) => {
           ))}
         </>
       )}
-      <ReDeposit visible={false} />
     </React.Fragment>
   );
 });

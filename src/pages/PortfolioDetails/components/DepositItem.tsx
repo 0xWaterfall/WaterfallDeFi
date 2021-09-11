@@ -17,7 +17,6 @@ import { useBalance } from "hooks";
 type TProps = WrappedComponentProps & {
   data: Market;
   isRe?: boolean;
-  fetchMarketData: Function;
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
@@ -29,7 +28,7 @@ const Box2 = styled.div`
   background: ${({ theme }) => theme.white.normal};
 `;
 
-const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
+const DepositItem = memo<TProps>(({ intl, isRe, data }) => {
   const { primary } = useTheme();
   const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
   const [marketData, setMarketData] = useState(data);
@@ -95,7 +94,6 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, fetchMarketData }) => {
         selectTrancheIdx={selectTrancheIdx}
         myBalance={myBalance}
         data={marketData}
-        fetchMarketData={fetchMarketData}
         isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
       />
     </div>

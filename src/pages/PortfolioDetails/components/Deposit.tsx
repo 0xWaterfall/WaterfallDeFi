@@ -34,23 +34,7 @@ const Text2 = styled.div`
 `;
 
 const Deposit = memo<TProps>(({ intl, data }) => {
-  // const location = useLocation<Market>();
-  // const data = location.state;
-  // const marketData = useSelectedMarket();
-  // const [marketData, setMarketData] = useState(data);
   const marketData = data;
-  const fetchMarketData = () => {
-    // const fetchData = async () => {
-    //   const _md = await useMarket({ ...data });
-    //   console.log("fetched");
-    //   console.log(_md);
-    //   if (_md) setMarketData(_md);
-    // };
-    // fetchData();
-  };
-  useEffect(() => {
-    fetchMarketData();
-  }, []);
   return (
     <div css={{ padding: "0 20px" }}>
       <NextTimeWrapper>
@@ -58,8 +42,7 @@ const Deposit = memo<TProps>(({ intl, data }) => {
         <Text1>{intl.formatMessage({ defaultMessage: "Next Cycle" })}: 2021/08/07</Text1>
         <Text2>{intl.formatMessage({ defaultMessage: "Active Cycle" })}: 2021/07/01-2021/07/08</Text2>
       </NextTimeWrapper>
-      {/* <div onClick={fetchMarketData}>Fetch</div> */}
-      {marketData && <DepositItem data={marketData} fetchMarketData={fetchMarketData} />}
+      {marketData && <DepositItem data={marketData} />}
     </div>
   );
 });

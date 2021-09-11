@@ -6,6 +6,8 @@ import { DEFAULT_GAS_LIMIT } from "config";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
 import { Contract } from "@ethersproject/contracts";
+import { getMarkets } from "store/markets";
+import { MarketList } from "config/market";
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
@@ -25,7 +27,7 @@ const useWithdraw = () => {
   const handleWithdraw = useCallback(
     async (amount: string) => {
       await withdraw(trancheContract, amount);
-      //   dispatch(updateUserStakedBalance(sousId, account));
+      dispatch(getMarkets(MarketList));
     },
     [account, dispatch, trancheContract]
   );

@@ -19,6 +19,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
+import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
 
 const Wrapper = styled.div`
   display: grid;
@@ -88,6 +89,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const { gray, primary, fonts } = useTheme();
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
+  const [showRedeposit, setShowRedeposit] = useState(false);
 
   const { onWithdraw } = useWithdraw();
 
@@ -119,6 +121,9 @@ const Charts = memo<TProps>(({ intl, data }) => {
       setWithdrawAllLoading(false);
     }
   };
+  const rollDepositPopup = () => {
+    setShowRedeposit(!showRedeposit);
+  };
   return (
     <Wrapper>
       <Block2>
@@ -130,8 +135,11 @@ const Charts = memo<TProps>(({ intl, data }) => {
             </div>
           </div>
           <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
-            <Button type="primary" onClick={() => withdrawAll()} loading={withdrawAllLoading}>
+            <Button type="default" onClick={() => withdrawAll()} loading={withdrawAllLoading}>
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
+            </Button>
+            <Button type="default" onClick={() => rollDepositPopup()}>
+              {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </Button>
           </div>
         </div>
@@ -155,6 +163,8 @@ const Charts = memo<TProps>(({ intl, data }) => {
       <Block>
         <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
       </Block>
+
+      <ReDeposit visible={showRedeposit} data={data} onCancel={rollDepositPopup} />
     </Wrapper>
   );
 });

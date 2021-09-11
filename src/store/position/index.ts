@@ -2,6 +2,7 @@ import { getContract, getSigner } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market } from "types";
 import { AbiItem } from "web3-utils";
+import { useAppSelector } from "store";
 
 const initialState: any[] = [];
 
@@ -16,7 +17,8 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
         contractTrancheMaster.userInvest(account, 2)
       ]);
       console.log(userInvest, 321321312321);
-      return JSON.parse(JSON.stringify(userInvest));
+      // return JSON.parse(JSON.stringify(userInvest));
+      return userInvest;
     } catch (e) {
       console.error(e);
     }

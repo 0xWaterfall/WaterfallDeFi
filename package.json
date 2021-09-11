@@ -23,6 +23,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.11",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@loadable/component": "^5.14.1",
@@ -44,7 +45,10 @@
     "echarts": "^5.1.2",
     "echarts-for-react": "^3.0.1",
     "ethers": "^5.4.1",
+    "graphql": "^15.5.3",
+    "install": "^0.13.0",
     "lodash": "^4.17.20",
+    "npm": "^7.23.0",
     "react": "^17.0.2",
     "react-countdown": "^2.3.2",
     "react-dom": "^17.0.2",

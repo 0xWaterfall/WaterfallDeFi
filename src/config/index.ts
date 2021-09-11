@@ -1,4 +1,5 @@
 import { BIG_TEN } from "utils/bigNumber";
+import { gql } from "@apollo/client";
 
 export const PUBLIC_URL = process.env.PUBLIC_URL || "";
 
@@ -20,3 +21,18 @@ export const languages = [
 export const DEFAULT_TOKEN_DECIMAL = BIG_TEN.pow(18);
 export const DEFAULT_GAS_LIMIT = 200000;
 export const DEFAULT_GAS_PRICE = 5;
+
+export const USER_INVESTS_GQL = gql`
+  {
+    userInvests(first: 1000) {
+      id
+      owner
+      tranche
+      cycle
+      principal
+      capital
+      investAt
+      harvestAt
+    }
+  }
+`;

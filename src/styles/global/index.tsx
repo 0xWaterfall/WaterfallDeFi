@@ -7,7 +7,7 @@ export default () => {
       styles={{
         "html, body": {
           fontSize: 14,
-          fontFamily: "Carter One, sans-serif",
+          fontFamily: "IBM Plex Sans, Roboto, Helvetica, Arial, sans-serif",
           overflowX: "hidden",
           height: "auto"
           // backgroundColor: gray.light

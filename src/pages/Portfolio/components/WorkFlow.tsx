@@ -13,7 +13,6 @@ const TitleH2 = styled.h2`
   line-height: 32px;
   text-align: center;
   color: ${({ theme }) => theme.gray.normal};
-  font-family: ${({ theme }) => theme.fonts.CarterOne};
 `;
 const ImgWrapper = styled.div`
   display: flex;

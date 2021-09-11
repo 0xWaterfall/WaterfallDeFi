@@ -121,7 +121,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <div>
           <div>
             <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
-            <div css={{ padding: "16px 0", fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>
+            <div css={{ padding: "16px 0", color: primary.deep, fontSize: 24 }}>
               {balance ? formatNumberDisplay(balance.toString()) : "-"} {data.assets}
             </div>
           </div>
@@ -136,7 +136,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
             <div css={{ paddingBlock: 24, color: gray.normal7 }}>
               {intl.formatMessage({ defaultMessage: "WTF Reward" })}
             </div>
-            <div css={{ fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>
+            <div css={{ color: primary.deep, fontSize: 24 }}>
               {pendingReward ? formatNumberDisplay(pendingReward.toString()) : "-"} WTF
             </div>
           </div>

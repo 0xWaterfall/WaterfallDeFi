@@ -83,7 +83,7 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
   return (
     <div>
       {/* overview */}
-      <TitleDiv>{intl.formatMessage({ defaultMessage: "Overview" })}</TitleDiv>
+      {/* <TitleDiv>{intl.formatMessage({ defaultMessage: "Overview" })}</TitleDiv>
       <MainGridContainer>
         <GridItem1>
           <div>
@@ -107,7 +107,7 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
               <div css={{ paddingBlock: 24, color: gray.normal7 }}>
                 {intl.formatMessage({ defaultMessage: "Return principal+Interest" })}
               </div>
-              <div css={{ fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>100,000,000 BUSD</div>
+              <div css={{ color: primary.deep, fontSize: 24 }}>100,000,000 BUSD</div>
             </div>
             <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
               <Button type="primary">{intl.formatMessage({ defaultMessage: "Withdraw All" })}</Button>
@@ -118,19 +118,19 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
               <div css={{ paddingBlock: 24, color: gray.normal7 }}>
                 {intl.formatMessage({ defaultMessage: "WTF Reward" })}
               </div>
-              <div css={{ fontFamily: fonts.CarterOne, color: primary.deep, fontSize: 24 }}>500,000 WTF</div>
+              <div css={{ color: primary.deep, fontSize: 24 }}>500,000 WTF</div>
             </div>
             <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
               <Button type="default">{intl.formatMessage({ defaultMessage: "Approve" })}</Button>
             </div>
           </div>
         </MainGridContainer2>
-      </MainGridContainer>
+      </MainGridContainer> */}
 
       {/* position */}
-      <div css={{ margin: "24px 0", fontSize: 20, fontWeight: 600, color: gray.normal85 }}>
+      {/* <div css={{ margin: "24px 0", fontSize: 20, fontWeight: 600, color: gray.normal85 }}>
         {intl.formatMessage({ defaultMessage: "Positions" })}
-      </div>
+      </div> */}
       <Positions />
     </div>
   );

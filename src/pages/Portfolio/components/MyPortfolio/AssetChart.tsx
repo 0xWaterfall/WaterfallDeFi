@@ -51,15 +51,11 @@ const AssetChart = memo<TProps>(({ intl }) => {
           emphasis: {
             label: {
               show: true,
-              fontSize: "12",
-              fontFamily: fonts.CarterOne
+              fontSize: "12"
             }
           },
           labelLine: {
             show: false
-          },
-          tooltip: {
-            textStyle: { fontFamily: fonts.CarterOne }
           },
           data: res
         }

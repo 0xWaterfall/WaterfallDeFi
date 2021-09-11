@@ -279,8 +279,7 @@ const Header = memo<TProps>(({ intl }) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: white.normal,
-        fontFamily: fonts.CarterOne
+        backgroundColor: white.normal
       }}
     >
       {isPc ? (

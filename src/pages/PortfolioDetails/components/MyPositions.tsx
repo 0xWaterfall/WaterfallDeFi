@@ -79,7 +79,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>
-              {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+              {intl.formatMessage({ defaultMessage: "Deposit APR" })}
             </TableHeaderColumn>
             <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>

@@ -59,7 +59,6 @@ const Airdrop = memo<TProps>(({ intl }) => {
       <div
         css={{
           fontSize: 20,
-          fontFamily: fonts.CarterOne,
           "@media screen and (max-width: 678px)": {
             fontSize: 12
           }

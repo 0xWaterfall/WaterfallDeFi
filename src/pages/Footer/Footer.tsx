@@ -27,7 +27,6 @@ const ContentWrapper = styled.div`
 const ConnectDiv = styled.div`
   font-size: 14px;
   line-height: 19px;
-  /* font-family: ${({ theme }) => theme.fonts.Nunito}; */
   color: ${({ theme }) => theme.white.normal};
   display: grid;
   grid-template-columns: 240px 240px;
@@ -47,7 +46,6 @@ const ConnectDivSub = styled.div`
 const CopyrightDiv = styled.div`
   font-size: 16px;
   line-height: 25px;
-  font-family: ${({ theme }) => theme.fonts.CarterOne};
   color: ${({ theme }) => theme.white.normal};
   display: flex;
 `;

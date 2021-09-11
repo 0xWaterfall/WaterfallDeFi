@@ -78,8 +78,9 @@ export const getLockupPeriod = (duration: string) => {
   return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : Number(duration) / 60 + " Mins";
 };
 
-export const getJuniorAPY = (tranches: Tranche[], duration: string | undefined) => {
+export const getJuniorAPY = (tranches?: Tranche[], duration?: string) => {
   // if (!duration) return "-";
+  if (!tranches) return "--";
   let totalTarget = new BigNumber(0);
   const decimals = 18;
 

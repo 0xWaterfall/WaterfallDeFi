@@ -4,6 +4,7 @@ import i18n, { fetchI18nMiddleware } from "./i18n";
 import markets from "./markets";
 import { load, save } from "redux-localstorage-simple";
 import selectedKeys from "./selectedKeys";
+import position from "./position";
 
 const PERSISTED_KEYS: string[] = ["i18n.locale", "selectedKeys"];
 
@@ -13,7 +14,8 @@ export const store = configureStore({
   reducer: {
     i18n,
     markets,
-    selectedKeys
+    selectedKeys,
+    position
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(

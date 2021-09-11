@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import Tabs, { TabPane } from "components/Tabs/Tabs";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import MyPositions from "./MyPositions";
 import Deposit from "./Deposit";
@@ -12,6 +12,7 @@ type TProps = WrappedComponentProps & {
 };
 
 const ContentCD = memo<TProps>(({ intl, data }) => {
+  const [activeKey, setActiveKey] = useState<"DEPOSIT" | "POSITIONS">("DEPOSIT");
   const TabTypes = [
     { key: "DEPOSIT", text: intl.formatMessage({ defaultMessage: "Deposit" }), component: <Deposit data={data} /> },
     {
@@ -21,10 +22,15 @@ const ContentCD = memo<TProps>(({ intl, data }) => {
     }
   ];
   return (
-    <Tabs defaultActiveKey="DEPOSIT">
+    <Tabs
+      activeKey={activeKey}
+      onChange={(e) => {
+        setActiveKey(e as typeof activeKey);
+      }}
+    >
       {TabTypes.map(({ key, text, component }) => (
         <TabPane tab={text} key={key}>
-          {component}
+          {key === activeKey && component}
         </TabPane>
       ))}
     </Tabs>

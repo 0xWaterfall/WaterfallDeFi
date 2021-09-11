@@ -15,3 +15,8 @@ export const useSelectedMarket = () => {
     }
   }, [marketKey, markets]);
 };
+
+export const usePosition = () => {
+  const position = useAppSelector((state) => state.position);
+  return position;
+};

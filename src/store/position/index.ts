@@ -16,9 +16,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
         contractTrancheMaster.userInvest(account, 1),
         contractTrancheMaster.userInvest(account, 2)
       ]);
-      console.log(userInvest, 321321312321);
-      // return JSON.parse(JSON.stringify(userInvest));
-      return userInvest;
+      return JSON.parse(JSON.stringify(userInvest));
     } catch (e) {
       console.error(e);
     }

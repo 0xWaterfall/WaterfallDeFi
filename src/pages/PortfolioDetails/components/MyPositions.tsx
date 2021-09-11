@@ -20,6 +20,9 @@ import Web3 from "web3";
 import { formatAllocPoint, formatAPY, formatNumberDisplay, getJuniorAPY } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
+import { useAppDispatch } from "store";
+import { getPosition } from "store/position";
+import { usePosition, useSelectedMarket } from "hooks/useSelectors";
 type TProps = WrappedComponentProps & {
   data: Market;
 };
@@ -32,50 +35,36 @@ const Text2 = styled.div`
 const MyPositions = memo<TProps>(({ intl }) => {
   const { gray, white, primary, linearGradient, tags } = useTheme();
   const { width } = useSize(document.body);
-  const [positionData, setPositionData] = useState<any[]>();
   const [redeemLoading, setRedeemLoading] = useState(false);
   const [isfolds, setFolds] = useState<{ [key: number]: boolean }>({});
   const location = useLocation<Market>();
   const { account, active } = useWeb3React<Web3Provider>();
-  const data = location.state;
-  const web3 = new Web3(Web3.givenProvider);
-  const contractTrancheMaster = new web3.eth.Contract(data.abi as AbiItem[], data.address);
+  const dispatch = useAppDispatch();
+  const market = useSelectedMarket();
+  const position = usePosition();
   useEffect(() => {
-    const fetchData = async () => {
-      const result = [];
-      const userInvest = await contractTrancheMaster.methods.userInvest(account, 0).call();
-      result.push(userInvest);
+    market && account && dispatch(getPosition({ market, account }));
+  }, [market, account]);
 
-      const userInvest2 = await contractTrancheMaster.methods.userInvest(account, 1).call();
-      result.push(userInvest2);
+  // const redeemDirect = (i: number) => {
+  //   setRedeemLoading(true);
 
-      const userInvest3 = await contractTrancheMaster.methods.userInvest(account, 2).call();
-      result.push(userInvest3);
-      console.log(result);
-      setPositionData(result);
-    };
-    fetchData();
-  }, []);
-
-  const redeemDirect = (i: number) => {
-    setRedeemLoading(true);
-
-    const redeem = async () => {
-      console.log("start redeem");
-      try {
-        const result = await contractTrancheMaster.methods.redeemDirect(i).send({ from: account });
-        console.log(result);
-        if (result.status) {
-          successNotification("Redeem Success", "");
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setRedeemLoading(false);
-      }
-    };
-    redeem();
-  };
+  //   const redeem = async () => {
+  //     console.log("start redeem");
+  //     try {
+  //       const result = await contractTrancheMaster.methods.redeemDirect(i).send({ from: account });
+  //       console.log(result);
+  //       if (result.status) {
+  //         successNotification("Redeem Success", "");
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     } finally {
+  //       setRedeemLoading(false);
+  //     }
+  //   };
+  //   redeem();
+  // };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayTextColor = [tags.yellowText, tags.greenText, primary.deep];
 
@@ -90,15 +79,15 @@ const MyPositions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>
-              {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+              {intl.formatMessage({ defaultMessage: "Deposit APR" })}
             </TableHeaderColumn>
             <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
             <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
-          {positionData &&
-            positionData.map((p, i) => {
+          {position &&
+            position?.map((p, i) => {
               return (
                 <div
                   key={i}
@@ -113,25 +102,25 @@ const MyPositions = memo<TProps>(({ intl }) => {
                   <TableRow
                     css={{ color: gray.normal85, fontSize: 16, borderBottom: `1px solid ${primary.lightBrown}` }}
                   >
-                    <TableColumn minWidth={150}>{data.portfolio}</TableColumn>
-                    <TableColumn>{data.assets}</TableColumn>
+                    <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
+                    <TableColumn>{market?.assets}</TableColumn>
                     <TableColumn minWidth={240}></TableColumn>
                     <TableColumn minWidth={240}>
                       {tranchesDisplayText[i]}:
                       <Text2 color={tranchesDisplayTextColor[i]}>
-                        {i !== positionData.length - 1
-                          ? formatAPY(data.tranches[i].apy)
-                          : getJuniorAPY(data.tranches, data.duration)}
+                        {i !== position.length - 1
+                          ? formatAPY(market?.tranches[i].apy)
+                          : getJuniorAPY(market?.tranches, market?.duration)}
                       </Text2>
-                      + {formatAllocPoint(data.pools[i], data.totalAllocPoints)}% WTF
+                      &nbsp;{formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
                     </TableColumn>
                     <TableColumn minWidth={200}>
-                      {formatNumberDisplay(p?.principal)} {data.assets}
+                      {formatNumberDisplay(p?.[1].hex)} {market?.assets}
                     </TableColumn>
                     <TableColumn>
-                      {data.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
-                      {data.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
-                      {data.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+                      {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
+                      {market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
+                      {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
                     </TableColumn>
                     <TableColumn>{/*10 BUSD*/}</TableColumn>
                     <TableColumn>
@@ -209,14 +198,14 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             </Tooltip>
                           </div>
                           <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                            {formatNumberDisplay(p?.principal)} {data.assets}
+                            {formatNumberDisplay(p?.principal)} {market?.assets}
                           </div>
                           <div css={{ display: "flex" }}>
-                            {data.status === PORTFOLIO_STATUS.PENDING && (
+                            {market?.status === PORTFOLIO_STATUS.PENDING && (
                               <Button
                                 css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                                 type="primary"
-                                onClick={() => redeemDirect(i)}
+                                // onClick={() => redeemDirect(i)}
                                 loading={redeemLoading}
                               >
                                 {intl.formatMessage({ defaultMessage: "Redeem" })}

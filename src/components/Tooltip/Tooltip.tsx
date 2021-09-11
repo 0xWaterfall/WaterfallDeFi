@@ -7,7 +7,7 @@ import { ClassNames, useTheme } from "@emotion/react";
 type TProps = TooltipProps;
 
 const Tooltip: React.FC<TProps> = ({ overlayInnerStyle, ...props }) => {
-  const { white, gray, fonts } = useTheme();
+  const { white, gray } = useTheme();
   return (
     <ClassNames>
       {({ css }) => (
@@ -20,7 +20,6 @@ const Tooltip: React.FC<TProps> = ({ overlayInnerStyle, ...props }) => {
             lineHeight: 1.25,
             fontSize: 12,
             wordBreak: "break-all",
-            // fontFamily: fonts.Nunito,
             ...overlayInnerStyle
           }}
           overlayClassName={css({

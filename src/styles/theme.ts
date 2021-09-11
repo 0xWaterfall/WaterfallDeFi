@@ -1,7 +1,5 @@
 const theme = {
   fonts: {
-    Nunito: "Nunito",
-    CarterOne: "Carter One",
     IBMPlexSans: "IBM Plex Sans"
   },
   gray: {

@@ -70,6 +70,7 @@ export const useStrategyFarm = () => {
   useEffect(() => {
     const fetchFarms = async () => {
       const contractStrategy = getContract(StrategyAbi, StrategyAddress);
+      console.log(contractStrategy, "contractStrategy");
       const _result = [];
       try {
         const farm0 = await contractStrategy.farms(0);

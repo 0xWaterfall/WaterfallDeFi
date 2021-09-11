@@ -18,7 +18,6 @@ const TitleH1 = styled.h1`
   max-width: 626px;
   margin: 0 auto;
   text-align: center;
-  font-family: ${({ theme }) => theme.fonts.CarterOne};
   @media screen and (max-width: 678px) {
     font-size: 36px;
     line-height: 55px;

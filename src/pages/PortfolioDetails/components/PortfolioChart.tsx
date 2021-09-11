@@ -11,8 +11,31 @@ import { CanvasRenderer } from "echarts/renderers";
 import { useStrategyFarm } from "hooks";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
+import styled from "@emotion/styled";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
+
+const Wrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const WrappetTitle = styled.title`
+  height: 62px;
+  padding: 0 32px;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.08);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+`;
+
+const WrappetContainer = styled.title`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 type TProps = WrappedComponentProps;
 
@@ -30,7 +53,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
       payload.push({ name: r?.farmName, value: r?.shares });
     });
   }
-
+  console.log(result, "213213131231");
   // const payload = [
   //   { name: "BTC/USDC-LP", value: 15 },
   //   { name: "BTC/USDT-LP", value: 30 },
@@ -61,15 +84,11 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
           emphasis: {
             label: {
               show: true,
-              fontSize: "12",
-              fontFamily: fonts.CarterOne
+              fontSize: "12"
             }
           },
           labelLine: {
             show: false
-          },
-          tooltip: {
-            textStyle: { fontFamily: fonts.CarterOne }
           },
           data: res
         }
@@ -92,17 +111,9 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
     }
   }, [options]);
   return (
-    <React.Fragment>
-      <div css={{ paddingTop: 8 }}>{intl.formatMessage({ defaultMessage: "Portfolio" })}</div>
-      <div
-        css={{
-          display: "flex",
-          "@media screen and (max-width: 475px)": {
-            flexDirection: "column-reverse",
-            alignItems: "center"
-          }
-        }}
-      >
+    <Wrapper>
+      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Portfolio" })}</WrappetTitle>
+      <WrappetContainer>
         <div id="portfolio-Chart" style={{ height: 200, width: 200 }} />
         <div>
           {payload.map((p, i) => (
@@ -147,8 +158,8 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
             </div>
           ))}
         </div>
-      </div>
-    </React.Fragment>
+      </WrappetContainer>
+    </Wrapper>
   );
 });
 

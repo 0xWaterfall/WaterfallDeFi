@@ -11,6 +11,8 @@ import { Market } from "types";
 import { useHistory, useLocation } from "react-router-dom";
 import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
+import { USER_INVESTS_GQL } from "config";
+import { useQuery } from "@apollo/client";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;
@@ -22,7 +24,7 @@ const PortfolioDetailsWrapper = styled.div`
 type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
-  const data = useSelectedMarket();
+  const market = useSelectedMarket();
   // const location = useLocation<Market>();
   // const { push } = useHistory();
   // useEffect(() => {
@@ -30,13 +32,16 @@ const PortfolioDetails = memo<TProps>(() => {
   //     push({ pathname: "/portfolio/" });
   //   }
   // }, []);
+  const { loading, error, data } = useQuery(USER_INVESTS_GQL);
+
+  console.log(data, 321312);
   return (
     <PortfolioDetailsWrapper>
-      {data && (
+      {market && (
         <>
-          <Information data={data} />
-          <Charts data={data} />
-          <ContentCD data={data} />
+          <Information data={market} />
+          <Charts data={market} />
+          <ContentCD data={market} />
         </>
       )}
     </PortfolioDetailsWrapper>

@@ -19,15 +19,28 @@ import { Web3Provider } from "@ethersproject/providers";
 import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
+
+const Wrapper = styled.div`
+  display: grid;
+  padding: 62px 0 20px;
+  gap: 20px;
+  grid-auto-flow: column;
+  grid-template-columns: 30% repeat(2, 1fr);
+  @media screen and (max-width: 768px) {
+    grid-auto-flow: row;
+    grid-template-columns: auto;
+  }
+`;
+
 const Block2 = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  gap: 20px;
+  grid-auto-flow: row;
   position: relative;
   & > div {
     padding-top: 12px;
     padding-left: 36px;
     padding-right: 20px;
-    margin-bottom: 20px;
     background: #ffffff;
     border-radius: 12px;
     color: ${({ theme }) => theme.gray.normal7};
@@ -48,8 +61,10 @@ const Block = styled.div`
   flex: 1;
   display: flex;
   color: ${({ theme }) => theme.gray.normal7};
-
-  @media screen and (max-width: 1024px) {
+  filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
+  background: #ffffff;
+  border-radius: 12px;
+  /* @media screen and (max-width: 1024px) {
     background-color: ${({ theme }) => theme.primary.lightBrown};
     padding-left: 0;
     margin: auto;
@@ -62,7 +77,7 @@ const Block = styled.div`
     justfify-content: space-between;
     & > * {
     }
-  }
+  } */
 `;
 
 type TProps = WrappedComponentProps & {
@@ -107,16 +122,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
     }
   };
   return (
-    <div
-      css={{
-        display: "flex",
-        paddingTop: 62,
-        "@media screen and (max-width: 1024px)": {
-          paddingTop: 10,
-          flexDirection: "column"
-        }
-      }}
-    >
+    <Wrapper>
       <Block2>
         <div>
           <div>
@@ -133,10 +139,8 @@ const Charts = memo<TProps>(({ intl, data }) => {
         </div>
         <div>
           <div>
-            <div css={{ paddingBlock: 24, color: gray.normal7 }}>
-              {intl.formatMessage({ defaultMessage: "WTF Reward" })}
-            </div>
-            <div css={{ color: primary.deep, fontSize: 24 }}>
+            <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
+            <div css={{ padding: "16px 0", color: primary.deep, fontSize: 24 }}>
               {pendingReward ? formatNumberDisplay(pendingReward.toString()) : "-"} WTF
             </div>
           </div>
@@ -150,10 +154,10 @@ const Charts = memo<TProps>(({ intl, data }) => {
       <Block>
         <PortfolioChart />
       </Block>
-      <Block css={{ paddingTop: 8 }}>
+      <Block>
         <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
       </Block>
-    </div>
+    </Wrapper>
   );
 });
 

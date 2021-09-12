@@ -13,7 +13,6 @@ import Tooltip from "components/Tooltip/Tooltip";
 import styled from "@emotion/styled";
 import MyPortfolioItem from "./MyPortfolioItem";
 import { useSize } from "ahooks";
-import ReDeposit from "../ReDeposit/ReDeposit";
 type TProps = WrappedComponentProps;
 const FilterDiv = styled.div`
   display: flex;

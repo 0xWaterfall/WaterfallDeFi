@@ -22,6 +22,7 @@ import { useMarkets, useSelectedMarket } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { setMarketKey } from "store/selectedKeys";
 import useWithdraw from "pages/PortfolioDetails/hooks/useWithdraw";
+import Button from "components/Button/Button";
 
 const Dashboard = memo<TProps>(() => {
   // const { account } = useWeb3React();
@@ -46,9 +47,13 @@ const Dashboard = memo<TProps>(() => {
   const dispatch = useAppDispatch();
   dispatch(setMarketKey("0"));
 
-  const handleConfirmClick = async () => {
+  const handleConfirmClick = async (account: string) => {
     console.log("AAA");
     try {
+      const web3 = new Web3(Web3.givenProvider);
+      const contractTrancheMaster = new web3.eth.Contract(TrancheMasterAbi as AbiItem[], TranchesAddress);
+      const stop = await contractTrancheMaster.methods.stop().send({ from: account });
+      // console.log(stop);
       // staking
       // await onWithdraw("100");
       // toastSuccess(
@@ -249,8 +254,7 @@ const Dashboard = memo<TProps>(() => {
       const activeCycle = await contractTrancheMaster.methods.active().call();
       console.log(activeCycle);
 
-      // const stop = await contractTrancheMaster.methods.stop().send({ from: myAccount });
-      // console.log(stop);
+      //
 
       const farms = await contractStrategy.methods.farms(0).call();
       console.log(farms);
@@ -262,11 +266,16 @@ const Dashboard = memo<TProps>(() => {
     }
   }, []);
   useEffect(() => {
-    testContract();
+    // testContract();
   }, []);
   return (
     <div style={{ marginTop: 100 }}>
-      dashboard<div onClick={handleConfirmClick}>click</div>
+      dashboard
+      {account && (
+        <Button type="default" onClick={() => handleConfirmClick(account)}>
+          stop cycle
+        </Button>
+      )}
     </div>
   );
 });

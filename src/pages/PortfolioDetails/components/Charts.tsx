@@ -10,7 +10,7 @@ import TrancheChart from "./TrancheChart";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import { usePendingWTFReward, useTrancheBalance } from "hooks";
-import { formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
+import { formatBalance, formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 
 import { AbiItem } from "web3-utils";
@@ -164,7 +164,12 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
       </Block>
 
-      <ReDeposit visible={showRedeposit} data={data} onCancel={rollDepositPopup} />
+      <ReDeposit
+        visible={showRedeposit}
+        data={data}
+        onCancel={rollDepositPopup}
+        balance={formatBalance(balance.toString())}
+      />
     </Wrapper>
   );
 });

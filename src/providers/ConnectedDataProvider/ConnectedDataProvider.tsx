@@ -6,6 +6,7 @@ import { getMarkets } from "store/markets";
 const ConnectedDataProvider: FC = ({ children }) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
+    dispatch(getMarkets(MarketList));
     const timer = setInterval(() => {
       dispatch(getMarkets(MarketList));
     }, 5000);

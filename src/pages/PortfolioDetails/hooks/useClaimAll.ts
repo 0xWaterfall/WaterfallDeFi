@@ -6,6 +6,7 @@ import { DEFAULT_GAS_LIMIT } from "config";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
 import { Contract } from "@ethersproject/contracts";
+import { getPendingWTFReward, getTrancheBalance } from "store/position";
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
@@ -23,7 +24,7 @@ const useClaimAll = () => {
   const masterChefContract = useMasterchefContract();
   const handleClaimAll = useCallback(async () => {
     await claim(masterChefContract);
-
+    account && dispatch(getPendingWTFReward({ account }));
     //   dispatch(updateUserStakedBalance(sousId, account));
   }, [account, dispatch, masterChefContract]);
 

@@ -6,6 +6,8 @@ import { DEFAULT_GAS_LIMIT } from "config";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
 import { Contract } from "@ethersproject/contracts";
+import { getPosition, getTrancheBalance } from "store/position";
+import { useSelectedMarket } from "hooks/useSelectors";
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
@@ -21,9 +23,12 @@ const useRedeemDirect = () => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const contract = useTrancheMasterContract();
+  const market = useSelectedMarket();
   const handleRedeemDirect = useCallback(
     async (i: number) => {
       await redeem(contract, i);
+      account && dispatch(getTrancheBalance({ account }));
+      market && account && dispatch(getPosition({ market, account }));
       //   dispatch(updateUserStakedBalance(sousId, account));
     },
     [account, dispatch, contract]

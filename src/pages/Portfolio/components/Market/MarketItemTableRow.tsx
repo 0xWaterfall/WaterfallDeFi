@@ -124,9 +124,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <span css={{ color: tranchesDisplayColor[_i] }}>
-                  {_i !== marketData.tranches.length - 1
-                    ? formatAPY(_t.apy)
-                    : getJuniorAPY(marketData.tranches, marketData.duration)}
+                  {_i !== marketData.tranches.length - 1 ? formatAPY(_t.apy) : getJuniorAPY(marketData.tranches)}
                 </span>
                 <span>
                   <div>

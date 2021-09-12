@@ -6,9 +6,10 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Mountain } from "assets/images";
 import DepositItem from "./DepositItem";
 import { useHistory, useLocation } from "react-router-dom";
-import { Market } from "types";
+import { Market, PORTFOLIO_STATUS } from "types";
 import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
+import { formatTimestamp } from "utils/formatNumbers";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -39,8 +40,19 @@ const Deposit = memo<TProps>(({ intl, data }) => {
     <div css={{ padding: "0 20px" }}>
       <NextTimeWrapper>
         <Mountain />
-        <Text1>{intl.formatMessage({ defaultMessage: "Next Cycle" })}: 2021/08/07</Text1>
-        <Text2>{intl.formatMessage({ defaultMessage: "Active Cycle" })}: 2021/07/01-2021/07/08</Text2>
+
+        {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
+          <>
+            <Text1>
+              {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
+              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+            </Text1>
+            <Text2>
+              {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
+              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+            </Text2>
+          </>
+        ) : null}
       </NextTimeWrapper>
       {marketData && <DepositItem data={marketData} />}
     </div>

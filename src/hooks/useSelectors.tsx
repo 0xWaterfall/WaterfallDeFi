@@ -22,8 +22,12 @@ export const usePosition = () => {
 };
 
 export const usePendingWTFReward = () => {
-  const pendingWTFReward = useAppSelector((state) => state.position.pendingWTFReward);
-  return pendingWTFReward;
+  const totalPendingReward = useAppSelector((state) => state.position.totalPendingReward);
+  const tranchesPendingReward = useAppSelector((state) => state.position.tranchesPendingReward);
+  return {
+    totalPendingReward,
+    tranchesPendingReward
+  };
 };
 
 export const useTrancheBalance = () => {

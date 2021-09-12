@@ -17,12 +17,20 @@ import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3 from "web3";
-import { formatAllocPoint, formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
+import {
+  formatAllocPoint,
+  formatAPY,
+  formatBalance,
+  formatNumberDisplay,
+  formatTimestamp,
+  getInterest,
+  getJuniorAPY
+} from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import { getPosition } from "store/position";
-import { usePosition, useSelectedMarket } from "hooks/useSelectors";
+import { usePendingWTFReward, usePosition, useSelectedMarket } from "hooks/useSelectors";
 import useRedeemDirect from "../hooks/useRedeemDirect";
 import { unset } from "lodash";
 type TProps = WrappedComponentProps & {
@@ -45,6 +53,8 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const market = useSelectedMarket();
   const position = usePosition();
   const { onRedeemDirect } = useRedeemDirect();
+  const { tranchesPendingReward } = usePendingWTFReward();
+  const { interests, principalAndInterests } = getInterest(market?.tranches, position);
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
@@ -111,9 +121,9 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       <Text2 color={tranchesDisplayTextColor[i]}>
                         {i !== position.length - 1
                           ? formatAPY(market?.tranches[i].apy)
-                          : getJuniorAPY(market?.tranches, market?.duration)}
+                          : getJuniorAPY(market?.tranches)}
                       </Text2>
-                      &nbsp;{formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
+                      {formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
                     </TableColumn>
                     <TableColumn minWidth={200}>
                       {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
@@ -123,7 +133,10 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       {market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
                       {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
                     </TableColumn>
-                    <TableColumn>{/*10 BUSD*/}</TableColumn>
+                    <TableColumn>
+                      {market?.status === PORTFOLIO_STATUS.ACTIVE && interests && interests[i] + " " + market?.assets}
+                      {}
+                    </TableColumn>
                     <TableColumn>
                       <div
                         css={{
@@ -199,7 +212,10 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             </Tooltip>
                           </div>
                           <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                            {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
+                            {market?.status === PORTFOLIO_STATUS.ACTIVE
+                              ? principalAndInterests && principalAndInterests[i]
+                              : formatNumberDisplay(p?.[1]?.hex)}{" "}
+                            {market?.assets}
                           </div>
                           <div css={{ display: "flex" }}>
                             <Button
@@ -237,7 +253,10 @@ const MyPositions = memo<TProps>(({ intl }) => {
                               {intl.formatMessage({ defaultMessage: "WTF Reward" })}
                             </span>
                           </div>
-                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}> WTF</div>
+                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                            {tranchesPendingReward[i] ? formatNumberDisplay(tranchesPendingReward[i].toString()) : "-"}
+                            WTF
+                          </div>
                           <div css={{ display: "flex" }}>
                             <Button
                               css={{
@@ -287,11 +306,22 @@ const MyPositions = memo<TProps>(({ intl }) => {
       )}
       {Boolean(width && width <= 768) && (
         <>
-          {[1, 2, 3, 4].map((p, i) => (
-            <div key={i}>
-              <MyPositionItem />
-            </div>
-          ))}
+          {market &&
+            redeemDirect &&
+            position.map((p, i) => (
+              <div key={i}>
+                <MyPositionItem
+                  market={market}
+                  positionIdx={i}
+                  position={p}
+                  tranchesPendingReward={tranchesPendingReward[i]}
+                  principalAndInterest={principalAndInterests && principalAndInterests[i]}
+                  interest={interests && interests[i]}
+                  redeemLoading={redeemLoading}
+                  redeemDirect={redeemDirect}
+                />
+              </div>
+            ))}
         </>
       )}
     </>

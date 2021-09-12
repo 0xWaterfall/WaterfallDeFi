@@ -102,7 +102,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const { balance, invested } = useTrancheBalance();
   const { account } = useWeb3React<Web3Provider>();
   console.log(balance, 32132132131);
-  const pendingReward = usePendingWTFReward();
+  const { totalPendingReward } = usePendingWTFReward();
   const dispatch = useAppDispatch();
   useEffect(() => {
     account && dispatch(getPendingWTFReward({ account }));
@@ -157,7 +157,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
           <div>
             <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
             <div css={{ padding: "16px 0", color: primary.deep, fontSize: 24 }}>
-              {pendingReward ? formatNumberDisplay(pendingReward.toString()) : "-"} WTF
+              {totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "-"} WTF
             </div>
           </div>
           <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>

@@ -9,7 +9,8 @@ import { MasterChefAddress, TranchesAddress } from "config/address";
 
 const initialState: IPosition = {
   positions: [],
-  pendingWTFReward: "0",
+  totalPendingReward: "0",
+  tranchesPendingReward: [],
   balance: "0",
   invested: "0"
 };
@@ -40,6 +41,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
         contractTrancheMaster.userInvest(account, 1),
         contractTrancheMaster.userInvest(account, 2)
       ]);
+      console.log(userInvest);
       return JSON.parse(JSON.stringify(userInvest));
     } catch (e) {
       console.error(e);
@@ -47,34 +49,36 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
   }
 );
 
-export const getPendingWTFReward = createAsyncThunk<string | undefined, { account: string; poolId?: number }>(
-  "position/getPendingWTFReward",
-  async ({ poolId, account }) => {
-    try {
-      const allPool = poolId == undefined ? true : false;
-      if (!account) return;
-      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
-      let _pendingReward = new BigNumber(0);
+export const getPendingWTFReward = createAsyncThunk<
+  { totalPendingReward: string; tranchesPendingReward: any[] } | undefined,
+  { account: string }
+>("position/getPendingWTFReward", async ({ account }) => {
+  try {
+    // const allPool = poolId == undefined ? true : false;
+    if (!account) return;
+    const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+    let _pendingReward = new BigNumber(0);
+    const _tranchesPendingReward = [];
 
-      if (poolId == 0 || allPool) {
-        const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
-        if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
-      }
-      if (poolId == 1 || allPool) {
-        const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
-        if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
-      }
-      if (poolId == 2 || allPool) {
-        const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
-        if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
-      }
+    const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
+    if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
+    _tranchesPendingReward.push(!pendingReward0.isZero() ? pendingReward0.toString() : "0");
 
-      return _pendingReward.toString();
-    } catch (e) {
-      console.log(e);
-    }
+    const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
+    if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
+    _tranchesPendingReward.push(!pendingReward1.isZero() ? pendingReward1.toString() : "0");
+    const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
+    if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
+    _tranchesPendingReward.push(!pendingReward2.isZero() ? pendingReward2.toString() : "0");
+
+    return {
+      totalPendingReward: _pendingReward.toString(),
+      tranchesPendingReward: _tranchesPendingReward
+    };
+  } catch (e) {
+    console.log(e);
   }
-);
+});
 
 export const positionSlice = createSlice({
   name: "position",
@@ -83,8 +87,12 @@ export const positionSlice = createSlice({
     setPosition: (state, action: PayloadAction<any[]>) => {
       state.positions = action.payload;
     },
-    setPendingWTFReward: (state, action: PayloadAction<string>) => {
-      state.pendingWTFReward = action.payload;
+    setPendingWTFReward: (
+      state,
+      action: PayloadAction<{ totalPendingReward: string; tranchesPendingReward: any[] }>
+    ) => {
+      state.totalPendingReward = action.payload.totalPendingReward;
+      state.tranchesPendingReward = action.payload.tranchesPendingReward;
     },
     setTrancheBalance: (state, action: PayloadAction<{ balance: string; invested: string }>) => {
       state.balance = action.payload.balance;
@@ -96,7 +104,10 @@ export const positionSlice = createSlice({
       state.positions = payload;
     });
     builder.addCase(getPendingWTFReward.fulfilled, (state, { payload }) => {
-      if (payload) state.pendingWTFReward = payload;
+      if (payload) {
+        state.totalPendingReward = payload.totalPendingReward;
+        state.tranchesPendingReward = payload.tranchesPendingReward;
+      }
     });
     builder.addCase(getTrancheBalance.fulfilled, (state, { payload }) => {
       if (payload) {

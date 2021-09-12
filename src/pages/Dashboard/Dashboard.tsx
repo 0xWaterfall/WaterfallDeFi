@@ -248,6 +248,7 @@ const Dashboard = memo<TProps>(() => {
       const pendingReward1 = await contractMasterChef.methods.pendingReward(myAccount, 1).call();
       console.log(pendingReward1);
       const pendingReward2 = await contractMasterChef.methods.pendingReward(myAccount, 2).call();
+      console.log(pendingReward2);
 
       // const claimAll = await contractMasterChef.methods.claimAll().send({ from: myAccount });
       // console.log(claimAll);
@@ -266,7 +267,7 @@ const Dashboard = memo<TProps>(() => {
     }
   }, []);
   useEffect(() => {
-    // testContract();
+    testContract();
   }, []);
   return (
     <div style={{ marginTop: 100 }}>

@@ -167,7 +167,7 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
           {Types[type].text}
         </Text1>
         <Text2 color={Types[type].color}>
-          APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches, data.duration)} +{" "}
+          APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches)} +{" "}
           {formatAllocPoint(allocPoint, totalAllocPoint)}% WTF
         </Text2>
         <Text3>{Types[type].riskText}</Text3>

@@ -10,10 +10,11 @@ import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { formatAllocPoint, formatAPY, getLockupPeriod } from "utils/formatNumbers";
+import { formatAllocPoint, formatAPY, formatDisplayTVL, getJuniorAPY, getLockupPeriod } from "utils/formatNumbers";
 import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
+import Countdown from "react-countdown";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -169,7 +170,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
-                <span css={{ color: tranchesDisplayColor[_i] }}>{formatAPY(_t.apy)}</span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>
+                  {_i !== marketData.tranches.length - 1 ? formatAPY(_t.apy) : getJuniorAPY(marketData.tranches)}
+                </span>
                 <span>
                   <div>
                     <WTFToken />
@@ -185,7 +188,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
-        <div>{marketData.tvl}</div>
+        <div>
+          {formatDisplayTVL(marketData.tvl)} {marketData.assets}
+        </div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
@@ -200,7 +205,24 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
           {intl.formatMessage({ defaultMessage: "Deposit" })}
         </Button>
       </ButtonDiv>
-      <NextTime>{marketData.status === PORTFOLIO_STATUS.ACTIVE ? `Next Time: 0D 12H 24M 56S` : ``}</NextTime>
+      <NextTime>
+        {marketData.status === PORTFOLIO_STATUS.ACTIVE && marketData.duration && marketData.actualStartAt && (
+          <Countdown
+            date={(Number(marketData.duration) + Number(marketData.actualStartAt)) * 1000}
+            renderer={({ days, hours, minutes, seconds, completed }) => {
+              return (
+                <span>
+                  {!completed && (
+                    <>
+                      {days}D {hours}H {minutes}M {seconds}S
+                    </>
+                  )}
+                </span>
+              );
+            }}
+          />
+        )}
+      </NextTime>
     </Container>
   );
 });

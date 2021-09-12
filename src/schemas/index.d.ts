@@ -14,7 +14,8 @@ interface ISelected {
 
 interface IPosition {
   positions: any[];
-  pendingWTFReward: string;
+  totalPendingReward: string;
+  tranchesPendingReward: any[];
   balance: string;
   invested: string;
 }

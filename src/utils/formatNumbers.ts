@@ -88,7 +88,35 @@ export const getLockupPeriod = (duration: string) => {
   return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : Number(duration) / 60 + " Mins";
 };
 
-export const getJuniorAPY = (tranches?: Tranche[], duration?: string) => {
+export const getInterest = (tranches: Tranche[] | undefined, position: any, decimals = 18) => {
+  if (!tranches) return {};
+  const interests: string[] = [];
+  const principalAndInterests: string[] = [];
+
+  tranches.map((_t, _i) => {
+    const _apy =
+      _i !== tranches.length - 1
+        ? new BigNumber(tranches[_i].apy).dividedBy(BIG_TEN.pow(decimals))
+        : new BigNumber(getJuniorAPY(tranches, true)).dividedBy(100);
+    const _principal = new BigNumber(position[_i]?.[1].hex);
+    const _interest = _apy
+      .times(_principal)
+      .dividedBy(BIG_TEN.pow(18))
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const _principalAndInterest = _principal
+      .times(_apy)
+      .plus(_principal)
+      .dividedBy(BIG_TEN.pow(18))
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    interests.push(_interest);
+    principalAndInterests.push(_principalAndInterest);
+  });
+  return { interests, principalAndInterests };
+};
+
+export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   // if (!duration) return "-";
   if (!tranches) return "--";
   let totalTarget = new BigNumber(0);
@@ -123,6 +151,7 @@ export const getJuniorAPY = (tranches?: Tranche[], duration?: string) => {
   //(0.0748 - 0.0449*0.6 - 0.0673*0.3) / 0.1
   //{[300,000*(1+0.5) - 100,000*(1+0.1) - 100,000*(1+0.2)] - 100,000}/100,000
   const result = totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString();
+  if (numbersOnly) return result;
   return result !== "NaN" ? result + "%" : "- -";
 };
 export const getRemaining = (target: string | undefined, principal: string | undefined, decimals = 18) => {

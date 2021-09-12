@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import { Pool, Tranche } from "types";
 import Web3 from "web3";
 import { BIG_TEN } from "./bigNumber";
+import moment from "moment";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + "%";
@@ -33,6 +34,12 @@ export const formatNumberDisplay = (num: string | undefined, decimals = 18) => {
 };
 export const formatNumberSeparator = (num: string) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+export const formatTimestamp = (num: string | number) => {
+  const format1 = "YYYY-MM-DD HH:mm:ss";
+  const format2 = "YYYY-MM-DD";
+  const d = parseInt(num + "000");
+  return moment(d).format(format1);
 };
 export const getPercentage = (num: string | undefined, total: string | undefined) => {
   if (!num || !total) return "0";

@@ -16,13 +16,15 @@ import { Invest, Market, PORTFOLIO_STATUS } from "types";
 import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { formatAllocPoint, formatAPY, formatNumberDisplay, getJuniorAPY } from "utils/formatNumbers";
+import Web3 from "web3";
+import { formatAllocPoint, formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import { getPosition } from "store/position";
 import { usePosition, useSelectedMarket } from "hooks/useSelectors";
 import useRedeemDirect from "../hooks/useRedeemDirect";
+import { unset } from "lodash";
 type TProps = WrappedComponentProps & {
   data: Market;
 };
@@ -57,21 +59,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
     } finally {
       setRedeemLoading(false);
     }
-    // const redeem = async () => {
-    //   console.log("start redeem");
-    //   try {
-    //     const result = await contractTrancheMaster.methods.redeemDirect(i).send({ from: account });
-    //     console.log(result);
-    //     if (result.status) {
-    //       successNotification("Redeem Success", "");
-    //     }
-    //   } catch (e) {
-    //     console.log(e);
-    //   } finally {
-    //     setRedeemLoading(false);
-    //   }
-    // };
-    // redeem();
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayTextColor = [tags.yellowText, tags.greenText, primary.deep];
@@ -113,7 +100,12 @@ const MyPositions = memo<TProps>(({ intl }) => {
                   >
                     <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
                     <TableColumn>{market?.assets}</TableColumn>
-                    <TableColumn minWidth={240}></TableColumn>
+                    <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
+                      {market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
+                        ? `${formatTimestamp(market.actualStartAt)} -
+                          ${formatTimestamp(Number(market.actualStartAt) + Number(market.duration))}`
+                        : null}
+                    </TableColumn>
                     <TableColumn minWidth={240}>
                       {tranchesDisplayText[i]}:
                       <Text2 color={tranchesDisplayTextColor[i]}>
@@ -210,16 +202,22 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
                           </div>
                           <div css={{ display: "flex" }}>
-                            {market?.status === PORTFOLIO_STATUS.PENDING && (
-                              <Button
-                                css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
-                                type="primary"
-                                onClick={() => redeemDirect(i)}
-                                loading={redeemLoading}
-                              >
-                                {intl.formatMessage({ defaultMessage: "Redeem" })}
-                              </Button>
-                            )}
+                            <Button
+                              css={{
+                                marginRight: 10,
+                                fontSize: 12,
+                                height: 30,
+                                padding: "0 12px",
+                                borderRadius: 4,
+                                visibility: market?.status !== PORTFOLIO_STATUS.PENDING ? "hidden" : "visible"
+                              }}
+                              type="primary"
+                              onClick={() => redeemDirect(i)}
+                              loading={redeemLoading}
+                            >
+                              {intl.formatMessage({ defaultMessage: "Redeem" })}
+                            </Button>
+
                             {/* <Button css={{ fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }} type="primary">
                             {intl.formatMessage({ defaultMessage: "Re-deposit" })}
                           </Button> */}

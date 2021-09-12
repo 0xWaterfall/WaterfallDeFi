@@ -7,7 +7,13 @@ import { Input, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
-import { compareNum, formatBalance, formatNumberSeparator, getRemaining } from "utils/formatNumbers";
+import {
+  compareNum,
+  formatBalance,
+  formatNumberDisplay,
+  formatNumberSeparator,
+  getRemaining
+} from "utils/formatNumbers";
 import { useEffect } from "react";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
@@ -19,7 +25,7 @@ import useCheckApprove from "../hooks/useCheckApprove";
 import useApprove from "../hooks/useApprove";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
-
+import useInvest from "../hooks/useInvest";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -104,6 +110,7 @@ const ApproveCard = memo<TProps>(
     const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect();
+    const { onInvest } = useInvest();
     useEffect(() => {
       const checkApproved = async (account: string) => {
         const approved = await onCheckApprove();
@@ -136,7 +143,9 @@ const ApproveCard = memo<TProps>(
       console.log("amount", amount);
       console.log("invest tranche", selectTrancheIdx);
       try {
-        const success = await onInvestDirect(amount, selectTrancheIdx.toString());
+        const success = !isRe
+          ? await onInvestDirect(amount, selectTrancheIdx.toString())
+          : await onInvest(amount, selectTrancheIdx.toString());
         if (success) {
           setBalanceInput(0);
           successNotification("Deposit Success", "");

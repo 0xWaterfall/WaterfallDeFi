@@ -11,3 +11,10 @@ interface II18n {
 interface ISelected {
   marketKey: string;
 }
+
+interface IPosition {
+  positions: any[];
+  pendingWTFReward: string;
+  balance: string;
+  invested: string;
+}

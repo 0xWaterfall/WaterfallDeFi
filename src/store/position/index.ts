@@ -2,9 +2,33 @@ import { getContract, getSigner } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market } from "types";
 import { AbiItem } from "web3-utils";
-import { useAppSelector } from "store";
+import BigNumber from "bignumber.js";
+import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
+import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
+import { MasterChefAddress, TranchesAddress } from "config/address";
 
-const initialState: any[] = [];
+const initialState: IPosition = {
+  positions: [],
+  pendingWTFReward: "0",
+  balance: "0",
+  invested: "0"
+};
+
+export const getTrancheBalance = createAsyncThunk<
+  { balance: string; invested: string } | undefined,
+  { account: string }
+>("position/getTrancheBalance", async ({ account }) => {
+  try {
+    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
+    const result = await contractMasterChef.balanceOf(account);
+    return {
+      balance: result.balance ? new BigNumber(result.balance?._hex).toString() : "0",
+      invested: result.invested.toString()
+    };
+  } catch (e) {
+    console.error(e);
+  }
+});
 
 export const getPosition = createAsyncThunk<any, { market: Market; account: string }>(
   "position/getPosition",
@@ -23,18 +47,67 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
   }
 );
 
+export const getPendingWTFReward = createAsyncThunk<string | undefined, { account: string; poolId?: number }>(
+  "position/getPendingWTFReward",
+  async ({ poolId, account }) => {
+    try {
+      const allPool = poolId == undefined ? true : false;
+      if (!account) return;
+      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+      let _pendingReward = new BigNumber(0);
+
+      if (poolId == 0 || allPool) {
+        const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
+        if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
+      }
+      if (poolId == 1 || allPool) {
+        const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
+        if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
+      }
+      if (poolId == 2 || allPool) {
+        const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
+        if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
+      }
+
+      return _pendingReward.toString();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+);
+
 export const positionSlice = createSlice({
   name: "position",
   initialState,
   reducers: {
-    setPosition: (state, action: PayloadAction<Market[]>) => action.payload
+    setPosition: (state, action: PayloadAction<any[]>) => {
+      state.positions = action.payload;
+    },
+    setPendingWTFReward: (state, action: PayloadAction<string>) => {
+      state.pendingWTFReward = action.payload;
+    },
+    setTrancheBalance: (state, action: PayloadAction<{ balance: string; invested: string }>) => {
+      state.balance = action.payload.balance;
+      state.invested = action.payload.invested;
+    }
   },
   extraReducers: (builder) => {
-    builder.addCase(getPosition.fulfilled, (state, { payload }) => payload && payload);
+    builder.addCase(getPosition.fulfilled, (state, { payload }) => {
+      state.positions = payload;
+    });
+    builder.addCase(getPendingWTFReward.fulfilled, (state, { payload }) => {
+      if (payload) state.pendingWTFReward = payload;
+    });
+    builder.addCase(getTrancheBalance.fulfilled, (state, { payload }) => {
+      if (payload) {
+        state.balance = payload.balance;
+        state.invested = payload.invested;
+      }
+    });
   }
 });
 
 // Actions
-export const { setPosition } = positionSlice.actions;
+export const { setPosition, setPendingWTFReward, setTrancheBalance } = positionSlice.actions;
 
 export default positionSlice.reducer;

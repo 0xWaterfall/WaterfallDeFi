@@ -125,7 +125,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       &nbsp;{formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
                     </TableColumn>
                     <TableColumn minWidth={200}>
-                      {formatNumberDisplay(p?.principal._hex)} {market?.assets}
+                      {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
                     </TableColumn>
                     <TableColumn>
                       {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}

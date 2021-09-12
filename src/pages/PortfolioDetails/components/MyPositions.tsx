@@ -208,7 +208,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             </Tooltip>
                           </div>
                           <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                            {formatNumberDisplay(p?.principal._hex)} {market?.assets}
+                            {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
                           </div>
                           <div css={{ display: "flex" }}>
                             {market?.status === PORTFOLIO_STATUS.PENDING && (

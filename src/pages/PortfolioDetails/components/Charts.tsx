@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useLocation } from "react-router-dom";
 import { Market } from "types";
@@ -9,7 +9,6 @@ import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
-import { usePendingWTFReward, useTrancheBalance } from "hooks";
 import { formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 
@@ -20,6 +19,10 @@ import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
 import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
+import { usePendingWTFReward, useTrancheBalance } from "hooks/useSelectors";
+import { useAppDispatch } from "store";
+import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "store/position";
+import BigNumber from "bignumber.js";
 
 const Wrapper = styled.div`
   display: grid;
@@ -96,8 +99,14 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const { onClaimAll } = useClaimAll();
 
   const { balance, invested } = useTrancheBalance();
-
+  const { account } = useWeb3React<Web3Provider>();
+  console.log(balance, 32132132131);
   const pendingReward = usePendingWTFReward();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    account && dispatch(getPendingWTFReward({ account }));
+    account && dispatch(getTrancheBalance({ account }));
+  }, [account]);
   const claimReward = async () => {
     setClaimRewardLoading(true);
     try {
@@ -113,7 +122,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
     setWithdrawAllLoading(true);
     try {
       if (!balance) return;
-      await onWithdraw(formatBigNumber2HexString(balance));
+      await onWithdraw(formatBigNumber2HexString(new BigNumber(balance)));
       successNotification("Withdraw All Success", "");
     } catch (e) {
       console.log(e);

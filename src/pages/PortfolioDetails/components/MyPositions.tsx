@@ -16,7 +16,6 @@ import { Invest, Market, PORTFOLIO_STATUS } from "types";
 import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import Web3 from "web3";
 import { formatAllocPoint, formatAPY, formatNumberDisplay, getJuniorAPY } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";

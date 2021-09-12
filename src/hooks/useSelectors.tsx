@@ -17,6 +17,17 @@ export const useSelectedMarket = () => {
 };
 
 export const usePosition = () => {
-  const position = useAppSelector((state) => state.position);
+  const position = useAppSelector((state) => state.position.positions);
   return position;
+};
+
+export const usePendingWTFReward = () => {
+  const pendingWTFReward = useAppSelector((state) => state.position.pendingWTFReward);
+  return pendingWTFReward;
+};
+
+export const useTrancheBalance = () => {
+  const balance = useAppSelector((state) => state.position.balance);
+  const invested = useAppSelector((state) => state.position.invested);
+  return { balance, invested };
 };

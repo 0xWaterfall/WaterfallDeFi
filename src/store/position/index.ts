@@ -35,7 +35,9 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
   "position/getPosition",
   async ({ market, account }) => {
     try {
-      const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, getSigner());
+      const signer = getSigner();
+      if (!signer) return [];
+      const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
       const userInvest = await Promise.all([
         contractTrancheMaster.userInvest(account, 0),
         contractTrancheMaster.userInvest(account, 1),

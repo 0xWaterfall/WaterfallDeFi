@@ -67,7 +67,7 @@ const Header = memo<TProps>(({ intl }) => {
         }}
       />
       <div css={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: 60 }}>
-        <TitleH1>{intl.formatMessage({ defaultMessage: "Deposit together, enjoy the distribution" })}</TitleH1>
+        <TitleH1>{intl.formatMessage({ defaultMessage: "Risk Optimized Yield Farming" })}</TitleH1>
         <DescText>
           {intl.formatMessage({
             defaultMessage:

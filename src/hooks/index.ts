@@ -74,7 +74,6 @@ export const useStrategyFarm = () => {
       const _result = [];
       try {
         const farm0 = await contractStrategy.farms(0);
-        console.log(farm0);
         if (farm0) _result.push(getFarmResult(farm0.shares, farm0.addr));
         const farm1 = await contractStrategy.farms(1);
         if (farm1) _result.push(getFarmResult(farm1.shares, farm1.addr));
@@ -186,6 +185,9 @@ export const getContract = (abi: any, address: string, signer?: ethers.Signer | 
 
 export const getSigner = () => {
   if (window.ethereum) {
+    const chainId = window.ethereum.chainId;
+    if (chainId !== "0x61" && chainId !== "0x38") return;
+
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     return signer;

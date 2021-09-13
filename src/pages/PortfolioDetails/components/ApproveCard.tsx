@@ -26,6 +26,7 @@ import useApprove from "../hooks/useApprove";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
+import { useTheme } from "@emotion/react";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -86,6 +87,12 @@ const BlockDiv = styled.div`
   position: absolute;
   z-index: 10;
 `;
+const ValidateText = styled.div`
+  font-size: 12px;
+  line-height: 125%;
+  letter-spacing: -0.015em;
+  color: ${({ theme }) => theme.tags.redText};
+`;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
   assets: string;
@@ -99,6 +106,7 @@ type TProps = WrappedComponentProps & {
 
 const ApproveCard = memo<TProps>(
   ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut }) => {
+    const { tags } = useTheme();
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
     const [validateText, setValidateText] = useState("");
@@ -149,7 +157,6 @@ const ApproveCard = memo<TProps>(
         if (success) {
           setBalanceInput(0);
           successNotification("Deposit Success", "");
-          // dispatch(getPosition({ market, account }));
         } else {
           successNotification("Deposit Fail", "");
         }
@@ -224,13 +231,14 @@ const ApproveCard = memo<TProps>(
           <div>
             <div>
               <Input
+                style={validateText ? { borderColor: tags.redText } : {}}
                 placeholder=""
                 value={balanceInput}
                 onChange={handleInputChange}
                 suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "Max" })}</Max>}
               />
             </div>
-            <div>{validateText}</div>
+            <ValidateText>{validateText}</ValidateText>
           </div>
         )}
         {approved ? (

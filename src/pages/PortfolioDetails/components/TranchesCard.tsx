@@ -86,6 +86,7 @@ const SoldOut = styled.div`
   text-align: center;
   line-height: 30px;
   background-color: white;
+  z-index: 11;
 `;
 const Container = styled.div`
   padding: 20px;
@@ -127,6 +128,15 @@ const CheckDiv = styled.div`
     height: 20px;
   }
 `;
+const Mask = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff7a;
+  z-index: 10;
+  top: 0;
+  left: 0;
+`;
 
 const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
@@ -150,6 +160,7 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
   };
   return (
     <Container style={selected ? { borderColor: primary.deep } : undefined}>
+      {!selected && <Mask />}
       {compareNum(tranche.principal, tranche.target) ? (
         <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
       ) : null}

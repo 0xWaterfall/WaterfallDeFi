@@ -57,12 +57,15 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
               key={_i}
               onClick={() => {
                 if (data.status === PORTFOLIO_STATUS.PENDING) {
-                  if (selectTranche) {
-                    setSelectTrancheIdx(undefined);
-                    setSelectTranche(undefined);
-                  } else {
+                  // if (selectTranche) {
+                  //   setSelectTrancheIdx(undefined);
+                  //   setSelectTranche(undefined);
+                  // } else {
+
+                  // }
+                  //not sold out
+                  if (!compareNum(_d.principal, _d.target)) {
                     setSelectTrancheIdx(_i);
-                    console.log(_d);
                     setSelectTranche({ ..._d });
                   }
                 }

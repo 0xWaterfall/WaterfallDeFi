@@ -88,10 +88,17 @@ export const getLockupPeriod = (duration: string) => {
   return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : Number(duration) / 60 + " Mins";
 };
 
-export const getInterest = (tranches: Tranche[] | undefined, position: any, decimals = 18) => {
-  if (!tranches) return {};
+export const getInterest = (
+  tranches: Tranche[] | undefined,
+  position: any,
+  duration: string | undefined,
+  decimals = 18
+) => {
+  if (!tranches || !duration) return {};
   const interests: string[] = [];
   const principalAndInterests: string[] = [];
+  const _durationYear = new BigNumber(365 * 86400);
+  const _timePeriod = new BigNumber(duration).dividedBy(_durationYear);
 
   tranches.map((_t, _i) => {
     const _apy =
@@ -101,13 +108,17 @@ export const getInterest = (tranches: Tranche[] | undefined, position: any, deci
     const _principal = new BigNumber(position[_i]?.[1].hex);
     const _interest = _apy
       .times(_principal)
+      .times(_timePeriod)
       .dividedBy(BIG_TEN.pow(18))
+      .toFormat(0)
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const _principalAndInterest = _principal
       .times(_apy)
+      .times(_timePeriod)
       .plus(_principal)
       .dividedBy(BIG_TEN.pow(18))
+      .toFormat(0)
       .toString()
       .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     interests.push(_interest);

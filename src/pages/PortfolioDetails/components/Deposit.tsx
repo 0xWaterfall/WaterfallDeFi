@@ -10,6 +10,7 @@ import { Market, PORTFOLIO_STATUS } from "types";
 import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
 import { formatTimestamp } from "utils/formatNumbers";
+import Countdown from "react-countdown";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -45,7 +46,20 @@ const Deposit = memo<TProps>(({ intl, data }) => {
           <>
             <Text1>
               {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
-              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+              <Countdown
+                date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
+                renderer={({ days, hours, minutes, seconds, completed }) => {
+                  return (
+                    <span>
+                      {!completed && (
+                        <>
+                          {days}D {hours}H {minutes}M {seconds}S
+                        </>
+                      )}
+                    </span>
+                  );
+                }}
+              />
             </Text1>
             <Text2>
               {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -

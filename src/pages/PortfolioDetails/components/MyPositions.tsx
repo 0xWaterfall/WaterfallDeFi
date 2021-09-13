@@ -54,7 +54,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const position = usePosition();
   const { onRedeemDirect } = useRedeemDirect();
   const { tranchesPendingReward } = usePendingWTFReward();
-  const { interests, principalAndInterests } = getInterest(market?.tranches, position);
+  const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
@@ -135,7 +135,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
                     </TableColumn>
                     <TableColumn>
                       {market?.status === PORTFOLIO_STATUS.ACTIVE && interests && interests[i] + " " + market?.assets}
-                      {}
                     </TableColumn>
                     <TableColumn>
                       <div

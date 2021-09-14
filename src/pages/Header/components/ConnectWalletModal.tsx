@@ -4,19 +4,18 @@ import { MetaMask } from "assets/images";
 import Modal from "components/Modal/Modal";
 import React, { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import detectEthereumProvider from "@metamask/detect-provider";
 import { useCallback } from "react";
 import { url } from "config";
 import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
 import { useTheme } from "@emotion/react";
 import useAuth from "utils/useAuth";
+import { useConnectWalletModalShow } from "hooks/useSelectors";
+import { useAppDispatch } from "store";
+import { setConnectWalletModalShow } from "store/showStatus";
 
-type TProps = WrappedComponentProps & {
-  visible?: boolean;
-  onCancel?: (e: boolean) => void;
-};
+type TProps = WrappedComponentProps;
 
-const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
+const ConnectWalletModal = memo<TProps>(({ intl }) => {
   const { gray, primary } = useTheme();
   const { active } = useWeb3ReactCore();
   const { login } = useAuth();
@@ -28,12 +27,22 @@ const ConnectWalletModal = memo<TProps>(({ intl, visible, onCancel }) => {
     }
   }, []);
 
+  const visible = useConnectWalletModalShow();
+
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    active && onCancel?.(false);
+    active && dispatch(setConnectWalletModalShow(false));
   }, [active]);
 
   return (
-    <Modal visible={visible} width={440} onCancel={onCancel?.bind(null, false)}>
+    <Modal
+      visible={visible}
+      width={440}
+      onCancel={() => {
+        dispatch(setConnectWalletModalShow(false));
+      }}
+    >
       <title css={{ color: gray.normal, fontWeight: 600, fontSize: 16, marginBottom: 14 }}>
         {intl.formatMessage({ defaultMessage: "Connect wallet" })}
       </title>

@@ -13,9 +13,6 @@ const options = {
 
 const invest = async (contract: Contract, amount: string, selectTrancheIdx: string) => {
   const _amount = utils.parseEther(amount).toString();
-  console.log(contract);
-  console.log(_amount);
-  console.log(selectTrancheIdx);
   const tx = await contract.investDirect(_amount, selectTrancheIdx, _amount);
   const receipt = await tx.wait();
   return receipt.status;

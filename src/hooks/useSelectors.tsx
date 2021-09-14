@@ -35,3 +35,8 @@ export const useTrancheBalance = () => {
   const invested = useAppSelector((state) => state.position.invested);
   return { balance, invested };
 };
+
+export const useConnectWalletModalShow = () => {
+  const isConnectWalletShow = useAppSelector((state) => state.showStatus.connectWalletModal);
+  return isConnectWalletShow;
+};

@@ -11,7 +11,6 @@ const options = {
 
 const checkApprove = async (contract: Contract, trancheMasterAddress: string, account: string) => {
   const tx = await contract.allowance(account, trancheMasterAddress);
-  console.log(new BigNumber(tx?._hex));
   if (tx?._hex) return new BigNumber(tx?._hex).isZero() ? false : true;
 };
 

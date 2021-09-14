@@ -13,7 +13,6 @@ const options = {
 
 const invest = async (contract: Contract, amount: string, selectTrancheIdx: string) => {
   const _amount = utils.parseEther(amount).toString();
-  console.log(contract);
   const tx = await contract.invest(selectTrancheIdx, _amount, false);
   const receipt = await tx.wait();
   return receipt.status;

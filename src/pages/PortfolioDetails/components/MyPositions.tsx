@@ -65,7 +65,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
       await onRedeemDirect(i);
       successNotification("Redeem Success", "");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setRedeemLoading(false);
     }
@@ -93,7 +93,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
           </TableRow>
           {position &&
             position?.map((p, i) => {
-              console.log(p);
               return (
                 <div
                   key={i}

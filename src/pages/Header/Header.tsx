@@ -20,14 +20,14 @@ import useAuth from "utils/useAuth";
 import { formatAccountAddress } from "utils/formatAddress";
 import { languages } from "config";
 import Tooltip from "components/Tooltip/Tooltip";
+import { setConnectWalletModalShow } from "store/showStatus";
 
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { gray, primary, white, shadow, warn, fonts } = useTheme();
+  const { gray, primary, white, warn, fonts } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
-  const [visible, setVisible] = useState(false);
   const [isDrawerShow, setDrawerShow] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -38,7 +38,7 @@ const Header = memo<TProps>(({ intl }) => {
   const [clientWidth, setClientWidth] = useState(0);
   const { width } = useSize(document.body);
 
-  const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
+  const { active, account, chainId } = useWeb3React<Web3Provider>();
   const { login } = useAuth();
 
   useEffect(() => {
@@ -112,7 +112,12 @@ const Header = memo<TProps>(({ intl }) => {
   const MetaMaskElement = useMemo(() => {
     if (!active) {
       return (
-        <Button type="primary" onClick={setVisible.bind(null, true)}>
+        <Button
+          type="primary"
+          onClick={() => {
+            dispatch(setConnectWalletModalShow(true));
+          }}
+        >
           {intl.formatMessage({ defaultMessage: "Connect wallet" })}
         </Button>
       );
@@ -318,7 +323,7 @@ const Header = memo<TProps>(({ intl }) => {
           </Drawer>
         </React.Fragment>
       )}
-      {visible && <ConnectWalletModal visible={visible} onCancel={setVisible} />}
+      <ConnectWalletModal />
     </div>
   );
 });

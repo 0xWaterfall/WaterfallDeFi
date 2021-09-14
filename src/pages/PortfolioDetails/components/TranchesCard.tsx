@@ -140,7 +140,6 @@ const Mask = styled.div`
 
 const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
-  console.log(tranche);
   const Types = {
     Senior: {
       color: tags.yellowText,
@@ -160,7 +159,7 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
   };
   return (
     <Container style={selected ? { borderColor: primary.deep } : undefined}>
-      {!selected && <Mask />}
+      {/* {!selected && <Mask />} */}
       {compareNum(tranche.principal, tranche.target) ? (
         <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
       ) : null}

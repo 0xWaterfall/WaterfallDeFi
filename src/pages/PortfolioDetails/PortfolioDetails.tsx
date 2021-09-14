@@ -13,6 +13,7 @@ import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
 import { USER_INVESTS_GQL } from "config";
 import { useQuery } from "@apollo/client";
+import useScrollTop from "hooks/useScrollTop";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;
@@ -24,6 +25,7 @@ const PortfolioDetailsWrapper = styled.div`
 type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
+  useScrollTop();
   const market = useSelectedMarket();
   // const location = useLocation<Market>();
   // const { push } = useHistory();
@@ -32,9 +34,8 @@ const PortfolioDetails = memo<TProps>(() => {
   //     push({ pathname: "/portfolio/" });
   //   }
   // }, []);
-  const { loading, error, data } = useQuery(USER_INVESTS_GQL);
+  // const { loading, error, data } = useQuery(USER_INVESTS_GQL);
 
-  console.log(data, 321312);
   return (
     <PortfolioDetailsWrapper>
       {market && (

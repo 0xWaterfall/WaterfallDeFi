@@ -197,7 +197,6 @@ const ApproveCard = memo<TProps>(
       if (isNaN(input)) input = 0;
       setBalanceInput(input);
     };
-    console.log(enabled, isSoldOut, myBalance, remaining);
 
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>

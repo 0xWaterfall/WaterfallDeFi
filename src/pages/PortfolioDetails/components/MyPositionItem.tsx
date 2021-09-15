@@ -140,7 +140,7 @@ const MyPositionItem = memo<TProps>(
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Cycle" })}</div>
-          <div>
+          <div style={{ whiteSpace: "unset" }}>
             {market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
               ? `${formatTimestamp(market.actualStartAt)} -
                           ${formatTimestamp(Number(market.actualStartAt) + Number(market.duration))}`

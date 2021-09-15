@@ -5,14 +5,8 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
 import Information from "./components/Information";
-import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Market } from "types";
-import { useHistory, useLocation } from "react-router-dom";
-import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
-import { USER_INVESTS_GQL } from "config";
-import { useQuery } from "@apollo/client";
 
 const PortfolioDetailsWrapper = styled.div`
   padding: 64px 24px;
@@ -32,9 +26,7 @@ const PortfolioDetails = memo<TProps>(() => {
   //     push({ pathname: "/portfolio/" });
   //   }
   // }, []);
-  const { loading, error, data } = useQuery(USER_INVESTS_GQL);
 
-  console.log(data, 321312);
   return (
     <PortfolioDetailsWrapper>
       {market && (

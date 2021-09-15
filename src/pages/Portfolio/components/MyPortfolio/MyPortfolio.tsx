@@ -126,7 +126,6 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
           </div>
         </MainGridContainer2>
       </MainGridContainer> */}
-
       {/* position */}
       {/* <div css={{ margin: "24px 0", fontSize: 20, fontWeight: 600, color: gray.normal85 }}>
         {intl.formatMessage({ defaultMessage: "Positions" })}

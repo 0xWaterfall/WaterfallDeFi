@@ -32,6 +32,16 @@ export const formatNumberDisplay = (num: string | undefined, decimals = 18) => {
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+export const formatNumberWithDecimalsDisplay = (num: string | undefined, decimals = 18) => {
+  if (!num) return "-";
+  return (
+    new BigNumber(num)
+      // .dividedBy(BIG_TEN.pow(decimals))
+      .toFormat(2)
+      .toString()
+    // .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  );
+};
 export const formatNumberSeparator = (num: string) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

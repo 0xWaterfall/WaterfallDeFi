@@ -98,6 +98,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
         selectTrancheIdx={selectTrancheIdx}
         myBalance={!isRe ? myBalance : redepositBalance || ""}
         data={marketData}
+        selectTranche={selectTranche}
         isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
       />
     </div>

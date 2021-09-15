@@ -90,6 +90,7 @@ const SoldOut = styled.div`
 `;
 const Container = styled.div`
   padding: 20px;
+  height: 100%;
   position: relative;
   cursor: pointer;
   border: ${({ theme }) => theme.table.border};

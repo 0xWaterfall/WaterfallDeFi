@@ -9,6 +9,7 @@ import Separator from "components/Separator/Separator";
 import { useState } from "react";
 import {
   compareNum,
+  formatAPY,
   formatBalance,
   formatNumberDisplay,
   formatNumberSeparator,
@@ -27,6 +28,7 @@ import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
 import { useTheme } from "@emotion/react";
+import { Union } from "assets/images";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -37,6 +39,7 @@ const RowDiv = styled.div`
   & > div:nth-of-type(2) {
     font-size: 24px;
     line-height: 33px;
+    text-align: end;
   }
 `;
 const Container = styled.div`
@@ -45,7 +48,7 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background: ${({ theme }) => theme.white.normal};
-  padding: 77px 81px;
+  padding: 35px 81px;
 
   & input {
     color: ${({ theme }) => theme.primary.normal};
@@ -70,7 +73,7 @@ const Max = styled.div`
 const ButtonDiv = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 56px;
+  margin-top: 20px;
   & button {
     width: 100%;
   }
@@ -93,6 +96,33 @@ const ValidateText = styled.div`
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.tags.redText};
 `;
+const RedemptionFee = styled.div`
+  color: ${({ theme }) => theme.gray.normal5};
+  margin-top: 10px;
+  & > span {
+    color: ${({ theme }) => theme.primary.deep};
+  }
+`;
+const ImportantNotes = styled.div`
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.primary.lightBrown};
+  padding: 20px;
+  display: flex;
+
+  & > div:nth-of-type(1) {
+    color: ${({ theme }) => theme.primary.deep};
+    padding-top: 2px;
+    margin-right: 10px;
+  }
+  & > div:nth-of-type(2) > div:nth-of-type(1) {
+    color: ${({ theme }) => theme.primary.deep};
+    margin-bottom: 10px;
+  }
+  & > div:nth-of-type(2) > div:nth-of-type(2) {
+    color: ${({ theme }) => theme.gray.normal7};
+  }
+`;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
   assets: string;
@@ -102,10 +132,11 @@ type TProps = WrappedComponentProps & {
   data: Market;
   selectTrancheIdx?: number;
   isSoldOut: boolean;
+  selectTranche: Tranche | undefined;
 };
 
 const ApproveCard = memo<TProps>(
-  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut }) => {
+  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut, selectTranche }) => {
     const { tags } = useTheme();
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
@@ -119,6 +150,12 @@ const ApproveCard = memo<TProps>(
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect();
     const { onInvest } = useInvest();
+
+    const notes = [
+      "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
+      "When depositing mezzanine, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
+      "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+    ];
     useEffect(() => {
       const checkApproved = async (account: string) => {
         const approved = await onCheckApprove();
@@ -241,6 +278,17 @@ const ApproveCard = memo<TProps>(
             <ValidateText>{validateText}</ValidateText>
           </div>
         )}
+        {selectTranche && (
+          <ImportantNotes>
+            <div>
+              <Union />
+            </div>
+            <div>
+              <div>{intl.formatMessage({ defaultMessage: "Important Notes" })}</div>
+              <div>{selectTrancheIdx !== undefined && notes[selectTrancheIdx]}</div>
+            </div>
+          </ImportantNotes>
+        )}
         {approved ? (
           <ButtonDiv>
             <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
@@ -254,6 +302,10 @@ const ApproveCard = memo<TProps>(
             </Button>
           </ButtonDiv>
         )}
+        <RedemptionFee>
+          Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
+          <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
+        </RedemptionFee>
         {/* <ButtonDiv>
         <Button type="primary" css={{ height: 56 }} onClick={handleDeposit100}>
           {intl.formatMessage({ defaultMessage: "Deposit 100" })}

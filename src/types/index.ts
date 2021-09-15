@@ -53,3 +53,14 @@ export interface Market {
   strategyAddress: string;
   strategyContract?: Contract;
 }
+
+export type TrancheCycle = {
+  capital: string;
+  cycle: number;
+  endAt: number;
+  id: string;
+  principal: string;
+  rate: string;
+  startAt: number;
+  state: number;
+};

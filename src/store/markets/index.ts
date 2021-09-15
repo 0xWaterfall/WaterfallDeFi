@@ -30,7 +30,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           let tvl = BIG_ZERO;
           const tranches: Tranche[] = [];
           _tranches.map((_t, _i) => {
-            console.log(_t.principal);
             const _principal = _t ? new BigNumber(_t.principal?._hex) : BIG_ZERO;
             const _apy = _t ? new BigNumber(_t.apy?._hex) : BIG_ZERO;
             const _fee = _t ? new BigNumber(_t.fee?._hex) : BIG_ZERO;
@@ -46,7 +45,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             };
             tranches.push(__t);
           });
-          console.log(_tranches);
 
           const [active, duration, actualStartAt, cycle] = await Promise.all([
             contractTranches.active(),
@@ -85,7 +83,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
               pools.push(_allocPoint.toString());
             });
           }
-          console.log(pools);
           // const totalAllocPoints = getTotalAllocPoints(pools);
 
           marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString() };

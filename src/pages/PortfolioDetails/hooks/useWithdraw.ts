@@ -34,7 +34,7 @@ const useWithdraw = () => {
       account && dispatch(getTrancheBalance({ account }));
       market && account && dispatch(getPosition({ market, account }));
     },
-    [account, dispatch, trancheContract]
+    [account, dispatch, trancheContract, market]
   );
 
   return { onWithdraw: handleWithdraw };

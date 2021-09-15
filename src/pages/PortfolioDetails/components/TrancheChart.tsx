@@ -46,10 +46,6 @@ type TProps = WrappedComponentProps & {
 };
 
 const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
-  const location = useLocation<Market>();
-  // const { tranches, totalTranchesTarget } = location.state;
-  // console.log(tranches, totalTranchesTarget);
-
   const { white } = useTheme();
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   const payload = [

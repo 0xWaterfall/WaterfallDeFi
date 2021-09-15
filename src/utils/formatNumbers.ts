@@ -57,7 +57,6 @@ export const getPercentage = (num: string | undefined, total: string | undefined
 };
 
 export const formatAllocPoint = (allocPoint: string | undefined, totalAllocPoints: string | undefined) => {
-  console.log(allocPoint, totalAllocPoints);
   if (!allocPoint || !totalAllocPoints) return "- -";
   return "+ " + Math.floor((parseInt(allocPoint) / parseInt(totalAllocPoints)) * 100);
 };
@@ -78,7 +77,6 @@ export const getPortfolioTotalTarget = (tranches: Tranche[]) => {
 
   tranches.map((_t) => {
     const _p = new BigNumber(_t.target);
-    console.log(_p);
     totalTarget = totalTarget.plus(_p);
   });
   return totalTarget.toString();

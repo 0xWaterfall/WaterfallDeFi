@@ -66,7 +66,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
       await onRedeemDirect(i);
       successNotification("Redeem Success", "");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: false }));
     }

@@ -20,7 +20,7 @@ module.exports = {
   },
   plugins: ["react", "@typescript-eslint"],
   rules: {
-    "no-console": "warn",
+    "no-console": ["warn", { allow: ["warn", "error"] }],
     "no-debugger": 0,
     "no-undef": 0,
     "@typescript-eslint/no-var-requires": 0,

@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Input, notification } from "antd";
+import { Form, Input, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
@@ -29,6 +29,8 @@ import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
 import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
+import { useAppDispatch } from "store";
+import { setConnectWalletModalShow } from "store/showStatus";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -140,16 +142,14 @@ const ApproveCard = memo<TProps>(
     const { tags } = useTheme();
     const [balanceInput, setBalanceInput] = useState(0);
     const [approved, setApproved] = useState(false);
-    const [validateText, setValidateText] = useState("");
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
-    const { active, account, chainId, ...p } = useWeb3React<Web3Provider>();
-    const web3 = new Web3(Web3.givenProvider);
-
+    const { account } = useWeb3React();
     const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect();
     const { onInvest } = useInvest();
+    const dispatch = useAppDispatch();
 
     const notes = [
       "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
@@ -173,20 +173,30 @@ const ApproveCard = memo<TProps>(
         successNotification("Approve Success", "");
         setApproved(true);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       } finally {
         setApproveLoading(false);
       }
     };
+    const validateText = useMemo(() => {
+      const _myBalance = myBalance.replace(/\,/g, "");
+      const _remaining = remaining.replace(/\,/g, "");
+      const _balanceInput = balanceInput;
+      if (compareNum(_balanceInput, _myBalance, true)) {
+        return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+      }
+      if (compareNum(_balanceInput, _remaining, true)) {
+        return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
+      }
+    }, [myBalance, remaining, balanceInput]);
+
     const handleDeposit = async () => {
-      if (!validateInput()) return;
+      if (!validateText) return;
       if (balanceInput <= 0) return;
       if (selectTrancheIdx === undefined) return;
 
       setDepositLoading(true);
       const amount = balanceInput.toString();
-      console.log("amount", amount);
-      console.log("invest tranche", selectTrancheIdx);
       try {
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
@@ -198,7 +208,7 @@ const ApproveCard = memo<TProps>(
           successNotification("Deposit Fail", "");
         }
       } catch (e) {
-        console.log(e);
+        console.error(e);
       } finally {
         setDepositLoading(false);
       }
@@ -217,39 +227,18 @@ const ApproveCard = memo<TProps>(
       }
       if (input) setBalanceInput(input);
     };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
       let input = parseInt(value);
       if (isNaN(input)) input = 0;
-      if (input == 0) setValidateText("");
       setBalanceInput(input);
     };
-    const validateInput = () => {
-      // console.log(myBalance);
-      const _myBalance = myBalance.replace(/\,/g, "");
-      const _remaining = remaining.replace(/\,/g, "");
-      const _balanceInput = balanceInput;
-      // console.log("_myBalance", _myBalance);
-      if (compareNum(_balanceInput, _myBalance, true)) {
-        // if (_balanceInput > _myBalance) {
-        console.log("Insufficient balance");
-        setValidateText("Insufficient Balance");
-        return false;
-      }
-      if (compareNum(_balanceInput, _remaining, true)) {
-        // if (_balanceInput > _remaining) {
-        console.log(`Maximum deposit amount = ${remaining}`);
-        setValidateText(`Maximum deposit amount = ${remaining}`);
-        return false;
-      }
 
-      setValidateText("");
-      return true;
-    };
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
-        {!enabled && <BlockDiv />}
-        {isSoldOut && <BlockDiv />}
+        {/* {!enabled && <BlockDiv />} */}
+        {/* {isSoldOut && <BlockDiv />} */}
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
           <div>
@@ -273,6 +262,7 @@ const ApproveCard = memo<TProps>(
                 value={balanceInput}
                 onChange={handleInputChange}
                 suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "Max" })}</Max>}
+                disabled={!enabled || isSoldOut}
               />
             </div>
             <ValidateText>{validateText}</ValidateText>
@@ -297,8 +287,14 @@ const ApproveCard = memo<TProps>(
           </ButtonDiv>
         ) : (
           <ButtonDiv>
-            <Button type="primary" css={{ height: 56 }} onClick={handleApprove} loading={approveLoading}>
-              {intl.formatMessage({ defaultMessage: "Approve" })}
+            <Button
+              type="primary"
+              css={{ height: 56 }}
+              onClick={() => {
+                dispatch(setConnectWalletModalShow(true));
+              }}
+            >
+              {intl.formatMessage({ defaultMessage: "Connect wallet" })}
             </Button>
           </ButtonDiv>
         )}

@@ -61,7 +61,6 @@ export const useStrategyFarm = () => {
   const [result, setResult] = useState<any>([]);
 
   const getFarmResult = (shares: BigNumber, addr: string) => {
-    console.log(shares);
     return {
       shares: new BigNumber(shares.toString()).dividedBy(BIG_TEN.pow(16)).toNumber(),
       farmName: farmsConfig[addr]
@@ -70,7 +69,6 @@ export const useStrategyFarm = () => {
   useEffect(() => {
     const fetchFarms = async () => {
       const contractStrategy = getContract(StrategyAbi, StrategyAddress);
-      console.log(contractStrategy, "contractStrategy");
       const _result = [];
       try {
         const farm0 = await contractStrategy.farms(0);
@@ -81,7 +79,7 @@ export const useStrategyFarm = () => {
         if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
         setResult(_result);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     };
 
@@ -132,10 +130,9 @@ export const usePendingWTFReward = (poolId?: number) => {
           if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
         }
 
-        console.log("pendingReward_", _pendingReward);
         if (!_pendingReward.isZero()) setPendingReward(_pendingReward);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     };
 
@@ -149,6 +146,7 @@ export const useBalance = (address: string) => {
   const { account, ...p } = useWeb3React<Web3Provider>();
 
   useEffect(() => {
+    if (!account) return;
     const fetchBalance = async () => {
       const contract = getContract(ERC20Abi, address);
       const tokenBalance = await contract.balanceOf(account);

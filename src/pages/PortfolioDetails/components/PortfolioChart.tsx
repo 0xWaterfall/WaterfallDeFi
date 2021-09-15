@@ -42,23 +42,16 @@ type TProps = WrappedComponentProps;
 let chart: echarts.ECharts;
 
 const PortfolioChart = memo<TProps>(({ intl }) => {
-  const { white, gray, fonts } = useTheme();
+  const { white, gray } = useTheme();
   const result = useStrategyFarm();
 
   const payload: any[] = [];
   if (result && result.length > 0) {
-    console.log(result);
-
     result.map((r: any) => {
       payload.push({ name: r?.farmName, value: r?.shares });
     });
   }
-  console.log(result, "213213131231");
-  // const payload = [
-  //   { name: "BTC/USDC-LP", value: 15 },
-  //   { name: "BTC/USDT-LP", value: 30 },
-  //   { name: "BTC/BUSD-LP", value: 40 }
-  // ];
+
   const COLORS = ["#FFB0E3", "#4A63B9", "#85C872", "#F7C05F"];
   const options = useMemo(() => {
     const res = payload.map((p, i) => ({ value: p.value, name: p.name, itemStyle: { color: COLORS[i] } }));

@@ -14,11 +14,8 @@ import { useMarkets } from "hooks/useSelectors";
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
-  const { gray, warn, green, primary } = useTheme();
   const { width } = useSize(document.body);
   const markets = useMarkets();
-  console.log(markets);
-
   return (
     <>
       {Boolean(width && width > 768) && (

@@ -101,7 +101,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
 
   const { balance, invested } = useTrancheBalance();
   const { account } = useWeb3React<Web3Provider>();
-  console.log(balance, 32132132131);
+
   const { totalPendingReward } = usePendingWTFReward();
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -114,7 +114,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
       await onClaimAll();
       successNotification("Claim Success", "");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setClaimRewardLoading(false);
     }
@@ -126,7 +126,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
       await onWithdraw(formatBigNumber2HexString(new BigNumber(balance)));
       successNotification("Withdraw All Success", "");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setWithdrawAllLoading(false);
     }
@@ -145,10 +145,15 @@ const Charts = memo<TProps>(({ intl, data }) => {
             </div>
           </div>
           <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
-            <Button type="default" onClick={() => withdrawAll()} loading={withdrawAllLoading}>
+            <Button
+              type="default"
+              onClick={() => withdrawAll()}
+              loading={withdrawAllLoading}
+              disabled={!account || !+balance}
+            >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
             </Button>
-            <Button type="default" onClick={() => rollDepositPopup()}>
+            <Button type="default" onClick={() => rollDepositPopup()} disabled={!account}>
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </Button>
           </div>
@@ -161,7 +166,12 @@ const Charts = memo<TProps>(({ intl, data }) => {
             </div>
           </div>
           <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
-            <Button type="default" onClick={() => claimReward()} loading={claimRewardLoading}>
+            <Button
+              type="default"
+              onClick={() => claimReward()}
+              loading={claimRewardLoading}
+              disabled={!account || !+totalPendingReward}
+            >
               {intl.formatMessage({ defaultMessage: "Claim" })}
             </Button>
           </div>

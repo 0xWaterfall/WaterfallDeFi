@@ -21,22 +21,21 @@ const useAuth = () => {
       activate(connector, async (error: Error) => {
         if (error instanceof UnsupportedChainIdError) {
           const hasSetup = await setupNetwork();
-          console.log(hasSetup);
           if (hasSetup) {
             activate(connector);
           }
         } else {
           if (error instanceof NoEthereumProviderError) {
-            console.log(error);
+            console.error(error);
           } else if (error instanceof UserRejectedRequestErrorInjected) {
-            console.log(error);
+            console.error(error);
           } else {
-            console.log(error);
+            console.error(error);
           }
         }
       });
     } else {
-      console.log("Unable to find connector", "The connector config is wrong");
+      console.warn("Unable to find connector", "The connector config is wrong");
     }
   }, [activate]);
 

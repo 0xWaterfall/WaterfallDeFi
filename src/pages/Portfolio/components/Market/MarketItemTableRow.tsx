@@ -95,22 +95,10 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
     dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolioDetails" });
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const _md = await useMarket({ ...data });
-  //     console.log(_md);
-  //     console.log(_md?.duration);
-  //     console.log(_md?.actualStartAt);
-
-  //     if (_md?.duration && _md.actualStartAt) console.log((Number(_md?.duration) + Number(_md?.actualStartAt)) * 1000);
-  //     if (_md) setMarketData(_md);
-  //   };
-  //   fetchData();
-  // }, []);
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
-    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }}>
+    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}
@@ -153,7 +141,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
       <TableColumn minWidth={240}>
         <APYStyled>
           <Button type="primary" onClick={navigateMarketDetail}>
-            Deposit
+            {marketData.status !== PORTFOLIO_STATUS.PENDING ? "More" : "Deposit"}
           </Button>
           <span css={{ fontSize: 10, marginTop: 10 }}>
             {marketData.status === PORTFOLIO_STATUS.ACTIVE && marketData.duration && marketData.actualStartAt && (

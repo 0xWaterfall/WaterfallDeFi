@@ -9,20 +9,23 @@ import Tooltip from "components/Tooltip/Tooltip";
 import { Union } from "assets/images";
 import theme from "styles/theme";
 import Fold from "./Fold";
-import { Market, PORTFOLIO_STATUS } from "types";
-import { formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
+import { Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
+import { formatAllocPoint, formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
-
+import BigNumber from "bignumber.js";
 type TProps = WrappedComponentProps & {
-  market: Market;
-  position: any;
+  market?: Market;
+  position?: any;
   positionIdx: number;
-  tranchesPendingReward: string;
-  interest: string | undefined;
-  principalAndInterest: string | undefined;
+  tranchesPendingReward?: string;
+  interest?: string | undefined;
+  principalAndInterest?: string | undefined;
   redeemLoading?: boolean;
   redeemDirect: (i: number) => Promise<void>;
+  isCurrentPosition: boolean;
+  _userInvest?: any;
+  _trancheCycle?: TrancheCycle;
 };
 
 const Container = styled.div`
@@ -121,7 +124,10 @@ const MyPositionItem = memo<TProps>(
     principalAndInterest,
     tranchesPendingReward,
     redeemLoading,
-    redeemDirect
+    redeemDirect,
+    isCurrentPosition,
+    _trancheCycle,
+    _userInvest
   }) => {
     const { tags, primary, gray } = useTheme();
     const [isFold, setFold] = useState(true);
@@ -132,19 +138,23 @@ const MyPositionItem = memo<TProps>(
       <Container>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</div>
-          <div>{market.portfolio}</div>
+          <div>{market?.portfolio}</div>
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
-          <div>{market.assets}</div>
+          <div>{market?.assets}</div>
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Cycle" })}</div>
           <div style={{ whiteSpace: "unset" }}>
-            {market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
               ? `${formatTimestamp(market.actualStartAt)} -
                           ${formatTimestamp(Number(market.actualStartAt) + Number(market.duration))}`
               : null}
+            {!isCurrentPosition &&
+              _trancheCycle &&
+              _trancheCycle.state !== 0 &&
+              `${formatTimestamp(_trancheCycle.startAt)} → ${formatTimestamp(Number(_trancheCycle.endAt))}`}
           </div>
         </RowDiv>
         <RowDiv>
@@ -162,19 +172,36 @@ const MyPositionItem = memo<TProps>(
             </Tooltip>
           </div>
           <div>
-            {tranchesDisplayText[positionIdx]}:
+            {isCurrentPosition && `${tranchesDisplayText[positionIdx]} : `}
             <Text2 color={tranchesDisplayTextColor[positionIdx]}>
-              {positionIdx !== market.tranches.length - 1
+              {isCurrentPosition && market?.tranches && positionIdx !== market.tranches.length - 1
                 ? formatAPY(market?.tranches[positionIdx].apy)
-                : getJuniorAPY(market?.tranches)}
+                : null}
+              {isCurrentPosition && market?.tranches && positionIdx === market.tranches.length - 1
+                ? getJuniorAPY(market?.tranches)
+                : null}
+              {!isCurrentPosition && `${tranchesDisplayText[_userInvest.tranche]} : `}
+              {!isCurrentPosition && _trancheCycle && _trancheCycle.state !== 0
+                ? new BigNumber(_userInvest.capital)
+                    .minus(new BigNumber(_userInvest.principal))
+                    .dividedBy(new BigNumber(_userInvest.principal))
+                    // .times(new BigNumber((365 / 7) * 10000))
+                    .times(new BigNumber(365 * 86400 * 100))
+                    .dividedBy(new BigNumber(_trancheCycle.endAt - _trancheCycle.startAt))
+                    .toFormat(0)
+                    .toString()
+                    .concat("%")
+                : ""}
             </Text2>
+            {isCurrentPosition && formatAllocPoint(market?.pools[positionIdx], market?.totalAllocPoints)}% WTF
           </div>
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Principal" })}</div>
           <div css={{ display: "flex", flexDirection: "column" }}>
             <span>
-              {formatNumberDisplay(position?.[1]?.hex)} {market?.assets}
+              {isCurrentPosition && formatNumberDisplay(position?.[1]?.hex)}
+              {!isCurrentPosition && formatNumberDisplay(_userInvest.principal)} {market?.assets}
             </span>
             {/* <span css={{ color: theme.primary.deep }}>Maturity: 2D 12:56:56</span> */}
           </div>
@@ -182,15 +209,35 @@ const MyPositionItem = memo<TProps>(
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
           <div>
-            <Tag color="green" value="Active" />
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 0 ? (
+              <Tag color="yellow" value={"Pending"}></Tag>
+            ) : null}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 1 ? (
+              <Tag color="green" value={"Active"}></Tag>
+            ) : null}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 2 ? (
+              <Tag color="red" value={"Expired"}></Tag>
+            ) : null}
           </div>
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Interest" })}</div>
-          <div>{market?.status === PORTFOLIO_STATUS.ACTIVE && interest && interest + " " + market?.assets}</div>
+          <div>
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && interest && interest}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state !== 0
+              ? formatNumberDisplay(
+                  new BigNumber(_userInvest.capital).minus(new BigNumber(_userInvest.principal)).toString()
+                )
+              : "-"}{" "}
+            {market?.assets}
+          </div>
         </RowDiv>
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Moer" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "More" })}</div>
           <CaretDiv
             onClick={() => {
               setFold((isFold) => !isFold);
@@ -235,10 +282,14 @@ const MyPositionItem = memo<TProps>(
                 </Tooltip>
               </div>
               <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                {market?.status === PORTFOLIO_STATUS.ACTIVE
-                  ? principalAndInterest && principalAndInterest
-                  : formatNumberDisplay(position?.[1]?.hex)}{" "}
-                {market?.assets}
+                {isCurrentPosition &&
+                  market?.status === PORTFOLIO_STATUS.ACTIVE &&
+                  principalAndInterest &&
+                  principalAndInterest}
+                {isCurrentPosition &&
+                  market?.status === PORTFOLIO_STATUS.PENDING &&
+                  formatNumberDisplay(position?.[1]?.hex)}
+                {!isCurrentPosition && formatNumberDisplay(_userInvest.capital)} {market?.assets}
               </div>
               <div css={{ display: "flex" }}>
                 {/* <Button
@@ -247,7 +298,7 @@ const MyPositionItem = memo<TProps>(
                 >
                   {intl.formatMessage({ defaultMessage: "Withdraw all" })}
                 </Button> */}
-                {market?.status === PORTFOLIO_STATUS.PENDING && (
+                {isCurrentPosition && market?.status === PORTFOLIO_STATUS.PENDING && (
                   <Button
                     css={{
                       fontSize: 12,

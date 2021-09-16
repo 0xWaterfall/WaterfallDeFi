@@ -191,12 +191,13 @@ const ApproveCard = memo<TProps>(
     }, [myBalance, remaining, balanceInput]);
 
     const handleDeposit = async () => {
-      if (!validateText) return;
+      if (validateText !== undefined && validateText.length > 0) return;
       if (balanceInput <= 0) return;
       if (selectTrancheIdx === undefined) return;
 
       setDepositLoading(true);
       const amount = balanceInput.toString();
+      console.log("amount", amount);
       try {
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())

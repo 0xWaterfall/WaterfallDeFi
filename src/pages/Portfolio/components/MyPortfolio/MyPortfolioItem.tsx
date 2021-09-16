@@ -9,8 +9,24 @@ import Tooltip from "components/Tooltip/Tooltip";
 import { Union } from "assets/images";
 import theme from "styles/theme";
 import Fold from "./Fold";
+import { Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
+import { formatAllocPoint, formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
+import { useTheme } from "@emotion/react";
+import Button from "components/Button/Button";
+import BigNumber from "bignumber.js";
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  market?: Market;
+  position?: any;
+  positionIdx: number;
+  tranchesPendingReward?: string;
+  interest?: string | undefined;
+  principalAndInterest?: string | undefined;
+  redeemLoading?: boolean;
+  isCurrentPosition: boolean;
+  _userInvest?: any;
+  _trancheCycle?: TrancheCycle;
+};
 
 const Container = styled.div`
   background: ${({ theme }) => theme.white.normal};
@@ -51,75 +67,284 @@ const CaretDiv = styled.div`
   justify-content: center;
   cursor: pointer;
 `;
+const Text2 = styled.div`
+  font-size: 16px;
+  line-height: 22px;
+  color: ${({ color }) => color};
+  margin: 10px 0;
+`;
 
-const MyPortfolioItem = memo<TProps>(({ intl }) => {
-  const [isFold, setFold] = useState(true);
-  return (
-    <Container>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</div>
-        <div>Cake Vaults 1</div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
-        <div>BUSD</div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Cycle" })}</div>
-        <div>2021/07/01→2021/07/08</div>
-      </RowDiv>
-      <RowDiv>
-        <div css={{ display: "flex" }}>
-          {intl.formatMessage({ defaultMessage: "Deposit APY" })}
-          <Tooltip
-            css={{ marginLeft: 10, lineHeight: 30 }}
-            overlay={
-              <React.Fragment>
-                <p></p>
-              </React.Fragment>
-            }
-          >
-            <Union />
-          </Tooltip>
-        </div>
-        <div>Senior: 3%</div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Principal" })}</div>
-        <div css={{ display: "flex", flexDirection: "column" }}>
-          <span>1,000,000 BUSD</span>
-          <span css={{ color: theme.primary.deep }}>Maturity: 2D 12:56:56</span>
-        </div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
-        <div>
-          <Tag color="green" value="Active" />
-        </div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Interest" })}</div>
-        <div>110 BUSD</div>
-      </RowDiv>
-      <RowDiv>
-        <div>{intl.formatMessage({ defaultMessage: "Moer" })}</div>
-        <CaretDiv
-          onClick={() => {
-            setFold((isFold) => !isFold);
-          }}
-        >
-          <CaretDown
-            css={{
-              transition: "transform 0.3s",
-              transform: "rotate(0)",
-              ...(isFold ? { transform: "rotate(180deg)" } : {})
+const Wrapper = styled.div`
+  padding: 24px 32px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  background-color: ${({ theme }) => theme.primary.lightBrown};
+  border-radius: 12px;
+  padding: 20px;
+`;
+const WithdrawDiv = styled.div`
+  padding: 16px 19px;
+  margin-right: 27;
+  border: 1px solid ${({ theme }) => theme.primary.deep2};
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.white.normal};
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const RewardDiv = styled.div`
+  padding: 16px 19px;
+  width: 100%;
+  margin-right: 23px;
+  background-color: ${({ theme }) => theme.white.normal};
+  border: 1px solid ${({ theme }) => theme.primary.deep2};
+  border-radius: 8px;
+  margin-bottom: 20px;
+`;
+
+const NoteDiv = styled.div`
+  display: flex;
+  padding: 16px 19px;
+  background-color: ${({ theme }) => theme.white.normal};
+  border-radius: 8px;
+`;
+const MyPortfolioItem = memo<TProps>(
+  ({
+    intl,
+    market,
+    position,
+    positionIdx,
+    interest,
+    principalAndInterest,
+    tranchesPendingReward,
+    redeemLoading,
+    isCurrentPosition,
+    _trancheCycle,
+    _userInvest
+  }) => {
+    const { tags, primary, gray } = useTheme();
+    const [isFold, setFold] = useState(true);
+    const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+    const tranchesDisplayTextColor = [tags.yellowText, tags.greenText, primary.deep];
+    return (
+      <Container>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</div>
+          <div>{market?.portfolio}</div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
+          <div>{market?.assets}</div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Cycle" })}</div>
+          <div style={{ whiteSpace: "unset" }}>
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
+              ? `${formatTimestamp(market.actualStartAt)} -
+                        ${formatTimestamp(Number(market.actualStartAt) + Number(market.duration))}`
+              : null}
+            {!isCurrentPosition &&
+              _trancheCycle &&
+              _trancheCycle.state !== 0 &&
+              `${formatTimestamp(_trancheCycle.startAt)} → ${formatTimestamp(Number(_trancheCycle.endAt))}`}
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div css={{ display: "flex" }}>
+            {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+            <Tooltip
+              css={{ marginLeft: 10, lineHeight: 30 }}
+              overlay={
+                <React.Fragment>
+                  <p></p>
+                </React.Fragment>
+              }
+            >
+              <Union />
+            </Tooltip>
+          </div>
+          <div>
+            {isCurrentPosition && `${tranchesDisplayText[positionIdx]} : `}
+            <Text2 color={tranchesDisplayTextColor[positionIdx]}>
+              {isCurrentPosition && market?.tranches && positionIdx !== market.tranches.length - 1
+                ? formatAPY(market?.tranches[positionIdx].apy)
+                : null}
+              {isCurrentPosition && market?.tranches && positionIdx === market.tranches.length - 1
+                ? getJuniorAPY(market?.tranches)
+                : null}
+              {!isCurrentPosition && `${tranchesDisplayText[_userInvest.tranche]} : `}
+              {!isCurrentPosition && _trancheCycle && _trancheCycle.state !== 0
+                ? new BigNumber(_userInvest.capital)
+                    .minus(new BigNumber(_userInvest.principal))
+                    .dividedBy(new BigNumber(_userInvest.principal))
+                    // .times(new BigNumber((365 / 7) * 10000))
+                    .times(new BigNumber(365 * 86400 * 100))
+                    .dividedBy(new BigNumber(_trancheCycle.endAt - _trancheCycle.startAt))
+                    .toFormat(0)
+                    .toString()
+                    .concat("%")
+                : ""}
+            </Text2>
+            {isCurrentPosition && formatAllocPoint(market?.pools[positionIdx], market?.totalAllocPoints)}% WTF
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Principal" })}</div>
+          <div css={{ display: "flex", flexDirection: "column" }}>
+            <span>
+              {isCurrentPosition && formatNumberDisplay(position?.[1]?.hex)}
+              {!isCurrentPosition && formatNumberDisplay(_userInvest.principal)} {market?.assets}
+            </span>
+            {/* <span css={{ color: theme.primary.deep }}>Maturity: 2D 12:56:56</span> */}
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
+          <div>
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 0 ? (
+              <Tag color="yellow" value={"Pending"}></Tag>
+            ) : null}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 1 ? (
+              <Tag color="green" value={"Active"}></Tag>
+            ) : null}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 2 ? (
+              <Tag color="red" value={"Expired"}></Tag>
+            ) : null}
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "Interest" })}</div>
+          <div>
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && interest && interest}
+            {!isCurrentPosition && _trancheCycle && _trancheCycle.state !== 0
+              ? formatNumberDisplay(
+                  new BigNumber(_userInvest.capital).minus(new BigNumber(_userInvest.principal)).toString()
+                )
+              : "-"}{" "}
+            {market?.assets}
+          </div>
+        </RowDiv>
+        <RowDiv>
+          <div>{intl.formatMessage({ defaultMessage: "More" })}</div>
+          <CaretDiv
+            onClick={() => {
+              setFold((isFold) => !isFold);
             }}
-          />
-        </CaretDiv>
-      </RowDiv>
-      {!isFold && <Fold />}
-    </Container>
-  );
-});
+          >
+            <CaretDown
+              css={{
+                transition: "transform 0.3s",
+                transform: "rotate(0)",
+                ...(isFold ? { transform: "rotate(180deg)" } : {})
+              }}
+            />
+          </CaretDiv>
+        </RowDiv>
+        {!isFold && (
+          <Wrapper>
+            <WithdrawDiv>
+              <div css={{ display: "flex", alignItems: "center" }}>
+                <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
+                  {intl.formatMessage({ defaultMessage: "Max withdrawal principal+Interest" })}
+                </span>
+                <Tooltip
+                  overlay={
+                    <React.Fragment>
+                      <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
+                      <p>
+                        {intl.formatMessage({
+                          defaultMessage:
+                            '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
+                        })}
+                      </p>
+                      <p>
+                        {intl.formatMessage({
+                          defaultMessage:
+                            '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
+                        })}
+                      </p>
+                    </React.Fragment>
+                  }
+                >
+                  <Union css={{ color: gray.normal3 }} />
+                </Tooltip>
+              </div>
+              <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                {isCurrentPosition &&
+                  market?.status === PORTFOLIO_STATUS.ACTIVE &&
+                  principalAndInterest &&
+                  principalAndInterest}
+                {isCurrentPosition &&
+                  market?.status === PORTFOLIO_STATUS.ACTIVE &&
+                  !principalAndInterest &&
+                  formatNumberDisplay(position?.[1]?.hex)}
+                {!isCurrentPosition && formatNumberDisplay(_userInvest.capital)} {market?.assets}
+              </div>
+              <div css={{ display: "flex" }}>
+                {/* <Button
+                css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
+                type="primary"
+              >
+                {intl.formatMessage({ defaultMessage: "Withdraw all" })}
+              </Button> */}
+                {/* {isCurrentPosition && market?.status === PORTFOLIO_STATUS.PENDING && (
+                  <Button
+                    css={{
+                      fontSize: 12,
+                      height: 30,
+                      padding: "0 12px",
+                      borderRadius: 4
+                    }}
+                    type="primary"
+                    onClick={() => redeemDirect(positionIdx)}
+                    loading={redeemLoading}
+                  >
+                    {intl.formatMessage({ defaultMessage: "Redeem" })}
+                  </Button>
+                )} */}
+              </div>
+            </WithdrawDiv>
+            <RewardDiv>
+              <div css={{ display: "flex", alignItems: "center" }}>
+                <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
+                  {intl.formatMessage({ defaultMessage: "WTF Reward" })}
+                </span>
+              </div>
+              <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                {tranchesPendingReward ? formatNumberDisplay(tranchesPendingReward.toString()) : "-"} WTF
+              </div>
+              <div css={{ display: "flex" }}>
+                {/* <Button
+                css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
+                type="primary"
+              >
+                {intl.formatMessage({ defaultMessage: "Claim" })}
+              </Button> */}
+              </div>
+            </RewardDiv>
+            <NoteDiv>
+              <div css={{ marginRight: 4 }}>
+                <Union css={{ color: primary.deep, transform: "translateY(2px)" }} />
+              </div>
+              <div css={{ color: gray.normal7, fontSize: 12 }}>
+                {intl.formatMessage({
+                  defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
+                })}
+              </div>
+            </NoteDiv>
+          </Wrapper>
+        )}
+      </Container>
+    );
+  }
+);
 
 export default injectIntl(MyPortfolioItem);

@@ -13,7 +13,6 @@ import Tooltip from "components/Tooltip/Tooltip";
 import styled from "@emotion/styled";
 import MyPortfolioItem from "./MyPortfolioItem";
 import { useSize } from "ahooks";
-import { gql, useQuery } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { MarketList } from "config/market";
@@ -21,6 +20,7 @@ import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp }
 import BigNumber from "bignumber.js";
 import { TrancheCycle } from "types";
 import Tag from "components/Tag/Tag";
+import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 type TProps = WrappedComponentProps;
 const FilterDiv = styled.div`
   display: flex;
@@ -45,37 +45,7 @@ const Positions = memo<TProps>(({ intl }) => {
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const market = MarketList[0];
-  const { loading, error, data } = useQuery(gql`
-    {
-      trancheCycles(orderBy: id, orderDirection: asc) {
-        id
-        cycle
-        state
-        principal
-        capital
-        rate
-        startAt
-        endAt
-      }
-      tranches {
-        id
-        cycle
-        target
-        apy
-        fee
-      }
-      userInvests(where: { owner: "${account}" }) {
-        id
-        owner
-        tranche
-        cycle
-        principal
-        capital
-        investAt
-        harvestAt
-      }
-    }
-  `);
+  const { loading, error, data } = useHistoryQuery(account);
 
   const trancheCycles: { [key: string]: TrancheCycle } = {};
   if (data && data.trancheCycles) {
@@ -151,7 +121,7 @@ const Positions = memo<TProps>(({ intl }) => {
         <Table>
           <TableRow>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</TableHeaderColumn>
-            <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
+            <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Deposit APY" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
@@ -183,7 +153,7 @@ const Positions = memo<TProps>(({ intl }) => {
                     }}
                   >
                     <TableColumn>{market.portfolio}</TableColumn>
-                    <TableColumn>{market.assets}</TableColumn>
+                    <TableColumn minWidth={60}>{market.assets}</TableColumn>
                     <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
                       {trancheCycles &&
                         trancheCycles[trancheCycleId] &&
@@ -299,9 +269,11 @@ const Positions = memo<TProps>(({ intl }) => {
                               <Union css={{ color: gray.normal3 }} />
                             </Tooltip>
                           </div>
-                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>10,000,010 BUSD</div>
+                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                            {formatNumberDisplay(_userInvest.capital)} {market?.assets}
+                          </div>
                           <div css={{ display: "flex" }}>
-                            <Button
+                            {/* <Button
                               css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                               type="primary"
                             >
@@ -312,7 +284,7 @@ const Positions = memo<TProps>(({ intl }) => {
                               type="primary"
                             >
                               {intl.formatMessage({ defaultMessage: "Re-deposit" })}
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
                         <div
@@ -329,14 +301,14 @@ const Positions = memo<TProps>(({ intl }) => {
                               {intl.formatMessage({ defaultMessage: "WTF Reward" })}
                             </span>
                           </div>
-                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>0 WTF</div>
+                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>- WTF</div>
                           <div css={{ display: "flex" }}>
-                            <Button
+                            {/* <Button
                               css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                               type="primary"
                             >
                               {intl.formatMessage({ defaultMessage: "Claim" })}
-                            </Button>
+                            </Button> */}
                           </div>
                         </div>
                         <div css={{ flex: 1, padding: 18, width: "100%", position: "relative", borderRadius: 8 }}>
@@ -372,11 +344,28 @@ const Positions = memo<TProps>(({ intl }) => {
       )}
       {Boolean(width && width <= 768) && (
         <>
-          {[1, 2, 3, 4].map((p, i) => (
-            <div key={i}>
-              <MyPortfolioItem />
-            </div>
-          ))}
+          {market &&
+            data &&
+            data.userInvests.map((_userInvest: any, _idx: number) => {
+              const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+              if (_userInvest.principal == "0") return;
+              // if (trancheCycles[trancheCycleId].state === 0) return;
+              if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
+              if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
+              console.log("render");
+
+              return (
+                <div key={_idx}>
+                  <MyPortfolioItem
+                    market={market}
+                    isCurrentPosition={false}
+                    _userInvest={_userInvest}
+                    positionIdx={0}
+                    _trancheCycle={trancheCycles[trancheCycleId]}
+                  />
+                </div>
+              );
+            })}
         </>
       )}
     </React.Fragment>

@@ -101,7 +101,7 @@ const Fold = memo<TProps>(({ intl }) => {
             {intl.formatMessage({ defaultMessage: "WTF Reward" })}
           </span>
         </div>
-        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>0 WTF</div>
+        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>- WTF</div>
         <div css={{ display: "flex" }}>
           <Button
             css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}

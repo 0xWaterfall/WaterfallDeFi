@@ -280,12 +280,20 @@ const ApproveCard = memo<TProps>(
             </div>
           </ImportantNotes>
         )}
-        {approved ? (
-          <ButtonDiv>
-            <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
-              {intl.formatMessage({ defaultMessage: "Deposit" })}
-            </Button>
-          </ButtonDiv>
+        {account ? (
+          approved ? (
+            <ButtonDiv>
+              <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
+                {intl.formatMessage({ defaultMessage: "Deposit" })}
+              </Button>
+            </ButtonDiv>
+          ) : (
+            <ButtonDiv>
+              <Button type="primary" css={{ height: 56 }} onClick={handleApprove} loading={approveLoading}>
+                {intl.formatMessage({ defaultMessage: "Approve" })}
+              </Button>
+            </ButtonDiv>
+          )
         ) : (
           <ButtonDiv>
             <Button

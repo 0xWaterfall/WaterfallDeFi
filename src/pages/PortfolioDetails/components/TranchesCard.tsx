@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
@@ -129,15 +129,6 @@ const CheckDiv = styled.div`
     height: 20px;
   }
 `;
-const Mask = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff7a;
-  z-index: 10;
-  top: 0;
-  left: 0;
-`;
 
 const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
@@ -158,12 +149,11 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
       riskText: "Multiple Leverage ; Variable"
     }
   };
+  const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
+
   return (
-    <Container style={selected ? { borderColor: primary.deep } : undefined}>
-      {/* {!selected && <Mask />} */}
-      {compareNum(tranche.principal, tranche.target) ? (
-        <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut>
-      ) : null}
+    <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
+      {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
       <CheckDiv>
         {selected ? (
           <CheckCircleTwoTone twoToneColor={primary.deep} />

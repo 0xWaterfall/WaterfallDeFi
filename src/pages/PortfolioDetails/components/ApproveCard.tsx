@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Form, Input, notification } from "antd";
+import { Form, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
@@ -31,6 +31,7 @@ import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
+import Input from "components/Input/Input";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -85,22 +86,17 @@ const ButtonDiv = styled.div`
     }
   }
 `;
-const BlockDiv = styled.div`
-  background-color: #ffffff7a;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 10;
-`;
 const ValidateText = styled.div`
   font-size: 12px;
   line-height: 125%;
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.tags.redText};
+  margin-top: 4px;
 `;
 const RedemptionFee = styled.div`
   color: ${({ theme }) => theme.gray.normal5};
   margin-top: 10px;
+  text-align: center;
   & > span {
     color: ${({ theme }) => theme.primary.deep};
   }
@@ -111,6 +107,7 @@ const ImportantNotes = styled.div`
   background-color: ${({ theme }) => theme.primary.lightBrown};
   padding: 20px;
   display: flex;
+  min-height: 140px;
 
   & > div:nth-of-type(1) {
     color: ${({ theme }) => theme.primary.deep};
@@ -241,13 +238,13 @@ const ApproveCard = memo<TProps>(
         {/* {!enabled && <BlockDiv />} */}
         {/* {isSoldOut && <BlockDiv />} */}
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}:</div>
           <div>
             {formatNumberSeparator(myBalance)} {assets}
           </div>
         </RowDiv>
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
           <div>{formatNumberSeparator(remaining)}</div>
         </RowDiv>
         <Separator />
@@ -262,7 +259,7 @@ const ApproveCard = memo<TProps>(
                 placeholder=""
                 value={balanceInput}
                 onChange={handleInputChange}
-                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "Max" })}</Max>}
+                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
                 disabled={!enabled || isSoldOut}
               />
             </div>
@@ -283,7 +280,13 @@ const ApproveCard = memo<TProps>(
         {account ? (
           approved ? (
             <ButtonDiv>
-              <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
+              <Button
+                type="primary"
+                css={{ height: 56 }}
+                onClick={handleDeposit}
+                loading={depositLoading}
+                disabled={!enabled || isSoldOut}
+              >
                 {intl.formatMessage({ defaultMessage: "Deposit" })}
               </Button>
             </ButtonDiv>

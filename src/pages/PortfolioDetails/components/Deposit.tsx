@@ -39,35 +39,32 @@ const Deposit = memo<TProps>(({ intl, data }) => {
   const marketData = data;
   return (
     <div css={{ padding: "0 20px" }}>
-      <NextTimeWrapper>
-        <Mountain />
-
-        {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
-          <>
-            <Text1>
-              {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
-              <Countdown
-                date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
-                renderer={({ days, hours, minutes, seconds, completed }) => {
-                  return (
-                    <span>
-                      {!completed && (
-                        <>
-                          {days}D {hours}H {minutes}M {seconds}S
-                        </>
-                      )}
-                    </span>
-                  );
-                }}
-              />
-            </Text1>
-            <Text2>
-              {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
-              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
-            </Text2>
-          </>
-        ) : null}
-      </NextTimeWrapper>
+      {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
+        <NextTimeWrapper>
+          <Mountain />
+          <Text1>
+            {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
+            <Countdown
+              date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
+              renderer={({ days, hours, minutes, seconds, completed }) => {
+                return (
+                  <span>
+                    {!completed && (
+                      <>
+                        {days}D {hours}H {minutes}M {seconds}S
+                      </>
+                    )}
+                  </span>
+                );
+              }}
+            />
+          </Text1>
+          <Text2>
+            {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
+            {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+          </Text2>
+        </NextTimeWrapper>
+      ) : null}
       {marketData && <DepositItem data={marketData} />}
     </div>
   );

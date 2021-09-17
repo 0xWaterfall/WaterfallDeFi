@@ -48,6 +48,8 @@ const APYStyled2 = styled.div`
   font-size: 12px;
   padding-top: 5px;
   padding-bottom: 5px;
+  display: flex;
+  align-items: center;
   & > span:nth-of-type(1) {
     width: 70px;
     text-align: left;
@@ -62,12 +64,14 @@ const APYStyled2 = styled.div`
   & > span:nth-of-type(3) {
     background-color: ${({ theme }) => theme.white.normal};
     border-radius: 4px;
+    padding: 5px;
     text-align: center;
     color: ${({ theme }) => theme.primary.light};
     width: 60px;
     margin-left: 0px;
     display: flex;
     justify-content: center;
+    align-items: center;
     & > div {
       display: flex;
       align-items: center;
@@ -92,13 +96,13 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const dispatch = useDispatch();
 
   const navigateMarketDetail = () => {
-    dispatch(setMarketKey(selectId.toString()));
+    // dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolioDetails" });
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
-    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
+    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }}>
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}

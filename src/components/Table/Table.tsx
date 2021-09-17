@@ -15,7 +15,6 @@ const TableRow = styled.ul<ITableRowStyledComponentProps>`
   height: ${({ height }) => height ?? 90}px;
   color: ${({ theme }) => theme.gray.normal7};
   display: flex;
-  cursor: pointer;
   &:last-child {
     margin-bottom: 0;
   }

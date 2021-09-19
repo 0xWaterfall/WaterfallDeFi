@@ -150,10 +150,20 @@ const ApproveCard = memo<TProps>(
     const dispatch = useAppDispatch();
 
     const notes = [
-      "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
-      "When depositing mezzanine, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
-      "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+      intl.formatMessage({
+        defaultMessage:
+          "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached."
+      }),
+      intl.formatMessage({
+        defaultMessage:
+          "When depositing mezzanine, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached."
+      }),
+      intl.formatMessage({
+        defaultMessage:
+          "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+      })
     ];
+
     useEffect(() => {
       const checkApproved = async (account: string) => {
         const approved = await onCheckApprove();
@@ -195,7 +205,6 @@ const ApproveCard = memo<TProps>(
 
       setDepositLoading(true);
       const amount = balanceInput.toString();
-      console.log("amount", amount);
       try {
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())

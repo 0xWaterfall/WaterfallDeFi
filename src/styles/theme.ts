@@ -17,6 +17,7 @@ const theme = {
     light: "#048FFF",
     normal: "#167BFF",
     deep: "#0066FF",
+    deep1: "rgba(0, 102, 255, 0.1)",
     deep2: "rgba(0, 102, 255, 0.2)",
     deep04: "rgba(0, 102, 255, 0.04)",
     deepBrown: "#2C5290"

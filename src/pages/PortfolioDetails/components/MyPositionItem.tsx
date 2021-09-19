@@ -1,14 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { CaretDown } from "assets/images";
 import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union } from "assets/images";
-import theme from "styles/theme";
-import Fold from "./Fold";
 import { Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
 import { formatAllocPoint, formatAPY, formatNumberDisplay, formatTimestamp, getJuniorAPY } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";

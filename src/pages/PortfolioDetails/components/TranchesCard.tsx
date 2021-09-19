@@ -121,17 +121,6 @@ const ProgressBar = styled.div<ProgressBarProps>`
   }
 `;
 
-const CheckDiv = styled.div`
-  position: absolute;
-  right: 20px;
-  width: 20px;
-  height: 20px;
-  & svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
 const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
   const Types = {
@@ -156,13 +145,6 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
   return (
     <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
       {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
-      {/* <CheckDiv>
-        {selected ? (
-          <CheckCircleTwoTone twoToneColor={primary.deep} />
-        ) : (
-          <CheckCircleOutlined style={{ color: gray.normal3 }} />
-        )}
-      </CheckDiv> */}
       <div>
         <TrancheName>
           <FlexRow>

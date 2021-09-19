@@ -9,8 +9,6 @@ import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 import { useStrategyFarm } from "hooks";
-import BigNumber from "bignumber.js";
-import { BIG_TEN } from "utils/bigNumber";
 import styled from "@emotion/styled";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);

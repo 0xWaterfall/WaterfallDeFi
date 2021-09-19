@@ -47,7 +47,7 @@ export const formatNumberSeparator = (num: string) => {
   return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 export const formatTimestamp = (num: string | number) => {
-  const format1 = "YYYY-MM-DD HH:mm:ss";
+  const format1 = "YYYY/MM/DD HH:mm:ss";
   const d = parseInt(num + "000");
   return dayjs(d).format(format1);
 };

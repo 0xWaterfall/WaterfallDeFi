@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
 import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
@@ -61,8 +60,6 @@ type TProps = WrappedComponentProps & {
 
 const Information = memo<TProps>(({ data }) => {
   const { goBack } = useHistory();
-  // const location = useLocation<Market>();
-  // const data = location.state;
 
   return (
     <InformationWrapper>

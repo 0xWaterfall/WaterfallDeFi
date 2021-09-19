@@ -92,6 +92,7 @@ const ValidateText = styled.div`
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.tags.redText};
   margin-top: 4px;
+  min-height: 15px;
 `;
 const RedemptionFee = styled.div`
   color: ${({ theme }) => theme.gray.normal5};
@@ -251,21 +252,19 @@ const ApproveCard = memo<TProps>(
         <RowDiv>
           <div>{assets}</div>
         </RowDiv>
-        {approved && (
-          <div>
-            <div>
-              <Input
-                style={validateText ? { borderColor: tags.redText } : {}}
-                placeholder=""
-                value={balanceInput}
-                onChange={handleInputChange}
-                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-                disabled={!enabled || isSoldOut}
-              />
-            </div>
-            <ValidateText>{validateText}</ValidateText>
-          </div>
-        )}
+
+        <div>
+          <Input
+            style={validateText ? { borderColor: tags.redText } : {}}
+            placeholder=""
+            value={balanceInput}
+            onChange={handleInputChange}
+            suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
+            disabled={!enabled || isSoldOut}
+          />
+        </div>
+        <ValidateText>{validateText}</ValidateText>
+
         {selectTranche && (
           <ImportantNotes>
             <div>
@@ -277,6 +276,7 @@ const ApproveCard = memo<TProps>(
             </div>
           </ImportantNotes>
         )}
+
         {account ? (
           approved ? (
             <ButtonDiv>

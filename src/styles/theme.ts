@@ -52,7 +52,8 @@ const theme = {
     marketItem: "0px 0px 10px rgba(22, 122, 255, 0.1)"
   },
   filter: {
-    primary: "drop-shadow(0px 10px 20px rgba(15, 96, 227, 0.04))"
+    primary: "drop-shadow(0px 10px 20px rgba(15, 96, 227, 0.04))",
+    card: "drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05))"
   },
   table: {
     border: "1px solid rgba(0, 102, 255, 0.2)",

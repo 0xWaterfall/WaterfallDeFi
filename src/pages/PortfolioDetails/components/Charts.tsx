@@ -45,10 +45,10 @@ const RecordCard = styled.div`
   section {
     padding: 12px 20px 12px 32px;
     min-height: 140px;
-    background: #ffffff;
+    background: ${({ theme }) => theme.white.normal};
     border-radius: 12px;
     color: ${({ theme }) => theme.gray.normal7};
-    filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
+    filter: ${({ theme }) => theme.filter.card};
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -68,10 +68,10 @@ const RecordCard = styled.div`
       font-size: 12px;
     }
     div {
-      :nth-child(1) {
+      :nth-of-type(1) {
         color: ${({ theme }) => theme.gray.normal5};
       }
-      :nth-child(2) {
+      :nth-of-type(2) {
         color: ${({ theme }) => theme.primary.deep};
         font-size: 20px;
       }
@@ -79,12 +79,11 @@ const RecordCard = styled.div`
   }
 `;
 const Block = styled.div`
-  // padding-left: 130px;
   flex: 1;
   display: flex;
   color: ${({ theme }) => theme.gray.normal7};
-  filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
-  background: #ffffff;
+  filter: ${({ theme }) => theme.filter.card};
+  background: ${({ theme }) => theme.white.normal};
   border-radius: 12px;
 `;
 
@@ -93,7 +92,6 @@ type TProps = WrappedComponentProps & {
 };
 
 const Charts = memo<TProps>(({ intl, data }) => {
-  const { gray, primary, fonts } = useTheme();
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);

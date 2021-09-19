@@ -244,6 +244,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             css={{
                               transition: "transform 0.3s",
                               transform: "rotate(0)",
+                              color: primary.normal,
                               ...(isfolds[i] ? { transform: "rotate(180deg)" } : {})
                             }}
                           />

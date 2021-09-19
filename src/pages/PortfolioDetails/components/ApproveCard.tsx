@@ -53,15 +53,11 @@ const Container = styled.div`
   background: ${({ theme }) => theme.white.normal};
   padding: 35px 81px;
 
-  & input {
-    color: ${({ theme }) => theme.primary.normal};
-    font-size: 24px;
-    line-height: 33px;
-  }
   @media screen and (max-width: 675px) {
     padding: 24px;
   }
 `;
+
 const Max = styled.div`
   color: ${({ theme }) => theme.primary.normal};
   font-weight: 600;
@@ -242,7 +238,6 @@ const ApproveCard = memo<TProps>(
       if (isNaN(input)) input = 0;
       setBalanceInput(input);
     };
-
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
         {/* {!enabled && <BlockDiv />} */}
@@ -319,15 +314,12 @@ const ApproveCard = memo<TProps>(
             </Button>
           </ButtonDiv>
         )}
-        <RedemptionFee>
-          Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
-          <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
-        </RedemptionFee>
-        {/* <ButtonDiv>
-        <Button type="primary" css={{ height: 56 }} onClick={handleDeposit100}>
-          {intl.formatMessage({ defaultMessage: "Deposit 100" })}
-        </Button>
-      </ButtonDiv> */}
+        {enabled && (
+          <RedemptionFee>
+            Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
+            <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
+          </RedemptionFee>
+        )}
       </Container>
     );
   }

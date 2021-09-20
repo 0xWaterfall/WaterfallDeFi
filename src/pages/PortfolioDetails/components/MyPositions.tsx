@@ -176,6 +176,8 @@ const MyPositions = memo<TProps>(({ intl }) => {
           </TableRow>
           {position &&
             position?.map((p, i) => {
+              const _cycle = new BigNumber(p[0].hex).toString();
+              if (_cycle !== market?.cycle) return;
               // if (trancheCycles[trancheCycleId].state === 0) return;
               console.log(selectedStatus, tranchesState[selectedStatus], market?.status);
               if (selectedTranche > -1 && selectedTranche !== i) return;
@@ -610,6 +612,8 @@ const MyPositions = memo<TProps>(({ intl }) => {
           {market &&
             redeemDirect &&
             position.map((p, i) => {
+              const _cycle = new BigNumber(p[0].hex).toString();
+              if (_cycle !== market?.cycle) return;
               if (selectedTranche > -1 && selectedTranche !== i) return;
               if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
 

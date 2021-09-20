@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Button from "components/Button/Button";
 import { useState } from "react";
@@ -21,6 +21,7 @@ import BigNumber from "bignumber.js";
 import { TrancheCycle } from "types";
 import Tag from "components/Tag/Tag";
 import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
+import NoData from "components/NoData/NoData";
 type TProps = WrappedComponentProps;
 const FilterDiv = styled.div`
   display: flex;
@@ -31,7 +32,7 @@ const FilterDiv = styled.div`
     flex-direction: column;
     align-items: flex-start;
     & > div {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 `;
@@ -55,8 +56,6 @@ const Positions = memo<TProps>(({ intl }) => {
     }
   }
 
-  console.log(data, 321312);
-
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
@@ -71,6 +70,17 @@ const Positions = memo<TProps>(({ intl }) => {
     setActivedTab(value);
     setSelectedStatus(status);
   };
+
+  const payload = useMemo(() => {
+    return data?.userInvests?.filter((_userInvest: any) => {
+      const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+      if (_userInvest.principal == "0") return false;
+      if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+      if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
+      return true;
+    });
+  }, [data, selectedTranche, selectedStatus, trancheCycles]);
+
   return (
     <React.Fragment>
       <FilterDiv>
@@ -129,12 +139,12 @@ const Positions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
             <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
-          {data &&
-            data.userInvests.map((_userInvest: any, _idx: number) => {
+          <NoData isNoData={!payload?.length}>
+            {payload?.map((_userInvest: any, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-              if (_userInvest.principal == "0") return;
-              if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
-              if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
+              // if (_userInvest.principal == "0") return;
+              // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
+              // if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
 
               return (
                 <div
@@ -243,28 +253,34 @@ const Positions = memo<TProps>(({ intl }) => {
                             borderRadius: 8
                           }}
                         >
-                          <div css={{ display: "flex", alignItems: "center" }}>
-                            <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                              {intl.formatMessage({ defaultMessage: "Max withdrawal principal+Interest" })}
-                            </span>
+                          <div css={{ display: "flex", alignItems: "flex-start", fontSize: 12, color: gray.normal7 }}>
+                            <div>
+                              {intl.formatMessage({ defaultMessage: "Principal+" })}
+                              <Tooltip
+                                overlay={intl.formatMessage({
+                                  defaultMessage:
+                                    "Before the cycle starts, the principal can be redeemed in the Pending state."
+                                })}
+                              >
+                                <u
+                                  css={{
+                                    borderBottom: "1px dotted",
+                                    borderColor: gray.normal7,
+                                    color: gray.normal7,
+                                    textDecoration: "none"
+                                  }}
+                                >
+                                  {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                                </u>
+                              </Tooltip>
+                            </div>
+
                             <Tooltip
-                              overlay={
-                                <React.Fragment>
-                                  <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
-                                  <p>
-                                    {intl.formatMessage({
-                                      defaultMessage:
-                                        '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
-                                    })}
-                                  </p>
-                                  <p>
-                                    {intl.formatMessage({
-                                      defaultMessage:
-                                        '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
-                                    })}
-                                  </p>
-                                </React.Fragment>
-                              }
+                              overlay={intl.formatMessage({
+                                defaultMessage:
+                                  "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                              })}
+                              css={{ marginLeft: 5 }}
                             >
                               <Union css={{ color: gray.normal3 }} />
                             </Tooltip>
@@ -340,33 +356,32 @@ const Positions = memo<TProps>(({ intl }) => {
                 </div>
               );
             })}
+          </NoData>
         </Table>
       )}
       {Boolean(width && width <= 768) && (
-        <>
-          {market &&
-            data &&
-            data.userInvests.map((_userInvest: any, _idx: number) => {
-              const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-              if (_userInvest.principal == "0") return;
-              // if (trancheCycles[trancheCycleId].state === 0) return;
-              if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
-              if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
-              console.log("render");
+        <NoData isNoData={!payload.length}>
+          {payload.map((_userInvest: any, _idx: number) => {
+            const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+            // if (_userInvest.principal == "0") return;
+            // // if (trancheCycles[trancheCycleId].state === 0) return;
+            // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
+            // if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
+            // console.log("render");
 
-              return (
-                <div key={_idx}>
-                  <MyPortfolioItem
-                    market={market}
-                    isCurrentPosition={false}
-                    _userInvest={_userInvest}
-                    positionIdx={0}
-                    _trancheCycle={trancheCycles[trancheCycleId]}
-                  />
-                </div>
-              );
-            })}
-        </>
+            return (
+              <div key={_idx}>
+                <MyPortfolioItem
+                  market={market}
+                  isCurrentPosition={false}
+                  _userInvest={_userInvest}
+                  positionIdx={0}
+                  _trancheCycle={trancheCycles[trancheCycleId]}
+                />
+              </div>
+            );
+          })}
+        </NoData>
       )}
     </React.Fragment>
   );

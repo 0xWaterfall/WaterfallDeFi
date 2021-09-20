@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Table/Table";
 import { CaretDown, Union } from "assets/images";
@@ -32,6 +32,7 @@ import BigNumber from "bignumber.js";
 import { useHistoryQuery } from "../hooks/useSubgraph";
 import { IType } from "pages/Portfolio/components/MyPortfolio/type";
 import Select, { Option } from "components/Select/Select";
+import NoData from "components/NoData/NoData";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -112,6 +113,29 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayTextColor = [tags.yellowText, tags.greenText, primary.deep];
 
+  const positionPayload = useMemo(() => {
+    return position?.filter((p, i) => {
+      if (selectedTranche > -1 && selectedTranche !== i) return false;
+      if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return false;
+      const _cycle = new BigNumber(p[0].hex).toString();
+      if (_cycle !== market?.cycle) return false;
+      if (new BigNumber(p[1].hex).toNumber() !== 0) return true;
+    });
+  }, [position, selectedTranche, selectedStatus, tranchesState]);
+
+  const payload = useMemo(() => {
+    return data?.userInvests?.filter((_userInvest: any) => {
+      const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+      if (_userInvest.principal == "0") return false;
+      if (trancheCycles[trancheCycleId].state === 0) return false;
+      if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+      if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
+      return true;
+    });
+  }, [data, selectedTranche, selectedStatus, trancheCycles]);
+
+  const isNoData = useMemo(() => !(positionPayload?.length + payload?.length), [positionPayload, payload]);
+
   return (
     <>
       <FilterDiv>
@@ -174,371 +198,376 @@ const MyPositions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
             <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
-          {position &&
-            position?.map((p, i) => {
-              const _cycle = new BigNumber(p[0].hex).toString();
-              if (_cycle !== market?.cycle) return;
-              // if (trancheCycles[trancheCycleId].state === 0) return;
-              console.log(selectedStatus, tranchesState[selectedStatus], market?.status);
-              if (selectedTranche > -1 && selectedTranche !== i) return;
-              if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
-              if (new BigNumber(p[1].hex).toNumber() !== 0)
-                return (
-                  <div
-                    key={i}
-                    css={
-                      {
-                        // ":hover": {
-                        //   boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
-                        // }
-                      }
-                    }
-                  >
-                    <TableRow
-                      css={{ color: gray.normal85, fontSize: 16, borderBottom: `1px solid ${primary.lightBrown}` }}
-                    >
-                      <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
-                      <TableColumn minWidth={60}>{market?.assets}</TableColumn>
-                      <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
-                        {market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
-                          ? `${formatTimestamp(market.actualStartAt)} -
+          <NoData isNoData={isNoData} />
+          {positionPayload.map((p, i) => {
+            // if (trancheCycles[trancheCycleId].state === 0) return;
+            // console.log(selectedStatus, tranchesState[selectedStatus], market?.status);
+            // if (selectedTranche > -1 && selectedTranche !== i) return;
+            // if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
+            // if (new BigNumber(p[1].hex).toNumber() !== 0)
+            return (
+              <div
+                key={i}
+                css={
+                  {
+                    // ":hover": {
+                    //   boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
+                    // }
+                  }
+                }
+              >
+                <TableRow css={{ color: gray.normal85, fontSize: 16, borderBottom: `1px solid ${primary.lightBrown}` }}>
+                  <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
+                  <TableColumn minWidth={60}>{market?.assets}</TableColumn>
+                  <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
+                    {market?.status === PORTFOLIO_STATUS.ACTIVE && market.actualStartAt && market.duration
+                      ? `${formatTimestamp(market.actualStartAt)} -
                           ${formatTimestamp(Number(market.actualStartAt) + Number(market.duration))}`
-                          : null}
-                      </TableColumn>
-                      <TableColumn minWidth={240}>
-                        {tranchesDisplayText[i]}:
-                        <Text2 color={tranchesDisplayTextColor[i]}>
-                          {i !== position.length - 1
-                            ? formatAPY(market?.tranches[i].apy)
-                            : getJuniorAPY(market?.tranches)}
-                        </Text2>
-                        {formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
-                      </TableColumn>
-                      <TableColumn minWidth={200}>
-                        {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
-                      </TableColumn>
-                      <TableColumn>
-                        {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
-                        {market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
-                        {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
-                      </TableColumn>
-                      <TableColumn>
-                        {market?.status === PORTFOLIO_STATUS.ACTIVE && interests && interests[i] + " " + market?.assets}
-                      </TableColumn>
-                      <TableColumn>
-                        <div
-                          css={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: 8,
-                            border: `2px solid ${primary.deep2}`,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            cursor: "pointer"
-                          }}
-                          onClick={() => {
-                            setFolds((isfolds) => ({ ...isfolds, [i]: !isfolds[i] }));
-                          }}
-                        >
-                          <CaretDown
-                            css={{
-                              transition: "transform 0.3s",
-                              transform: "rotate(0)",
-                              color: primary.normal,
-                              ...(isfolds[i] ? { transform: "rotate(180deg)" } : {})
-                            }}
-                          />
+                      : "--"}
+                  </TableColumn>
+                  <TableColumn minWidth={240}>
+                    {tranchesDisplayText[i]}:
+                    <Text2 color={tranchesDisplayTextColor[i]}>
+                      {i !== position.length - 1 ? formatAPY(market?.tranches[i].apy) : getJuniorAPY(market?.tranches)}
+                    </Text2>
+                    {formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
+                  </TableColumn>
+                  <TableColumn minWidth={200}>
+                    {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
+                  </TableColumn>
+                  <TableColumn>
+                    {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
+                    {market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
+                    {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+                  </TableColumn>
+                  <TableColumn>
+                    {market?.status === PORTFOLIO_STATUS.ACTIVE && interests
+                      ? interests[i] + " " + market?.assets
+                      : "--"}
+                  </TableColumn>
+                  <TableColumn>
+                    <div
+                      css={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        border: `2px solid ${primary.deep2}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => {
+                        setFolds((isfolds) => ({ ...isfolds, [i]: !isfolds[i] }));
+                      }}
+                    >
+                      <CaretDown
+                        css={{
+                          transition: "transform 0.3s",
+                          transform: "rotate(0)",
+                          color: primary.normal,
+                          ...(isfolds[i] ? { transform: "rotate(180deg)" } : {})
+                        }}
+                      />
+                    </div>
+                  </TableColumn>
+                </TableRow>
+                {isfolds[i] && (
+                  <div css={{ padding: "24px 32px", position: "relative" }}>
+                    <div
+                      css={{
+                        width: "100%",
+                        height: "100%",
+                        background: linearGradient.primary,
+                        opacity: 0.02,
+                        position: "absolute",
+                        top: 0,
+                        left: 0
+                      }}
+                    />
+                    <div css={{ display: "flex", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
+                      <div
+                        css={{
+                          padding: "16px 19px",
+                          marginRight: 27,
+                          border: `1px solid ${primary.deep2}`,
+                          borderRadius: 8
+                        }}
+                      >
+                        <div css={{ display: "flex", alignItems: "flex-start", fontSize: 12, color: gray.normal7 }}>
+                          <div>
+                            {intl.formatMessage({ defaultMessage: "Principal+" })}
+                            <Tooltip
+                              overlay={intl.formatMessage({
+                                defaultMessage:
+                                  "Before the cycle starts, the principal can be redeemed in the Pending state."
+                              })}
+                            >
+                              <u
+                                css={{
+                                  borderBottom: "1px dotted",
+                                  borderColor: gray.normal7,
+                                  color: gray.normal7,
+                                  textDecoration: "none"
+                                }}
+                              >
+                                {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                              </u>
+                            </Tooltip>
+                          </div>
+
+                          <Tooltip
+                            overlay={intl.formatMessage({
+                              defaultMessage:
+                                "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                            })}
+                            css={{ marginLeft: 5 }}
+                          >
+                            <Union css={{ color: gray.normal3 }} />
+                          </Tooltip>
                         </div>
-                      </TableColumn>
-                    </TableRow>
-                    {isfolds[i] && (
-                      <div css={{ padding: "24px 32px", position: "relative" }}>
+                        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                          {market?.status === PORTFOLIO_STATUS.ACTIVE
+                            ? principalAndInterests && principalAndInterests[i]
+                            : formatNumberDisplay(p?.[1]?.hex)}{" "}
+                          {market?.assets}
+                        </div>
+                        <div css={{ display: "flex" }}>
+                          <Button
+                            css={{
+                              marginRight: 10,
+                              fontSize: 12,
+                              height: 30,
+                              padding: "0 12px",
+                              borderRadius: 4,
+                              visibility: market?.status !== PORTFOLIO_STATUS.PENDING ? "hidden" : "visible"
+                            }}
+                            type="primary"
+                            onClick={() => redeemDirect(i)}
+                            loading={redeemLoading[i] || false}
+                          >
+                            {intl.formatMessage({ defaultMessage: "Redeem" })}
+                          </Button>
+
+                          {/* <Button css={{ fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }} type="primary">
+                            {intl.formatMessage({ defaultMessage: "Re-deposit" })}
+                          </Button> */}
+                        </div>
+                      </div>
+                      <div
+                        css={{
+                          padding: "16px 19px",
+                          width: 235,
+                          marginRight: 23,
+                          border: `1px solid ${primary.deep2}`,
+                          borderRadius: 8
+                        }}
+                      >
+                        <div css={{ display: "flex", alignItems: "center" }}>
+                          <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
+                            {intl.formatMessage({ defaultMessage: "WTF Reward" })}
+                          </span>
+                        </div>
+                        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                          {tranchesPendingReward[i] ? formatNumberDisplay(tranchesPendingReward[i].toString()) : "-"}
+                          WTF
+                        </div>
+                        <div css={{ display: "flex" }}>
+                          <Button
+                            css={{
+                              marginRight: 10,
+                              fontSize: 12,
+                              height: 30,
+                              padding: "0 12px",
+                              borderRadius: 4,
+                              visibility: "hidden"
+                            }}
+                            type="primary"
+                          >
+                            {intl.formatMessage({ defaultMessage: "Claim" })}
+                          </Button>
+                        </div>
+                      </div>
+                      <div css={{ flex: 1, padding: 18, width: "100%", position: "relative", borderRadius: 8 }}>
                         <div
                           css={{
                             width: "100%",
                             height: "100%",
-                            background: linearGradient.primary,
-                            opacity: 0.02,
                             position: "absolute",
                             top: 0,
-                            left: 0
+                            left: 0,
+                            backgroundColor: white.normal,
+                            borderRadius: 8
                           }}
                         />
-                        <div css={{ display: "flex", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
-                          <div
-                            css={{
-                              padding: "16px 19px",
-                              marginRight: 27,
-                              border: `1px solid ${primary.deep2}`,
-                              borderRadius: 8
-                            }}
-                          >
-                            <div css={{ display: "flex", alignItems: "center" }}>
-                              <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                                {intl.formatMessage({ defaultMessage: "Principal + Est. Interest" })}
-                              </span>
-                              <Tooltip
-                                overlay={
-                                  <React.Fragment>
-                                    <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
-                                    <p>
-                                      {intl.formatMessage({
-                                        defaultMessage:
-                                          '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
-                                      })}
-                                    </p>
-                                    <p>
-                                      {intl.formatMessage({
-                                        defaultMessage:
-                                          '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
-                                      })}
-                                    </p>
-                                  </React.Fragment>
-                                }
-                              >
-                                <Union css={{ color: gray.normal3 }} />
-                              </Tooltip>
-                            </div>
-                            <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                              {market?.status === PORTFOLIO_STATUS.ACTIVE
-                                ? principalAndInterests && principalAndInterests[i]
-                                : formatNumberDisplay(p?.[1]?.hex)}{" "}
-                              {market?.assets}
-                            </div>
-                            <div css={{ display: "flex" }}>
-                              <Button
-                                css={{
-                                  marginRight: 10,
-                                  fontSize: 12,
-                                  height: 30,
-                                  padding: "0 12px",
-                                  borderRadius: 4,
-                                  visibility: market?.status !== PORTFOLIO_STATUS.PENDING ? "hidden" : "visible"
-                                }}
-                                type="primary"
-                                onClick={() => redeemDirect(i)}
-                                loading={redeemLoading[i] || false}
-                              >
-                                {intl.formatMessage({ defaultMessage: "Redeem" })}
-                              </Button>
-
-                              {/* <Button css={{ fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }} type="primary">
-                            {intl.formatMessage({ defaultMessage: "Re-deposit" })}
-                          </Button> */}
-                            </div>
+                        <div css={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start" }}>
+                          <div css={{ marginRight: 4 }}>
+                            <Union css={{ color: primary.deep, transform: "translateY(2px)" }} />
                           </div>
-                          <div
-                            css={{
-                              padding: "16px 19px",
-                              width: 235,
-                              marginRight: 23,
-                              border: `1px solid ${primary.deep2}`,
-                              borderRadius: 8
-                            }}
-                          >
-                            <div css={{ display: "flex", alignItems: "center" }}>
-                              <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                                {intl.formatMessage({ defaultMessage: "WTF Reward" })}
-                              </span>
-                            </div>
-                            <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                              {tranchesPendingReward[i]
-                                ? formatNumberDisplay(tranchesPendingReward[i].toString())
-                                : "-"}
-                              WTF
-                            </div>
-                            <div css={{ display: "flex" }}>
-                              <Button
-                                css={{
-                                  marginRight: 10,
-                                  fontSize: 12,
-                                  height: 30,
-                                  padding: "0 12px",
-                                  borderRadius: 4,
-                                  visibility: "hidden"
-                                }}
-                                type="primary"
-                              >
-                                {intl.formatMessage({ defaultMessage: "Claim" })}
-                              </Button>
-                            </div>
-                          </div>
-                          <div css={{ flex: 1, padding: 18, width: "100%", position: "relative", borderRadius: 8 }}>
-                            <div
-                              css={{
-                                width: "100%",
-                                height: "100%",
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                backgroundColor: white.normal,
-                                borderRadius: 8
-                              }}
-                            />
-                            <div css={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start" }}>
-                              <div css={{ marginRight: 4 }}>
-                                <Union css={{ color: primary.deep, transform: "translateY(2px)" }} />
-                              </div>
-                              <div css={{ color: gray.normal7, fontSize: 12 }}>
-                                {intl.formatMessage({
-                                  defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
-                                })}
-                              </div>
-                            </div>
+                          <div css={{ color: gray.normal7, fontSize: 12 }}>
+                            {intl.formatMessage({
+                              defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
+                            })}
                           </div>
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
-                );
-            })}
-          {data &&
-            data.userInvests.map((_userInvest: any, _idx: number) => {
-              const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-              if (_userInvest.principal == "0") return;
-              if (trancheCycles[trancheCycleId].state === 0) return;
-              if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
-              if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
+                )}
+              </div>
+            );
+          })}
+          {payload?.map((_userInvest: any, _idx: number) => {
+            const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+            // if (_userInvest.principal == "0") return;
+            // if (trancheCycles[trancheCycleId].state === 0) return;
+            // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
+            // if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
 
-              return (
-                <div
-                  key={_idx}
+            return (
+              <div
+                key={_idx}
+                css={{
+                  ":hover": {
+                    // boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
+                  }
+                }}
+              >
+                <TableRow
                   css={{
-                    ":hover": {
-                      // boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
-                    }
+                    color: gray.normal85,
+                    fontSize: 16,
+                    borderBottom: `1px solid ${primary.lightBrown}`
                   }}
                 >
-                  <TableRow
-                    css={{
-                      color: gray.normal85,
-                      fontSize: 16,
-                      borderBottom: `1px solid ${primary.lightBrown}`
-                    }}
-                  >
-                    <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
-                    <TableColumn minWidth={60}>{market?.assets}</TableColumn>
-                    <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
-                      {trancheCycles &&
-                        trancheCycles[trancheCycleId] &&
-                        trancheCycles[trancheCycleId].state !== 0 &&
-                        `${formatTimestamp(trancheCycles[trancheCycleId].startAt)} → ${formatTimestamp(
-                          Number(trancheCycles[trancheCycleId].endAt)
-                        )}`}
-                    </TableColumn>
-                    <TableColumn minWidth={240} style={{ whiteSpace: "break-spaces" }}>
-                      {tranchesName[_userInvest.tranche]}:{" "}
-                      {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
-                        ? new BigNumber(_userInvest.capital)
-                            .minus(new BigNumber(_userInvest.principal))
-                            .dividedBy(new BigNumber(_userInvest.principal))
-                            // .times(new BigNumber((365 / 7) * 10000))
-                            .times(new BigNumber(365 * 86400 * 100))
-                            .dividedBy(
-                              new BigNumber(trancheCycles[trancheCycleId].endAt - trancheCycles[trancheCycleId].startAt)
-                            )
-                            .toFormat(0)
-                            .toString()
-                        : "-"}
-                      %
-                    </TableColumn>
-                    <TableColumn minWidth={200}>
-                      {formatNumberDisplay(_userInvest.principal)} {market?.assets}
-                    </TableColumn>
-                    <TableColumn>
-                      {trancheCycles[trancheCycleId].state === 0 ? <Tag color="yellow" value={"Pending"}></Tag> : null}
-                      {trancheCycles[trancheCycleId].state === 1 ? <Tag color="green" value={"Active"}></Tag> : null}
-                      {trancheCycles[trancheCycleId].state === 2 ? <Tag color="red" value={"Expired"}></Tag> : null}
-                    </TableColumn>
-                    <TableColumn>
-                      {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
-                        ? formatNumberDisplay(
-                            new BigNumber(_userInvest.capital).minus(new BigNumber(_userInvest.principal)).toString()
+                  <TableColumn minWidth={150}>{market?.portfolio}</TableColumn>
+                  <TableColumn minWidth={60}>{market?.assets}</TableColumn>
+                  <TableColumn minWidth={240} style={{ whiteSpace: "unset" }}>
+                    {trancheCycles &&
+                      trancheCycles[trancheCycleId] &&
+                      trancheCycles[trancheCycleId].state !== 0 &&
+                      `${formatTimestamp(trancheCycles[trancheCycleId].startAt)} → ${formatTimestamp(
+                        Number(trancheCycles[trancheCycleId].endAt)
+                      )}`}
+                  </TableColumn>
+                  <TableColumn minWidth={240} style={{ whiteSpace: "break-spaces" }}>
+                    {tranchesName[_userInvest.tranche]}:{" "}
+                    {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
+                      ? new BigNumber(_userInvest.capital)
+                          .minus(new BigNumber(_userInvest.principal))
+                          .dividedBy(new BigNumber(_userInvest.principal))
+                          // .times(new BigNumber((365 / 7) * 10000))
+                          .times(new BigNumber(365 * 86400 * 100))
+                          .dividedBy(
+                            new BigNumber(trancheCycles[trancheCycleId].endAt - trancheCycles[trancheCycleId].startAt)
                           )
-                        : "-"}{" "}
-                      {market?.assets}
-                    </TableColumn>
-                    <TableColumn>
-                      <div
+                          .toFormat(0)
+                          .toString()
+                      : "-"}
+                    %
+                  </TableColumn>
+                  <TableColumn minWidth={200}>
+                    {formatNumberDisplay(_userInvest.principal)} {market?.assets}
+                  </TableColumn>
+                  <TableColumn>
+                    {trancheCycles[trancheCycleId].state === 0 ? <Tag color="yellow" value={"Pending"}></Tag> : null}
+                    {trancheCycles[trancheCycleId].state === 1 ? <Tag color="green" value={"Active"}></Tag> : null}
+                    {trancheCycles[trancheCycleId].state === 2 ? <Tag color="red" value={"Expired"}></Tag> : null}
+                  </TableColumn>
+                  <TableColumn>
+                    {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
+                      ? formatNumberDisplay(
+                          new BigNumber(_userInvest.capital).minus(new BigNumber(_userInvest.principal)).toString()
+                        )
+                      : "-"}{" "}
+                    {market?.assets}
+                  </TableColumn>
+                  <TableColumn>
+                    <div
+                      css={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        border: `2px solid ${primary.deep2}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        cursor: "pointer"
+                      }}
+                      onClick={() => {
+                        setFolds((isfolds) => ({ ...isfolds, [_idx]: !isfolds[_idx] }));
+                      }}
+                    >
+                      <CaretDown
                         css={{
-                          width: 32,
-                          height: 32,
-                          borderRadius: 8,
-                          border: `2px solid ${primary.deep2}`,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          cursor: "pointer"
-                        }}
-                        onClick={() => {
-                          setFolds((isfolds) => ({ ...isfolds, [_idx]: !isfolds[_idx] }));
-                        }}
-                      >
-                        <CaretDown
-                          css={{
-                            transition: "transform 0.3s",
-                            transform: "rotate(0)",
-                            color: primary.normal,
-                            ...(isfolds[_idx] ? { transform: "rotate(180deg)" } : {})
-                          }}
-                        />
-                      </div>
-                    </TableColumn>
-                  </TableRow>
-                  {isfolds[_idx] && (
-                    <div css={{ padding: "24px 32px", position: "relative" }}>
-                      <div
-                        css={{
-                          width: "100%",
-                          height: "100%",
-                          background: linearGradient.primary,
-                          opacity: 0.02,
-                          position: "absolute",
-                          top: 0,
-                          left: 0
+                          transition: "transform 0.3s",
+                          transform: "rotate(0)",
+                          color: primary.normal,
+                          ...(isfolds[_idx] ? { transform: "rotate(180deg)" } : {})
                         }}
                       />
-                      <div css={{ display: "flex", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
-                        <div
-                          css={{
-                            padding: "16px 19px",
-                            marginRight: 27,
-                            border: `1px solid ${primary.deep2}`,
-                            borderRadius: 8
-                          }}
-                        >
-                          <div css={{ display: "flex", alignItems: "center" }}>
-                            <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                              {intl.formatMessage({ defaultMessage: "Max withdrawal principal+Interest" })}
-                            </span>
+                    </div>
+                  </TableColumn>
+                </TableRow>
+                {isfolds[_idx] && (
+                  <div css={{ padding: "24px 32px", position: "relative" }}>
+                    <div
+                      css={{
+                        width: "100%",
+                        height: "100%",
+                        background: linearGradient.primary,
+                        opacity: 0.02,
+                        position: "absolute",
+                        top: 0,
+                        left: 0
+                      }}
+                    />
+                    <div css={{ display: "flex", alignItems: "flex-end", position: "relative", zIndex: 1 }}>
+                      <div
+                        css={{
+                          padding: "16px 19px",
+                          marginRight: 27,
+                          border: `1px solid ${primary.deep2}`,
+                          borderRadius: 8
+                        }}
+                      >
+                        <div css={{ display: "flex", alignItems: "flex-start", fontSize: 12, color: gray.normal7 }}>
+                          <div>
+                            {intl.formatMessage({ defaultMessage: "Principal+" })}
                             <Tooltip
-                              overlay={
-                                <React.Fragment>
-                                  <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
-                                  <p>
-                                    {intl.formatMessage({
-                                      defaultMessage:
-                                        '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
-                                    })}
-                                  </p>
-                                  <p>
-                                    {intl.formatMessage({
-                                      defaultMessage:
-                                        '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
-                                    })}
-                                  </p>
-                                </React.Fragment>
-                              }
+                              overlay={intl.formatMessage({
+                                defaultMessage:
+                                  "Before the cycle starts, the principal can be redeemed in the Pending state."
+                              })}
                             >
-                              <Union css={{ color: gray.normal3 }} />
+                              <u
+                                css={{
+                                  borderBottom: "1px dotted",
+                                  borderColor: gray.normal7,
+                                  color: gray.normal7,
+                                  textDecoration: "none"
+                                }}
+                              >
+                                {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                              </u>
                             </Tooltip>
                           </div>
-                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
-                            {formatNumberDisplay(_userInvest.capital)} {market?.assets}
-                          </div>
-                          <div css={{ display: "flex" }}>
-                            {/* <Button
+
+                          <Tooltip
+                            overlay={intl.formatMessage({
+                              defaultMessage:
+                                "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                            })}
+                            css={{ marginLeft: 5 }}
+                          >
+                            <Union css={{ color: gray.normal3 }} />
+                          </Tooltip>
+                        </div>
+                        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>
+                          {formatNumberDisplay(_userInvest.capital)} {market?.assets}
+                        </div>
+                        <div css={{ display: "flex" }}>
+                          {/* <Button
                               css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                               type="primary"
                             >
@@ -550,61 +579,61 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             >
                               {intl.formatMessage({ defaultMessage: "Re-deposit" })}
                             </Button> */}
-                          </div>
                         </div>
-                        <div
-                          css={{
-                            padding: "16px 19px",
-                            width: 235,
-                            marginRight: 23,
-                            border: `1px solid ${primary.deep2}`,
-                            borderRadius: 8
-                          }}
-                        >
-                          <div css={{ display: "flex", alignItems: "center" }}>
-                            <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                              {intl.formatMessage({ defaultMessage: "WTF Reward" })}
-                            </span>
-                          </div>
-                          <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>- WTF</div>
-                          <div css={{ display: "flex" }}>
-                            {/* <Button
+                      </div>
+                      <div
+                        css={{
+                          padding: "16px 19px",
+                          width: 235,
+                          marginRight: 23,
+                          border: `1px solid ${primary.deep2}`,
+                          borderRadius: 8
+                        }}
+                      >
+                        <div css={{ display: "flex", alignItems: "center" }}>
+                          <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
+                            {intl.formatMessage({ defaultMessage: "WTF Reward" })}
+                          </span>
+                        </div>
+                        <div css={{ color: primary.deep, margin: "8px 0 6px 0" }}>- WTF</div>
+                        <div css={{ display: "flex" }}>
+                          {/* <Button
                               css={{ marginRight: 10, fontSize: 12, height: 30, padding: "0 12px", borderRadius: 4 }}
                               type="primary"
                             >
                               {intl.formatMessage({ defaultMessage: "Claim" })}
                             </Button> */}
-                          </div>
                         </div>
-                        <div css={{ flex: 1, padding: 18, width: "100%", position: "relative", borderRadius: 8 }}>
-                          <div
-                            css={{
-                              width: "100%",
-                              height: "100%",
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              backgroundColor: white.normal,
-                              borderRadius: 8
-                            }}
-                          />
-                          <div css={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start" }}>
-                            <div css={{ marginRight: 4 }}>
-                              <Union css={{ color: primary.deep, transform: "translateY(2px)" }} />
-                            </div>
-                            <div css={{ color: gray.normal7, fontSize: 12 }}>
-                              {intl.formatMessage({
-                                defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
-                              })}
-                            </div>
+                      </div>
+                      <div css={{ flex: 1, padding: 18, width: "100%", position: "relative", borderRadius: 8 }}>
+                        <div
+                          css={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            backgroundColor: white.normal,
+                            borderRadius: 8
+                          }}
+                        />
+                        <div css={{ position: "relative", zIndex: 1, display: "flex", alignItems: "flex-start" }}>
+                          <div css={{ marginRight: 4 }}>
+                            <Union css={{ color: primary.deep, transform: "translateY(2px)" }} />
+                          </div>
+                          <div css={{ color: gray.normal7, fontSize: 12 }}>
+                            {intl.formatMessage({
+                              defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
+                            })}
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </Table>
       )}
       {Boolean(width && width <= 768) && (

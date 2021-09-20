@@ -253,28 +253,33 @@ const MyPositionItem = memo<TProps>(
         {!isFold && (
           <Wrapper>
             <WithdrawDiv>
-              <div css={{ display: "flex", alignItems: "center" }}>
-                <span css={{ marginRight: 5, color: gray.normal7, fontSize: 12 }}>
-                  {intl.formatMessage({ defaultMessage: "Max withdrawal principal+Interest" })}
-                </span>
+              <div css={{ display: "flex", alignItems: "flex-start", fontSize: 12, color: gray.normal7 }}>
+                <div>
+                  {intl.formatMessage({ defaultMessage: "Principal+" })}
+                  <Tooltip
+                    overlay={intl.formatMessage({
+                      defaultMessage: "Before the cycle starts, the principal can be redeemed in the Pending state."
+                    })}
+                  >
+                    <u
+                      css={{
+                        borderBottom: "1px dotted",
+                        borderColor: gray.normal7,
+                        color: gray.normal7,
+                        textDecoration: "none"
+                      }}
+                    >
+                      {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                    </u>
+                  </Tooltip>
+                </div>
+
                 <Tooltip
-                  overlay={
-                    <React.Fragment>
-                      <p>{intl.formatMessage({ defaultMessage: "When you can withdraw:" })}</p>
-                      <p>
-                        {intl.formatMessage({
-                          defaultMessage:
-                            '1. Before the cycle deploys, the principal can be withdrawn while the portfolio is in the "Pending" stage'
-                        })}
-                      </p>
-                      <p>
-                        {intl.formatMessage({
-                          defaultMessage:
-                            '2. After the deployment is completed, the principal + interest can be withdrawn while the portfolio is in the "Mature" stage'
-                        })}
-                      </p>
-                    </React.Fragment>
-                  }
+                  overlay={intl.formatMessage({
+                    defaultMessage:
+                      "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                  })}
+                  css={{ marginLeft: 5 }}
                 >
                   <Union css={{ color: gray.normal3 }} />
                 </Tooltip>

@@ -202,7 +202,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
 
       <ButtonDiv>
         <Button type="primary" onClick={() => push({ pathname: "/portfolioDetails", state: marketData })}>
-          {intl.formatMessage({ defaultMessage: "Deposit" })}
+          {marketData.status !== PORTFOLIO_STATUS.PENDING
+            ? intl.formatMessage({ defaultMessage: "More" })
+            : intl.formatMessage({ defaultMessage: "Deposit" })}
         </Button>
       </ButtonDiv>
       <NextTime>

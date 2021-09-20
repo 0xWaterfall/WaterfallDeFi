@@ -27,7 +27,7 @@ const Markets = memo<TProps>(({ intl }) => {
               {intl.formatMessage({ defaultMessage: "Lock-up period" })}
             </TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>
-              {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+              {intl.formatMessage({ defaultMessage: "Deposit APR" })}
             </TableHeaderColumn>
             <TableHeaderColumn minWidth={160}>{intl.formatMessage({ defaultMessage: "TVL" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>

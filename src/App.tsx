@@ -15,8 +15,8 @@ import ConnectedDataProvider from "providers/ConnectedDataProvider/ConnectedData
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
-  // uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.8",
-  uri: "https://subgraph-test.icarus.finance/subgraphs/name/ica/waterfall-subgraph",
+  uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.9",
+  // uri: "https://subgraph-test.icarus.finance/subgraphs/name/ica/waterfall-subgraph",
   cache: new InMemoryCache()
 });
 

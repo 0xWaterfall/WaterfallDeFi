@@ -23,7 +23,8 @@ import { useAppDispatch } from "store";
 import { setMarketKey } from "store/selectedKeys";
 import useWithdraw from "pages/PortfolioDetails/hooks/useWithdraw";
 import Button from "components/Button/Button";
-
+import { Multicall, ContractCallResults, ContractCallContext } from "ethereum-multicall";
+import multicall from "utils/multicall";
 const Dashboard = memo<TProps>(() => {
   // const { account } = useWeb3React();
   const { active, account, chainId, library, connector, ...p } = useWeb3React<Web3Provider>();
@@ -266,8 +267,28 @@ const Dashboard = memo<TProps>(() => {
       console.log(farms2);
     }
   }, []);
+  const testMultiCall = async () => {
+    //BSC Mainnet	0x41263cba59eb80dc200f3e2544eda4ed6a90e76c
+    // BSC Testnet	0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C
+    const calls = [
+      // Balance of token in the LP contract
+      {
+        address: TranchesAddress,
+        name: "tranches",
+        params: [0]
+      },
+      {
+        address: TranchesAddress,
+        name: "tranches",
+        params: [1]
+      }
+    ];
+    const result = await multicall(TrancheMasterAbi, calls);
+    console.log(result);
+  };
   useEffect(() => {
-    testContract();
+    // testContract();
+    testMultiCall();
   }, []);
   return (
     <div style={{ marginTop: 100 }}>

@@ -197,3 +197,32 @@ export const compareNum = (num1: string | number | undefined, num2: string | und
   if (largerOnly) return _num1.comparedTo(_num2) > 0 ? true : false;
   return _num1.comparedTo(_num2) >= 0 ? true : false;
 };
+
+export const getNetApr = (
+  trancheAPY: string | undefined,
+  wtfAPY: string | undefined,
+  weekDistribution: string | undefined,
+  tranche: Tranche | undefined
+) => {
+  if (trancheAPY === undefined) return;
+  if (wtfAPY === undefined) return;
+  if (weekDistribution === undefined) return;
+  if (tranche === undefined) return;
+  if (weekDistribution === "0") return;
+
+  trancheAPY = trancheAPY.replace("%", "");
+  wtfAPY = wtfAPY.replace("+ ", "");
+  const wtfPrice = 1;
+  console.log(weekDistribution);
+  console.log(wtfAPY);
+  const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
+
+  const wtfReward = new BigNumber(weekDistribution)
+    .times(new BigNumber(wtfAPY))
+    .times(wtfPrice)
+    .dividedBy(target)
+    .toFormat(0)
+    .toString();
+  console.log(wtfReward);
+  return Number(trancheAPY) + Number(wtfReward) + "%";
+};

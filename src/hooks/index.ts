@@ -1,4 +1,11 @@
-import { MasterChefAddress, TranchesAddress, WTFAddress, BUSDAddress, StrategyAddress } from "config/address";
+import {
+  MasterChefAddress,
+  TranchesAddress,
+  WTFAddress,
+  BUSDAddress,
+  StrategyAddress,
+  MulticallAddress
+} from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Market, PORTFOLIO_STATUS } from "types";
@@ -15,6 +22,7 @@ import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import farmsConfig from "config/farms";
+import MultiCallAbi from "config/abi/Multicall.json";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -179,6 +187,9 @@ export const getContract = (abi: any, address: string, signer?: ethers.Signer | 
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
   const signerOrProvider = signer ?? simpleRpcProvider;
   return new ethers.Contract(address, abi, signerOrProvider);
+};
+export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.Provider) => {
+  return getContract(MultiCallAbi, MulticallAddress, signer);
 };
 
 export const getSigner = () => {

@@ -133,7 +133,7 @@ const Positions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
-            <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Deposit APY" })}</TableHeaderColumn>
+            <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Net APY" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>

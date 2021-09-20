@@ -145,7 +145,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
       <TableColumn minWidth={240}>
         <APYStyled>
           <Button type="primary" onClick={navigateMarketDetail}>
-            {marketData.status !== PORTFOLIO_STATUS.PENDING ? "More" : "Deposit"}
+            {marketData.status !== PORTFOLIO_STATUS.PENDING
+              ? intl.formatMessage({ defaultMessage: "More" })
+              : intl.formatMessage({ defaultMessage: "Deposit" })}
           </Button>
           <span css={{ fontSize: 10, marginTop: 10 }}>
             {marketData.status === PORTFOLIO_STATUS.ACTIVE && marketData.duration && marketData.actualStartAt && (

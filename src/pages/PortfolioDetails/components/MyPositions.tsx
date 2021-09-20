@@ -60,10 +60,10 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const { gray, white, primary, linearGradient, tags, shadow } = useTheme();
   const { width } = useSize(document.body);
   const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
-  const [activedTab, setActivedTab] = useState<IType>("ALL");
+  const [activedTab, setActivedTab] = useState<IType>("PENDING");
   const [isfolds, setFolds] = useState<{ [key: number]: boolean }>({});
   const [selectedTranche, setSelectedTranche] = useState(-1);
-  const [selectedStatus, setSelectedStatus] = useState(-1);
+  const [selectedStatus, setSelectedStatus] = useState(0);
   const { account, active } = useWeb3React<Web3Provider>();
   const dispatch = useAppDispatch();
   const market = useSelectedMarket();

@@ -28,6 +28,7 @@ import _ from "lodash";
 import { useSelectedMarket } from "hooks/useSelectors";
 import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
+import Tooltip from "components/Tooltip/Tooltip";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -102,7 +103,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
-    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }}>
+    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}

@@ -44,6 +44,7 @@
     "dayjs": "^1.9.7",
     "echarts": "^5.1.2",
     "echarts-for-react": "^3.0.1",
+    "ethereum-multicall": "^2.8.0",
     "ethers": "^5.4.1",
     "graphql": "^15.5.3",
     "install": "^0.13.0",

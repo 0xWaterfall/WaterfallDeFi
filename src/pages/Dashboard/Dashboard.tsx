@@ -3,12 +3,10 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useWeb3React } from "@web3-react/core";
-type TProps = WrappedComponentProps;
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { TranchesAddress } from "config/address";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
-
 import { Web3Provider } from "@ethersproject/providers";
 import Button from "components/Button/Button";
 import styled from "@emotion/styled";
@@ -33,6 +31,8 @@ const InfoWrapper = styled.div`
   grid-template-columns: 1fr 1fr;
   position: relative;
 `;
+
+type TProps = WrappedComponentProps;
 
 const Dashboard = memo<TProps>(() => {
   const { account } = useWeb3React<Web3Provider>();

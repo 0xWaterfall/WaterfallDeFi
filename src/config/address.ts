@@ -27,3 +27,7 @@ export const TranchesAddress = "aaAfebF363839DdB04Bd0eA649e48a7515228B4f";
 export const MasterChefAddress = "16B4B2a2d1A503a41aA1AfF157F40766730B9D11";
 export const BUSDAddress = "8dF107fb383d4C25fec36C9a6EbB06097C1135DB";
 export const WTFAddress = "a9F302953082Fb8412F55D5bCa3714A51E5b9A97";
+
+//BSC Mainnet	0x41263cba59eb80dc200f3e2544eda4ed6a90e76c
+// BSC Testnet	0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C
+export const MulticallAddress = "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C";

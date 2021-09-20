@@ -20,7 +20,8 @@ import {
   formatNumberDisplay,
   formatTimestamp,
   getInterest,
-  getJuniorAPY
+  getJuniorAPY,
+  getNetApr
 } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
@@ -33,6 +34,7 @@ import { useHistoryQuery } from "../hooks/useSubgraph";
 import { IType } from "pages/Portfolio/components/MyPortfolio/type";
 import Select, { Option } from "components/Select/Select";
 import NoData from "components/NoData/NoData";
+import { useWTF } from "hooks";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -50,6 +52,9 @@ const FilterDiv = styled.div`
     }
   }
 `;
+const APRPopup = styled.div`
+  // display: flex;
+`;
 const Text2 = styled.div`
   font-size: 16px;
   line-height: 22px;
@@ -59,6 +64,7 @@ const Text2 = styled.div`
 const MyPositions = memo<TProps>(({ intl }) => {
   const { gray, white, primary, linearGradient, tags, shadow } = useTheme();
   const { width } = useSize(document.body);
+  const { weekDistribution } = useWTF();
   const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
   const [activedTab, setActivedTab] = useState<IType>("PENDING");
   const [isfolds, setFolds] = useState<{ [key: number]: boolean }>({});
@@ -117,7 +123,11 @@ const MyPositions = memo<TProps>(({ intl }) => {
     return position?.filter((p, i) => {
       if (selectedTranche > -1 && selectedTranche !== i) return false;
       if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return false;
-      if (new BigNumber(p[1].hex).toNumber() !== 0) return true;
+      const _cycle = new BigNumber(p[0].hex).toString();
+      if (_cycle !== market?.cycle) return false;
+      if (new BigNumber(p[1].hex).toNumber() === 0) return false;
+
+      return true;
     });
   }, [position, selectedTranche, selectedStatus, tranchesState]);
 
@@ -197,12 +207,13 @@ const MyPositions = memo<TProps>(({ intl }) => {
             <TableHeaderColumn></TableHeaderColumn>
           </TableRow>
           <NoData isNoData={isNoData} />
-          {positionPayload.map((p, i) => {
-            // if (trancheCycles[trancheCycleId].state === 0) return;
-            // console.log(selectedStatus, tranchesState[selectedStatus], market?.status);
-            // if (selectedTranche > -1 && selectedTranche !== i) return;
-            // if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
-            // if (new BigNumber(p[1].hex).toNumber() !== 0)
+          {position.map((p, i) => {
+            if (selectedTranche > -1 && selectedTranche !== i) return;
+            if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
+            const _cycle = new BigNumber(p[0].hex).toString();
+            if (_cycle !== market?.cycle) return;
+            if (new BigNumber(p[1].hex).toNumber() === 0) return;
+
             return (
               <div
                 key={i}
@@ -224,11 +235,31 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       : "--"}
                   </TableColumn>
                   <TableColumn minWidth={240}>
-                    {tranchesDisplayText[i]}:
-                    <Text2 color={tranchesDisplayTextColor[i]}>
-                      {i !== position.length - 1 ? formatAPY(market?.tranches[i].apy) : getJuniorAPY(market?.tranches)}
-                    </Text2>
-                    {formatAllocPoint(market?.pools[i], market?.totalAllocPoints)}% WTF
+                    <Tooltip
+                      overlay={
+                        <React.Fragment>
+                          <APRPopup>
+                            <div>
+                              {tranchesDisplayText[i]}:
+                              {i !== position.length - 1
+                                ? formatAPY(market?.tranches[i].apy)
+                                : getJuniorAPY(market?.tranches)}
+                            </div>
+                            <div>
+                              WTF:
+                              {formatAllocPoint(market?.pools[i], market?.totalAllocPoints).replace("+ ", "")}%
+                            </div>
+                          </APRPopup>
+                        </React.Fragment>
+                      }
+                    >
+                      {getNetApr(
+                        i !== position.length - 1 ? formatAPY(market?.tranches[i].apy) : getJuniorAPY(market?.tranches),
+                        formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
+                        weekDistribution.toString(),
+                        market?.tranches[i]
+                      )}
+                    </Tooltip>
                   </TableColumn>
                   <TableColumn minWidth={200}>
                     {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
@@ -639,6 +670,8 @@ const MyPositions = memo<TProps>(({ intl }) => {
           {market &&
             redeemDirect &&
             position.map((p, i) => {
+              const _cycle = new BigNumber(p[0].hex).toString();
+              if (_cycle !== market?.cycle) return;
               if (selectedTranche > -1 && selectedTranche !== i) return;
               if (selectedStatus > -1 && market?.status !== tranchesState[selectedStatus]) return;
 

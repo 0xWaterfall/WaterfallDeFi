@@ -29,3 +29,6 @@ export { ReactComponent as ShortRight } from "./ShortRight.svg";
 export { ReactComponent as Wallet } from "./Wallet.svg";
 export { ReactComponent as CheckIcon } from "./CheckIcon.svg";
 export { ReactComponent as NoData } from "./NoData.svg";
+export { ReactComponent as DashboardImage } from "./DashboardImage.svg";
+export { ReactComponent as Coingecko } from "./Coingecko.svg";
+export { ReactComponent as BUSD } from "./BUSD.svg";

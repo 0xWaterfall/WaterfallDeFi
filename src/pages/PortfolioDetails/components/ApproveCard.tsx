@@ -289,7 +289,7 @@ const ApproveCard = memo<TProps>(
                 css={{ height: 56 }}
                 onClick={handleDeposit}
                 loading={depositLoading}
-                disabled={!enabled || isSoldOut}
+                disabled={!enabled || isSoldOut || !balanceInput}
               >
                 {intl.formatMessage({ defaultMessage: "Deposit" })}
               </Button>

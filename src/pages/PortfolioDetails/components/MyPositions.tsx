@@ -86,7 +86,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
     setActivedTab(value);
     setSelectedStatus(status);
   };
-
   const trancheCycles: { [key: string]: TrancheCycle } = {};
   if (data && data.trancheCycles) {
     for (let i = 0; i < data.trancheCycles.length; i++) {
@@ -478,6 +477,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                           css={{
                             transition: "transform 0.3s",
                             transform: "rotate(0)",
+                            color: primary.normal,
                             ...(isfolds[_idx] ? { transform: "rotate(180deg)" } : {})
                           }}
                         />

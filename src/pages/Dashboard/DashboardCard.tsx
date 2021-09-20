@@ -44,7 +44,7 @@ const LinearGradientWrapper = styled.div`
 const H1 = styled.div`
   font-size: 36px;
   font-weight: 500;
-  line-height: 20.8px;
+  line-height: 45px;
   margin-bottom: 40px;
 `;
 

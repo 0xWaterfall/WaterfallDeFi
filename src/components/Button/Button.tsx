@@ -10,11 +10,9 @@ const ANTDButtonStyled = styled(ANTDButton)`
   border-radius: 8px;
   height: 40px;
   border: 0;
-  /* width: 100%; */
   padding: 0 24px;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 16px;
-  /* filter: drop-shadow(0px 8px 20px rgba(0, 108, 253, 0.3)); */
   color: ${({ theme }) => theme.gray.normal7};
   &[disabled] {
     opacity: 0.5;
@@ -25,11 +23,10 @@ const ANTDButtonStyled = styled(ANTDButton)`
 
   &[dataType="default"],
   &[dataType="default"][disabled] {
-    border: 2px solid ${({ theme }) => theme.primary.deep2};
+    border: 1px solid ${({ theme }) => theme.primary.deep1};
     color: ${({ theme }) => theme.primary.deep};
-    /* box-shadow: ${({ theme }) => theme.shadow.primary}; */
     &[ant-click-animating-without-extra-node="true"]::after {
-      --antd-wave-shadow-color: ${({ theme }) => theme.primary.normal};
+      --antd-wave-shadow-color: ${({ theme }) => theme.primary.deep1};
     }
   }
 
@@ -37,7 +34,6 @@ const ANTDButtonStyled = styled(ANTDButton)`
   &[dataType="primary"][disabled] {
     background: ${({ theme }) => theme.linearGradient.primary};
     color: ${({ theme }) => theme.white.normal};
-    /* box-shadow: ${({ theme }) => theme.shadow.primary}; */
     &[ant-click-animating-without-extra-node="true"]::after {
       --antd-wave-shadow-color: ${({ theme }) => theme.primary.normal};
     }
@@ -47,7 +43,6 @@ const ANTDButtonStyled = styled(ANTDButton)`
   &[dataType="warn"][disabled] {
     background: ${({ theme }) => theme.warn.deep};
     color: ${({ theme }) => theme.white.normal};
-    /* box-shadow: ${({ theme }) => theme.shadow.primary}; */
     &[ant-click-animating-without-extra-node="true"]::after {
       --antd-wave-shadow-color: ${({ theme }) => theme.warn.deep};
     }

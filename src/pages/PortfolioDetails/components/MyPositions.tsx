@@ -10,17 +10,13 @@ import MyPositionItem from "./MyPositionItem";
 import { useSize } from "ahooks";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
-import { useLocation } from "react-router-dom";
-import { Invest, Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
+import { Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
 
-import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import Web3 from "web3";
 import {
   formatAllocPoint,
   formatAPY,
-  formatBalance,
   formatNumberDisplay,
   formatTimestamp,
   getInterest,
@@ -99,7 +95,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
     }
   }
 
-  console.log(data, 123123123123123);
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
@@ -249,6 +244,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             css={{
                               transition: "transform 0.3s",
                               transform: "rotate(0)",
+                              color: primary.normal,
                               ...(isfolds[i] ? { transform: "rotate(180deg)" } : {})
                             }}
                           />
@@ -638,12 +634,10 @@ const MyPositions = memo<TProps>(({ intl }) => {
             data &&
             data.userInvests.map((_userInvest: any, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-              console.log(selectedTranche, _userInvest.tranche);
               if (_userInvest.principal == "0") return;
               if (trancheCycles[trancheCycleId].state === 0) return;
               if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
               if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
-              console.log("render");
 
               return (
                 <div key={_idx}>

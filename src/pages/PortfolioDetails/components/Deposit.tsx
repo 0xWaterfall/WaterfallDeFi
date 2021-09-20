@@ -16,58 +16,54 @@ type TProps = WrappedComponentProps & {
   data: Market;
 };
 
-const Text1 = styled.div`
-  font-size: 20px;
-  line-height: 27px;
+const NextCycle = styled.div`
+  font-size: 14px;
   color: ${({ theme }) => theme.primary.deep};
 `;
 
-const NextTimeWrapper = styled.div`
+const NextCycleWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 30px 0;
 `;
 
-const Text2 = styled.div`
-  font-size: 20px;
-  line-height: 27px;
-  color: ${({ theme }) => theme.gray.normal85};
+const ActiveCycle = styled.div`
+  font-size: 14px;
+  color: ${({ theme }) => theme.gray.normal5};
+  margin-top: 13px;
 `;
 
 const Deposit = memo<TProps>(({ intl, data }) => {
   const marketData = data;
   return (
     <div css={{ padding: "0 20px" }}>
-      <NextTimeWrapper>
-        <Mountain />
-
-        {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
-          <>
-            <Text1>
-              {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
-              <Countdown
-                date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
-                renderer={({ days, hours, minutes, seconds, completed }) => {
-                  return (
-                    <span>
-                      {!completed && (
-                        <>
-                          {days}D {hours}H {minutes}M {seconds}S
-                        </>
-                      )}
-                    </span>
-                  );
-                }}
-              />
-            </Text1>
-            <Text2>
-              {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
-              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
-            </Text2>
-          </>
-        ) : null}
-      </NextTimeWrapper>
+      {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
+        <NextCycleWrapper>
+          <Mountain />
+          <NextCycle>
+            {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
+            <Countdown
+              date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
+              renderer={({ days, hours, minutes, seconds, completed }) => {
+                return (
+                  <span>
+                    {!completed && (
+                      <>
+                        {days}D {hours}H {minutes}M {seconds}S
+                      </>
+                    )}
+                  </span>
+                );
+              }}
+            />
+          </NextCycle>
+          <ActiveCycle>
+            {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
+            {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+          </ActiveCycle>
+        </NextCycleWrapper>
+      ) : null}
       {marketData && <DepositItem data={marketData} />}
     </div>
   );

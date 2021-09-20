@@ -1,58 +1,77 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
 import { ArrowLeft } from "assets/images";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
 import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
 
-const InformationWrapper = styled.div`
+const Wrapper = styled.div`
   display: flex;
-  padding-top: 20px;
-  & > div {
+  padding-top: 37px;
+  /* & > div {
     padding: 0px 20px;
-  }
-  & span {
+  } */
+  /* & span {
     font-size: 14px;
     line-height: 19px;
     color: ${({ theme }) => theme.gray.normal7};
-  }
-  @media screen and (max-width: 768px) {
+  } */
+  /* @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: column;
     & > div {
       padding: 10px 0;
     }
-  }
+  } */
 `;
 const Arrow = styled(ArrowLeft)`
   color: ${({ theme }) => theme.gray.normal7};
   & :hover {
     color: ${({ theme }) => theme.primary.deep};
   }
-  margin-top: 20px;
+  margin-top: 4px;
   margin-right: 20px;
   cursor: pointer;
 `;
-const Text1 = styled.div`
+
+const InformationWrapper = styled.div`
+  display: grid;
+  gap: 40px;
+  grid-auto-flow: column;
+  @media screen and (max-width: 768px) {
+    grid-auto-flow: row;
+  }
+`;
+
+const Block = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 14px;
+  span:last-child {
+    color: ${({ theme }) => theme.gray.normal7};
+  }
+  :last-child {
+    span:last-child {
+      font-size: 16px;
+      color: ${({ theme }) => theme.primary.deep};
+    }
+  }
+`;
+
+const PortfolioName = styled.span`
   font-size: 24px;
-  line-height: 33px;
   height: 30px;
   color: ${({ theme }) => theme.gray.normal85};
 `;
-const Text2 = styled.div`
+
+const Assets = styled.span`
   font-size: 20px;
-  line-height: 27px;
   height: 30px;
   color: ${({ theme }) => theme.gray.normal85};
-`;
-const TvlDiv = styled.div`
-  font-size: 16px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.primary.deep};
 `;
 
 type TProps = WrappedComponentProps & {
@@ -61,27 +80,27 @@ type TProps = WrappedComponentProps & {
 
 const Information = memo<TProps>(({ data }) => {
   const { goBack } = useHistory();
-  // const location = useLocation<Market>();
-  // const data = location.state;
 
   return (
-    <InformationWrapper>
+    <Wrapper>
       <Arrow onClick={goBack} />
-      <div>
-        <Text1>{data?.portfolio}</Text1>
-        <span>Listing date: {data?.listingDate}</span>
-      </div>
-      <div>
-        <Text2>{data?.assets}</Text2>
-        <span>Lock-up period: {data?.duration ? getLockupPeriod(data?.duration) : "-"}</span>
-      </div>
-      <div>
-        <Text2></Text2>
-        <TvlDiv>
-          TVL: {formatDisplayTVL(data?.tvl)} {data?.assets}
-        </TvlDiv>
-      </div>
-    </InformationWrapper>
+      <InformationWrapper>
+        <Block>
+          <PortfolioName>{data?.portfolio}</PortfolioName>
+          <span>Listing date: {data?.listingDate}</span>
+        </Block>
+        <Block>
+          <Assets>{data?.assets}</Assets>
+          <span>Lock-up period: {data?.duration ? getLockupPeriod(data?.duration) : "-"}</span>
+        </Block>
+        <Block>
+          <div />
+          <span>
+            TVL: {formatDisplayTVL(data?.tvl)} {data?.assets}
+          </span>
+        </Block>
+      </InformationWrapper>
+    </Wrapper>
   );
 });
 

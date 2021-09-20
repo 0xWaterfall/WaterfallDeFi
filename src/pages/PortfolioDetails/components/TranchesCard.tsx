@@ -16,7 +16,8 @@ import {
   compareNum,
   getPercentage
 } from "utils/formatNumbers";
-import { CheckCircleTwoTone, CheckCircleOutlined } from "@ant-design/icons";
+import { CheckIcon } from "assets/images";
+import { FlexRow } from "styles";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -35,11 +36,13 @@ type ProgressBarProps = {
   percentage: string;
 };
 
-const Text1 = styled.div`
+const TrancheName = styled.div`
   font-size: 14px;
   line-height: 18px;
   color: ${({ theme }) => theme.gray.normal7};
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 const Text2 = styled.div`
   font-size: 16px;
@@ -68,7 +71,6 @@ const Dot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 100%;
-  margin-top: 5px;
   margin-right: 5px;
 `;
 const SoldOut = styled.div`
@@ -119,17 +121,6 @@ const ProgressBar = styled.div<ProgressBarProps>`
   }
 `;
 
-const CheckDiv = styled.div`
-  position: absolute;
-  right: 20px;
-  width: 20px;
-  height: 20px;
-  & svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
 const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
   const { tags, primary, gray } = useTheme();
   const Types = {
@@ -154,19 +145,14 @@ const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, asset
   return (
     <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
       {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
-      <CheckDiv>
-        {selected ? (
-          <CheckCircleTwoTone twoToneColor={primary.deep} />
-        ) : (
-          <CheckCircleOutlined style={{ color: gray.normal3 }} />
-        )}
-      </CheckDiv>
-
       <div>
-        <Text1>
-          <Dot color={Types[type].color} />
-          {Types[type].text}
-        </Text1>
+        <TrancheName>
+          <FlexRow>
+            <Dot color={Types[type].color} />
+            {Types[type].text}
+          </FlexRow>
+          <CheckIcon css={{ color: selected ? primary.deep : gray.normal3 }} />
+        </TrancheName>
         <Text2 color={Types[type].color}>
           APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches)}{" "}
           {formatAllocPoint(allocPoint, totalAllocPoint)}% WTF

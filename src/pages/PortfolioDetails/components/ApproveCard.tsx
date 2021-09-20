@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Form, Input, notification } from "antd";
+import { Form, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
@@ -31,6 +31,7 @@ import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
+import Input from "components/Input/Input";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -52,15 +53,11 @@ const Container = styled.div`
   background: ${({ theme }) => theme.white.normal};
   padding: 35px 81px;
 
-  & input {
-    color: ${({ theme }) => theme.primary.normal};
-    font-size: 24px;
-    line-height: 33px;
-  }
   @media screen and (max-width: 675px) {
     padding: 24px;
   }
 `;
+
 const Max = styled.div`
   color: ${({ theme }) => theme.primary.normal};
   font-weight: 600;
@@ -85,22 +82,18 @@ const ButtonDiv = styled.div`
     }
   }
 `;
-const BlockDiv = styled.div`
-  background-color: #ffffff7a;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  z-index: 10;
-`;
 const ValidateText = styled.div`
   font-size: 12px;
   line-height: 125%;
   letter-spacing: -0.015em;
   color: ${({ theme }) => theme.tags.redText};
+  margin-top: 4px;
+  min-height: 15px;
 `;
 const RedemptionFee = styled.div`
   color: ${({ theme }) => theme.gray.normal5};
   margin-top: 10px;
+  text-align: center;
   & > span {
     color: ${({ theme }) => theme.primary.deep};
   }
@@ -111,6 +104,7 @@ const ImportantNotes = styled.div`
   background-color: ${({ theme }) => theme.primary.lightBrown};
   padding: 20px;
   display: flex;
+  min-height: 140px;
 
   & > div:nth-of-type(1) {
     color: ${({ theme }) => theme.primary.deep};
@@ -152,10 +146,20 @@ const ApproveCard = memo<TProps>(
     const dispatch = useAppDispatch();
 
     const notes = [
-      "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
-      "When depositing mezzanine, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached.",
-      "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+      intl.formatMessage({
+        defaultMessage:
+          "When depositing senior, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached."
+      }),
+      intl.formatMessage({
+        defaultMessage:
+          "When depositing mezzanine, you will get a guaranteed fixed rate. However, your deposit will be locked in the portfolio until this maturity date is reached."
+      }),
+      intl.formatMessage({
+        defaultMessage:
+          "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+      })
     ];
+
     useEffect(() => {
       const checkApproved = async (account: string) => {
         const approved = await onCheckApprove();
@@ -197,7 +201,6 @@ const ApproveCard = memo<TProps>(
 
       setDepositLoading(true);
       const amount = balanceInput.toString();
-      console.log("amount", amount);
       try {
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
@@ -235,40 +238,37 @@ const ApproveCard = memo<TProps>(
       if (isNaN(input)) input = 0;
       setBalanceInput(input);
     };
-
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
         {/* {!enabled && <BlockDiv />} */}
         {/* {isSoldOut && <BlockDiv />} */}
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}:</div>
           <div>
             {formatNumberSeparator(myBalance)} {assets}
           </div>
         </RowDiv>
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
           <div>{formatNumberSeparator(remaining)}</div>
         </RowDiv>
         <Separator />
         <RowDiv>
           <div>{assets}</div>
         </RowDiv>
-        {approved && (
-          <div>
-            <div>
-              <Input
-                style={validateText ? { borderColor: tags.redText } : {}}
-                placeholder=""
-                value={balanceInput}
-                onChange={handleInputChange}
-                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "Max" })}</Max>}
-                disabled={!enabled || isSoldOut}
-              />
-            </div>
-            <ValidateText>{validateText}</ValidateText>
-          </div>
-        )}
+
+        <div>
+          <Input
+            style={validateText ? { borderColor: tags.redText } : {}}
+            placeholder=""
+            value={balanceInput}
+            onChange={handleInputChange}
+            suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
+            disabled={!enabled || isSoldOut}
+          />
+        </div>
+        <ValidateText>{validateText}</ValidateText>
+
         {selectTranche && (
           <ImportantNotes>
             <div>
@@ -280,10 +280,17 @@ const ApproveCard = memo<TProps>(
             </div>
           </ImportantNotes>
         )}
+
         {account ? (
           approved ? (
             <ButtonDiv>
-              <Button type="primary" css={{ height: 56 }} onClick={handleDeposit} loading={depositLoading}>
+              <Button
+                type="primary"
+                css={{ height: 56 }}
+                onClick={handleDeposit}
+                loading={depositLoading}
+                disabled={!enabled || isSoldOut}
+              >
                 {intl.formatMessage({ defaultMessage: "Deposit" })}
               </Button>
             </ButtonDiv>
@@ -307,15 +314,12 @@ const ApproveCard = memo<TProps>(
             </Button>
           </ButtonDiv>
         )}
-        <RedemptionFee>
-          Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
-          <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
-        </RedemptionFee>
-        {/* <ButtonDiv>
-        <Button type="primary" css={{ height: 56 }} onClick={handleDeposit100}>
-          {intl.formatMessage({ defaultMessage: "Deposit 100" })}
-        </Button>
-      </ButtonDiv> */}
+        {enabled && (
+          <RedemptionFee>
+            Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
+            <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
+          </RedemptionFee>
+        )}
       </Container>
     );
   }

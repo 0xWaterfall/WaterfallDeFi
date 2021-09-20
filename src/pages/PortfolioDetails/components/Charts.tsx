@@ -37,52 +37,54 @@ const Wrapper = styled.div`
   }
 `;
 
-const Block2 = styled.div`
+const RecordCard = styled.div`
   display: grid;
   gap: 20px;
   grid-auto-flow: row;
   position: relative;
-  & > div {
-    padding-top: 12px;
-    padding-left: 36px;
-    padding-right: 20px;
-    background: #ffffff;
+  section {
+    padding: 12px 20px 12px 32px;
+    min-height: 140px;
+    background: ${({ theme }) => theme.white.normal};
     border-radius: 12px;
     color: ${({ theme }) => theme.gray.normal7};
-    filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
-  }
-  & > div:after {
-    content: "";
-    position: absolute;
-    background-color: ${({ theme }) => theme.primary.deep};
-    top: 12px;
-    left: 0;
-    height: calc(100% - 24px);
-    width: 5px;
+    filter: ${({ theme }) => theme.filter.card};
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 12px;
+    :after {
+      content: "";
+      position: absolute;
+      background-color: ${({ theme }) => theme.primary.deep};
+      top: 12px;
+      left: 0;
+      height: calc(100% - 24px);
+      width: 5px;
+    }
+    button {
+      width: fit-content;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+    div {
+      :nth-of-type(1) {
+        color: ${({ theme }) => theme.gray.normal5};
+      }
+      :nth-of-type(2) {
+        color: ${({ theme }) => theme.primary.deep};
+        font-size: 20px;
+      }
+    }
   }
 `;
 const Block = styled.div`
-  // padding-left: 130px;
   flex: 1;
   display: flex;
   color: ${({ theme }) => theme.gray.normal7};
-  filter: drop-shadow(0px 10px 20px rgba(2, 103, 255, 0.05));
-  background: #ffffff;
+  filter: ${({ theme }) => theme.filter.card};
+  background: ${({ theme }) => theme.white.normal};
   border-radius: 12px;
-  /* @media screen and (max-width: 1024px) {
-    background-color: ${({ theme }) => theme.primary.lightBrown};
-    padding-left: 0;
-    margin: auto;
-    margin-bottom: 10px;
-    width: 100%;
-    padding: 20px;
-    border-radius: 12px;
-
-    display: flex;
-    justfify-content: space-between;
-    & > * {
-    }
-  } */
 `;
 
 type TProps = WrappedComponentProps & {
@@ -90,7 +92,6 @@ type TProps = WrappedComponentProps & {
 };
 
 const Charts = memo<TProps>(({ intl, data }) => {
-  const { gray, primary, fonts } = useTheme();
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
@@ -136,47 +137,40 @@ const Charts = memo<TProps>(({ intl, data }) => {
   };
   return (
     <Wrapper>
-      <Block2>
-        <div>
+      <RecordCard>
+        <section>
+          <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
           <div>
-            <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
-            <div css={{ padding: "16px 0", color: primary.deep, fontSize: 24 }}>
-              {balance ? formatNumberDisplay(balance.toString()) : "-"} {data.assets}
-            </div>
+            {balance ? formatNumberDisplay(balance.toString()) : "--"} {data.assets}
           </div>
-          <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
+          <div>
             <Button
               type="default"
-              onClick={() => withdrawAll()}
+              onClick={withdrawAll}
               loading={withdrawAllLoading}
               disabled={!account || !+balance}
+              css={{ marginRight: 17 }}
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
             </Button>
-            <Button type="default" onClick={() => rollDepositPopup()} disabled={!account}>
+            <Button type="default" onClick={rollDepositPopup} disabled={!account}>
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </Button>
           </div>
-        </div>
-        <div>
-          <div>
-            <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
-            <div css={{ padding: "16px 0", color: primary.deep, fontSize: 24 }}>
-              {totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "-"} WTF
-            </div>
-          </div>
-          <div css={{ padding: "16px 0", borderTop: `1px solid ${primary.deep2}` }}>
-            <Button
-              type="default"
-              onClick={() => claimReward()}
-              loading={claimRewardLoading}
-              disabled={!account || !+totalPendingReward}
-            >
-              {intl.formatMessage({ defaultMessage: "Claim" })}
-            </Button>
-          </div>
-        </div>
-      </Block2>
+        </section>
+        <section>
+          <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
+          <div>{totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "--"} WTF</div>
+          <Button
+            type="default"
+            onClick={() => claimReward()}
+            loading={claimRewardLoading}
+            disabled={!account || !+totalPendingReward}
+          >
+            {intl.formatMessage({ defaultMessage: "Claim" })}
+          </Button>
+        </section>
+      </RecordCard>
       <Block>
         <PortfolioChart />
       </Block>

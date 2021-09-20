@@ -5,9 +5,8 @@ import styled from "@emotion/styled";
 import { InitialRenderTransition } from "components/Transitions";
 import React, { CSSProperties, memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useLocation } from "react-router-dom";
 import { TransitionStatus } from "react-transition-group";
-import { Market, Tranche } from "types";
+import { Tranche } from "types";
 import { getPercentage } from "utils/formatNumbers";
 
 const Wrapper = styled.div`

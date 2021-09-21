@@ -5,6 +5,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { BUSD, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
+import Tooltip from "components/Tooltip/Tooltip";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -139,6 +140,23 @@ const Fee = styled.div`
 type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
+  const msg = (
+    <React.Fragment>
+      <p>
+        {intl.formatMessage({
+          defaultMessage:
+            "After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x 0.033%"
+        })}
+      </p>
+      <br />
+      <p>
+        {intl.formatMessage({
+          defaultMessage:
+            "You can also choose to roll-deposit to the next cycle. You can change the tranche and the number in next cycle, it's completely up to you."
+        })}
+      </p>
+    </React.Fragment>
+  );
   return (
     <Wrapper>
       <IconWrapper>
@@ -161,7 +179,9 @@ const TrancheCard = memo<TProps>(({ intl }) => {
           </APRWrapper>
           <Line />
           <Fee>
-            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <Tooltip overlay={msg}>
+              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            </Tooltip>
             <span>0.033%</span>
           </Fee>
         </Section>
@@ -183,7 +203,9 @@ const TrancheCard = memo<TProps>(({ intl }) => {
           </APRWrapper>
           <Line />
           <Fee>
-            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <Tooltip overlay={msg}>
+              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            </Tooltip>
             <span>0.033%</span>
           </Fee>
         </Section>
@@ -205,7 +227,9 @@ const TrancheCard = memo<TProps>(({ intl }) => {
           </APRWrapper>
           <Line />
           <Fee>
-            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <Tooltip overlay={msg}>
+              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            </Tooltip>
             <span>0.033%</span>
           </Fee>
         </Section>

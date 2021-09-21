@@ -144,7 +144,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
             >
               <div css={{ width: 8, height: 8, borderRadius: 2, backgroundColor: COLORS[i] }} />
               <div css={{ marginLeft: 4 }}>
-                {p.name} -{p.value}%
+                {p.name} {p.value}%
               </div>
             </div>
           ))}

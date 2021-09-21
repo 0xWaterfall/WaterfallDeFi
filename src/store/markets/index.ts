@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market, Pool, PORTFOLIO_STATUS, Tranche } from "types";
 import Web3 from "web3";
 import BigNumber from "bignumber.js";
-import { BIG_ZERO } from "utils/bigNumber";
+import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import multicall from "utils/multicall";
@@ -59,7 +59,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         _tranches.map((_t, _i) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex) : BIG_ZERO;
           const _apy = _t ? new BigNumber(_t.apy?._hex) : BIG_ZERO;
-          const _fee = _t ? new BigNumber(_t.fee?._hex) : BIG_ZERO;
+          const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex) : BIG_ZERO;
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
@@ -67,13 +67,12 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           const __t = {
             principal: _t.principal.toString(),
             apy: _t.apy.toString(),
-            fee: _t.fee.toString(),
+            fee: _fee.toString(),
             target: _t.target.toString()
           };
           tranches.push(__t);
         });
-
-        const status = active ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
+        const status = active[0] ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
 
         marketData = {
           ...marketData,
@@ -102,26 +101,27 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             address: _masterchefAddress,
             name: "poolInfo",
             params: [2]
+          },
+          {
+            address: _masterchefAddress,
+            name: "rewardPerBlock"
           }
         ];
-        const [p0, p1, p2] = await multicall(marketData.masterChefAbi, calls2);
-
+        const [p0, p1, p2, _rewardPerBlock] = await multicall(marketData.masterChefAbi, calls2);
+        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
         const pools: string[] = [];
         let totalAllocPoints = BIG_ZERO;
         const _pools = [p0, p1, p2];
-        console.log(_pools);
         _pools.map((_p, _i) => {
           const _allocPoint = _p ? new BigNumber(_p?.allocPoint._hex) : BIG_ZERO;
           totalAllocPoints = totalAllocPoints.plus(_allocPoint);
           pools.push(_allocPoint.toString());
         });
         // const totalAllocPoints = getTotalAllocPoints(pools);
-        marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString() };
+        marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
         return marketData;
       })
     );
-    console.log("TESTTTTT", Date.now() - _tt1);
-    console.log("TESTTTTT", JSON.parse(JSON.stringify(markets)));
     return JSON.parse(JSON.stringify(markets));
   } catch (e) {
     console.error(e);
@@ -208,7 +208,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 //         return marketData;
 //       })
 //     );
-//   console.log("TESTTTTT", JSON.parse(JSON.stringify(markets)));
 //     return JSON.parse(JSON.stringify(markets));
 //   } catch (e) {
 //     console.error(e);

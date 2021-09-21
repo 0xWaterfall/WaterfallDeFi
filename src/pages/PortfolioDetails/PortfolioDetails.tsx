@@ -7,8 +7,6 @@ import Charts from "./components/Charts";
 import Information from "./components/Information";
 import styled from "@emotion/styled";
 import { useSelectedMarket } from "hooks/useSelectors";
-import { USER_INVESTS_GQL } from "config";
-import { useQuery } from "@apollo/client";
 import useScrollTop from "hooks/useScrollTop";
 
 const PortfolioDetailsWrapper = styled.div`
@@ -23,13 +21,6 @@ type TProps = WrappedComponentProps;
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
   const market = useSelectedMarket();
-  // const location = useLocation<Market>();
-  // const { push } = useHistory();
-  // useEffect(() => {
-  //   if (!data) {
-  //     push({ pathname: "/portfolio/" });
-  //   }
-  // }, []);
 
   return (
     <PortfolioDetailsWrapper>

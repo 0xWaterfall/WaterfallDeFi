@@ -6,6 +6,7 @@ import { load, save } from "redux-localstorage-simple";
 import selectedKeys from "./selectedKeys";
 import position from "./position";
 import showStatus from "./showStatus";
+import WTFInfo from "./WTFInfo";
 
 const PERSISTED_KEYS: string[] = ["i18n.locale", "selectedKeys"];
 
@@ -17,14 +18,15 @@ export const store = configureStore({
     markets,
     selectedKeys,
     position,
-    showStatus
+    showStatus,
+    WTFInfo
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true }).concat(
       save({ states: PERSISTED_KEYS, debounce: 1000, namespace: "waterfall", namespaceSeparator: "." })
     )
 });
-store.dispatch(fetchI18nMiddleware(store.getState().i18n.locale));
+// store.dispatch(fetchI18nMiddleware(store.getState().i18n.locale));
 
 /**
  * @see https://redux-toolkit.js.org/usage/usage-with-typescript#getting-the-dispatch-type

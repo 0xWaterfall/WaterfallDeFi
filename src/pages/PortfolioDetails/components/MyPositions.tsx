@@ -249,7 +249,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
                         <div>
                           {getWTFApr(
                             formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
-                            weekDistribution.toString(),
                             market?.tranches[i],
                             market.duration,
                             market.rewardPerBlock
@@ -271,7 +270,9 @@ const MyPositions = memo<TProps>(({ intl }) => {
                               : getJuniorAPY(market?.tranches),
                             formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
                             weekDistribution.toString(),
-                            market?.tranches[i]
+                            market?.tranches[i],
+                            market.duration,
+                            market.rewardPerBlock
                           )}
                         </div>
                       </div>

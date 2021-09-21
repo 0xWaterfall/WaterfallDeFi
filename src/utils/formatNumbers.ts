@@ -204,14 +204,12 @@ export const compareNum = (num1: string | number | undefined, num2: string | und
 
 export const getWTFApr = (
   wtfAPY: string | undefined,
-  timeDistribution: string | undefined,
   tranche: Tranche | undefined,
   duration: string | undefined,
   rewardPerBlock: string | undefined
 ) => {
   if (wtfAPY === undefined) return;
   if (tranche === undefined) return;
-  if (timeDistribution === undefined) return;
   if (duration === undefined) return;
   if (rewardPerBlock === undefined) return;
   wtfAPY = wtfAPY.replace("+ ", "");
@@ -232,24 +230,24 @@ export const getNetApr = (
   trancheAPY: string | undefined,
   wtfAPY: string | undefined,
   timeDistribution: string | undefined,
-  tranche: Tranche | undefined
+  tranche: Tranche | undefined,
+  duration: string | undefined,
+  rewardPerBlock: string | undefined
 ) => {
   if (trancheAPY === undefined) return;
   if (wtfAPY === undefined) return;
   if (timeDistribution === undefined) return;
   if (tranche === undefined) return;
   if (timeDistribution === "0") return;
+  if (duration === undefined) return;
+  if (rewardPerBlock === undefined) return;
 
   trancheAPY = trancheAPY.replace("%", "");
+  const _wtfAPY = getWTFApr(wtfAPY, tranche, duration, rewardPerBlock);
   wtfAPY = wtfAPY.replace("+ ", "");
   const wtfPrice = 1;
   const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
   const fee = new BigNumber(tranche.fee).dividedBy(1000).toString();
-  const wtfReward = new BigNumber(timeDistribution)
-    .times(new BigNumber(wtfAPY))
-    .times(wtfPrice)
-    .dividedBy(target)
-    .toFormat(0)
-    .toString();
-  return Number(trancheAPY) + Number(wtfReward) + "%";
+
+  return Number(trancheAPY) + Number(_wtfAPY) + "%";
 };

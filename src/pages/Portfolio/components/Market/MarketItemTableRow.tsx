@@ -13,7 +13,8 @@ import {
   formatTVL,
   getJuniorAPY,
   getLockupPeriod,
-  getPortfolioTvl
+  getPortfolioTvl,
+  getWTFApr
 } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
@@ -102,7 +103,6 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
-  console.log(data);
   return (
     <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
       <TableColumn>{marketData.portfolio}</TableColumn>
@@ -124,7 +124,13 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                   <div>
                     <WTFToken />
                   </div>
-                  {formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints)}%
+                  {getWTFApr(
+                    formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
+                    marketData?.tranches[_i],
+                    marketData.duration,
+                    marketData.rewardPerBlock
+                  )}
+                  %
                 </span>
               </APYStyled2>
               /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */

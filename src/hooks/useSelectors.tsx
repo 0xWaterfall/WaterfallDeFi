@@ -40,3 +40,13 @@ export const useConnectWalletModalShow = () => {
   const isConnectWalletShow = useAppSelector((state) => state.showStatus.connectWalletModal);
   return isConnectWalletShow;
 };
+
+export const useWTFPrice = () => {
+  const price = useAppSelector((state) => state.WTFInfo.price);
+  return price;
+};
+
+export const useMarketCap = () => {
+  const marketCap = useAppSelector((state) => state.WTFInfo.marketCap);
+  return marketCap;
+};

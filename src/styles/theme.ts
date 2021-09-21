@@ -2,6 +2,9 @@ const theme = {
   fonts: {
     IBMPlexSans: "IBM Plex Sans"
   },
+  background: {
+    apr: "#F8FDFF"
+  },
   gray: {
     light: "#FAFAFA",
     normal: "#333333",

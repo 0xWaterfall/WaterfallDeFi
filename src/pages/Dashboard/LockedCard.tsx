@@ -3,7 +3,6 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { DashboardImage } from "assets/images";
 
 const Wrapper = styled.div`
   height: 143px;

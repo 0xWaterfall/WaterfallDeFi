@@ -30,6 +30,12 @@ const InfoWrapper = styled.div`
   grid-auto-flow: column;
   grid-template-columns: 1fr 1fr;
   position: relative;
+  @media screen and (max-width: 768px) {
+    grid-auto-flow: row;
+    gap: 80px;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 1fr;
+  }
 `;
 
 type TProps = WrappedComponentProps;

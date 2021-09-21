@@ -9,7 +9,7 @@ import Button from "components/Button/Button";
 const Wrapper = styled.div`
   border-radius: 24px;
   background: ${({ theme }) => theme.white.normal};
-  padding: 63px 40px;
+  padding: 77px 40px 46px;
   display: grid;
   gap: 24px;
   grid-auto-flow: row;
@@ -17,44 +17,59 @@ const Wrapper = styled.div`
   filter: drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04));
 `;
 
-const Block = styled.div`
-  height: 77px;
-  padding: 0 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 20px;
-  font-weight: 500px;
+const Block = styled.section`
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 40% 60%;
+  font-size: 14px;
   background: ${({ theme }) => theme.primary.lightBrown};
   border-radius: 12px;
+  border: solid 1px transparent;
+  background-image: linear-gradient(132.89deg, #fff, #fff), linear-gradient(93.83deg, #e8f7ff 26.54%, #bffeff 70.96%);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0px 4px 8px 0px #00000005;
+  overflow: hidden;
   div {
     display: flex;
     align-items: center;
   }
-
-  :nth-of-type(1) p {
-    color: ${({ theme }) => theme.tags.yellowText};
+  h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 18px;
   }
-  :nth-of-type(2) p {
-    color: ${({ theme }) => theme.green.normal};
+  p {
+    font-weight: 600;
+    font-size: 16px;
   }
-  :nth-of-type(3) p {
-    color: ${({ theme }) => theme.primary.light};
+  &:nth-of-type(1) {
+    h1,
+    p {
+      color: ${({ theme }) => theme.tags.yellowText};
+    }
+  }
+  &:nth-of-type(2) {
+    h1,
+    p {
+      color: ${({ theme }) => theme.green.normal};
+    }
+  }
+  :nth-of-type(3) {
+    h1,
+    p {
+      color: ${({ theme }) => theme.primary.light};
+    }
   }
 `;
 
-const Section = styled.div`
-  width: 60%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: ${({ theme }) => theme.primary.deep};
-`;
-
-const WTF = styled(WTFToken)`
-  width: 26px;
-  height: 26px;
-  margin-right: 5px;
+const Section = styled.section`
+  height: 100%;
+  color: ${({ theme }) => theme.gray.normal7};
+  background: ${({ theme }) => theme.background.apr};
+  padding: 19px 29px;
 `;
 
 const ButtonWrapper = styled(Button)`
@@ -92,6 +107,35 @@ const IconWrapper = styled.div`
   }
 `;
 
+const APRWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  line-height: 18.2px;
+`;
+
+const Line = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${({ theme }) => theme.primary.deep};
+  margin: 10px 0 14px;
+  opacity: 0.1;
+`;
+
+const Fee = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 15.6px;
+  font-size: 12px;
+  u {
+    text-decoration: none;
+    border-bottom: 1px dashed ${({ theme }) => theme.gray.normal3};
+  }
+`;
+
 type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
@@ -101,30 +145,69 @@ const TrancheCard = memo<TProps>(({ intl }) => {
         <BUSD />
       </IconWrapper>
       <Block>
-        <span>{intl.formatMessage({ defaultMessage: "Senior" })}</span>
+        <h1>{intl.formatMessage({ defaultMessage: "Senior" })}</h1>
         <Section>
-          <p>APR 3%</p>
-          <div>
-            <WTF /> +25%
-          </div>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+            <p>120%</p>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
+            <span>15%</span>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+            <span>105%</span>
+          </APRWrapper>
+          <Line />
+          <Fee>
+            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <span>0.033%</span>
+          </Fee>
         </Section>
       </Block>
       <Block>
-        <span>{intl.formatMessage({ defaultMessage: "Mezzanine" })}</span>
+        <h1>{intl.formatMessage({ defaultMessage: "Mezzanine" })}</h1>
         <Section>
-          <p>APR 7%</p>
-          <div>
-            <WTF /> +35%
-          </div>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+            <p>120%</p>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
+            <span>15%</span>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+            <span>105%</span>
+          </APRWrapper>
+          <Line />
+          <Fee>
+            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <span>0.033%</span>
+          </Fee>
         </Section>
       </Block>
       <Block>
-        <span>{intl.formatMessage({ defaultMessage: "Junior" })}</span>
+        <h1>{intl.formatMessage({ defaultMessage: "Junior" })}</h1>
         <Section>
-          <p>APR 17%</p>
-          <div>
-            <WTF /> +40%
-          </div>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+            <p>120%</p>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
+            <span>15%</span>
+          </APRWrapper>
+          <APRWrapper>
+            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+            <span>105%</span>
+          </APRWrapper>
+          <Line />
+          <Fee>
+            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+            <span>0.033%</span>
+          </Fee>
         </Section>
       </Block>
       <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Start" })}</ButtonWrapper>

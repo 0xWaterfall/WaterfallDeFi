@@ -102,6 +102,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
+  console.log(data);
   return (
     <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
       <TableColumn>{marketData.portfolio}</TableColumn>

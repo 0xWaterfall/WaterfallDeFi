@@ -52,6 +52,7 @@ export interface Market {
   strategyAbi: any;
   strategyAddress: string;
   strategyContract?: Contract;
+  rewardPerBlock?: string;
 }
 
 export type TrancheCycle = {
@@ -63,4 +64,17 @@ export type TrancheCycle = {
   rate: string;
   startAt: number;
   state: number;
+};
+
+export type UserInvest = {
+  capital: string;
+  cycle: number;
+  harvestAt: number;
+  id: string;
+  investAt: number;
+  owner: string;
+  principal: string;
+  tranche: number;
+  interest: string;
+  earningsAPY: string;
 };

@@ -10,7 +10,7 @@ import MyPositionItem from "./MyPositionItem";
 import { useSize } from "ahooks";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
-import { Market, PORTFOLIO_STATUS, TrancheCycle } from "types";
+import { Market, PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -21,7 +21,8 @@ import {
   formatTimestamp,
   getInterest,
   getJuniorAPY,
-  getNetApr
+  getNetApr,
+  getWTFApr
 } from "utils/formatNumbers";
 import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
@@ -30,7 +31,7 @@ import { getPosition } from "store/position";
 import { usePendingWTFReward, usePosition, useSelectedMarket } from "hooks/useSelectors";
 import useRedeemDirect from "../hooks/useRedeemDirect";
 import BigNumber from "bignumber.js";
-import { useHistoryQuery } from "../hooks/useSubgraph";
+import { useHistoryQuery, useHistoryQuery2 } from "../hooks/useSubgraph";
 import { IType } from "pages/Portfolio/components/MyPortfolio/type";
 import Select, { Option } from "components/Select/Select";
 import NoData from "components/NoData/NoData";
@@ -53,7 +54,11 @@ const FilterDiv = styled.div`
   }
 `;
 const APRPopup = styled.div`
-  // display: flex;
+  width: 100%;
+  & > div {
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 const Text2 = styled.div`
   font-size: 16px;
@@ -77,7 +82,9 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const { onRedeemDirect } = useRedeemDirect();
   const { tranchesPendingReward } = usePendingWTFReward();
   const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
-  const { loading, error, data } = useHistoryQuery(account);
+  // const { loading, error, data } = useHistoryQuery(account);
+  const { userInvests, trancheCycles } = useHistoryQuery2(account);
+
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
@@ -93,13 +100,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
     setActivedTab(value);
     setSelectedStatus(status);
   };
-  const trancheCycles: { [key: string]: TrancheCycle } = {};
-  if (data && data.trancheCycles) {
-    for (let i = 0; i < data.trancheCycles.length; i++) {
-      const { id } = data.trancheCycles[i];
-      trancheCycles[id] = data.trancheCycles[i];
-    }
-  }
 
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
@@ -130,17 +130,17 @@ const MyPositions = memo<TProps>(({ intl }) => {
       return true;
     });
   }, [position, selectedTranche, selectedStatus, tranchesState]);
-
   const payload = useMemo(() => {
-    return data?.userInvests?.filter((_userInvest: any) => {
+    return userInvests?.filter((_userInvest: any) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (trancheCycles[trancheCycleId].state === 0) return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
       if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
+      if (_userInvest.cycle == market?.cycle) return false;
       return true;
     });
-  }, [data, selectedTranche, selectedStatus, trancheCycles]);
+  }, [selectedTranche, selectedStatus, trancheCycles]);
 
   const isNoData = useMemo(() => !(positionPayload?.length + payload?.length), [positionPayload, payload]);
 
@@ -235,31 +235,47 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       : "--"}
                   </TableColumn>
                   <TableColumn minWidth={240}>
-                    <Tooltip
-                      overlay={
-                        <React.Fragment>
-                          <APRPopup>
-                            <div>
-                              {tranchesDisplayText[i]}:
-                              {i !== position.length - 1
-                                ? formatAPY(market?.tranches[i].apy)
-                                : getJuniorAPY(market?.tranches)}
-                            </div>
-                            <div>
-                              WTF:
-                              {formatAllocPoint(market?.pools[i], market?.totalAllocPoints).replace("+ ", "")}%
-                            </div>
-                          </APRPopup>
-                        </React.Fragment>
-                      }
-                    >
-                      {getNetApr(
-                        i !== position.length - 1 ? formatAPY(market?.tranches[i].apy) : getJuniorAPY(market?.tranches),
-                        formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
-                        weekDistribution.toString(),
-                        market?.tranches[i]
-                      )}
-                    </Tooltip>
+                    <APRPopup>
+                      <div>
+                        <div>{tranchesDisplayText[i]}:</div>
+                        <div>
+                          {i !== position.length - 1
+                            ? formatAPY(market?.tranches[i].apy)
+                            : getJuniorAPY(market?.tranches)}
+                        </div>
+                      </div>
+                      <div>
+                        <div>WTF:</div>
+                        <div>
+                          {getWTFApr(
+                            formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
+                            weekDistribution.toString(),
+                            market?.tranches[i],
+                            market.duration,
+                            market.rewardPerBlock
+                          )}
+                          %
+                        </div>
+                        {/* {formatAllocPoint(market?.pools[i], market?.totalAllocPoints).replace("+ ", "")} */}
+                      </div>
+                      <div>
+                        <div>Fee:</div>
+                        <div>- {market?.tranches[i].fee}%</div>
+                      </div>
+                      <div>
+                        <div>{intl.formatMessage({ defaultMessage: "Net Apr" })}:</div>
+                        <div>
+                          {getNetApr(
+                            i !== position.length - 1
+                              ? formatAPY(market?.tranches[i].apy)
+                              : getJuniorAPY(market?.tranches),
+                            formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
+                            weekDistribution.toString(),
+                            market?.tranches[i]
+                          )}
+                        </div>
+                      </div>
+                    </APRPopup>
                   </TableColumn>
                   <TableColumn minWidth={200}>
                     {formatNumberDisplay(p?.[1]?.hex)} {market?.assets}
@@ -446,8 +462,9 @@ const MyPositions = memo<TProps>(({ intl }) => {
               </div>
             );
           })}
-          {payload?.map((_userInvest: any, _idx: number) => {
+          {payload?.map((_userInvest: UserInvest, _idx: number) => {
             const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+
             // if (_userInvest.principal == "0") return;
             // if (trancheCycles[trancheCycleId].state === 0) return;
             // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
@@ -480,20 +497,34 @@ const MyPositions = memo<TProps>(({ intl }) => {
                       )}`}
                   </TableColumn>
                   <TableColumn minWidth={240} style={{ whiteSpace: "break-spaces" }}>
-                    {tranchesName[_userInvest.tranche]}:{" "}
-                    {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
-                      ? new BigNumber(_userInvest.capital)
-                          .minus(new BigNumber(_userInvest.principal))
-                          .dividedBy(new BigNumber(_userInvest.principal))
-                          // .times(new BigNumber((365 / 7) * 10000))
-                          .times(new BigNumber(365 * 86400 * 100))
-                          .dividedBy(
-                            new BigNumber(trancheCycles[trancheCycleId].endAt - trancheCycles[trancheCycleId].startAt)
-                          )
-                          .toFormat(0)
-                          .toString()
-                      : "-"}
-                    %
+                    <APRPopup>
+                      <div>
+                        <div>{tranchesName[_userInvest.tranche]}:</div>
+                        <div>
+                          {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
+                            ? _userInvest.earningsAPY
+                            : "-"}
+                          %
+                        </div>
+                      </div>
+                      <div>
+                        <div>WTF:</div>
+                        <div>- %</div>
+                      </div>
+                      {/* <div>
+                        <div>{intl.formatMessage({ defaultMessage: "Net Apr" })}:</div>
+                        <div>
+                          {getNetApr(
+                            i !== position.length - 1
+                              ? formatAPY(market?.tranches[i].apy)
+                              : getJuniorAPY(market?.tranches),
+                            formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
+                            weekDistribution.toString(),
+                            market?.tranches[i]
+                          )}
+                        </div>
+                      </div> */}
+                    </APRPopup>
                   </TableColumn>
                   <TableColumn minWidth={200}>
                     {formatNumberDisplay(_userInvest.principal)} {market?.assets}
@@ -505,9 +536,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                   </TableColumn>
                   <TableColumn>
                     {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0
-                      ? formatNumberDisplay(
-                          new BigNumber(_userInvest.capital).minus(new BigNumber(_userInvest.principal)).toString()
-                        )
+                      ? _userInvest.interest
                       : "-"}{" "}
                     {market?.assets}
                   </TableColumn>
@@ -693,8 +722,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
               );
             })}
           {market &&
-            data &&
-            data.userInvests.map((_userInvest: any, _idx: number) => {
+            userInvests.map((_userInvest: any, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
               if (_userInvest.principal == "0") return;
               if (trancheCycles[trancheCycleId].state === 0) return;

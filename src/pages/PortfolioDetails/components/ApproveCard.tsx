@@ -13,6 +13,7 @@ import {
   formatBalance,
   formatNumberDisplay,
   formatNumberSeparator,
+  formatRedemptionFee,
   getRemaining
 } from "utils/formatNumbers";
 import { useEffect } from "react";
@@ -206,11 +207,11 @@ const ApproveCard = memo<TProps>(
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
           : await onInvest(amount, selectTrancheIdx.toString());
         if (success) {
-          setBalanceInput(0);
           successNotification("Deposit Success", "");
         } else {
           successNotification("Deposit Fail", "");
         }
+        setBalanceInput(0);
       } catch (e) {
         console.error(e);
       } finally {
@@ -316,8 +317,8 @@ const ApproveCard = memo<TProps>(
         )}
         {enabled && (
           <RedemptionFee>
-            Redemption fee: ( Principal + all interest of the current cycle ) x{" "}
-            <span>{selectTranche && formatAPY(selectTranche.fee)}</span>
+            Withdrawal fee: ( Principal + all interest of the current cycle ) x{" "}
+            <span>{selectTranche && selectTranche.fee + "%"}</span>
           </RedemptionFee>
         )}
       </Container>

@@ -153,19 +153,19 @@ export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
 
-  useEffect(() => {
+  const fetchBalance = useCallback(async () => {
     if (!account) return;
-    const fetchBalance = async () => {
-      const contract = getContract(ERC20Abi, address);
-      const tokenBalance = await contract.balanceOf(account);
-      const value = formatBalance(tokenBalance.toString());
-      setBalance(value);
-    };
+    const contract = getContract(ERC20Abi, address);
+    const tokenBalance = await contract.balanceOf(account);
+    const value = formatBalance(tokenBalance.toString());
+    setBalance(value);
+  }, [account]);
 
+  useEffect(() => {
     fetchBalance();
-  }, [address, account]);
+  }, [fetchBalance]);
 
-  return balance;
+  return { balance, fetchBalance };
 };
 export const useWTF = () => {
   const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);

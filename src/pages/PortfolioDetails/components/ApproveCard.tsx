@@ -33,6 +33,7 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
+import { useBalance } from "hooks";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -145,7 +146,7 @@ const ApproveCard = memo<TProps>(
     const { onInvestDirect } = useInvestDirect();
     const { onInvest } = useInvest();
     const dispatch = useAppDispatch();
-
+    const { balance, fetchBalance } = useBalance(data.depositAssetAddress);
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -184,16 +185,16 @@ const ApproveCard = memo<TProps>(
       }
     };
     const validateText = useMemo(() => {
-      const _myBalance = myBalance.replace(/\,/g, "");
+      const _balance = balance.replace(/\,/g, "");
       const _remaining = remaining.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      if (compareNum(_balanceInput, _myBalance, true)) {
+      if (compareNum(_balanceInput, _balance, true)) {
         return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
       }
       if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
       }
-    }, [myBalance, remaining, balanceInput]);
+    }, [balance, remaining, balanceInput]);
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
@@ -212,6 +213,7 @@ const ApproveCard = memo<TProps>(
           successNotification("Deposit Fail", "");
         }
         setBalanceInput(0);
+        fetchBalance();
       } catch (e) {
         console.error(e);
       } finally {
@@ -219,15 +221,15 @@ const ApproveCard = memo<TProps>(
       }
     };
     const handleMaxInput = () => {
-      const _myBalance = myBalance.replace(/\,/g, "");
+      const _balance = balance.replace(/\,/g, "");
       const _remaining = remaining.replace(/\,/g, "");
       const _balanceInput = balanceInput;
       let input = 0;
-      if (compareNum(_remaining, _myBalance)) {
-        // if (_myBalance <= _remaining) {
-        input = parseInt(_myBalance);
-      } else if (compareNum(_myBalance, _remaining, true)) {
-        // } else if (_myBalance > _remaining) {
+      if (compareNum(_remaining, _balance)) {
+        // if (_balance <= _remaining) {
+        input = parseInt(_balance);
+      } else if (compareNum(_balance, _remaining, true)) {
+        // } else if (_balance > _remaining) {
         input = parseInt(_remaining);
       }
       if (input) setBalanceInput(input);
@@ -246,7 +248,7 @@ const ApproveCard = memo<TProps>(
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}:</div>
           <div>
-            {formatNumberSeparator(myBalance)} {assets}
+            {formatNumberSeparator(balance)} {assets}
           </div>
         </RowDiv>
         <RowDiv>

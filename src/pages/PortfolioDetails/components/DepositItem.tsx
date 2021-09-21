@@ -35,9 +35,8 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
   const [marketData, setMarketData] = useState(data);
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
-  const myBalance = useBalance(data.depositAssetAddress);
+  const { balance } = useBalance(data.depositAssetAddress);
   // const myBalance = "0";
-
   return (
     <div
       css={{
@@ -96,7 +95,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
         }
         enabled={selectTranche !== undefined}
         selectTrancheIdx={selectTrancheIdx}
-        myBalance={!isRe ? myBalance : redepositBalance || ""}
+        myBalance={!isRe ? balance : redepositBalance || ""}
         data={marketData}
         selectTranche={selectTranche}
         isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}

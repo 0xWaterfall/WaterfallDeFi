@@ -23,5 +23,12 @@ export const getPrice = async () => {
   const pancake = await axios.get(
     "https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
   );
-  return new BigNumber(pancake.data.data.price).toFixed(2);
+  return new BigNumber(pancake?.data?.data?.price).toFixed(2);
+};
+
+export const getMarketCap = async () => {
+  const coingecko = await axios.get(
+    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&ids=binancecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+  );
+  return new BigNumber(coingecko?.data?.[0]?.market_cap).toFixed(2);
 };

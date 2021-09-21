@@ -5,6 +5,8 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { Coingecko, DashboardImage, MetaMask } from "assets/images";
 import { useSize } from "ahooks";
+import { useMarketCap, useWTFPrice } from "hooks/useSelectors";
+import numeral from "numeral";
 
 type TProps = WrappedComponentProps;
 
@@ -87,6 +89,9 @@ const IconGroup = styled.div`
 `;
 
 const DashboardCard = memo<TProps>(({ intl }) => {
+  const price = useWTFPrice();
+  const marketPrice = useMarketCap();
+
   return (
     <Wrapper>
       <DashboardImageWrapper />
@@ -95,11 +100,11 @@ const DashboardCard = memo<TProps>(({ intl }) => {
       <Content>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "WTF Price" })}</Title>
-          <Value>$ 210</Value>
+          <Value>$ {numeral(price).format("0,0.00")}</Value>
         </Block>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "Market Cap" })}</Title>
-          <Value>$ 100,000,000</Value>
+          <Value>$ {numeral(marketPrice).format("0,0.00")}</Value>
         </Block>
         <Block>
           <Title />

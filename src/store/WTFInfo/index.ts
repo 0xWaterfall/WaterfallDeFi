@@ -1,4 +1,4 @@
-import { getPrice } from "./../../services/http";
+import { getMarketCap, getPrice } from "./../../services/http";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IWTFInfo {
@@ -13,10 +13,10 @@ const initialState: IWTFInfo = {
 
 export const getInfo = createAsyncThunk<IWTFInfo | undefined>("WTFInfo/getInfo", async () => {
   try {
-    const price = await getPrice();
+    const [price, marketCap] = await Promise.all([getPrice(), getMarketCap()]);
     return {
       price,
-      marketCap: null
+      marketCap
     };
   } catch (e) {
     console.error(e);

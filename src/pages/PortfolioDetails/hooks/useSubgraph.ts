@@ -2,42 +2,42 @@ import { gql, useQuery } from "@apollo/client";
 import { TrancheCycle, UserInvest } from "types";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
-export const useHistoryQuery = (account: string | null | undefined) => {
-  if (!account) account = "";
-  return useQuery(gql`
-    {
-      trancheCycles(orderBy: id, orderDirection: asc) {
-        id
-        cycle
-        state
-        principal
-        capital
-        rate
-        startAt
-        endAt
-      }
-      tranches {
-        id
-        cycle
-        target
-        apy
-        fee
-      }
-      userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
-        id
-        owner
-        tranche
-        cycle
-        principal
-        capital
-        investAt
-        harvestAt
-      }
-    }
-  `);
-};
+// export const useHistoryQuery = (account: string | null | undefined) => {
+//   if (!account) account = "";
+//   return useQuery(gql`
+//     {
+//       trancheCycles(orderBy: id, orderDirection: asc) {
+//         id
+//         cycle
+//         state
+//         principal
+//         capital
+//         rate
+//         startAt
+//         endAt
+//       }
+//       tranches {
+//         id
+//         cycle
+//         target
+//         apy
+//         fee
+//       }
+//       userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
+//         id
+//         owner
+//         tranche
+//         cycle
+//         principal
+//         capital
+//         investAt
+//         harvestAt
+//       }
+//     }
+//   `);
+// };
 
-export const useHistoryQuery2 = (account: string | null | undefined, decimals = 18) => {
+export const useHistoryQuery = (account: string | null | undefined, decimals = 18) => {
   if (!account) account = "";
   const { data } = useQuery(gql`
     {

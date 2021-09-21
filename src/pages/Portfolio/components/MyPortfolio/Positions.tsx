@@ -46,15 +46,8 @@ const Positions = memo<TProps>(({ intl }) => {
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const market = MarketList[0];
-  const { loading, error, data } = useHistoryQuery(account);
-
-  const trancheCycles: { [key: string]: TrancheCycle } = {};
-  if (data && data.trancheCycles) {
-    for (let i = 0; i < data.trancheCycles.length; i++) {
-      const { id } = data.trancheCycles[i];
-      trancheCycles[id] = data.trancheCycles[i];
-    }
-  }
+  // const { loading, error, data } = useHistoryQuery(account);
+  const { userInvests, trancheCycles } = useHistoryQuery(account);
 
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
@@ -72,14 +65,14 @@ const Positions = memo<TProps>(({ intl }) => {
   };
 
   const payload = useMemo(() => {
-    return data?.userInvests?.filter((_userInvest: any) => {
+    return userInvests?.filter((_userInvest: any) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
       if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
       return true;
     });
-  }, [data, selectedTranche, selectedStatus, trancheCycles]);
+  }, [selectedTranche, selectedStatus, trancheCycles]);
 
   return (
     <React.Fragment>

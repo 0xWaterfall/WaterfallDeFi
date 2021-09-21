@@ -31,7 +31,7 @@ import { getPosition } from "store/position";
 import { usePendingWTFReward, usePosition, useSelectedMarket } from "hooks/useSelectors";
 import useRedeemDirect from "../hooks/useRedeemDirect";
 import BigNumber from "bignumber.js";
-import { useHistoryQuery, useHistoryQuery2 } from "../hooks/useSubgraph";
+import { useHistoryQuery } from "../hooks/useSubgraph";
 import { IType } from "pages/Portfolio/components/MyPortfolio/type";
 import Select, { Option } from "components/Select/Select";
 import NoData from "components/NoData/NoData";
@@ -83,7 +83,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const { tranchesPendingReward } = usePendingWTFReward();
   const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
   // const { loading, error, data } = useHistoryQuery(account);
-  const { userInvests, trancheCycles } = useHistoryQuery2(account);
+  const { userInvests, trancheCycles } = useHistoryQuery(account);
 
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },

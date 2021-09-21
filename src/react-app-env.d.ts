@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare module "@loadable/component";
+declare module "react-twitter-embed";
 interface Window {
   __REDUX_DEVTOOLS_EXTENSION__?: Function;
   ethereum?: {

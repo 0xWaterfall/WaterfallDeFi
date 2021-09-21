@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { Coingecko, DashboardImage, MetaMask } from "assets/images";
 import { useSize } from "ahooks";
 import { useMarketCap, useWTFPrice } from "hooks/useSelectors";
 import numeral from "numeral";
+import { BASE_BSC_SCAN_URL } from "config";
+import { nodes } from "utils/getRpcUrl";
 
 type TProps = WrappedComponentProps;
 
@@ -92,6 +94,33 @@ const DashboardCard = memo<TProps>(({ intl }) => {
   const price = useWTFPrice();
   const marketPrice = useMarketCap();
 
+  const addToken = useCallback(async () => {
+    const provider = window.ethereum;
+    if (provider?.request) {
+      try {
+        await provider.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC20",
+            options: {
+              address: "0xa9f302953082fb8412f55d5bca3714a51e5b9a97",
+              symbol: "WTF",
+              decimals: 18,
+              image: "https://waterfalldefi.org/wp-content/uploads/2021/04/cropped-favocon_wtf-192x192.png"
+            }
+          }
+        });
+        return true;
+      } catch (error) {
+        console.error(error);
+        return false;
+      }
+    } else {
+      console.error("Can't setup the BSC network on metamask because window.ethereum is undefined");
+      return false;
+    }
+  }, []);
+
   return (
     <Wrapper>
       <DashboardImageWrapper />
@@ -109,8 +138,10 @@ const DashboardCard = memo<TProps>(({ intl }) => {
         <Block>
           <Title />
           <IconGroup>
-            <Coingecko />
-            <MetaMask css={{ width: 30, height: 30, marginLeft: 15 }} />
+            <a href="https://www.coingecko.com/en/coins/waterfall" target="_blank" rel="noopener noreferrer">
+              <Coingecko />
+            </a>
+            <MetaMask css={{ width: 30, height: 30, marginLeft: 15 }} onClick={addToken} />
           </IconGroup>
         </Block>
       </Content>

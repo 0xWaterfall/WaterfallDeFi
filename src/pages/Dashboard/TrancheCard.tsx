@@ -6,6 +6,8 @@ import styled from "@emotion/styled";
 import { BUSD, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
+import { useMarkets, useWTFPrice } from "hooks/useSelectors";
+import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -140,6 +142,9 @@ const Fee = styled.div`
 type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
+  const markets = useMarkets();
+  const wtfPrice = useWTFPrice();
+  const currentMarket = markets[0];
   const msg = (
     <React.Fragment>
       <p>
@@ -157,83 +162,72 @@ const TrancheCard = memo<TProps>(({ intl }) => {
       </p>
     </React.Fragment>
   );
+  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+
   return (
     <Wrapper>
       <IconWrapper>
         <BUSD />
       </IconWrapper>
-      <Block>
-        <h1>{intl.formatMessage({ defaultMessage: "Senior" })}</h1>
-        <Section>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
-            <p>120%</p>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
-            <span>15%</span>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
-            <span>105%</span>
-          </APRWrapper>
-          <Line />
-          <Fee>
-            <Tooltip overlay={msg}>
-              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
-            </Tooltip>
-            <span>0.033%</span>
-          </Fee>
-        </Section>
-      </Block>
-      <Block>
-        <h1>{intl.formatMessage({ defaultMessage: "Mezzanine" })}</h1>
-        <Section>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
-            <p>120%</p>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
-            <span>15%</span>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
-            <span>105%</span>
-          </APRWrapper>
-          <Line />
-          <Fee>
-            <Tooltip overlay={msg}>
-              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
-            </Tooltip>
-            <span>0.033%</span>
-          </Fee>
-        </Section>
-      </Block>
-      <Block>
-        <h1>{intl.formatMessage({ defaultMessage: "Junior" })}</h1>
-        <Section>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
-            <p>120%</p>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "Senior APR" })}: </span>
-            <span>15%</span>
-          </APRWrapper>
-          <APRWrapper>
-            <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
-            <span>105%</span>
-          </APRWrapper>
-          <Line />
-          <Fee>
-            <Tooltip overlay={msg}>
-              <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
-            </Tooltip>
-            <span>0.033%</span>
-          </Fee>
-        </Section>
-      </Block>
+      {tranchesDisplayText.map((trancheText, _i) => {
+        const trancheApr =
+          _i !== currentMarket?.tranches.length - 1
+            ? formatAPY(currentMarket?.tranches[_i].apy)
+            : getJuniorAPY(currentMarket?.tranches);
+        const wtfApr = currentMarket
+          ? getWTFApr(
+              formatAllocPoint(currentMarket?.pools[_i], currentMarket?.totalAllocPoints),
+              currentMarket?.tranches[_i],
+              currentMarket?.duration,
+              currentMarket?.rewardPerBlock,
+              wtfPrice
+            )
+          : "-";
+
+        const netApr = getNetApr(
+          trancheApr,
+          formatAllocPoint(currentMarket?.pools[_i], currentMarket?.totalAllocPoints),
+          currentMarket?.tranches[_i],
+          currentMarket?.duration,
+          currentMarket?.rewardPerBlock,
+          wtfPrice
+        );
+
+        return (
+          <Block key={trancheText}>
+            <h1>{trancheText}</h1>
+            <Section>
+              <APRWrapper>
+                <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+                <p>
+                  {netApr}
+                  {" %"}
+                </p>
+              </APRWrapper>
+              <APRWrapper>
+                <span>
+                  {trancheText} {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
+                </span>
+                <span>{trancheApr}</span>
+              </APRWrapper>
+              <APRWrapper>
+                <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+                <span>
+                  {wtfApr}
+                  {" %"}
+                </span>
+              </APRWrapper>
+              <Line />
+              <Fee>
+                <Tooltip overlay={msg}>
+                  <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+                </Tooltip>
+                <span>{currentMarket?.tranches[_i].fee} %</span>
+              </Fee>
+            </Section>
+          </Block>
+        );
+      })}
       <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Start" })}</ButtonWrapper>
     </Wrapper>
   );

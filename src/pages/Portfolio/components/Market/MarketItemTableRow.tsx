@@ -26,7 +26,7 @@ import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
 import _ from "lodash";
-import { useSelectedMarket } from "hooks/useSelectors";
+import { useSelectedMarket, useWTFPrice } from "hooks/useSelectors";
 import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
 import Tooltip from "components/Tooltip/Tooltip";
@@ -96,7 +96,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { warn, green, primary, gray } = useTheme();
   const { push } = useHistory();
   const dispatch = useDispatch();
-
+  const wtfPrice = useWTFPrice();
   const navigateMarketDetail = () => {
     // dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolioDetails" });
@@ -128,9 +128,10 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                     formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
                     marketData?.tranches[_i],
                     marketData.duration,
-                    marketData.rewardPerBlock
+                    marketData.rewardPerBlock,
+                    wtfPrice
                   )}
-                  %
+                  {" %"}
                 </span>
               </APYStyled2>
               /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */

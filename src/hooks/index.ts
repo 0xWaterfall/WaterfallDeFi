@@ -23,6 +23,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
+import { useMarkets } from "./useSelectors";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -182,6 +183,20 @@ export const useWTF = () => {
   }, [MasterChefAddress]);
 
   return { weekDistribution };
+};
+export const useTotalTvl = () => {
+  const [totalTvl, setTotalTvl] = useState("0");
+  const markets = useMarkets();
+  let _totalTvl = new BigNumber(BIG_ZERO);
+  useEffect(() => {
+    markets.forEach((m) => {
+      const _tvl = new BigNumber(m.tvl);
+      _totalTvl = _totalTvl.plus(_tvl);
+    });
+    setTotalTvl(_totalTvl.dividedBy(BIG_TEN.pow(18)).toFormat(0).toString());
+  }, [markets]);
+
+  return totalTvl;
 };
 export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());

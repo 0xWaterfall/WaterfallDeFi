@@ -6,11 +6,11 @@ import moment from "moment";
 import dayjs from "dayjs";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
-  return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + "%";
+  return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
 };
 export const formatRedemptionFee = (apy: string | undefined, decimals = 3) => {
   if (!apy) return "- -";
-  return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + "%";
+  return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
 };
 
 export const formatBalance = (num: string | undefined, decimals = 18) => {
@@ -206,48 +206,48 @@ export const getWTFApr = (
   wtfAPY: string | undefined,
   tranche: Tranche | undefined,
   duration: string | undefined,
-  rewardPerBlock: string | undefined
+  rewardPerBlock: string | undefined,
+  wtfPrice: string | null
 ) => {
   if (wtfAPY === undefined) return;
   if (tranche === undefined) return;
   if (duration === undefined) return;
   if (rewardPerBlock === undefined) return;
+  if (wtfPrice === null) return;
   wtfAPY = wtfAPY.replace("+ ", "");
-  const wtfPrice = 1;
+  // const wtfPrice = 1;
   const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
   //
   const blocksInDuration = new BigNumber(duration).dividedBy(3);
   const tokensInDuration = new BigNumber(blocksInDuration).times(rewardPerBlock);
   const wtfReward = new BigNumber(wtfAPY)
     .times(tokensInDuration)
-    .times(wtfPrice)
+    .times(new BigNumber(wtfPrice))
     .dividedBy(target)
-    // .toFormat(0)
+    .toFormat(0)
     .toString();
   return wtfReward;
 };
 export const getNetApr = (
   trancheAPY: string | undefined,
   wtfAPY: string | undefined,
-  timeDistribution: string | undefined,
   tranche: Tranche | undefined,
   duration: string | undefined,
-  rewardPerBlock: string | undefined
+  rewardPerBlock: string | undefined,
+  wtfPrice: string | null
 ) => {
   if (trancheAPY === undefined) return;
   if (wtfAPY === undefined) return;
-  if (timeDistribution === undefined) return;
   if (tranche === undefined) return;
-  if (timeDistribution === "0") return;
   if (duration === undefined) return;
   if (rewardPerBlock === undefined) return;
+  if (wtfPrice === null) return;
 
   trancheAPY = trancheAPY.replace("%", "");
-  const _wtfAPY = getWTFApr(wtfAPY, tranche, duration, rewardPerBlock);
+  const _wtfAPY = getWTFApr(wtfAPY, tranche, duration, rewardPerBlock, wtfPrice);
   wtfAPY = wtfAPY.replace("+ ", "");
-  const wtfPrice = 1;
   const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
   const fee = new BigNumber(tranche.fee).dividedBy(1000).toString();
 
-  return Number(trancheAPY) + Number(_wtfAPY) + "%";
+  return Number(trancheAPY) + Number(_wtfAPY);
 };

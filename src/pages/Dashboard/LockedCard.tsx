@@ -3,6 +3,8 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
+import { useMarkets } from "hooks/useSelectors";
+import { useTotalTvl } from "hooks";
 
 const Wrapper = styled.div`
   height: 143px;
@@ -41,6 +43,7 @@ const Value = styled.div`
   background-clip: padding-box, border-box;
   box-shadow: 0px 4px 10px 0px #187eff33;
   white-space: nowrap;
+  min-width: 300px;
   @media screen and (max-width: 414px) {
     font-size: 28px;
     transform: scale(0.8);
@@ -50,10 +53,11 @@ const Value = styled.div`
 type TProps = WrappedComponentProps;
 
 const LockedCard = memo<TProps>(({ intl }) => {
+  const totalTvl = useTotalTvl();
   return (
     <Wrapper>
       <Text>{intl.formatMessage({ defaultMessage: "Total Value Locked" })}</Text>
-      <Value>{intl.formatMessage({ defaultMessage: "$ 689,518,240" })}</Value>
+      <Value>${totalTvl}</Value>
     </Wrapper>
   );
 });

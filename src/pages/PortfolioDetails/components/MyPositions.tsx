@@ -28,7 +28,7 @@ import styled from "@emotion/styled";
 import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import { getPosition } from "store/position";
-import { usePendingWTFReward, usePosition, useSelectedMarket } from "hooks/useSelectors";
+import { usePendingWTFReward, usePosition, useSelectedMarket, useWTFPrice } from "hooks/useSelectors";
 import useRedeemDirect from "../hooks/useRedeemDirect";
 import BigNumber from "bignumber.js";
 import { useHistoryQuery } from "../hooks/useSubgraph";
@@ -84,6 +84,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
   // const { loading, error, data } = useHistoryQuery(account);
   const { userInvests, trancheCycles } = useHistoryQuery(account);
+  const wtfPrice = useWTFPrice();
 
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
@@ -251,15 +252,16 @@ const MyPositions = memo<TProps>(({ intl }) => {
                             formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
                             market?.tranches[i],
                             market.duration,
-                            market.rewardPerBlock
+                            market.rewardPerBlock,
+                            wtfPrice
                           )}
-                          %
+                          {" %"}
                         </div>
                         {/* {formatAllocPoint(market?.pools[i], market?.totalAllocPoints).replace("+ ", "")} */}
                       </div>
                       <div>
                         <div>Fee:</div>
-                        <div>- {market?.tranches[i].fee}%</div>
+                        <div>- {market?.tranches[i].fee} %</div>
                       </div>
                       <div>
                         <div>{intl.formatMessage({ defaultMessage: "Net Apr" })}:</div>
@@ -269,11 +271,12 @@ const MyPositions = memo<TProps>(({ intl }) => {
                               ? formatAPY(market?.tranches[i].apy)
                               : getJuniorAPY(market?.tranches),
                             formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
-                            weekDistribution.toString(),
                             market?.tranches[i],
                             market.duration,
-                            market.rewardPerBlock
+                            market.rewardPerBlock,
+                            wtfPrice
                           )}
+                          {" %"}
                         </div>
                       </div>
                     </APRPopup>
@@ -520,7 +523,6 @@ const MyPositions = memo<TProps>(({ intl }) => {
                               ? formatAPY(market?.tranches[i].apy)
                               : getJuniorAPY(market?.tranches),
                             formatAllocPoint(market?.pools[i], market?.totalAllocPoints),
-                            weekDistribution.toString(),
                             market?.tranches[i]
                           )}
                         </div>

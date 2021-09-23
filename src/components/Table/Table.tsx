@@ -21,10 +21,18 @@ const TableRow = styled.ul<ITableRowStyledComponentProps>`
   &:first-of-type {
     cursor: initial;
   }
+
+  @media screen and (max-width: 768px) {
+    display: grid;
+    gap: 17px;
+    grid-auto-flow: row;
+    height: auto;
+  }
 `;
 
 interface ITableColumnStyledComponentProps {
   minWidth?: number;
+  content?: string;
 }
 
 const TableColumn = styled.li<ITableColumnStyledComponentProps>`
@@ -36,6 +44,13 @@ const TableColumn = styled.li<ITableColumnStyledComponentProps>`
   flex: 1;
   min-width: ${({ minWidth }) => minWidth ?? 120}px;
   width: ${({ minWidth }) => minWidth ?? 120}px;
+
+  @media screen and (max-width: 768px) {
+    padding: 0;
+    width: 100%;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
 `;
 
 const TableHeaderColumn = styled(TableColumn)`
@@ -48,6 +63,9 @@ const TableHeaderColumn = styled(TableColumn)`
     border-bottom-right-radius: 12px;
   }
   background-color: ${({ theme }) => theme.primary.lightBrown};
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export { Table, TableRow, TableColumn, TableHeaderColumn };

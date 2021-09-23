@@ -8,6 +8,7 @@ import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
 import { useMarkets, useWTFPrice } from "hooks/useSelectors";
 import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
+import { useHistory } from "react-router";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -145,19 +146,13 @@ const TrancheCard = memo<TProps>(({ intl }) => {
   const markets = useMarkets();
   const wtfPrice = useWTFPrice();
   const currentMarket = markets[0];
+  const { push } = useHistory();
   const msg = (
     <React.Fragment>
       <p>
         {intl.formatMessage({
           defaultMessage:
             "After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x 0.033%"
-        })}
-      </p>
-      <br />
-      <p>
-        {intl.formatMessage({
-          defaultMessage:
-            "You can also choose to roll-deposit to the next cycle. You can change the tranche and the number in next cycle, it's completely up to you."
         })}
       </p>
     </React.Fragment>
@@ -228,7 +223,14 @@ const TrancheCard = memo<TProps>(({ intl }) => {
           </Block>
         );
       })}
-      <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Start" })}</ButtonWrapper>
+      <ButtonWrapper
+        type="primary"
+        onClick={() => {
+          push("/portfolio/markets");
+        }}
+      >
+        {intl.formatMessage({ defaultMessage: "Start" })}
+      </ButtonWrapper>
     </Wrapper>
   );
 });

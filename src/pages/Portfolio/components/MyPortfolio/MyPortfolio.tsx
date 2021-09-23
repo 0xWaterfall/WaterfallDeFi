@@ -8,6 +8,7 @@ import TrancheChart from "./TrancheChart";
 import AssetChart from "./AssetChart";
 import Button from "components/Button/Button";
 import Positions from "./Positions";
+import SparePositions from "pages/SparePositions";
 
 type TProps = WrappedComponentProps;
 const TitleDiv = styled.div`
@@ -130,7 +131,8 @@ const MyPortfolio = memo<TProps>(({ intl }) => {
       {/* <div css={{ margin: "24px 0", fontSize: 20, fontWeight: 600, color: gray.normal85 }}>
         {intl.formatMessage({ defaultMessage: "Positions" })}
       </div> */}
-      <Positions />
+      {/* <Positions /> */}
+      <SparePositions />
     </div>
   );
 });

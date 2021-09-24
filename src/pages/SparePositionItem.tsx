@@ -14,14 +14,24 @@ import { useSize } from "ahooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { MarketList } from "config/market";
-import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp } from "utils/formatNumbers";
+import {
+  formatAllocPoint,
+  formatNumberDisplay,
+  formatNumberWithDecimalsDisplay,
+  formatTimestamp,
+  getWTFApr
+} from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
-import { TrancheCycle } from "types";
+import { Market, PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
 import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
+import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
+import numeral from "numeral";
+import { dataTool } from "echarts/core";
+import useInvest from "./PortfolioDetails/hooks/useInvest";
 
 const Wrapper = styled.div``;
 
@@ -52,6 +62,9 @@ const APRWrapper = styled.div`
   grid-auto-flow: column;
   h1 {
     font-weight: 500;
+  }
+  & > p {
+    width: 70px;
   }
   & > div {
     display: grid;
@@ -120,56 +133,88 @@ const TableColumnWrapper = styled(TableColumn)`
   }
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  userInvest: UserInvest;
+  market: Market;
+  trancheCycle: TrancheCycle;
+  redeemDirect: (i: number) => Promise<void>;
+  redeemLoading: boolean;
+};
 
-const SparePositionItem = memo<TProps>(({ intl }) => {
+const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle, redeemLoading, redeemDirect }) => {
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
+  const wtfPrice = useWTFPrice();
+  const { tranchesPendingReward } = usePendingWTFReward();
 
+  const totalAmount =
+    userInvest.principal &&
+    userInvest.capital &&
+    new BigNumber(numeral(userInvest.principal).value() || 0)
+      .plus(new BigNumber(numeral(userInvest.capital).value() || 0))
+      .toString();
+
+  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+  const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
+  const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
+  const wtfAPY =
+    market && isCurrentCycle
+      ? getWTFApr(
+          formatAllocPoint(market?.pools[userInvest.tranche], market?.totalAllocPoints),
+          market?.tranches[userInvest.tranche],
+          market?.duration,
+          market?.rewardPerBlock,
+          wtfPrice
+        )
+      : "-";
+
+  const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
   return (
     <Wrapper>
       <TableRowWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}>
-          BUSD Falls
+          {market?.portfolio}
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={60} content={intl.formatMessage({ defaultMessage: "Asset" })}>
-          BUSD
+          {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={200} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
           <CycleWrapper>
-            <span>2021/09/23 10:00:05</span>
+            <span>{trancheCycle.state !== 0 && formatTimestamp(trancheCycle.startAt)}</span>
             <span>↓</span>
-            <span>2021/09/23 10:54:17</span>
+            <span>{trancheCycle.state !== 0 && formatTimestamp(trancheCycle.endAt)}</span>
           </CycleWrapper>
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Net APY" })}>
-          <APRWrapper css={{ color: COLORS.Senior }}>
-            <p>Senior</p>
+          <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
+            <p>{tranchesDisplayText[userInvest.tranche]}</p>
             <div>
               <section>
                 <title>Total APR:</title>
-                <p>120%</p>
+                <p>{netAPY} %</p>
               </section>
               <section>
-                <title>Senior APR:</title>
-                <span>15%</span>
+                <title>{tranchesDisplayText[userInvest.tranche]} APR:</title>
+                <span>{trancheAPY} %</span>
               </section>
               <section>
                 <title>WTF APR:</title>
-                <span>105%</span>
+                <span>{wtfAPY} %</span>
               </section>
             </div>
           </APRWrapper>
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={150} content={intl.formatMessage({ defaultMessage: "Principal" })}>
-          100,000,000 BUSD
+          {userInvest.principal} {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
-          <Tag color="yellow" value={"Pending"}></Tag>
+          {trancheCycle.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
+          {trancheCycle.state === 1 && <Tag color="green" value="Active"></Tag>}
+          {trancheCycle.state === 2 && <Tag color="red" value="Expired"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Interest" })}>
-          326,999 BUSD
+          {userInvest.interest} {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper>
           <CaretDownWrapper
@@ -187,7 +232,19 @@ const SparePositionItem = memo<TProps>(({ intl }) => {
           </CaretDownWrapper>
         </TableColumnWrapper>
       </TableRowWrapper>
-      {isfold && <SparePositionFold />}
+      {isfold && (
+        <SparePositionFold
+          totalAmount={totalAmount}
+          assets={market?.assets}
+          isCurrentCycle={isCurrentCycle}
+          redeemDirect={redeemDirect}
+          redeemLoading={redeemLoading}
+          currentTranche={userInvest.tranche}
+          isPending={trancheCycle.state === 0}
+          isActive={trancheCycle.state === 1}
+          tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
+        />
+      )}
     </Wrapper>
   );
 });

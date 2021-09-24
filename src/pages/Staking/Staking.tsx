@@ -4,7 +4,10 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import theme from "styles/theme";
-import { Sticker, WTFCoin, Pancake, ArrowRight, WTFCoinBG1, WTFCoinBG2 } from "assets/images";
+import { Sticker, WTFCoin, Pancake, ArrowRight, WTFCoinBG1, WTFBG } from "assets/images";
+// import WTFCoinBG2 from "assets/images/wtfcoinbg2.png";
+import WTFCoinBG2 from "./../../assets/images/wtfcoinbg2.png";
+import { useSize } from "ahooks";
 
 const Wrapper = styled.div`
   max-width: 1048px;
@@ -26,8 +29,19 @@ const BGWrapper1 = styled.div`
 `;
 const BGWrapper2 = styled.div`
   position: absolute;
-  top: -160px;
-  left: -180px;
+  bottom: 100px;
+  right: -300px;
+`;
+const BGWrapper3 = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 400px;
+  left: 0;
+  top: 100px;
+  z-index: -1;
+  & > svg {
+    width: 100%;
+  }
 `;
 const InfoWrapper = styled.div`
   border-radius: 20px;
@@ -39,12 +53,19 @@ const InfoWrapper = styled.div`
   padding: 5px;
   position: relative;
 
+  max-width: 90vw;
+
   & > div:nth-of-type(1) {
     border-radius: 15px;
     background: ${({ theme }) => theme.white.normal};
     padding: 20px;
     height: 100%;
     width: 100%;
+    max-width: 90vw;
+
+    @media screen and (max-width: 768px) {
+      padding-top: 100px;
+    }
   }
   & > div:nth-of-type(1) > div:nth-of-type(1) {
     margin: 20px 0;
@@ -106,7 +127,48 @@ const InfoWrapper = styled.div`
 type TProps = WrappedComponentProps;
 
 const Staking = memo<TProps>(({ intl }) => {
-  return <></>;
+  const { width } = useSize(document.body);
+  return (
+    <>
+      <Wrapper>
+        <InfoWrapper>
+          <div>
+            <h1>{intl.formatMessage({ defaultMessage: "WTF farm will be opened soon!" })}</h1>
+            <div>
+              <WTFCoin />
+              <ArrowRight />
+              <Pancake />
+            </div>
+            <div>
+              {intl.formatMessage({ defaultMessage: "Please try to put WTF on pancakeswap to earn liquidity income!" })}
+            </div>
+            <div>
+              <div>
+                <Pancake /> pancakeswap <ArrowRight />
+              </div>
+            </div>
+          </div>
+          {Boolean(width && width > 768) && (
+            <>
+              <StickerWrapper>
+                <Sticker />
+              </StickerWrapper>
+              <BGWrapper1>
+                <WTFCoinBG1 />
+              </BGWrapper1>
+              <BGWrapper2>
+                {/* <WTFCoinBG2 /> */}
+                <div style={{ backgroundImage: `url(${WTFCoinBG2})`, width: 335, height: 335 }}></div>
+              </BGWrapper2>
+            </>
+          )}
+        </InfoWrapper>
+        <BGWrapper3>
+          <WTFBG />
+        </BGWrapper3>
+      </Wrapper>
+    </>
+  );
 });
 
 export default injectIntl(Staking);

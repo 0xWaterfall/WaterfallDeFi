@@ -10,11 +10,20 @@ import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { formatAllocPoint, formatAPY, formatDisplayTVL, getJuniorAPY, getLockupPeriod } from "utils/formatNumbers";
+import {
+  formatAllocPoint,
+  formatAPY,
+  formatDisplayTVL,
+  formatNumberSeparator,
+  getJuniorAPY,
+  getLockupPeriod,
+  getWTFApr
+} from "utils/formatNumbers";
 import { useMarket } from "hooks";
 import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
+import { useWTFPrice } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -119,7 +128,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
   const { warn, green, primary } = useTheme();
   const { push } = useHistory();
   const [marketData, setMarketData] = useState<Market>(data);
-
+  const wtfPrice = useWTFPrice();
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const _md = await useMarket({ ...data });
@@ -170,14 +179,19 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
-                <span css={{ color: tranchesDisplayColor[_i] }}>
-                  {_i !== marketData.tranches.length - 1 ? formatAPY(_t.apy) : getJuniorAPY(marketData.tranches)}
-                </span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
                 <span>
                   <div>
                     <WTFToken />
                   </div>
-                  {formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints)}%
+                  {getWTFApr(
+                    formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
+                    marketData?.tranches[_i],
+                    marketData.duration,
+                    marketData.rewardPerBlock,
+                    wtfPrice
+                  )}
+                  {" %"}
                 </span>
               </APYStyled2>
               //{/* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */}
@@ -189,7 +203,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
         <div>
-          {formatDisplayTVL(marketData.tvl)} {marketData.assets}
+          {formatNumberSeparator(marketData.tvl)} {marketData.assets}
         </div>
       </RowDiv>
       <RowDiv>

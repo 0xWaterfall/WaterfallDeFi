@@ -10,7 +10,12 @@ import TrancheChart from "./TrancheChart";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 // import { usePendingWTFReward, useTrancheBalance } from "hooks";
-import { formatBalance, formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
+import {
+  formatBalance,
+  formatBigNumber2HexString,
+  formatNumberDisplay,
+  formatNumberSeparator
+} from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 
 import { AbiItem } from "web3-utils";
@@ -24,6 +29,8 @@ import { usePendingWTFReward, useTrancheBalance } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "store/position";
 import BigNumber from "bignumber.js";
+import numeral from "numeral";
+import { BIG_TEN } from "utils/bigNumber";
 
 const Wrapper = styled.div`
   display: grid;
@@ -124,7 +131,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
     setWithdrawAllLoading(true);
     try {
       if (!balance) return;
-      await onWithdraw(formatBigNumber2HexString(new BigNumber(balance)));
+      await onWithdraw(formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))));
       successNotification("Withdraw All Success", "");
     } catch (e) {
       console.error(e);
@@ -141,7 +148,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
           <div>
-            {balance ? formatNumberDisplay(balance.toString()) : "--"} {data.assets}
+            {balance ? numeral(balance.toString()).format("0,0") : "--"} {data.assets}
           </div>
           <div>
             <Button

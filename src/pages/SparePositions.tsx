@@ -16,12 +16,15 @@ import { Web3Provider } from "@ethersproject/providers";
 import { MarketList } from "config/market";
 import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
-import { TrancheCycle } from "types";
+import { TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
 import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionItem from "./SparePositionItem";
+import { useMarkets } from "hooks/useSelectors";
+import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
+import { successNotification } from "utils/notification";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -82,11 +85,16 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [activedTab, setActivedTab] = useState<IType>("ALL");
   const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
+  const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
+  const { onRedeemDirect } = useRedeemDirect();
+
   const { width } = useSize(document.body);
   const { account } = useWeb3React<Web3Provider>();
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
-  const market = MarketList[0];
+  const markets = useMarkets();
+  const market = markets[0];
+
   // const { loading, error, data } = useHistoryQuery(account);
   const { userInvests, trancheCycles } = useHistoryQuery(account);
 
@@ -104,7 +112,17 @@ const SparePositions = memo<TProps>(({ intl }) => {
     setActivedTab(value);
     setSelectedStatus(status);
   };
-
+  const redeemDirect = async (i: number) => {
+    setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: true }));
+    try {
+      await onRedeemDirect(i);
+      successNotification("Redeem Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: false }));
+    }
+  };
   const payload = useMemo(() => {
     return userInvests?.filter((_userInvest: any) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
@@ -160,10 +178,23 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
           <TableHeaderColumn></TableHeaderColumn>
         </TableRow>
+
         <NoDataWrapper isNoData={!payload?.length}>
-          {[1, 2, 3].map((p) => (
-            <SparePositionItem key={p} />
-          ))}
+          {payload.map((_userInvest: UserInvest, _idx: number) => {
+            const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+            const trancheCycle = trancheCycles[trancheCycleId];
+
+            return (
+              <SparePositionItem
+                key={_idx}
+                userInvest={_userInvest}
+                market={market}
+                trancheCycle={trancheCycle}
+                redeemDirect={redeemDirect}
+                redeemLoading={redeemLoading[_idx] || false}
+              />
+            );
+          })}
         </NoDataWrapper>
       </Table>
     </React.Fragment>

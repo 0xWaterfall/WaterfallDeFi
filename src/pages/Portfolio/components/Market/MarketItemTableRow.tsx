@@ -10,6 +10,7 @@ import {
   formatAllocPoint,
   formatAPY,
   formatDisplayTVL,
+  formatNumberSeparator,
   formatTVL,
   getJuniorAPY,
   getLockupPeriod,
@@ -117,9 +118,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
-                <span css={{ color: tranchesDisplayColor[_i] }}>
-                  {_i !== marketData.tranches.length - 1 ? formatAPY(_t.apy) : getJuniorAPY(marketData.tranches)}
-                </span>
+                <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
                 <span>
                   <div>
                     <WTFToken />
@@ -141,7 +140,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         </div>
       </TableColumn>
       <TableColumn minWidth={160}>
-        {formatDisplayTVL(marketData.tvl)} {marketData.assets}
+        {formatNumberSeparator(marketData.tvl)} {marketData.assets}
       </TableColumn>
       <TableColumn minWidth={80}>
         {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}

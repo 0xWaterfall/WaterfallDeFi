@@ -193,7 +193,7 @@ export const useTotalTvl = () => {
       const _tvl = new BigNumber(m.tvl);
       _totalTvl = _totalTvl.plus(_tvl);
     });
-    setTotalTvl(_totalTvl.dividedBy(BIG_TEN.pow(18)).toFormat(0).toString());
+    setTotalTvl(_totalTvl.toFormat(0).toString());
   }, [markets]);
 
   return totalTvl;

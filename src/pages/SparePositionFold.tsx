@@ -9,6 +9,8 @@ import Tooltip from "components/Tooltip/Tooltip";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import { Union } from "assets/images";
 import styled from "@emotion/styled";
+import numeral from "numeral";
+import { formatNumberDisplay } from "utils/formatNumbers";
 
 const Wrapper = styled.div`
   padding: 24px 32px;
@@ -89,70 +91,102 @@ const Prompt = styled.div`
   line-height: 15.6px;
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  totalAmount: string;
+  assets: string;
+  redeemLoading?: boolean;
+  redeemDirect: (i: number) => Promise<void>;
+  isCurrentCycle: boolean;
+  isPending: boolean;
+  isActive: boolean;
+  currentTranche: number;
+  tranchesPendingReward: any;
+};
 
-const SparePositionFold = memo<TProps>(({ intl }) => {
-  const { gray, primary, shadow, linearGradient, white } = useTheme();
-
-  return (
-    <Wrapper>
-      <LinearGradientWrapper />
-      <ContainerWrapper>
-        <Card>
-          <CardTitle>
-            <div>
-              {intl.formatMessage({ defaultMessage: "Principal+" })}
+const SparePositionFold = memo<TProps>(
+  ({
+    intl,
+    totalAmount,
+    assets,
+    redeemLoading,
+    redeemDirect,
+    isCurrentCycle,
+    currentTranche,
+    isPending,
+    isActive,
+    tranchesPendingReward
+  }) => {
+    const { gray, primary, shadow, linearGradient, white } = useTheme();
+    return (
+      <Wrapper>
+        <LinearGradientWrapper />
+        <ContainerWrapper>
+          <Card>
+            <CardTitle>
+              <div>
+                {intl.formatMessage({ defaultMessage: "Principal+" })}
+                <Tooltip
+                  overlay={intl.formatMessage({
+                    defaultMessage: "Before the cycle starts, the principal can be redeemed in the Pending state."
+                  })}
+                >
+                  <u
+                    css={{
+                      borderBottom: "1px dashed",
+                      borderColor: gray.normal7,
+                      color: gray.normal7,
+                      textDecoration: "none"
+                    }}
+                  >
+                    {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                  </u>
+                </Tooltip>
+              </div>
               <Tooltip
                 overlay={intl.formatMessage({
-                  defaultMessage: "Before the cycle starts, the principal can be redeemed in the Pending state."
+                  defaultMessage:
+                    "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
                 })}
+                css={{ position: "absolute", top: 16, right: 17 }}
               >
-                <u
-                  css={{
-                    borderBottom: "1px dashed",
-                    borderColor: gray.normal7,
-                    color: gray.normal7,
-                    textDecoration: "none"
-                  }}
-                >
-                  {intl.formatMessage({ defaultMessage: "Est. interest" })}
-                </u>
+                <Union css={{ color: gray.normal3 }} />
               </Tooltip>
-            </div>
-            <Tooltip
-              overlay={intl.formatMessage({
-                defaultMessage:
-                  "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+            </CardTitle>
+            <CardValue>
+              {numeral(totalAmount).format("0,0")} {assets}{" "}
+            </CardValue>
+            <CardAction>
+              {isCurrentCycle && isPending && (
+                <ButtonWrapper type="primary" onClick={() => redeemDirect(currentTranche)} loading={redeemLoading}>
+                  {intl.formatMessage({ defaultMessage: "Redeem" })}
+                </ButtonWrapper>
+              )}
+              <ButtonWrapper type="primary" style={{ visibility: "hidden" }}>
+                {intl.formatMessage({ defaultMessage: "Re-deposit" })}
+              </ButtonWrapper>
+            </CardAction>
+          </Card>
+          <Card>
+            <CardTitle>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</CardTitle>
+            <CardValue>{isCurrentCycle && isActive ? formatNumberDisplay(tranchesPendingReward) : "-"} WTF</CardValue>
+            <CardAction>
+              <ButtonWrapper style={{ visibility: "hidden" }} type="primary">
+                {intl.formatMessage({ defaultMessage: "Claim" })}
+              </ButtonWrapper>
+            </CardAction>
+          </Card>
+          <Prompt>
+            <Union css={{ color: primary.deep }} />
+            <div>
+              {intl.formatMessage({
+                defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
               })}
-              css={{ position: "absolute", top: 16, right: 17 }}
-            >
-              <Union css={{ color: gray.normal3 }} />
-            </Tooltip>
-          </CardTitle>
-          <CardValue>10,000,010 BUSD </CardValue>
-          <CardAction>
-            <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Withdraw all" })}</ButtonWrapper>
-            <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Re-deposit" })}</ButtonWrapper>
-          </CardAction>
-        </Card>
-        <Card>
-          <CardTitle>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</CardTitle>
-          <CardValue>- WTF</CardValue>
-          <CardAction>
-            <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Claim" })}</ButtonWrapper>
-          </CardAction>
-        </Card>
-        <Prompt>
-          <Union css={{ color: primary.deep }} />
-          <div>
-            {intl.formatMessage({
-              defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
-            })}
-          </div>
-        </Prompt>
-      </ContainerWrapper>
-    </Wrapper>
-  );
-});
+            </div>
+          </Prompt>
+        </ContainerWrapper>
+      </Wrapper>
+    );
+  }
+);
 
 export default injectIntl(SparePositionFold);

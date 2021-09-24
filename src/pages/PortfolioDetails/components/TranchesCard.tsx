@@ -14,10 +14,12 @@ import {
   getJuniorAPY,
   getRemaining,
   compareNum,
-  getPercentage
+  getPercentage,
+  getWTFApr
 } from "utils/formatNumbers";
 import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
+import { useWTFPrice } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -121,56 +123,67 @@ const ProgressBar = styled.div<ProgressBarProps>`
   }
 `;
 
-const TranchesCard = memo<TProps>(({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint }) => {
-  const { tags, primary, gray } = useTheme();
-  const Types = {
-    Senior: {
-      color: tags.yellowText,
-      text: intl.formatMessage({ defaultMessage: "Senior" }),
-      riskText: "Low Risk ; Fixed"
-    },
-    Mezzanine: {
-      color: tags.greenText,
-      text: intl.formatMessage({ defaultMessage: "Mezzanine" }),
-      riskText: "Medium Risk ; Fixed"
-    },
-    Junior: {
-      color: primary.deep,
-      text: intl.formatMessage({ defaultMessage: "Junior" }),
-      riskText: "Multiple Leverage ; Variable"
-    }
-  };
-  const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
-
-  return (
-    <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
-      {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
-      <div>
-        <TrancheName>
-          <FlexRow>
-            <Dot color={Types[type].color} />
-            {Types[type].text}
-          </FlexRow>
-          <CheckIcon css={{ color: selected ? primary.deep : gray.normal3 }} />
-        </TrancheName>
-        <Text2 color={Types[type].color}>
-          APY {type !== "Junior" ? formatAPY(tranche.apy) : getJuniorAPY(data.tranches)}{" "}
-          {formatAllocPoint(allocPoint, totalAllocPoint)}% WTF
-        </Text2>
-        <Text3>{Types[type].riskText}</Text3>
-        <Separator margin={15} />
-        <StatusDiv>
-          <Text3>
-            TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
-          </Text3>
-          <Text4>
-            Remaining:{getRemaining(tranche?.target, tranche?.principal)} {assets}
-          </Text4>
-        </StatusDiv>
-        <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />
-      </div>
-    </Container>
-  );
-});
+const TranchesCard = memo<TProps>(
+  ({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint, trancheIndex }) => {
+    const { tags, primary, gray } = useTheme();
+    const Types = {
+      Senior: {
+        color: tags.yellowText,
+        text: intl.formatMessage({ defaultMessage: "Senior" }),
+        riskText: "Low Risk ; Fixed"
+      },
+      Mezzanine: {
+        color: tags.greenText,
+        text: intl.formatMessage({ defaultMessage: "Mezzanine" }),
+        riskText: "Medium Risk ; Fixed"
+      },
+      Junior: {
+        color: primary.deep,
+        text: intl.formatMessage({ defaultMessage: "Junior" }),
+        riskText: "Multiple Leverage ; Variable"
+      }
+    };
+    const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
+    const trancheApr = tranche.apy;
+    const wtfPrice = useWTFPrice();
+    const wtfApr = data
+      ? getWTFApr(
+          formatAllocPoint(data?.pools[trancheIndex], data?.totalAllocPoints),
+          data?.tranches[trancheIndex],
+          data?.duration,
+          data?.rewardPerBlock,
+          wtfPrice
+        )
+      : "-";
+    return (
+      <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
+        {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
+        <div>
+          <TrancheName>
+            <FlexRow>
+              <Dot color={Types[type].color} />
+              {Types[type].text}
+            </FlexRow>
+            <CheckIcon css={{ color: selected ? primary.deep : gray.normal3 }} />
+          </TrancheName>
+          <Text2 color={Types[type].color}>
+            APY {trancheApr}% + {wtfApr}% WTF
+          </Text2>
+          <Text3>{Types[type].riskText}</Text3>
+          <Separator margin={15} />
+          <StatusDiv>
+            <Text3>
+              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
+            </Text3>
+            <Text4>
+              Remaining:{getRemaining(tranche?.target, tranche?.principal)} {assets}
+            </Text4>
+          </StatusDiv>
+          <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />
+        </div>
+      </Container>
+    );
+  }
+);
 
 export default injectIntl(TranchesCard);

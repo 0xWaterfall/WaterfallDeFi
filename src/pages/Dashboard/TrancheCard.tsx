@@ -9,6 +9,7 @@ import Tooltip from "components/Tooltip/Tooltip";
 import { useMarkets, useWTFPrice } from "hooks/useSelectors";
 import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
 import { useHistory } from "react-router";
+import numeral from "numeral";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -165,10 +166,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
         <BUSD />
       </IconWrapper>
       {tranchesDisplayText.map((trancheText, _i) => {
-        const trancheApr =
-          _i !== currentMarket?.tranches.length - 1
-            ? formatAPY(currentMarket?.tranches[_i].apy)
-            : getJuniorAPY(currentMarket?.tranches);
+        const trancheApr = currentMarket && currentMarket.tranches ? currentMarket.tranches[_i].apy : "-";
         const wtfApr = currentMarket
           ? getWTFApr(
               formatAllocPoint(currentMarket?.pools[_i], currentMarket?.totalAllocPoints),
@@ -179,14 +177,8 @@ const TrancheCard = memo<TProps>(({ intl }) => {
             )
           : "-";
 
-        const netApr = getNetApr(
-          trancheApr,
-          formatAllocPoint(currentMarket?.pools[_i], currentMarket?.totalAllocPoints),
-          currentMarket?.tranches[_i],
-          currentMarket?.duration,
-          currentMarket?.rewardPerBlock,
-          wtfPrice
-        );
+        const netApr =
+          trancheApr && wtfApr && wtfApr !== null ? Number(trancheApr) + Number(numeral(wtfApr).value()) : "-";
 
         return (
           <Block key={trancheText}>
@@ -203,7 +195,10 @@ const TrancheCard = memo<TProps>(({ intl }) => {
                 <span>
                   {trancheText} {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
                 </span>
-                <span>{trancheApr}</span>
+                <span>
+                  {trancheApr}
+                  {" %"}
+                </span>
               </APRWrapper>
               <APRWrapper>
                 <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>

@@ -7,9 +7,23 @@ import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import multicall from "utils/multicall";
+import { formatAPY } from "utils/formatNumbers";
+import { useWTFPrice } from "hooks/useSelectors";
 
 const initialState: Market[] = [];
-
+const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorTarget: BigNumber, decimals = 18) => {
+  const juniorTVL = juniorTarget;
+  tranches.map((_t, _i) => {
+    let _apy = new BigNumber(_t.apy);
+    _apy = _apy.plus(new BigNumber(100));
+    _apy = _apy.dividedBy(new BigNumber(100));
+    const _target = new BigNumber(_t.target);
+    totalTarget = totalTarget.minus(_apy.times(_target));
+  });
+  totalTarget = totalTarget.dividedBy(juniorTVL);
+  const result = totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString();
+  return result;
+};
 export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("markets/getMarket", async (payload) => {
   try {
     // if (!Web3.givenProvider) return;
@@ -55,20 +69,32 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;
+        let totalTarget = BIG_ZERO;
+        let expectedAPY = new BigNumber("500000000000000000").dividedBy(BIG_TEN.pow(18));
+        expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
         _tranches.map((_t, _i) => {
-          const _principal = _t ? new BigNumber(_t.principal?._hex) : BIG_ZERO;
-          const _apy = _t ? new BigNumber(_t.apy?._hex) : BIG_ZERO;
+          const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18));
+          totalTarget = totalTarget.plus(_target);
+        });
+        totalTarget = totalTarget.times(expectedAPY);
+        _tranches.map((_t, _i) => {
+          const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
-          const _target = _t ? new BigNumber(_t.target?._hex) : BIG_ZERO;
+          const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _apy =
+            _t && _i !== _tranches.length - 1
+              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(16))
+              : calculateJuniorAPY(tranches, totalTarget, _target);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
           tvl = tvl.plus(_principal);
           const __t = {
-            principal: _t.principal.toString(),
-            apy: _t.apy.toString(),
+            principal: _principal.toString(),
+            apy: _apy.toString(),
             fee: _fee.toString(),
-            target: _t.target.toString()
+            target: _target.toString()
           };
           tranches.push(__t);
         });

@@ -79,11 +79,11 @@ type TProps = WrappedComponentProps & {
 };
 
 const Information = memo<TProps>(({ data }) => {
-  const { goBack } = useHistory();
+  const { push } = useHistory();
 
   return (
     <Wrapper>
-      <Arrow onClick={goBack} />
+      <Arrow onClick={() => push({ pathname: "/portfolio/markets" })} />
       <InformationWrapper>
         <Block>
           <PortfolioName>{data?.portfolio}</PortfolioName>
@@ -96,7 +96,7 @@ const Information = memo<TProps>(({ data }) => {
         <Block>
           <div />
           <span>
-            TVL: {formatDisplayTVL(data?.tvl)} {data?.assets}
+            TVL: {data?.tvl} {data?.assets}
           </span>
         </Block>
       </InformationWrapper>

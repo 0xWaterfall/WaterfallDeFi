@@ -38,3 +38,4 @@ export { ReactComponent as WTFCoin } from "./wtfcoin.svg";
 export { ReactComponent as Pancake } from "./pancake.svg";
 export { ReactComponent as WTFCoinBG1 } from "./wtfcoinbg1.svg";
 export { ReactComponent as WTFCoinBG2 } from "./wtfcoinbg2.svg";
+export { ReactComponent as WTFBG } from "./wtfbg.svg";

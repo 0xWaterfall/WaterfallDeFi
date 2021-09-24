@@ -4,6 +4,7 @@ import Web3 from "web3";
 import { BIG_TEN } from "./bigNumber";
 import moment from "moment";
 import dayjs from "dayjs";
+import { compose } from "redux";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
@@ -27,7 +28,7 @@ export const formatDisplayTVL = (num: string | undefined, decimals = 18) => {
 };
 export const formatTVL = (num: string | undefined, decimals = 18) => {
   if (!num) return "- -";
-  return new BigNumber(num).dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString();
+  return new BigNumber(num).toFormat(0).toString();
 };
 export const formatNumberDisplay = (num: string | undefined, decimals = 18) => {
   if (!num) return "-";
@@ -187,7 +188,6 @@ export const getRemaining = (target: string | undefined, principal: string | und
   const result = _target.minus(_principal);
 
   return result
-    .dividedBy(BIG_TEN.pow(decimals))
     .toFormat(0)
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -216,14 +216,20 @@ export const getWTFApr = (
   if (wtfPrice === null) return;
   wtfAPY = wtfAPY.replace("+ ", "");
   // const wtfPrice = 1;
-  const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
+  const target = new BigNumber(tranche.target);
+
   //
   const blocksInDuration = new BigNumber(duration).dividedBy(3);
   const tokensInDuration = new BigNumber(blocksInDuration).times(rewardPerBlock);
+  // (100 * 1) / 100000 * (365 * 86400) / 60018:27
+
   const wtfReward = new BigNumber(wtfAPY)
+    .dividedBy(new BigNumber(100))
     .times(tokensInDuration)
     .times(new BigNumber(wtfPrice))
     .dividedBy(target)
+    .times(new BigNumber(86400 * 365))
+    .dividedBy(duration)
     .toFormat(0)
     .toString();
   return wtfReward;

@@ -1,7 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { TrancheCycle, UserInvest } from "types";
 import BigNumber from "bignumber.js";
-import { BIG_TEN } from "utils/bigNumber";
+import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 // export const useHistoryQuery = (account: string | null | undefined) => {
 //   if (!account) account = "";
 //   return useQuery(gql`
@@ -90,7 +90,9 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       const { capital, cycle, harvestAt, id, investAt, owner, principal, tranche } = userInvests[i];
       const trancheCycleId = tranche + "-" + cycle;
 
-      const interest = new BigNumber(capital).minus(new BigNumber(principal));
+      const interest = new BigNumber(capital).isZero()
+        ? BIG_ZERO
+        : new BigNumber(capital).minus(new BigNumber(principal));
       const earningsAPY = new BigNumber(interest)
         .dividedBy(new BigNumber(principal))
         .times(new BigNumber(365 * 86400 * 100))
@@ -104,14 +106,15 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         id,
         investAt,
         owner,
-        principal,
+        principal: new BigNumber(principal).dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString(),
         tranche,
         interest: interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString(),
-        earningsAPY: earningsAPY
+        earningsAPY
       };
       _userInvests.push(_ui);
     }
   }
+  console.log(_userInvests);
   return {
     userInvests: _userInvests,
     trancheCycles: _trancheCycles

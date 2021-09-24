@@ -6,6 +6,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import MyPositions from "./MyPositions";
 import Deposit from "./Deposit";
 import { Market } from "types";
+import SparePositions from "pages/SparePositions";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -18,7 +19,8 @@ const ContentCD = memo<TProps>(({ intl, data }) => {
     {
       key: "POSITIONS",
       text: intl.formatMessage({ defaultMessage: "My Positions" }),
-      component: <MyPositions data={data} />
+
+      component: <SparePositions />
     }
   ];
   return (

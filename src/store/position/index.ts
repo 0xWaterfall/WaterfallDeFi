@@ -6,6 +6,7 @@ import BigNumber from "bignumber.js";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { MasterChefAddress, TranchesAddress } from "config/address";
+import { BIG_TEN } from "utils/bigNumber";
 
 const initialState: IPosition = {
   positions: [],
@@ -23,7 +24,7 @@ export const getTrancheBalance = createAsyncThunk<
     const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
     const result = await contractMasterChef.balanceOf(account);
     return {
-      balance: result.balance ? new BigNumber(result.balance?._hex).toString() : "0",
+      balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
       invested: result.invested.toString()
     };
   } catch (e) {

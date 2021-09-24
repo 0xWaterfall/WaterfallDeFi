@@ -34,6 +34,9 @@ import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
 import { useBalance } from "hooks";
+import { useTrancheBalance } from "hooks/useSelectors";
+import numeral from "numeral";
+import { getTrancheBalance } from "store/position";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -140,13 +143,15 @@ const ApproveCard = memo<TProps>(
     const [approved, setApproved] = useState(false);
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
-    const { account } = useWeb3React();
+    const { account } = useWeb3React<Web3Provider>();
     const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect();
     const { onInvest } = useInvest();
     const dispatch = useAppDispatch();
-    const { balance, fetchBalance } = useBalance(data.depositAssetAddress);
+    const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
+    const { balance: balanceRe } = useTrancheBalance();
+    const balance = isRe === undefined ? balanceWallet : numeral(balanceRe).format("0,0");
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -214,6 +219,7 @@ const ApproveCard = memo<TProps>(
         }
         setBalanceInput(0);
         fetchBalance();
+        if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         console.error(e);
       } finally {

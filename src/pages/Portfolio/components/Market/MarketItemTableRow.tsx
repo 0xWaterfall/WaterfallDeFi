@@ -65,12 +65,15 @@ const APYStyled2 = styled.div`
     margin-left: 5px;
   }
   & > span:nth-of-type(3) {
+    display: grid;
+    gap: 5px;
+    grid-auto-flow: column;
     background-color: ${({ theme }) => theme.white.normal};
     border-radius: 4px;
     padding: 5px;
     text-align: center;
     color: ${({ theme }) => theme.primary.light};
-    width: 60px;
+    min-width: 60px;
     margin-left: 0px;
     display: flex;
     justify-content: center;

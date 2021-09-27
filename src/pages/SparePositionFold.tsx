@@ -101,6 +101,7 @@ type TProps = WrappedComponentProps & {
   isActive: boolean;
   currentTranche: number;
   tranchesPendingReward: any;
+  fee: string;
 };
 
 const SparePositionFold = memo<TProps>(
@@ -114,7 +115,8 @@ const SparePositionFold = memo<TProps>(
     currentTranche,
     isPending,
     isActive,
-    tranchesPendingReward
+    tranchesPendingReward,
+    fee
   }) => {
     const { gray, primary, shadow, linearGradient, white } = useTheme();
     return (
@@ -178,9 +180,7 @@ const SparePositionFold = memo<TProps>(
           <Prompt>
             <Union css={{ color: primary.deep }} />
             <div>
-              {intl.formatMessage({
-                defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
-              })}
+              {`After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x ${fee}%. You can also select Roll-deposit to the next cycle, and you can change the Tranche and amount during Roll-deposit.`}
             </div>
           </Prompt>
         </ContainerWrapper>

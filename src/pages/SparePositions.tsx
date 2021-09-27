@@ -16,15 +16,19 @@ import { Web3Provider } from "@ethersproject/providers";
 import { MarketList } from "config/market";
 import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
-import { TrancheCycle, UserInvest } from "types";
+import { PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
 import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionItem from "./SparePositionItem";
-import { useMarkets } from "hooks/useSelectors";
+import { getPosition } from "store/position";
+import { useMarkets, usePosition } from "hooks/useSelectors";
 import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
 import { successNotification } from "utils/notification";
+import { useAppDispatch } from "store";
+import numeral from "numeral";
+import { BIG_TEN } from "utils/bigNumber";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -92,12 +96,46 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { account } = useWeb3React<Web3Provider>();
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
+
+  const position = usePosition();
   const markets = useMarkets();
   const market = markets[0];
+  const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    market && account && dispatch(getPosition({ market, account }));
+  }, [market, account]);
 
   // const { loading, error, data } = useHistoryQuery(account);
-  const { userInvests, trancheCycles } = useHistoryQuery(account);
 
+  console.log(_userInvests);
+  let userInvests = _userInvests.filter((_userInvest: UserInvest) => {
+    if ((_userInvest.cycle == Number(market.cycle) && market.status) === PORTFOLIO_STATUS.PENDING) return false;
+    return true;
+  });
+  console.log(userInvests);
+  for (let i = 0; i < position.length; i++) {
+    const _cycle = new BigNumber(position[i][0].hex).toString();
+    const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0");
+    if (_cycle == market.cycle) {
+      userInvests = [
+        {
+          capital: "0",
+          cycle: Number(market.cycle),
+          harvestAt: 0,
+          id: "",
+          investAt: 0,
+          owner: "",
+          principal: _principal,
+          tranche: i,
+          interest: "0",
+          earningsAPY: "NaN"
+        },
+        ...userInvests
+      ];
+    }
+  }
+  console.log(userInvests);
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
@@ -131,7 +169,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
       if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
       return true;
     });
-  }, [selectedTranche, selectedStatus, trancheCycles]);
+  }, [selectedTranche, selectedStatus, trancheCycles, userInvests]);
 
   return (
     <React.Fragment>
@@ -172,7 +210,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
-          <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Net APY" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Net APR" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={150}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
@@ -180,21 +218,22 @@ const SparePositions = memo<TProps>(({ intl }) => {
         </TableRow>
 
         <NoDataWrapper isNoData={!payload?.length}>
-          {payload.map((_userInvest: UserInvest, _idx: number) => {
-            const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-            const trancheCycle = trancheCycles[trancheCycleId];
-
-            return (
-              <SparePositionItem
-                key={_idx}
-                userInvest={_userInvest}
-                market={market}
-                trancheCycle={trancheCycle}
-                redeemDirect={redeemDirect}
-                redeemLoading={redeemLoading[_idx] || false}
-              />
-            );
-          })}
+          {trancheCycles &&
+            payload.map((_userInvest: UserInvest, _idx: number) => {
+              const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+              const trancheCycle = trancheCycles[trancheCycleId];
+              if (trancheCycle)
+                return (
+                  <SparePositionItem
+                    key={_idx}
+                    userInvest={_userInvest}
+                    market={market}
+                    trancheCycle={trancheCycle}
+                    redeemDirect={redeemDirect}
+                    redeemLoading={redeemLoading[_idx] || false}
+                  />
+                );
+            })}
         </NoDataWrapper>
       </Table>
     </React.Fragment>

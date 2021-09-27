@@ -116,7 +116,7 @@ const TableColumnWrapper = styled(TableColumn)`
       content: "Cycle";
     }
     &:nth-of-type(4)::before {
-      content: "Net APY";
+      content: "Net APR";
     }
     &:nth-of-type(5)::before {
       content: "Principal";
@@ -186,7 +186,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             <span>{trancheCycle.state !== 0 && formatTimestamp(trancheCycle.endAt)}</span>
           </CycleWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Net APY" })}>
+        <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Net APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             <p>{tranchesDisplayText[userInvest.tranche]}</p>
             <div>
@@ -243,6 +243,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           isPending={trancheCycle.state === 0}
           isActive={trancheCycle.state === 1}
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
+          fee={market.tranches[userInvest.tranche].fee}
         />
       )}
     </Wrapper>

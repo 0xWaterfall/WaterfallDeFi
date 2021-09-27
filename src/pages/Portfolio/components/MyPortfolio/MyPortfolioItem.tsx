@@ -154,7 +154,7 @@ const MyPortfolioItem = memo<TProps>(
         </RowDiv>
         <RowDiv>
           <div css={{ display: "flex" }}>
-            {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+            {intl.formatMessage({ defaultMessage: "Deposit APR" })}
             <Tooltip
               css={{ marginLeft: 10, lineHeight: 30 }}
               overlay={

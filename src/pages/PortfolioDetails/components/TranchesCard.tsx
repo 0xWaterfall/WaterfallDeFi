@@ -167,7 +167,7 @@ const TranchesCard = memo<TProps>(
             <CheckIcon css={{ color: selected ? primary.deep : gray.normal3 }} />
           </TrancheName>
           <Text2 color={Types[type].color}>
-            APY {trancheApr}% + {wtfApr}% WTF
+            APR {trancheApr}% + {wtfApr}% WTF
           </Text2>
           <Text3>{Types[type].riskText}</Text3>
           <Separator margin={15} />

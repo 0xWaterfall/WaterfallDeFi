@@ -163,7 +163,7 @@ const ApproveCard = memo<TProps>(
       }),
       intl.formatMessage({
         defaultMessage:
-          "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APY of your portfolio, your effective APY may be lower. Make sure you fully understand the risks."
+          "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APR of your portfolio, your effective APR may be lower. Make sure you fully understand the risks."
       })
     ];
 
@@ -252,7 +252,12 @@ const ApproveCard = memo<TProps>(
         {/* {!enabled && <BlockDiv />} */}
         {/* {isSoldOut && <BlockDiv />} */}
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Wallet Balance" })}:</div>
+          <div>
+            {isRe
+              ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+              : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+            :
+          </div>
           <div>
             {formatNumberSeparator(balance)} {assets}
           </div>

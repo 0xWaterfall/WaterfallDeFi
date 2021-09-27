@@ -180,7 +180,32 @@ const SparePositionFold = memo<TProps>(
           <Prompt>
             <Union css={{ color: primary.deep }} />
             <div>
-              {`After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x ${fee}%. You can also select Roll-deposit to the next cycle, and you can change the Tranche and amount during Roll-deposit.`}
+              <p>
+                {intl.formatMessage(
+                  {
+                    defaultMessage:
+                      "After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x {number}."
+                  },
+                  {
+                    number: <span css={{ color: primary.deep }}>{fee}%</span>
+                  }
+                )}
+              </p>
+              <p>
+                {intl.formatMessage(
+                  {
+                    defaultMessage: `
+                  You can also select {deposit} to the next cycle, and you can change the Tranche and amount during Roll-deposit.`
+                  },
+                  {
+                    deposit: (
+                      <span css={{ color: primary.deep }}>
+                        {intl.formatMessage({ defaultMessage: "Roll-deposit" })}
+                      </span>
+                    )
+                  }
+                )}
+              </p>
             </div>
           </Prompt>
         </ContainerWrapper>

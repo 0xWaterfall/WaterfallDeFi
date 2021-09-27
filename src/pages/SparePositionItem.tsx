@@ -93,6 +93,7 @@ const TableRowWrapper = styled(TableRow)`
   color: ${({ theme }) => theme.gray.normal85};
   font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.primary.lightBrown};
+  cursor: pointer;
   @media screen and (max-width: 768px) {
     padding: 26px 20px;
     border: 1px solid ${({ theme }) => theme.primary.lightBrown};
@@ -172,7 +173,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
   return (
     <Wrapper>
-      <TableRowWrapper>
+      <TableRowWrapper
+        onClick={() => {
+          setFold((fold) => !fold);
+        }}
+      >
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}>
           {market?.portfolio}
         </TableColumnWrapper>
@@ -217,11 +222,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {userInvest.interest} {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper>
-          <CaretDownWrapper
-            onClick={() => {
-              setFold((fold) => !fold);
-            }}
-          >
+          <CaretDownWrapper>
             <CaretDown
               css={{
                 transition: "transform 0.3s",

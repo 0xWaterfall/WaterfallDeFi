@@ -1,13 +1,13 @@
 <svg width="74" height="75" viewBox="0 0 74 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d)">
-<circle cx="37" cy="36" r="31" transform="rotate(90 37 36)" fill="url(#paint0_linear)"/>
-<g filter="url(#filter1_i)">
-<circle cx="37" cy="36" r="31" transform="rotate(90 37 36)" fill="url(#paint1_linear)"/>
+<g filter="url(#wf_coin_d)">
+<circle cx="37" cy="36" r="31" transform="rotate(90 37 36)" fill="url(#wf_coin0_linear)"/>
+<g filter="url(#wf_coin1_i)">
+<circle cx="37" cy="36" r="31" transform="rotate(90 37 36)" fill="url(#wf_coin1_linear)"/>
 </g>
 </g>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M41.0352 41.352H39.4419V29.6697C39.4419 27.8983 39.0175 26.6174 38.1501 25.8543C37.2827 25.0912 35.794 24.7037 33.7087 24.7037H32.9059V23.1321H33.7087C36.237 23.1321 38.0394 23.6408 39.2143 24.6855C40.3893 25.7302 41.0598 27.438 41.0352 29.6727V41.352ZM40.1646 45.6794C39.1842 45.7264 38.2203 45.4183 37.4549 44.8134C36.7136 44.1654 36.3076 43.2025 36.2245 41.9458V41.8913L36.3937 30.1182C36.3445 28.9069 36.3168 28.6647 36.3107 28.6193C36.2904 28.4195 36.2014 28.2325 36.0584 28.0893C35.9139 27.9773 35.3664 27.6745 33.7178 27.6745H32.9058V26.115H33.7024C35.3572 26.0999 36.4398 26.3512 37.1011 26.9054C37.5329 27.2886 37.813 27.8099 37.8916 28.377C37.9131 28.5193 37.9439 28.8282 37.9931 30.0818V30.1242L37.827 41.8822C37.8793 42.6938 38.1069 43.2842 38.5068 43.6355C39.0018 43.9951 39.6133 44.1642 40.2261 44.1109H41.0258L41.0443 45.6825H40.2477L40.1646 45.6794ZM34.8989 47.2151C36.1046 48.2174 37.8916 48.7291 40.2108 48.7291V48.7473H41.0874V47.1757H40.2877C38.3222 47.1999 36.8581 46.8002 35.9354 46.0311C34.9635 45.2075 34.5082 43.9599 34.5082 42.2097V30.5092H32.9058V42.1885C32.9058 44.3929 33.5671 46.0796 34.8989 47.2151Z" fill="white" fill-opacity="0.8"/>
 <defs>
-<filter id="filter0_d" x="0.150943" y="0.320754" width="73.6981" height="73.6981" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="wf_coin_d" x="0.150943" y="0.320754" width="73.6981" height="73.6981" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset dy="1.16981"/>
@@ -17,7 +17,7 @@
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
 </filter>
-<filter id="filter1_i" x="6" y="5" width="62" height="62" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="wf_coin1_i" x="6" y="5" width="62" height="62" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
@@ -27,11 +27,11 @@
 <feColorMatrix type="matrix" values="0 0 0 0 0.710661 0 0 0 0 0.753378 0 0 0 0 0.979167 0 0 0 0.5 0"/>
 <feBlend mode="normal" in2="shape" result="effect1_innerShadow"/>
 </filter>
-<linearGradient id="paint0_linear" x1="44.2656" y1="67" x2="29.4115" y2="6.29167" gradientUnits="userSpaceOnUse">
+<linearGradient id="wf_coin0_linear" x1="44.2656" y1="67" x2="29.4115" y2="6.29167" gradientUnits="userSpaceOnUse">
 <stop stop-color="#528CAF"/>
 <stop offset="1" stop-color="#523ECB"/>
 </linearGradient>
-<linearGradient id="paint1_linear" x1="6.344" y1="35.5997" x2="71.6137" y2="41.2237" gradientUnits="userSpaceOnUse">
+<linearGradient id="wf_coin1_linear" x1="6.344" y1="35.5997" x2="71.6137" y2="41.2237" gradientUnits="userSpaceOnUse">
 <stop offset="0.00520833" stop-color="#00CCCC"/>
 <stop offset="0.5625" stop-color="#3DA8C2"/>
 <stop offset="1" stop-color="#6633FF"/>

@@ -21,7 +21,6 @@ type TProps = WrappedComponentProps;
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
   const market = useSelectedMarket();
-
   return (
     <PortfolioDetailsWrapper>
       {market && (

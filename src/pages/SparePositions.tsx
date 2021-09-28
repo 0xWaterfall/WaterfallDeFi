@@ -108,17 +108,13 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
   // const { loading, error, data } = useHistoryQuery(account);
 
-  console.log(_userInvests);
   let userInvests = _userInvests.filter((_userInvest: UserInvest) => {
     if (_userInvest?.cycle == Number(market.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
     return true;
   });
-  console.log(userInvests);
   for (let i = 0; i < position.length; i++) {
     const _cycle = new BigNumber(position[i][0].hex).toString();
     const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0");
-    console.log(market.cycle);
-    console.log(_cycle);
     if (_cycle == market.cycle && market.status === PORTFOLIO_STATUS.PENDING) {
       userInvests = [
         {
@@ -137,7 +133,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
       ];
     }
   }
-  console.log(userInvests);
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },

@@ -104,6 +104,7 @@ export const useTrancheBalance = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
+      if (!account) return;
       const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
       const result = await contractMasterChef.balanceOf(account);
       setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
@@ -208,13 +209,13 @@ export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.P
 };
 
 export const getSigner = () => {
-  if (window.ethereum) {
+  if (window?.ethereum) {
     const chainId = window.ethereum.chainId;
     if (chainId !== "0x61" && chainId !== "0x38") return;
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    return signer;
+    if (signer) return signer;
   }
   return;
 };

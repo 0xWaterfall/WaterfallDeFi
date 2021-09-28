@@ -102,7 +102,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const dispatch = useDispatch();
   const wtfPrice = useWTFPrice();
   const navigateMarketDetail = () => {
-    // dispatch(setMarketKey(selectId.toString()));
+    dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolioDetails" });
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];

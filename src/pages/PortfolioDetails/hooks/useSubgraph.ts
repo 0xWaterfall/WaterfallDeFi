@@ -114,10 +114,6 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       _userInvests.push(_ui);
     }
   }
-  console.log({
-    userInvests: _userInvests,
-    trancheCycles: _trancheCycles
-  });
   return {
     userInvests: _userInvests,
     trancheCycles: _trancheCycles

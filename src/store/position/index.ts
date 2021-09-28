@@ -21,6 +21,7 @@ export const getTrancheBalance = createAsyncThunk<
   { account: string }
 >("position/getTrancheBalance", async ({ account }) => {
   try {
+    if (!account) return;
     const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
     const result = await contractMasterChef.balanceOf(account);
     return {
@@ -36,6 +37,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
   "position/getPosition",
   async ({ market, account }) => {
     try {
+      if (!account) return;
       const signer = getSigner();
       if (!signer) return [];
       const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
@@ -44,7 +46,6 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
         contractTrancheMaster.userInvest(account, 1),
         contractTrancheMaster.userInvest(account, 2)
       ]);
-      console.log(userInvest);
       return JSON.parse(JSON.stringify(userInvest));
     } catch (e) {
       console.error(e);

@@ -110,14 +110,16 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
   console.log(_userInvests);
   let userInvests = _userInvests.filter((_userInvest: UserInvest) => {
-    if ((_userInvest.cycle == Number(market.cycle) && market.status) === PORTFOLIO_STATUS.PENDING) return false;
+    if (_userInvest?.cycle == Number(market.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
     return true;
   });
   console.log(userInvests);
   for (let i = 0; i < position.length; i++) {
     const _cycle = new BigNumber(position[i][0].hex).toString();
     const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0");
-    if (_cycle == market.cycle) {
+    console.log(market.cycle);
+    console.log(_cycle);
+    if (_cycle == market.cycle && market.status === PORTFOLIO_STATUS.PENDING) {
       userInvests = [
         {
           capital: "0",
@@ -163,6 +165,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   };
   const payload = useMemo(() => {
     return userInvests?.filter((_userInvest: any) => {
+      if (!trancheCycles) return false;
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;

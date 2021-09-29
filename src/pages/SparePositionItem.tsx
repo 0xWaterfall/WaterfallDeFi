@@ -32,6 +32,7 @@ import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
 import numeral from "numeral";
 import { dataTool } from "echarts/core";
 import useInvest from "./PortfolioDetails/hooks/useInvest";
+import { BIG_TEN } from "utils/bigNumber";
 
 const Wrapper = styled.div``;
 
@@ -154,6 +155,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
     userInvest.capital &&
     new BigNumber(numeral(userInvest.principal).value() || 0)
       .plus(new BigNumber(numeral(userInvest.capital).value() || 0))
+      .dividedBy(BIG_TEN.pow(18))
       .toString();
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];

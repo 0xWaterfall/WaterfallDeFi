@@ -105,7 +105,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
-
   // const { loading, error, data } = useHistoryQuery(account);
 
   let userInvests = _userInvests.filter((_userInvest: UserInvest) => {

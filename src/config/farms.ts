@@ -1,6 +1,6 @@
 const farms: { [key: string]: string } = {
-  "0x2601A3a7a634Fba08b743DCe3FF0229E9a09832B": "Alpaca",
-  "0xd5c1bDe54f22bCfe580525224AA85DB8F33818F8": "Venus",
-  "0x273df2a8C1C1C060D0B1084F401Eeaa9b11D7829": "Cream"
+  "0xa39E14a13D36bEDcE922B3ac56aDb7A473bC96Bd": "Alpaca",
+  "0xD914768BA26B41251AB9f5274dc6212C89cA2D33": "Venus",
+  "0xA71FEc8D1Bee8f07CF1ca339525e96f952529BeD": "Cream"
 };
 export default farms;

@@ -12,8 +12,8 @@ const Wrapper = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const Staking = memo<TProps>(({ intl }) => {
+const StakingCard = memo<TProps>(({ intl }) => {
   return <Wrapper></Wrapper>;
 });
 
-export default injectIntl(Staking);
+export default injectIntl(StakingCard);

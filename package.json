@@ -2,12 +2,6 @@
   "name": "waterfall",
   "version": "1.0.0",
   "private": true,
-  "contributors": [
-    {
-      "name": "Hippo",
-      "email": "hippowuyufan@gmail.com"
-    }
-  ],
   "scripts": {
     "start": "yarn translations && react-app-rewired start",
     "build": "yarn translations && react-app-rewired build",
@@ -20,7 +14,9 @@
     "translations:pull": "node scripts/pull-translations.js",
     "translations": "yarn translations:push && yarn translations:pull",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@apollo/client": "^3.4.11",
@@ -85,10 +81,9 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,json,md,ts,tsx,scss,jsx}": [
+    "*.{js,css,json,ts,tsx,scss,jsx}": [
       "prettier --write",
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "devDependencies": {
@@ -122,7 +117,7 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-webpack-plugin": "^2.4.1",
-    "husky": "^4.3.5",
+    "husky": "^7.0.0",
     "lint-staged": "^10.5.3",
     "lodash-webpack-plugin": "^0.11.5",
     "prettier": "^2.2.1",

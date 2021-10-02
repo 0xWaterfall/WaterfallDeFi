@@ -3,7 +3,8 @@ const theme = {
     IBMPlexSans: "IBM Plex Sans"
   },
   background: {
-    apr: "#F8FDFF"
+    apr: "#F8FDFF",
+    iconfont: "#2B508C"
   },
   gray: {
     light: "#FAFAFA",
@@ -43,7 +44,8 @@ const theme = {
   },
   white: {
     normal: "#FFFFFF",
-    normal1: "rgba(255, 255, 255, .1)"
+    normal1: "rgba(255, 255, 255, .1)",
+    normal5: "rgba(255, 255, 255, .5)"
   },
   linearGradient: {
     primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"

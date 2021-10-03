@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import useScrollTop from "hooks/useScrollTop";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Farming from "./Farming";
-import Reward from "./Reward";
-import StakingCard from "./StakingCard";
+import FarmCard from "./FarmCard";
+import StakeCard from "./StakeCard";
+import TVLCard from "./TVLCard";
 
 const Wrapper = styled.div`
   max-width: 1048px;
@@ -15,14 +16,15 @@ const Wrapper = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const Staking = memo<TProps>(() => {
+const Stake = memo<TProps>(() => {
+  useScrollTop();
   return (
     <Wrapper>
-      <StakingCard />
-      <Farming />
-      <Reward />
+      <TVLCard />
+      <FarmCard />
+      <StakeCard />
     </Wrapper>
   );
 });
 
-export default injectIntl(Staking);
+export default injectIntl(Stake);

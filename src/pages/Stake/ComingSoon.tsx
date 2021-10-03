@@ -129,7 +129,6 @@ const ComingSoonRightBgWrapper = styled(ComingSoonRightBg)`
 type TProps = WrappedComponentProps;
 
 const CommingSoon = memo<TProps>(({ intl }) => {
-  const { width } = useSize(document.body);
   return (
     <Wrapper>
       <CardWrapper>

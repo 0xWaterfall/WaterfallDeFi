@@ -39,3 +39,5 @@ export { ReactComponent as Pancake } from "./pancake.svg";
 export { ReactComponent as ComingSoonTopBg } from "./ComingSoonTopBg.svg";
 export { ReactComponent as ComingSoonRightBg } from "./ComingSoonRightBg.svg";
 export { ReactComponent as StakingCardImage } from "./StakingCardImage.svg";
+export { ReactComponent as ChevronLeft } from "./ChevronLeft.svg";
+export { ReactComponent as FarmCardImage } from "./FarmCardImage.svg";

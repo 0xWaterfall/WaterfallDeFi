@@ -50,11 +50,11 @@ const Header = memo<TProps>(({ intl }) => {
   }, []);
 
   const MENU = [
-    { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: ["/"] },
+    { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: undefined },
     {
       pathname: "/portfolio",
       text: intl.formatMessage({ defaultMessage: "Portfolio" }),
-      checked: ["/portfolio/markets", "/portfolio/myPortfolio", "/portfolioDetails"],
+      checked: "portfolio",
       subMenu: [
         {
           pathname: "/portfolio/markets",
@@ -66,7 +66,11 @@ const Header = memo<TProps>(({ intl }) => {
         }
       ]
     },
-    { pathname: "/staking", text: intl.formatMessage({ defaultMessage: "Staking" }), checked: ["/staking"] }
+    {
+      pathname: "/stake",
+      text: intl.formatMessage({ defaultMessage: "Staking" }),
+      checked: "stake"
+    }
   ];
 
   const isPc = useMemo(() => {
@@ -193,7 +197,13 @@ const Header = memo<TProps>(({ intl }) => {
             css={{
               display: "flex",
               alignItems: "center",
-              color: checked.includes(location.pathname) ? primary.deep : gray.normal7,
+              color: checked
+                ? location.pathname.split("/").join().includes(checked)
+                  ? primary.deep
+                  : gray.normal7
+                : location.pathname === "/"
+                ? primary.deep
+                : gray.normal7,
               ":hover": {
                 "&>svg": {
                   transform: "rotate(180deg)"

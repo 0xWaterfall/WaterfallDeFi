@@ -55,7 +55,7 @@ const StakingCardImageWrapper = styled(StakingCardImage)`
 
 type TProps = WrappedComponentProps;
 
-const StakingCard = memo<TProps>(({ intl }) => {
+const TVLCard = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
       <StakingCardImageWrapper />
@@ -66,4 +66,4 @@ const StakingCard = memo<TProps>(({ intl }) => {
   );
 });
 
-export default injectIntl(StakingCard);
+export default injectIntl(TVLCard);

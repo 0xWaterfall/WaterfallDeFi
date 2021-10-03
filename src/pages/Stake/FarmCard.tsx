@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import useScrollTop from "hooks/useScrollTop";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
 
 const Wrapper = styled.div`
@@ -47,6 +49,12 @@ const Card = styled.div`
   }
 `;
 
+const LinearGradientSubtractWrapper = styled(LinearGradientSubtract)`
+  position: absolute;
+  top: 0;
+  left: -140px;
+`;
+
 const IconWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -82,9 +90,9 @@ const LabelLP = styled.div`
 `;
 
 const DataWrapper = styled.div`
-  display: grid;
-  row-gap: 28px;
-  grid-template-areas: "a b";
+  display: flex;
+  justify-content: space-between;
+
   div {
     display: grid;
     gap: 8px;
@@ -105,13 +113,21 @@ const DataWrapper = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const Reward = memo<TProps>(({ intl }) => {
+const FarmCard = memo<TProps>(({ intl }) => {
+  const { push } = useHistory();
+
   return (
     <Wrapper>
-      <Label>{intl.formatMessage({ defaultMessage: "Staking WTF get double reward" })}</Label>
+      <Label>{intl.formatMessage({ defaultMessage: "Farming WTF" })}</Label>
       <CardGroup>
+        <LinearGradientSubtractWrapper />
         {[1, 2, 3, 4].map((p) => (
-          <Card key={p}>
+          <Card
+            key={p}
+            onClick={() => {
+              push({ pathname: `/stake/farming/${p}` });
+            }}
+          >
             <IconWrapper>
               <IconGroup>
                 <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
@@ -120,7 +136,7 @@ const Reward = memo<TProps>(({ intl }) => {
                   css={{ transform: "translateX(-11px)" }}
                 />
               </IconGroup>
-              <span>WTF+ Trade fee</span>
+              <span>WTF</span>
             </IconWrapper>
             <LabelLP>WTF-BUSD LP</LabelLP>
             <DataWrapper>
@@ -131,10 +147,6 @@ const Reward = memo<TProps>(({ intl }) => {
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
                 <span>736%</span>
-              </div>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
-                <span>800,000</span>
               </div>
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
@@ -148,4 +160,4 @@ const Reward = memo<TProps>(({ intl }) => {
   );
 });
 
-export default injectIntl(Reward);
+export default injectIntl(FarmCard);

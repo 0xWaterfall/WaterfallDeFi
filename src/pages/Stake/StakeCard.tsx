@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { LinearGradientSubtract } from "styles";
+import { useHistory } from "react-router-dom";
 
 const Wrapper = styled.div`
   position: relative;
@@ -47,12 +47,6 @@ const Card = styled.div`
   }
 `;
 
-const LinearGradientSubtractWrapper = styled(LinearGradientSubtract)`
-  position: absolute;
-  top: 0;
-  left: -140px;
-`;
-
 const IconWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -88,9 +82,9 @@ const LabelLP = styled.div`
 `;
 
 const DataWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-
+  display: grid;
+  row-gap: 28px;
+  grid-template-areas: "a b";
   div {
     display: grid;
     gap: 8px;
@@ -111,14 +105,20 @@ const DataWrapper = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const Farming = memo<TProps>(({ intl }) => {
+const StakeCard = memo<TProps>(({ intl }) => {
+  const { push } = useHistory();
+
   return (
     <Wrapper>
-      <Label>{intl.formatMessage({ defaultMessage: "Farming WTF" })}</Label>
+      <Label>{intl.formatMessage({ defaultMessage: "Staking WTF get double reward" })}</Label>
       <CardGroup>
-        <LinearGradientSubtractWrapper />
         {[1, 2, 3, 4].map((p) => (
-          <Card key={p}>
+          <Card
+            key={p}
+            onClick={() => {
+              push({ pathname: `/stake/staking/${p}` });
+            }}
+          >
             <IconWrapper>
               <IconGroup>
                 <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
@@ -127,7 +127,7 @@ const Farming = memo<TProps>(({ intl }) => {
                   css={{ transform: "translateX(-11px)" }}
                 />
               </IconGroup>
-              <span>WTF</span>
+              <span>WTF+ Trade fee</span>
             </IconWrapper>
             <LabelLP>WTF-BUSD LP</LabelLP>
             <DataWrapper>
@@ -138,6 +138,10 @@ const Farming = memo<TProps>(({ intl }) => {
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
                 <span>736%</span>
+              </div>
+              <div>
+                <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
+                <span>800,000</span>
               </div>
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
@@ -151,4 +155,4 @@ const Farming = memo<TProps>(({ intl }) => {
   );
 });
 
-export default injectIntl(Farming);
+export default injectIntl(StakeCard);

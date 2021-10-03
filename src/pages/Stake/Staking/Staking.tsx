@@ -7,6 +7,9 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
+import MyStakingCard from "./MyStakingCard";
+import RewardCard from "./RewardCard";
+import TotalCard from "./TotalCard";
 
 const Wrapper = styled.div`
   max-width: 1048px;
@@ -14,7 +17,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
-const FarmingCard = styled.div`
+const StakingCard = styled.div`
   background: ${({ theme }) => theme.primary.lightBrown};
   border-radius: 24px;
   padding: 45px 53px;
@@ -38,6 +41,7 @@ const CardGroup = styled.div`
   grid-auto-flow: column;
   grid-template-columns: 4fr 3fr;
   position: relative;
+  margin-bottom: 24px;
   @media screen and (max-width: 876px) {
     grid-auto-flow: row;
     grid-template-columns: auto;
@@ -46,8 +50,8 @@ const CardGroup = styled.div`
 
 const LinearGradientSubtractWrapper = styled(LinearGradientSubtract)`
   position: absolute;
-  left: -140px;
-  top: -40px;
+  left: -141px;
+  top: -84px;
 `;
 
 type TProps = WrappedComponentProps;
@@ -59,10 +63,16 @@ const Staking = memo<TProps>(({ intl }) => {
 
   return (
     <Wrapper>
-      <FarmingCard onClick={goBack}>
+      <StakingCard onClick={goBack}>
         <ChevronLeft />
         <span>{intl.formatMessage({ defaultMessage: "Staking WTF get double reward" })}</span>
-      </FarmingCard>
+      </StakingCard>
+      <CardGroup>
+        <LinearGradientSubtractWrapper />
+        <TotalCard />
+        <RewardCard />
+      </CardGroup>
+      <MyStakingCard />
     </Wrapper>
   );
 });

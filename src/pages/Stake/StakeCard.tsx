@@ -37,9 +37,9 @@ const CardGroup = styled.div`
 
 const Card = styled.div`
   background: ${({ theme }) => theme.white.normal5};
+  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   border-radius: 24px;
   padding: 19px 16px 22px;
-  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   cursor: pointer;
   transition: transform 0.5s;
   :hover {

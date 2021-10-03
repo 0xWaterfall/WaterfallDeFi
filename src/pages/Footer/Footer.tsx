@@ -1,14 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
-import { useSize } from "ahooks";
-import { Discord, Medium, Telegram, Twitter, Unicorn, LogoFooter, FooterLine } from "assets/images";
+import { Discord, Medium, Telegram, Twitter, LogoFooter, FooterLine } from "assets/images";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { useTheme } from "@emotion/react";
 
 type TProps = WrappedComponentProps;
-const FooterWrapper = styled.div`
+const FooterWrapper = styled.footer`
   background-color: ${({ theme }) => theme.footer.background};
   height: 500px;
 `;

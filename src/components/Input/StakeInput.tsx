@@ -46,8 +46,12 @@ const StakeInput: React.FC<TProps> = ({ suffixText, onMAX, ...props }) => {
       suffix={
         <>
           <p onClick={onMAX}>MAX</p>
-          <SplitLine />
-          <span>{suffixText ?? "coin"}</span>
+          {suffixText && (
+            <>
+              <SplitLine />
+              <span>{suffixText}</span>
+            </>
+          )}
         </>
       }
     />

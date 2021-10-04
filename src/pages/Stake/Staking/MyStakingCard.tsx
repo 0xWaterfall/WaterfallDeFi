@@ -85,7 +85,7 @@ const NoBorderBlock = styled.div`
 type TProps = WrappedComponentProps;
 
 const MyStakingCard = memo<TProps>(({ intl }) => {
-  const [amountModalVisit, setAmountModalVisit] = useState(true);
+  const [amountModalVisit, setAmountModalVisit] = useState(false);
   return (
     <Wrapper>
       <Block css={{ gridArea: "a" }}>
@@ -94,21 +94,23 @@ const MyStakingCard = memo<TProps>(({ intl }) => {
           <p>1,000,000,000</p>
           <span>$ 2517.12</span>
         </div>
-        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Add Amount" })}</LinearGradientBtn>
+        <LinearGradientBtn onClick={setAmountModalVisit.bind(null, true)}>
+          {intl.formatMessage({ defaultMessage: "Add Amount" })}
+        </LinearGradientBtn>
       </Block>
       <Block css={{ gridArea: "b" }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "Expire date" })}</span>
           <p>Unlockable</p>
         </div>
-        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Add Amount" })}</LinearGradientBtn>
+        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Extend" })}</LinearGradientBtn>
       </Block>
       <Block css={{ gridArea: "c" }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "You get Ratio" })}</span>
           <p>0.83%</p>
         </div>
-        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Add Amount" })}</LinearGradientBtn>
+        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Raise" })}</LinearGradientBtn>
       </Block>
       <NoBorderBlock css={{ gridArea: "d" }}>
         <span>{intl.formatMessage({ defaultMessage: "Staking" })}（Ve-WTF）</span>

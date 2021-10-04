@@ -24,6 +24,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
 import { useMarkets } from "./useSelectors";
+import { NETWORK } from "config";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -77,7 +78,7 @@ export const useStrategyFarm = () => {
   };
   useEffect(() => {
     const fetchFarms = async () => {
-      const contractStrategy = getContract(StrategyAbi, StrategyAddress);
+      const contractStrategy = getContract(StrategyAbi, StrategyAddress[NETWORK]);
       const _result = [];
       try {
         const farm0 = await contractStrategy.farms(0);
@@ -105,7 +106,7 @@ export const useTrancheBalance = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       if (!account) return;
-      const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
+      const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
       const result = await contractMasterChef.balanceOf(account);
       setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
       setInvested(result.invested);
@@ -124,7 +125,7 @@ export const usePendingWTFReward = (poolId?: number) => {
     const fetchPendingReward = async () => {
       try {
         if (!account) return;
-        const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+        const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
         let _pendingReward = new BigNumber(0);
 
         if (poolId == 0 || allPool) {
@@ -174,7 +175,7 @@ export const useWTF = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
       const rewardPerBlock = await contractMasterChef.rewardPerBlock();
       const _weekDistribution = new BigNumber(rewardPerBlock.toString()).dividedBy(BIG_TEN.pow(18)).times(28800 * 7);
       setWeekDistribution(_weekDistribution);
@@ -205,7 +206,7 @@ export const getContract = (abi: any, address: string, signer?: ethers.Signer | 
   return new ethers.Contract(address, abi, signerOrProvider);
 };
 export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.Provider) => {
-  return getContract(MultiCallAbi, MulticallAddress, signer);
+  return getContract(MultiCallAbi, MulticallAddress[NETWORK], signer);
 };
 
 export const getSigner = () => {

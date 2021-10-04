@@ -36,3 +36,5 @@ export const USER_INVESTS_GQL = gql`
     }
   }
 `;
+
+export const NETWORK = process.env.REACT_APP_NETWORK as "DEVNET" | "TESTNET" | "MAINNET";

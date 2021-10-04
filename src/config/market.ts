@@ -4,10 +4,10 @@ import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as StrategyAbi } from "./abi/Strategy.json";
 import { Market } from "types";
-
+import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: "BUSD Falls",
+    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Falls",
     assets: "BUSD",
     listingDate: "2021/08/29",
     // lockupPeriod: "7 Days",

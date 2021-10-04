@@ -36,5 +36,11 @@ export const USER_INVESTS_GQL = gql`
     }
   }
 `;
-
-export const NETWORK = process.env.REACT_APP_NETWORK as "DEVNET" | "TESTNET" | "MAINNET";
+export const NETWORKS = {
+  DEVNET: "DEVNET",
+  TESTNET: "TESTNET",
+  MAINNET: "MAINNET"
+} as const;
+export type NETWORKS_TYPE = typeof NETWORKS[keyof typeof NETWORKS];
+export const NETWORK = process.env.REACT_APP_NETWORK as NETWORKS_TYPE;
+console.log("connected to", NETWORK);

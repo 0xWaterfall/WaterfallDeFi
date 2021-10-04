@@ -18,14 +18,14 @@ export const MarketList: Market[] = [
     totalTranchesTarget: "",
     status: "",
     nextTime: "",
-    address: TranchesAddress,
+    address: TranchesAddress[NETWORK],
     abi: TranchesAbi,
     masterChefAbi: MasterChefAbi,
-    masterChefAddress: MasterChefAddress,
+    masterChefAddress: MasterChefAddress[NETWORK],
     pools: [],
-    depositAssetAddress: BUSDAddress,
+    depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAbi: WTFAbi,
-    strategyAddress: StrategyAddress,
+    strategyAddress: StrategyAddress[NETWORK],
     strategyAbi: StrategyAbi
   }
 ];

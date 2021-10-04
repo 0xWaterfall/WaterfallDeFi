@@ -7,6 +7,7 @@ import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { MasterChefAddress, TranchesAddress } from "config/address";
 import { BIG_TEN } from "utils/bigNumber";
+import { NETWORK } from "config";
 
 const initialState: IPosition = {
   positions: [],
@@ -22,7 +23,7 @@ export const getTrancheBalance = createAsyncThunk<
 >("position/getTrancheBalance", async ({ account }) => {
   try {
     if (!account) return;
-    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress);
+    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
     const result = await contractMasterChef.balanceOf(account);
     return {
       balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
@@ -60,7 +61,7 @@ export const getPendingWTFReward = createAsyncThunk<
   try {
     // const allPool = poolId == undefined ? true : false;
     if (!account) return;
-    const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress);
+    const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
     let _pendingReward = new BigNumber(0);
     const _tranchesPendingReward = [];
 

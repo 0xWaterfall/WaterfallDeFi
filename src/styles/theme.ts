@@ -12,6 +12,7 @@ const theme = {
     normal04: "rgba(51, 51, 51, 0.04)",
     normal08: "rgba(51, 51, 51, 0.08)",
     normal3: "rgba(51, 51, 51, 0.3)",
+    normal2: "rgba(51, 51, 51, 0.2)",
     normal5: "rgba(51, 51, 51, 0.5)",
     normal7: "rgba(51, 51, 51, 0.7)",
     normal85: "rgba(51, 51, 51, 0.85)"

@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import AddAmountModal from "./Modal/AddAmountModal";
+import ExtendModal from "./Modal/ExtendModal";
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -86,6 +87,8 @@ type TProps = WrappedComponentProps;
 
 const MyStakingCard = memo<TProps>(({ intl }) => {
   const [amountModalVisit, setAmountModalVisit] = useState(false);
+  const [extendModalVisit, setExtendModalVisit] = useState(false);
+
   return (
     <Wrapper>
       <Block css={{ gridArea: "a" }}>
@@ -103,14 +106,18 @@ const MyStakingCard = memo<TProps>(({ intl }) => {
           <span>{intl.formatMessage({ defaultMessage: "Expire date" })}</span>
           <p>Unlockable</p>
         </div>
-        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Extend" })}</LinearGradientBtn>
+        <LinearGradientBtn onClick={setExtendModalVisit.bind(null, true)}>
+          {intl.formatMessage({ defaultMessage: "Extend" })}
+        </LinearGradientBtn>
       </Block>
       <Block css={{ gridArea: "c" }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "You get Ratio" })}</span>
           <p>0.83%</p>
         </div>
-        <LinearGradientBtn>{intl.formatMessage({ defaultMessage: "Raise" })}</LinearGradientBtn>
+        <LinearGradientBtn onClick={setExtendModalVisit.bind(null, true)}>
+          {intl.formatMessage({ defaultMessage: "Raise" })}
+        </LinearGradientBtn>
       </Block>
       <NoBorderBlock css={{ gridArea: "d" }}>
         <span>{intl.formatMessage({ defaultMessage: "Staking" })}（Ve-WTF）</span>
@@ -121,7 +128,8 @@ const MyStakingCard = memo<TProps>(({ intl }) => {
         <span>{intl.formatMessage({ defaultMessage: "Your Share" })}</span>
         <p>0.1%</p>
       </NoBorderBlock>
-      <AddAmountModal visible={amountModalVisit} onCancel={setAmountModalVisit} />
+      {amountModalVisit && <AddAmountModal visible={amountModalVisit} onCancel={setAmountModalVisit} />}
+      {extendModalVisit && <ExtendModal visible={extendModalVisit} onCancel={setExtendModalVisit} />}
     </Wrapper>
   );
 });

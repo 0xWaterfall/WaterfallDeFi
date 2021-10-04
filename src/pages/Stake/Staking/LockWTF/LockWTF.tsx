@@ -11,7 +11,8 @@ const Wrapper = styled.div`
   gap: 25px;
   grid-auto-flow: column;
   grid-template-columns: 5fr 3fr;
-  @media screen and (max-width: 680px) {
+  @media screen and (max-width: 768px) {
+    grid-template-columns: auto;
     grid-auto-flow: row;
   }
 `;

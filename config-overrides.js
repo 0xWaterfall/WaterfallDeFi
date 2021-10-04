@@ -6,7 +6,7 @@ const {
   addWebpackPlugin,
   addDecoratorsLegacy
 } = require("customize-cra");
-
+const AntdDayjsWebpackPlugin = require("antd-dayjs-webpack-plugin");
 const LodashWebpackPlugin = require("lodash-webpack-plugin");
 module.exports = {
   webpack: override(
@@ -36,6 +36,7 @@ module.exports = {
         paths: true
       })
     ),
+    addWebpackPlugin(new AntdDayjsWebpackPlugin()),
     addBabelPlugin([
       "formatjs",
       {

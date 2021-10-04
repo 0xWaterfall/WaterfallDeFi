@@ -3,8 +3,11 @@
 import styled from "@emotion/styled";
 import { Union } from "assets/images";
 import Button from "components/Button/Button";
+import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
-import React, { memo } from "react";
+import SelectTimeLimit, { Block } from "components/SelectTimeLimit/SelectTimeLimit";
+import dayjs, { Dayjs, OpUnitType } from "dayjs";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const Wrapper = styled.div`
@@ -15,6 +18,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.gray.normal85};
+  @media screen and (max-width: 768px) {
+    padding: 32px;
+  }
 `;
 
 const Title = styled.div`
@@ -62,9 +68,34 @@ const ButtonWrapper = styled(Button)`
   margin-top: 55px;
 `;
 
+// const DateType = styled.div`
+//   display: grid;
+//   gap: 15px;
+//   grid-template-columns:
+//   grid-auto-flow: column;
+// `;
+
 type TProps = WrappedComponentProps;
 
 const LockUp = memo<TProps>(({ intl }) => {
+  const [isDatePickerShow, setDatePickerShow] = useState(false);
+
+  const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
+
+  const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
+
+  const newExpireDate = useMemo(() => {
+    if (isDatePickerShow) {
+      return datePickerValue;
+    } else if (selectedValue) {
+      return dayjs().add(selectedValue.value, selectedValue.unit);
+    }
+  }, [selectedValue, datePickerValue, isDatePickerShow]);
+
+  const onConfirm = useCallback(() => {
+    console.log(newExpireDate?.unix());
+  }, [newExpireDate]);
+
   return (
     <Wrapper>
       <Title>{intl.formatMessage({ defaultMessage: "Lock-up" })}</Title>
@@ -79,7 +110,39 @@ const LockUp = memo<TProps>(({ intl }) => {
           console.log(1);
         }}
       />
-      <Line css={{ margin: "24px 0 26px" }} />
+      <Label css={{ margin: "16px 0 10px" }}>
+        <p>{intl.formatMessage({ defaultMessage: "Choose a period" })}</p>
+      </Label>
+
+      <SelectTimeLimit
+        onSelected={(e) => {
+          setSelectedValue(e);
+          setDatePickerShow(false);
+        }}
+        css={{ marginBottom: 17 }}
+        reset={isDatePickerShow}
+        suffixRender={
+          <Block
+            data-actived={isDatePickerShow}
+            onClick={() => {
+              setDatePickerShow(true);
+            }}
+          >
+            {intl.formatMessage({ defaultMessage: "Custom" })}
+          </Block>
+        }
+      />
+
+      {isDatePickerShow && (
+        <DatePicker
+          style={{ marginBottom: 19 }}
+          value={datePickerValue as moment.Moment | undefined}
+          onChange={(e) => {
+            setDatePickerValue(e as Dayjs);
+          }}
+        />
+      )}
+
       <Label>
         <div>
           {intl.formatMessage({ defaultMessage: "Pending Rewards" })}
@@ -95,10 +158,12 @@ const LockUp = memo<TProps>(({ intl }) => {
 
       <Label>
         <div>{intl.formatMessage({ defaultMessage: "Expire date" })}</div>
-        <p>2021-07-30</p>
+        <p>{newExpireDate ? newExpireDate?.format("YYYY-MM-DD") : "--"}</p>
       </Label>
 
-      <ButtonWrapper type="primaryLine">{intl.formatMessage({ defaultMessage: "Lock & Stake Ve-WTF" })}</ButtonWrapper>
+      <ButtonWrapper type="primaryLine" onClick={onConfirm}>
+        {intl.formatMessage({ defaultMessage: "Lock & Stake Ve-WTF" })}
+      </ButtonWrapper>
     </Wrapper>
   );
 });

@@ -68,13 +68,6 @@ const ButtonWrapper = styled(Button)`
   margin-top: 55px;
 `;
 
-// const DateType = styled.div`
-//   display: grid;
-//   gap: 15px;
-//   grid-template-columns:
-//   grid-auto-flow: column;
-// `;
-
 type TProps = WrappedComponentProps;
 
 const LockUp = memo<TProps>(({ intl }) => {

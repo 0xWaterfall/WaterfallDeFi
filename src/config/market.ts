@@ -4,6 +4,7 @@ import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as StrategyAbi } from "./abi/Strategy.json";
 import { Market } from "types";
+
 export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls",

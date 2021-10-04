@@ -2,13 +2,16 @@
 
 import styled from "@emotion/styled";
 import { ArrowLeft, ChevronLeft } from "assets/images";
+import Tabs, { TabPane } from "components/Tabs/Tabs";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
+import LockWTF from "./LockWTF/LockWTF";
 import MyStakingCard from "./MyStakingCard";
 import RewardCard from "./RewardCard";
+import StakingVeWTF from "./StakingVeWTF/StakingVeWTF";
 import TotalCard from "./TotalCard";
 
 const Wrapper = styled.div`
@@ -61,6 +64,18 @@ const Staking = memo<TProps>(({ intl }) => {
 
   const { goBack } = useHistory();
 
+  const [activeKey, setActiveKey] = useState("LOCKWTF");
+
+  const TABS = [
+    { key: "LOCKWTF", text: intl.formatMessage({ defaultMessage: "Lock WTF" }), component: <LockWTF /> },
+    {
+      key: "STAKINGVEWTF",
+      text: intl.formatMessage({ defaultMessage: "Staking Ve-WTF" }),
+
+      component: <StakingVeWTF />
+    }
+  ];
+
   return (
     <Wrapper>
       <StakingCard onClick={goBack}>
@@ -73,6 +88,13 @@ const Staking = memo<TProps>(({ intl }) => {
         <RewardCard />
       </CardGroup>
       <MyStakingCard />
+      <Tabs activeKey={activeKey} onChange={setActiveKey} style={{ marginBottom: 100 }}>
+        {TABS.map(({ key, text, component }) => (
+          <TabPane tab={text} key={key}>
+            {key === activeKey && component}
+          </TabPane>
+        ))}
+      </Tabs>
     </Wrapper>
   );
 });

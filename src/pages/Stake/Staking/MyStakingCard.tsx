@@ -1,13 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { ArrowLeft, ChevronLeft, WTF as WTFIcon } from "assets/images";
-import Button from "components/Button/Button";
-import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router";
-import { LinearGradientSubtract } from "styles";
+import AddAmountModal from "./Modal/AddAmountModal";
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -89,6 +85,7 @@ const NoBorderBlock = styled.div`
 type TProps = WrappedComponentProps;
 
 const MyStakingCard = memo<TProps>(({ intl }) => {
+  const [amountModalVisit, setAmountModalVisit] = useState(true);
   return (
     <Wrapper>
       <Block css={{ gridArea: "a" }}>
@@ -122,6 +119,7 @@ const MyStakingCard = memo<TProps>(({ intl }) => {
         <span>{intl.formatMessage({ defaultMessage: "Your Share" })}</span>
         <p>0.1%</p>
       </NoBorderBlock>
+      <AddAmountModal visible={amountModalVisit} onCancel={setAmountModalVisit} />
     </Wrapper>
   );
 });

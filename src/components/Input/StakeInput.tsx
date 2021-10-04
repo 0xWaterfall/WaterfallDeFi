@@ -4,7 +4,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import Input from "./Input";
 
-type TProps = Partial<typeof Input> & { suffixText?: React.ReactNode };
+type TProps = Partial<typeof Input> & { suffixText?: React.ReactNode; onMAX?: () => void };
 
 const WrapperInput = styled(Input)`
   &.ant-input-affix-wrapper {
@@ -39,13 +39,13 @@ const SplitLine = styled.div`
   margin: 0 16px;
 `;
 
-const StakeInput: React.FC<TProps> = ({ suffixText, ...props }) => {
+const StakeInput: React.FC<TProps> = ({ suffixText, onMAX, ...props }) => {
   return (
     <WrapperInput
       {...props}
       suffix={
         <>
-          <p>MAX</p>
+          <p onClick={onMAX}>MAX</p>
           <SplitLine />
           <span>{suffixText ?? "coin"}</span>
         </>

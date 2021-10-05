@@ -26,13 +26,16 @@ const CardGroup = styled.div`
   display: grid;
   column-gap: 35px;
   row-gap: 24px;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-areas: "a b c";
   position: relative;
   @media screen and (max-width: 876px) {
+    grid-template-columns: 1fr 1fr;
     grid-template-areas: "a b";
   }
 
   @media screen and (max-width: 512px) {
+    grid-template-columns: auto;
     grid-template-areas: "a";
   }
 `;

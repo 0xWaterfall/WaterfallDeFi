@@ -1,40 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import { useStakingPool, useEarningTokenTotalSupply } from "hooks/useStaking";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router-dom";
-
-const Wrapper = styled.div`
-  position: relative;
-  z-index: 1;
-  margin-bottom: 48px;
-`;
-
-const Label = styled.div`
-  padding-bottom: 20px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.primary.deep1};
-  font-size: 20px;
-  line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal7};
-`;
-
-const CardGroup = styled.div`
-  display: grid;
-  column-gap: 35px;
-  row-gap: 24px;
-  grid-template-areas: "a b c";
-  position: relative;
-  @media screen and (max-width: 876px) {
-    grid-template-areas: "a b";
-  }
-
-  @media screen and (max-width: 512px) {
-    grid-template-areas: "a";
-  }
-`;
-
+import { StakingConfig } from "types";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 const Card = styled.div`
   background: ${({ theme }) => theme.white.normal5};
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
@@ -103,55 +75,44 @@ const DataWrapper = styled.div`
   }
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  data: StakingConfig;
+};
 
-const StakeCard = memo<TProps>(({ intl }) => {
-  const { push } = useHistory();
+const StakeCard = memo<TProps>(({ intl, data }) => {
+  const { account } = useWeb3React<Web3Provider>();
 
+  const result = useStakingPool(data.stakingTokenAddress, account);
+  const earningTokenTotalSupply = useEarningTokenTotalSupply(data.earningTokenAddress);
   return (
-    <Wrapper>
-      <Label>{intl.formatMessage({ defaultMessage: "Staking WTF get double reward" })}</Label>
-      <CardGroup>
-        {[1, 2, 3, 4].map((p) => (
-          <Card
-            key={p}
-            onClick={() => {
-              push({ pathname: `/stake/staking/${p}` });
-            }}
-          >
-            <IconWrapper>
-              <IconGroup>
-                <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
-                <img
-                  src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013"
-                  css={{ transform: "translateX(-11px)" }}
-                />
-              </IconGroup>
-              <span>WTF+ Trade fee</span>
-            </IconWrapper>
-            <LabelLP>WTF-BUSD LP</LabelLP>
-            <DataWrapper>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>
-                <span>1,000,000</span>
-              </div>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
-                <span>736%</span>
-              </div>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
-                <span>800,000</span>
-              </div>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
-                <span>0</span>
-              </div>
-            </DataWrapper>
-          </Card>
-        ))}
-      </CardGroup>
-    </Wrapper>
+    <Card>
+      <IconWrapper>
+        <IconGroup>
+          <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
+          <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013" css={{ transform: "translateX(-11px)" }} />
+        </IconGroup>
+        <span>WTF+ Trade fee</span>
+      </IconWrapper>
+      <LabelLP>{data.name} LP</LabelLP>
+      <DataWrapper>
+        <div>
+          <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>
+          <span>{result.totalStaked}</span>
+        </div>
+        <div>
+          <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
+          <span>736%</span>
+        </div>
+        <div>
+          <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
+          <span>{earningTokenTotalSupply}</span>
+        </div>
+        <div>
+          <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
+          <span>{result.userStaked}</span>
+        </div>
+      </DataWrapper>
+    </Card>
   );
 });
 

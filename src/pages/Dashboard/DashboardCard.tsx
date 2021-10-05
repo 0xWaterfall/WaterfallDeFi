@@ -15,9 +15,9 @@ type TProps = WrappedComponentProps;
 const Wrapper = styled.div`
   border-radius: 24px;
   padding: 32px 44px 102px;
-  background: ${({ theme }) => theme.primary.lightBrown};
+  background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
   position: relative;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
 `;
 
 const DashboardImageWrapper = styled(DashboardImage)`
@@ -73,10 +73,10 @@ const Title = styled.span`
   font-size: 16px;
   line-height: 20.8px;
   margin-bottom: 12px;
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal7)};
 `;
 
 const Value = styled.span`
-  color: ${({ theme }) => theme.gray.normal};
   font-size: 24px;
   line-height: 31.2px;
   font-weight: 600;

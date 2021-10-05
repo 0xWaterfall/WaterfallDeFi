@@ -19,3 +19,5 @@ interface IPosition {
   balance: string;
   invested: string;
 }
+
+type ITheme = "light" | "dark";

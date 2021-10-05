@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { TwitterTimelineEmbed } from "react-twitter-embed";
+import { colorMode } from "hooks/useColorMode";
+import ReactDOM from "react-dom";
 
 const Wrapper = styled.div`
   border-radius: 24px;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   filter: drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04));
   padding: 0 24px;
   display: flex;
@@ -24,24 +26,40 @@ const Title = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.gray.normal08};
   font-size: 24px;
   line-height: 31px;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   font-weight: 500;
 `;
 
 type TProps = WrappedComponentProps;
 
 const ContactCard = memo<TProps>(({ intl }) => {
+  const theme = colorMode();
+
   return (
     <Wrapper>
       <Title>{intl.formatMessage({ defaultMessage: "Announcements" })}</Title>
-      <TwitterTimelineEmbed
-        sourceType="profile"
-        screenName="Waterfalldefi"
-        theme="light"
-        noHeader
-        noFooter
-        options={{ height: "100%" }}
-      />
+      {theme === "dark" && (
+        <TwitterTimelineEmbed
+          sourceType="profile"
+          screenName="Waterfalldefi"
+          theme="dark"
+          noHeader
+          noFooter
+          options={{ height: "100%" }}
+          transparent
+        />
+      )}
+      {(!theme || theme === "light") && (
+        <TwitterTimelineEmbed
+          sourceType="profile"
+          screenName="Waterfalldefi"
+          theme="light"
+          noHeader
+          noFooter
+          options={{ height: "100%" }}
+          transparent
+        />
+      )}
     </Wrapper>
   );
 });

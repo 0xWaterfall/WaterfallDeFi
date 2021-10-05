@@ -96,7 +96,7 @@ const Header = memo<TProps>(({ intl }) => {
         <div
           css={{
             display: "grid",
-            gridTemplateColumns: "206px 270px",
+            gridTemplateColumns: "1fr 1fr",
             gridColumnGap: 16,
             "@media screen and (max-width: 1024px)": {
               gridTemplateColumns: "none",

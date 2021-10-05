@@ -1,4 +1,5 @@
 export { ReactComponent as WaterFall } from "./WaterFall.svg";
+export { ReactComponent as WaterFallDark } from "./WaterFallDark.svg";
 export { ReactComponent as Intersect } from "./Intersect.svg";
 export { ReactComponent as Close } from "./Close.svg";
 export { ReactComponent as MetaMask } from "./MetaMask.svg";
@@ -43,3 +44,5 @@ export { ReactComponent as ChevronLeft } from "./ChevronLeft.svg";
 export { ReactComponent as FarmCardImage } from "./FarmCardImage.svg";
 export { ReactComponent as WTF } from "./WTF.svg";
 export { ReactComponent as DateIcon } from "./DateIcon.svg";
+export { ReactComponent as LightIcon } from "./LightIcon.svg";
+export { ReactComponent as DarkIcon } from "./DarkIcon.svg";

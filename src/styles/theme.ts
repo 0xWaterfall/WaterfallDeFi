@@ -1,3 +1,5 @@
+import { colorMode, useColorModeValue } from "hooks/useColorMode";
+
 const theme = {
   fonts: {
     IBMPlexSans: "IBM Plex Sans"
@@ -5,6 +7,13 @@ const theme = {
   background: {
     apr: "#F8FDFF",
     iconfont: "#2B508C"
+  },
+  dark: {
+    basic: "#04050E",
+    header: "#030C1B",
+    block: "#13132C",
+    light: "#181839",
+    armyGreen: "#131B32"
   },
   gray: {
     light: "#FAFAFA",
@@ -46,7 +55,10 @@ const theme = {
   white: {
     normal: "#FFFFFF",
     normal1: "rgba(255, 255, 255, .1)",
-    normal5: "rgba(255, 255, 255, .5)"
+    normal3: "rgba(255, 255, 255, .3)",
+    normal5: "rgba(255, 255, 255, .5)",
+    normal7: "rgba(255, 255, 255, .7)",
+    normal85: "rgba(255, 255, 255, .85)"
   },
   linearGradient: {
     primary: "linear-gradient(360deg, #1579FF 0%, #157BFF 100%)"
@@ -69,7 +81,9 @@ const theme = {
   },
   footer: {
     background: "#030C1B"
-  }
+  },
+  useColorModeValue,
+  colorMode
 };
 
 export type ITheme = typeof theme;

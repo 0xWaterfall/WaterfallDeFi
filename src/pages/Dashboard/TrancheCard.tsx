@@ -13,7 +13,7 @@ import numeral from "numeral";
 
 const Wrapper = styled.div`
   border-radius: 24px;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.armyGreen)};
   padding: 77px 40px 46px;
   display: grid;
   gap: 24px;
@@ -27,10 +27,14 @@ const Block = styled.section`
   grid-auto-flow: column;
   grid-template-columns: 40% 60%;
   font-size: 14px;
-  background: ${({ theme }) => theme.primary.lightBrown};
+  background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.armyGreen)};
   border-radius: 12px;
   border: solid 1px transparent;
-  background-image: linear-gradient(132.89deg, #fff, #fff), linear-gradient(93.83deg, #e8f7ff 26.54%, #bffeff 70.96%);
+  background-image: ${({ theme }) =>
+    theme.useColorModeValue(
+      "linear-gradient(132.89deg, #fff, #fff), linear-gradient(93.83deg, #e8f7ff 26.54%, #bffeff 70.96%)",
+      `linear-gradient(132.89deg,${theme.dark.armyGreen} , ${theme.dark.armyGreen}), linear-gradient(93.83deg, rgba(232, 247, 255, 0.2) 26.54%, rgba(191, 254, 255, 0.2) 70.96%)`
+    )};
   background-origin: padding-box, border-box;
   background-clip: padding-box, border-box;
   box-shadow: 0px 4px 8px 0px #00000005;
@@ -72,8 +76,8 @@ const Block = styled.section`
 
 const Section = styled.section`
   height: 100%;
-  color: ${({ theme }) => theme.gray.normal7};
-  background: ${({ theme }) => theme.background.apr};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+  background: ${({ theme }) => theme.useColorModeValue(theme.background.apr, theme.dark.block)};
   padding: 19px 29px;
 `;
 
@@ -137,7 +141,7 @@ const Fee = styled.div`
   font-size: 12px;
   u {
     text-decoration: none;
-    border-bottom: 1px dashed ${({ theme }) => theme.gray.normal3};
+    border-bottom: 1px dashed ${({ theme }) => theme.useColorModeValue(theme.gray.normal3, theme.white.normal3)};
   }
 `;
 

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   height: 143px;
   border-radius: 24px;
   padding: 26px 0;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.light)};
   position: relative;
   transform: translateY(-56px);
   display: flex;

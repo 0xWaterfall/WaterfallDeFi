@@ -2,7 +2,17 @@
 
 import { ClassNames, useTheme } from "@emotion/react";
 import { useSize } from "ahooks";
-import { CaretDown, I18n, Menu, ShortRight, Wallet, WaterFall } from "assets/images";
+import {
+  CaretDown,
+  DarkIcon,
+  I18n,
+  LightIcon,
+  Menu,
+  ShortRight,
+  Wallet,
+  WaterFall,
+  WaterFallDark
+} from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import Dropdown from "components/Dropdown/Dropdown";
@@ -21,11 +31,25 @@ import { formatAccountAddress } from "utils/formatAddress";
 import { languages } from "config";
 import Tooltip from "components/Tooltip/Tooltip";
 import { setConnectWalletModalShow } from "store/showStatus";
+import styled from "@emotion/styled";
+import { colorMode } from "hooks/useColorMode";
+import { setTheme } from "store/selectedKeys";
+
+const ThemeIcon = styled.div`
+  color: ${({ theme: { useColorModeValue, gray, white } }) => useColorModeValue(gray.normal5, white.normal7)};
+  margin-left: 26px;
+  svg {
+    cursor: pointer;
+  }
+  :hover {
+    color: ${({ theme: { useColorModeValue, gray, white } }) => useColorModeValue(gray.normal7, white.normal5)};
+  }
+`;
 
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { gray, primary, white, warn, fonts } = useTheme();
+  const { gray, primary, white, warn, fonts, shadow, dark, useColorModeValue } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
   const [isDrawerShow, setDrawerShow] = useState(false);
@@ -38,6 +62,7 @@ const Header = memo<TProps>(({ intl }) => {
   const [clientWidth, setClientWidth] = useState(0);
   const { width } = useSize(document.body);
 
+  const theme = colorMode();
   const { active, account, chainId } = useWeb3React<Web3Provider>();
   const { login } = useAuth();
 
@@ -79,7 +104,16 @@ const Header = memo<TProps>(({ intl }) => {
 
   const I18nElement = useMemo(
     () => (
-      <>
+      <ul
+        css={{
+          cursor: "pointer",
+          boxShadow: shadow.primary,
+          backgroundColor: theme === "dark" ? dark.header : white.normal,
+          borderRadius: 4,
+          marginTop: 10,
+          padding: "4px 0"
+        }}
+      >
         {languages
           ?.filter((p) => p.code !== locale)
           ?.map((l) => (
@@ -91,27 +125,36 @@ const Header = memo<TProps>(({ intl }) => {
                 display: "flex",
                 alignItems: "center",
                 paddingLeft: 12,
-                color: gray.normal7,
-                ":hover": { backgroundColor: primary.lightBrown }
+                color: theme === "dark" ? white.normal5 : gray.normal7,
+                ":hover": { backgroundColor: theme === "dark" ? primary.deep04 : primary.lightBrown }
               }}
               onClick={() => dispatch(fetchI18nMiddleware(l.code))}
             >
               {l.name}
             </li>
           ))}
-      </>
+      </ul>
     ),
-    [locale]
+    [locale, theme]
   );
 
-  const WaterFallDeFi = (
-    <WaterFall
-      css={{ cursor: "pointer" }}
-      onClick={() => {
-        push({ pathname: "/" });
-      }}
-    />
-  );
+  const WaterFallDeFi = useMemo(() => {
+    return theme === "dark" ? (
+      <WaterFallDark
+        css={{ cursor: "pointer" }}
+        onClick={() => {
+          push({ pathname: "/" });
+        }}
+      />
+    ) : (
+      <WaterFall
+        css={{ cursor: "pointer" }}
+        onClick={() => {
+          push({ pathname: "/" });
+        }}
+      />
+    );
+  }, [theme]);
 
   const MetaMaskElement = useMemo(() => {
     if (!active) {
@@ -138,7 +181,7 @@ const Header = memo<TProps>(({ intl }) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: gray.light,
+            backgroundColor: theme === "dark" ? dark.block : gray.light,
             color: warn.normal,
             borderTopLeftRadius: 8,
             borderBottomLeftRadius: 8,
@@ -152,7 +195,7 @@ const Header = memo<TProps>(({ intl }) => {
           css={{
             padding: "0 16px",
             height: 38,
-            backgroundColor: white.normal,
+            backgroundColor: theme === "dark" ? dark.block : white.normal,
             borderWidth: 2,
             borderStyle: "solid",
             borderColor: primary.light,
@@ -170,122 +213,142 @@ const Header = memo<TProps>(({ intl }) => {
         </div>
       </div>
     );
-  }, [account, active, chainId]);
+  }, [account, active, chainId, theme]);
 
-  const MenuLink = useMemo(
-    () =>
-      MENU.map(({ pathname, text, checked, subMenu }) => (
-        <div
-          key={pathname}
-          css={{
-            fontWeight: 600,
-            fontSize: 16,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-            ...(isPc ? { marginLeft: 36, height: "100%" } : { padding: "12px 20px" }),
-            ":hover": {
-              "&>div": {
-                display: "block"
-              }
+  const MenuLink = MENU.map(({ pathname, text, checked, subMenu }) => (
+    <div
+      key={pathname}
+      css={{
+        fontWeight: 600,
+        fontSize: 16,
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        ...(isPc ? { marginLeft: 36, height: "100%" } : { padding: "12px 20px" }),
+        ":hover": {
+          "&>div": {
+            display: "block"
+          }
+        }
+      }}
+    >
+      <Link
+        to={pathname}
+        css={{
+          display: "flex",
+          alignItems: "center",
+          color: checked
+            ? location.pathname.split("/").join().includes(checked)
+              ? primary.deep
+              : useColorModeValue(gray.normal7, white.normal5)
+            : location.pathname === "/"
+            ? primary.deep
+            : useColorModeValue(gray.normal7, white.normal5),
+          ":hover": {
+            "&>svg": {
+              transform: "rotate(180deg)"
             }
+          }
+        }}
+      >
+        {text} {Boolean(subMenu) && <CaretDown css={{ transition: "transform .2s" }} />}
+      </Link>
+      {Boolean(subMenu) && (
+        <div
+          css={{
+            minWidth: 250,
+            position: "absolute",
+            zIndex: 1,
+            bottom: 0,
+            left: 0,
+            padding: 20,
+            background: useColorModeValue(white.normal, dark.header),
+            borderRadius: 12,
+            transform: isPc ? "translate(-20%,100%)" : "translate(0,100%)",
+            filter: "drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04))",
+            display: "none",
+            fontFamily: fonts.IBMPlexSans
           }}
         >
-          <Link
-            to={pathname}
-            css={{
-              display: "flex",
-              alignItems: "center",
-              color: checked
-                ? location.pathname.split("/").join().includes(checked)
-                  ? primary.deep
-                  : gray.normal7
-                : location.pathname === "/"
-                ? primary.deep
-                : gray.normal7,
-              ":hover": {
-                "&>svg": {
-                  transform: "rotate(180deg)"
-                }
-              }
-            }}
-          >
-            {text} {Boolean(subMenu) && <CaretDown css={{ transition: "transform .2s" }} />}
-          </Link>
-          {Boolean(subMenu) && (
-            <div
+          {subMenu?.map((r) => (
+            <Link
+              key={r.pathname}
               css={{
-                minWidth: 250,
-                position: "absolute",
-                zIndex: 1,
-                bottom: 0,
-                left: 0,
-                padding: 20,
-                background: white.normal,
-                borderRadius: 12,
-                transform: isPc ? "translate(-20%,100%)" : "translate(0,100%)",
-                filter: "drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04))",
-                display: "none",
-                fontFamily: fonts.IBMPlexSans
+                fontWeight: 500,
+                fontSize: 16,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                color: useColorModeValue(gray.normal85, white.normal5),
+                height: 52,
+                padding: "0 20px",
+                borderRadius: 10,
+                ":hover": {
+                  background: primary.deep04,
+                  color: primary.normal,
+                  fontWeight: 700,
+                  svg: {
+                    display: "block"
+                  }
+                }
               }}
+              to={r.pathname}
             >
-              {subMenu?.map((r) => (
-                <Link
-                  key={r.pathname}
-                  css={{
-                    fontWeight: 500,
-                    fontSize: 16,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    color: gray.normal85,
-                    height: 52,
-                    padding: "0 20px",
-                    borderRadius: 10,
-                    ":hover": {
-                      background: primary.deep04,
-                      color: primary.normal,
-                      fontWeight: 700,
-                      svg: {
-                        display: "block"
-                      }
-                    }
-                  }}
-                  to={r.pathname}
-                >
-                  <div css={{ display: "flex", alignItems: "center" }}>
-                    <div
-                      css={{ width: 6, height: 6, borderRadius: "50%", background: primary.normal, marginRight: 8 }}
-                    />
-                    {r.text}
-                  </div>
-                  <ShortRight css={{ display: "none" }} />
-                </Link>
-              ))}
-            </div>
-          )}
+              <div css={{ display: "flex", alignItems: "center" }}>
+                <div css={{ width: 6, height: 6, borderRadius: "50%", background: primary.normal, marginRight: 8 }} />
+                {r.text}
+              </div>
+              <ShortRight css={{ display: "none" }} />
+            </Link>
+          ))}
         </div>
-      )),
-    [isPc, location.pathname]
-  );
-
-  const ConfigElement = (
-    <div css={{ display: "flex", flexDirection: "row" }}>
-      <ClassNames>
-        {({ css }) => (
-          <Tooltip
-            overlay={I18nElement}
-            openClassName={css({ color: gray.normal85 })}
-            overlayInnerStyle={{ padding: "4px 0" }}
-          >
-            <I18n css={{ color: gray.normal5, display: "block", marginLeft: 24, cursor: "pointer" }} />
-          </Tooltip>
-        )}
-      </ClassNames>
+      )}
     </div>
-  );
+  ));
+
+  const ConfigElement = useMemo(() => {
+    return (
+      <div css={{ display: "flex", flexDirection: "row" }}>
+        <ThemeIcon>
+          {theme === "dark" ? (
+            <LightIcon
+              onClick={() => {
+                dispatch(setTheme("light"));
+              }}
+            />
+          ) : (
+            <DarkIcon
+              onClick={() => {
+                dispatch(setTheme("dark"));
+              }}
+            />
+          )}
+        </ThemeIcon>
+        <ClassNames>
+          {({ css }) => (
+            <Dropdown
+              overlay={I18nElement}
+              openClassName={css({
+                color: theme === "dark" ? white.normal5 : gray.normal85
+                // background: theme === "dark" ? dark.header : white.normal
+              })}
+            >
+              <I18n
+                css={{
+                  color: theme === "dark" ? white.normal7 : gray.normal5,
+                  display: "block",
+                  marginLeft: 24,
+                  cursor: "pointer"
+                }}
+              />
+            </Dropdown>
+          )}
+        </ClassNames>
+      </div>
+    );
+  }, [theme]);
   return (
     <div
       css={{
@@ -294,7 +357,7 @@ const Header = memo<TProps>(({ intl }) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: white.normal
+        backgroundColor: useColorModeValue(white.normal, dark.header)
       }}
     >
       {isPc ? (
@@ -314,7 +377,10 @@ const Header = memo<TProps>(({ intl }) => {
       ) : (
         <React.Fragment>
           <div css={{ display: "flex", alignItems: "center", height: "100%" }}>
-            <Menu css={{ marginRight: 16 }} onClick={setDrawerShow.bind(null, true)} />
+            <Menu
+              css={{ marginRight: 16, fill: theme === "dark" ? white.normal7 : gray.normal5 }}
+              onClick={setDrawerShow.bind(null, true)}
+            />
             {/* {WaterFallDeFi} */}
           </div>
           {MetaMaskElement}
@@ -323,7 +389,10 @@ const Header = memo<TProps>(({ intl }) => {
             <div css={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
                 <div css={{ display: "flex", alignItems: "center", height: 64, paddingLeft: 20 }}>
-                  <Menu css={{ marginRight: 16 }} onClick={setDrawerShow.bind(null, false)} />
+                  <Menu
+                    css={{ marginRight: 16, fill: theme === "dark" ? white.normal7 : gray.normal5 }}
+                    onClick={setDrawerShow.bind(null, false)}
+                  />
                   {WaterFallDeFi}
                 </div>
                 {MenuLink}

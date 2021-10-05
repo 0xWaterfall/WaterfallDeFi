@@ -21,6 +21,15 @@ export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a"
 };
 
+export const WTFRewardsAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
+  [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594"
+};
+export const VeWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
+  [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99"
+};
+
 export const MulticallAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
   [NETWORKS.TESTNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",

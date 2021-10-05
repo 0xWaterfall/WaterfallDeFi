@@ -24,6 +24,12 @@ export interface Pool {
   totalSupply: string;
 }
 
+export interface StakingConfig {
+  stakingTokenAddress: string;
+  earningTokenAddress: string;
+  name: string;
+}
+
 export interface Market {
   portfolio: string;
   assets: string;

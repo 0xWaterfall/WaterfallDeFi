@@ -4,8 +4,8 @@ import styled from "@emotion/styled";
 import useScrollTop from "hooks/useScrollTop";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import FarmCard from "./FarmCard";
-import StakeCard from "./StakeCard";
+import FarmContainer from "./FarmContainer";
+import StakeContainer from "./StakeContainer";
 import TVLCard from "./TVLCard";
 
 const Wrapper = styled.div`
@@ -21,8 +21,8 @@ const Stake = memo<TProps>(() => {
   return (
     <Wrapper>
       <TVLCard />
-      <FarmCard />
-      <StakeCard />
+      <FarmContainer />
+      <StakeContainer />
     </Wrapper>
   );
 });

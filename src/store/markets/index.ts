@@ -9,6 +9,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import multicall from "utils/multicall";
 import { formatAPY } from "utils/formatNumbers";
 import { useWTFPrice } from "hooks/useSelectors";
+import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 
 const initialState: Market[] = [];
 const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorTarget: BigNumber, decimals = 18) => {

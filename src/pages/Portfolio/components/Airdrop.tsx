@@ -15,8 +15,13 @@ type TProps = WrappedComponentProps;
 const AirdropBlockName = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.primary.normal};
+  color: ${({ theme }) => theme.gray.normal7};
   margin-bottom: 8px;
+`;
+
+const Label = styled.span`
+  margin-right: 4px;
+  font-size: 12px;
 `;
 
 const Airdrop = memo<TProps>(({ intl }) => {
@@ -38,9 +43,7 @@ const Airdrop = memo<TProps>(({ intl }) => {
       }}
     >
       <AirdropBlockName>
-        <span css={{ marginRight: 4 }}>
-          {intl.formatMessage({ defaultMessage: "Airdrop bonus for early deposit" })}
-        </span>
+        <Label>{intl.formatMessage({ defaultMessage: "Airdrop bonus for early deposit" })}</Label>
         <Tooltip
           overlay={
             <React.Fragment>
@@ -59,6 +62,7 @@ const Airdrop = memo<TProps>(({ intl }) => {
       <div
         css={{
           fontSize: 20,
+          fontWeight: 600,
           "@media screen and (max-width: 678px)": {
             fontSize: 12
           }

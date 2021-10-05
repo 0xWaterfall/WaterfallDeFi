@@ -56,7 +56,7 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background: ${({ theme }) => theme.white.normal};
-  padding: 35px 81px;
+  padding: 34px 24px;
 
   @media screen and (max-width: 675px) {
     padding: 24px;

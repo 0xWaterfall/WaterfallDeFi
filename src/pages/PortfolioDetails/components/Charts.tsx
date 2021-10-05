@@ -85,6 +85,7 @@ const RecordCard = styled.div`
     }
   }
 `;
+
 const Block = styled.div`
   flex: 1;
   display: flex;
@@ -92,6 +93,12 @@ const Block = styled.div`
   filter: ${({ theme }) => theme.filter.card};
   background: ${({ theme }) => theme.white.normal};
   border-radius: 12px;
+`;
+
+const ButtonWrapper = styled(Button)`
+  border-radius: 4px;
+  height: 28px;
+  font-size: 12px;
 `;
 
 type TProps = WrappedComponentProps & {
@@ -151,7 +158,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
             {balance ? numeral(balance.toString()).format("0,0") : "--"} {data.assets}
           </div>
           <div>
-            <Button
+            <ButtonWrapper
               type="default"
               onClick={withdrawAll}
               loading={withdrawAllLoading}
@@ -159,23 +166,23 @@ const Charts = memo<TProps>(({ intl, data }) => {
               css={{ marginRight: 17 }}
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
-            </Button>
-            <Button type="default" onClick={rollDepositPopup} disabled={!account}>
+            </ButtonWrapper>
+            <ButtonWrapper type="default" onClick={rollDepositPopup} disabled={!account}>
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
-            </Button>
+            </ButtonWrapper>
           </div>
         </section>
         <section>
           <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
           <div>{totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "--"} WTF</div>
-          <Button
+          <ButtonWrapper
             type="default"
             onClick={() => claimReward()}
             loading={claimRewardLoading}
             disabled={!account || !+totalPendingReward}
           >
             {intl.formatMessage({ defaultMessage: "Claim" })}
-          </Button>
+          </ButtonWrapper>
         </section>
       </RecordCard>
       <Block>

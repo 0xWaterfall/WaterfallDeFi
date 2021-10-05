@@ -71,6 +71,7 @@ const SelectGroup = styled.div`
   grid-auto-flow: column;
   color: ${({ theme }) => theme.gray.normal7};
   title {
+    font-size: 12px;
     margin-bottom: 6px;
   }
 `;

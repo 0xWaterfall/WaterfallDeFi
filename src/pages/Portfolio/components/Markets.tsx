@@ -31,7 +31,7 @@ const Markets = memo<TProps>(({ intl }) => {
             </TableHeaderColumn>
             <TableHeaderColumn minWidth={160}>{intl.formatMessage({ defaultMessage: "TVL" })}</TableHeaderColumn>
             <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
-            <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Action" })}</TableHeaderColumn>
+            <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Action" })}</TableHeaderColumn>
           </TableRow>
           {markets.map((_m, i) => (
             <MarketItemTableRow key={i} selectId={i} data={_m} />

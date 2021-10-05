@@ -108,7 +108,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
-    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 16 }} onClick={navigateMarketDetail}>
+    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 14 }} onClick={navigateMarketDetail}>
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}
@@ -153,7 +153,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         {/* {i === 2 ? <Tag color="yellow" value={"Pending"}></Tag> : null} */}
         {/* {i === 3 ? <Tag color="green" value={"Active"}></Tag> : null} */}
       </TableColumn>
-      <TableColumn minWidth={240}>
+      <TableColumn>
         <APYStyled>
           <Button type="primary" onClick={navigateMarketDetail}>
             {marketData.status !== PORTFOLIO_STATUS.PENDING

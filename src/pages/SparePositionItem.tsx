@@ -92,7 +92,7 @@ const APRWrapper = styled.div`
 
 const TableRowWrapper = styled(TableRow)`
   color: ${({ theme }) => theme.gray.normal85};
-  font-size: 16px;
+  font-size: 14px;
   border-bottom: 1px solid ${({ theme }) => theme.primary.lightBrown};
   cursor: pointer;
   @media screen and (max-width: 768px) {

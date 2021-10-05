@@ -15,8 +15,12 @@ type TProps = WrappedComponentProps;
 const ClaimBlockName = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.primary.normal};
-  margin-bottom: 8px;
+  color: ${({ theme }) => theme.gray.normal7};
+  margin-bottom: 12px;
+`;
+const Label = styled.span`
+  margin-right: 4px;
+  font-size: 12px;
 `;
 
 const Claim = memo<TProps>(({ intl }) => {
@@ -38,7 +42,7 @@ const Claim = memo<TProps>(({ intl }) => {
       }}
     >
       <ClaimBlockName>
-        <span css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Weekly reward" })}</span>
+        <Label css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Weekly reward" })}</Label>
         <Tooltip
           overlay={
             <React.Fragment>
@@ -73,6 +77,7 @@ const Claim = memo<TProps>(({ intl }) => {
       <div
         css={{
           fontSize: 20,
+          fontWeight: 600,
           "@media screen and (max-width: 678px)": {
             fontSize: 12
           }

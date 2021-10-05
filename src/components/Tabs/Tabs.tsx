@@ -11,7 +11,8 @@ const TabsStyled = styled(ANTDTabs)`
   }
   .ant-tabs-tab {
     color: ${({ theme }) => theme.gray.normal5};
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: 600;
     &:hover {
       color: ${({ theme }) => theme.gray.normal5};
     }

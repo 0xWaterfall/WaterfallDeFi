@@ -7,7 +7,7 @@ import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Falls",
+    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Vault 2",
     assets: "BUSD",
     listingDate: "2021/08/29",
     // lockupPeriod: "7 Days",

@@ -13,6 +13,7 @@ import { getLibrary } from "utils/web3React";
 import Reset from "styles/global/Reset";
 import ConnectedDataProvider from "providers/ConnectedDataProvider/ConnectedDataProvider";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { RefreshContextProvider } from "contexts/RefreshContext";
 
 const client = new ApolloClient({
   // uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.9",
@@ -30,9 +31,11 @@ const App: FC = () => {
             <ConnectedIntlProvider>
               <Router history={history}>
                 <ThemeProvider theme={theme}>
-                  <Reset />
-                  <Global />
-                  <Layout />
+                  <RefreshContextProvider>
+                    <Reset />
+                    <Global />
+                    <Layout />
+                  </RefreshContextProvider>
                 </ThemeProvider>
               </Router>
             </ConnectedIntlProvider>

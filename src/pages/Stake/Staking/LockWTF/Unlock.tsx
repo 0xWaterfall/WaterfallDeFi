@@ -90,7 +90,7 @@ const Unlock = memo<TProps>(({ intl }) => {
           <span>{intl.formatMessage({ defaultMessage: "Next time: " })}</span>
           <span>2D 12:56:56</span>
         </NextTime>
-        <ButtonWrapper type="primaryLine">{intl.formatMessage({ defaultMessage: "Stake" })}</ButtonWrapper>
+        <ButtonWrapper type="primaryLine">{intl.formatMessage({ defaultMessage: "Unlock" })}</ButtonWrapper>
       </div>
     </Wrapper>
   );

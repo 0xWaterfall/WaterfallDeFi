@@ -95,7 +95,7 @@ const LockUp = memo<TProps>(({ intl }) => {
       <Line />
       <Label>
         <p>{intl.formatMessage({ defaultMessage: "WTF balance" })}</p>
-        <span>0 Ve-WTF</span>
+        <span>0 WTF</span>
       </Label>
       <StakeInput
         suffixText="WTF"

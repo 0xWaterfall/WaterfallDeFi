@@ -1,18 +1,14 @@
-import { useWeb3React } from "@web3-react/core";
-import { getContract, getSigner } from "hooks";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 import { abi as VEWTFAbi } from "config/abi/VEWTF.json";
 
 import { useEffect, useMemo, useState } from "react";
 import multicall from "utils/multicall";
-import { ethers } from "ethers";
-import getRpcUrl from "utils/getRpcUrl";
-import { BIG_ZERO } from "utils/bigNumber";
 import BigNumber from "bignumber.js";
+import useRefresh from "./useRefresh";
 
 export const useEarningTokenTotalSupply = (tokenAddress: string) => {
   const [totalSupply, setTotalSupply] = useState("");
-  //   const { slowRefresh } = useRefresh();
+  const { slowRefresh } = useRefresh();
   useEffect(() => {
     const fetchBalance = async () => {
       const calls = [
@@ -26,8 +22,7 @@ export const useEarningTokenTotalSupply = (tokenAddress: string) => {
     };
 
     fetchBalance();
-    //   }, [tokenAddress, slowRefresh]);
-  }, [tokenAddress]);
+  }, [tokenAddress, slowRefresh]);
 
   return totalSupply;
 };
@@ -37,7 +32,7 @@ export const useStakingPool = (tokenAddress: string, account: string | null | un
     totalStaked: "",
     userStaked: ""
   });
-  //   const { slowRefresh } = useRefresh();
+  const { slowRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -66,8 +61,7 @@ export const useStakingPool = (tokenAddress: string, account: string | null | un
     };
 
     fetchBalance();
-    //   }, [tokenAddress, slowRefresh]);
-  }, [tokenAddress]);
+  }, [tokenAddress, slowRefresh]);
 
   return result;
 };

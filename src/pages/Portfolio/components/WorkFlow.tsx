@@ -12,7 +12,7 @@ const TitleH2 = styled.h2`
   font-size: 16px;
   line-height: 32px;
   text-align: center;
-  color: ${({ theme }) => theme.gray.normal};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal, theme.white.normal)};
 `;
 const ImgWrapper = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const DescText = styled.p`
   font-size: 14px;
   line-height: 19px;
   text-align: center;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal, theme.white.normal7)};
   max-width: 270px;
   margin: 0 auto;
   @media screen and (max-width: 1024px) {

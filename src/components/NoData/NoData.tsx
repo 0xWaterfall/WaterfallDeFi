@@ -17,7 +17,7 @@ const NoDataWrapper = styled.div`
 
 const NoDataText = styled.span`
   font-size: 14px;
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal7)};
   margin-top: 12px;
 `;
 

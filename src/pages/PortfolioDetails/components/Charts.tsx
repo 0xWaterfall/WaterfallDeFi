@@ -52,9 +52,9 @@ const RecordCard = styled.div`
   section {
     padding: 12px 20px 12px 32px;
     min-height: 140px;
-    background: ${({ theme }) => theme.white.normal};
+    background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
     border-radius: 12px;
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal5)};
     filter: ${({ theme }) => theme.filter.card};
     display: flex;
     flex-direction: column;
@@ -76,7 +76,7 @@ const RecordCard = styled.div`
     }
     div {
       :nth-of-type(1) {
-        color: ${({ theme }) => theme.gray.normal5};
+        color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
       }
       :nth-of-type(2) {
         color: ${({ theme }) => theme.primary.deep};
@@ -89,9 +89,9 @@ const RecordCard = styled.div`
 const Block = styled.div`
   flex: 1;
   display: flex;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   filter: ${({ theme }) => theme.filter.card};
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   border-radius: 12px;
 `;
 

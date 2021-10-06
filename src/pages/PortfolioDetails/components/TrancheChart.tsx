@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 const WrappetTitle = styled.title`
   height: 62px;
   padding: 0 32px;
-  border-bottom: 1px solid rgba(51, 51, 51, 0.08);
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue("rgba(51, 51, 51, 0.08)", theme.white.normal08)};
   font-weight: 700;
   display: flex;
   align-items: center;

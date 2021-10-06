@@ -15,7 +15,7 @@ type TProps = WrappedComponentProps;
 const AirdropBlockName = styled.div`
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   margin-bottom: 8px;
 `;
 
@@ -25,7 +25,7 @@ const Label = styled.span`
 `;
 
 const Airdrop = memo<TProps>(({ intl }) => {
-  const { primary, fonts, white } = useTheme();
+  const { primary, fonts, white, useColorModeValue, dark } = useTheme();
   // const { weekDistribution } = useWTF();
   return (
     <div
@@ -39,7 +39,7 @@ const Airdrop = memo<TProps>(({ intl }) => {
         borderRadius: 8,
         position: "relative",
         zIndex: 1,
-        backgroundColor: white.normal
+        backgroundColor: useColorModeValue(white.normal, dark.block)
       }}
     >
       <AirdropBlockName>

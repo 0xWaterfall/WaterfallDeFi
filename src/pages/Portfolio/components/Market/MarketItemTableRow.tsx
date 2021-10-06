@@ -89,15 +89,15 @@ const APYStyled2 = styled.div`
 `;
 
 const TableRowMarket = styled(TableRow)`
-  border: 1px solid ${({ theme }) => theme.primary.deep2};
+  /* border: 1px solid ${({ theme }) => theme.primary.deep2}; */
   border-radius: 12px;
   height: 127px;
-  background-color: ${({ theme }) => theme.primary.lightBrown};
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
 `;
 
 const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const [marketData, setMarketData] = useState(data);
-  const { warn, green, primary, gray } = useTheme();
+  const { warn, green, primary, gray, useColorModeValue, white } = useTheme();
   const { push } = useHistory();
   const dispatch = useDispatch();
   const wtfPrice = useWTFPrice();
@@ -108,7 +108,11 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   return (
-    <TableRowMarket height={100} css={{ color: gray.normal85, fontSize: 14 }} onClick={navigateMarketDetail}>
+    <TableRowMarket
+      height={100}
+      css={{ color: useColorModeValue(gray.normal85, white.normal7), fontSize: 14 }}
+      onClick={navigateMarketDetail}
+    >
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
         <Coin assetName={marketData.assets} /> {marketData.assets}

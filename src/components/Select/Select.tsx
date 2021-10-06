@@ -7,8 +7,15 @@ import { ClassNames, useTheme } from "@emotion/react";
 
 const ANTDSelectStyled = styled(ANTDSelect)`
   min-width: 140px;
+  &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background: transparent;
+  }
+
   &.ant-select {
-    color: ${({ theme }) => theme.gray.normal5};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal85)};
+    .ant-select-arrow {
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
+    }
   }
   &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 4px;
@@ -25,18 +32,21 @@ const ANTDSelectStyled = styled(ANTDSelect)`
 
 type TProps = SelectProps<any>;
 const Select: React.FC<TProps> = ({ children, ...props }) => {
-  const { primary, gray } = useTheme();
+  const { primary, gray, useColorModeValue, white, dark } = useTheme();
   return (
     <ClassNames>
       {({ css }) => (
         <ANTDSelectStyled
           dropdownClassName={css({
+            "&.ant-select-dropdown": {
+              backgroundColor: useColorModeValue(white.normal, dark.header)
+            },
             ".ant-select-item": {
-              color: gray.normal7
+              color: useColorModeValue(gray.normal7, white.normal85)
             },
             ".ant-select-item-option-active:not(.ant-select-item-option-disabled),.ant-select-item-option-selected:not(.ant-select-item-option-disabled)":
               {
-                backgroundColor: primary.lightBrown
+                backgroundColor: useColorModeValue(primary.lightBrown, dark.armyGreen)
               }
           })}
           {...props}

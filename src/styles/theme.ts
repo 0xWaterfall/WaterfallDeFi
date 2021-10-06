@@ -54,7 +54,9 @@ const theme = {
   },
   white: {
     normal: "#FFFFFF",
+    normal08: "rgba(255, 255, 255, .08)",
     normal1: "rgba(255, 255, 255, .1)",
+    normal2: "rgba(255, 255, 255, .2)",
     normal3: "rgba(255, 255, 255, .3)",
     normal5: "rgba(255, 255, 255, .5)",
     normal7: "rgba(255, 255, 255, .7)",

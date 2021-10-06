@@ -13,7 +13,7 @@ interface ITableRowStyledComponentProps {
 }
 const TableRow = styled.ul<ITableRowStyledComponentProps>`
   height: ${({ height }) => height ?? 90}px;
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal7)};
   display: flex;
   &:last-child {
     margin-bottom: 0;
@@ -62,7 +62,7 @@ const TableHeaderColumn = styled(TableColumn)`
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
   }
-  background-color: ${({ theme }) => theme.primary.lightBrown};
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.header)};
   @media screen and (max-width: 768px) {
     display: none;
   }

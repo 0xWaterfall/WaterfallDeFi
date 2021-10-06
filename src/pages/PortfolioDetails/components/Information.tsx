@@ -28,9 +28,9 @@ const Wrapper = styled.div`
   } */
 `;
 const Arrow = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal85)};
   & :hover {
-    color: ${({ theme }) => theme.primary.deep};
+    color: ${({ theme }) => theme.useColorModeValue(theme.primary.deep, theme.white.normal5)};
   }
   margin-top: 4px;
   margin-right: 20px;
@@ -52,7 +52,7 @@ const Block = styled.div`
   justify-content: space-between;
   font-size: 14px;
   span:last-child {
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   }
   :last-child {
     span:last-child {
@@ -65,13 +65,13 @@ const Block = styled.div`
 const PortfolioName = styled.span`
   font-size: 24px;
   height: 30px;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
 `;
 
 const Assets = styled.span`
   font-size: 20px;
   height: 30px;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
 `;
 
 type TProps = WrappedComponentProps & {

@@ -55,13 +55,13 @@ const Segement = styled.div`
 
 const SegementBlock = styled.div`
   padding: 6px 16px;
-  margin-right: 5;
   cursor: pointer;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   &[data-actived="true"] {
     border-radius: 8px;
     box-shadow: ${({ theme }) => theme.shadow.positionsTab};
     color: ${({ theme }) => theme.primary.deep};
+    background: ${({ theme }) => theme.white.normal};
   }
 `;
 

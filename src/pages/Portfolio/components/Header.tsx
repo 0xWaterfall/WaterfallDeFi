@@ -13,7 +13,7 @@ const TitleH1 = styled.h1`
   font-size: 36px;
   line-height: 55px;
   letter-spacing: -0.015em;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal)};
   position: relative;
   max-width: 626px;
   margin: 0 auto;
@@ -28,7 +28,7 @@ const TitleH1 = styled.h1`
 
 const DescText = styled.p`
   max-width: 510px;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal)};
   text-align: center;
   font-size: 14px;
   line-height: 24px;

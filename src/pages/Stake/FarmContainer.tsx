@@ -16,10 +16,10 @@ const Wrapper = styled.div`
 const Label = styled.div`
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.primary.deep1};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
 
 const CardGroup = styled.div`
@@ -41,7 +41,7 @@ const CardGroup = styled.div`
 `;
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block5)};
   border-radius: 24px;
   padding: 19px 16px 22px;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
@@ -86,10 +86,10 @@ const IconGroup = styled.div`
 const LabelLP = styled.div`
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.gray.normal04};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal08)};
 `;
 
 const DataWrapper = styled.div`
@@ -103,12 +103,12 @@ const DataWrapper = styled.div`
     p {
       font-size: 12px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal5};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
     }
     span {
       font-size: 16px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal85};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
       font-weight: bold;
     }
   }

@@ -8,13 +8,13 @@ import ExtendModal from "./Modal/ExtendModal";
 
 const Wrapper = styled.div`
   padding: 24px;
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header3)};
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   border-radius: 24px;
   display: grid;
   gap: 24px;
   grid-template-areas: "a b c d e";
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   margin-bottom: 50px;
 
   @media screen and (max-width: 1000px) {
@@ -42,7 +42,7 @@ const Wrapper = styled.div`
     font-weight: bold;
     font-size: 20px;
     line-height: 125%;
-    color: ${({ theme }) => theme.gray.normal85};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
     margin-bottom: 11px;
   }
 `;
@@ -51,7 +51,8 @@ const Block = styled.div`
   padding: 18px 28px;
   border-radius: 24px;
   border: solid 1px transparent;
-  background-image: linear-gradient(180deg, #fff, #fff),
+  background-image: ${({ theme }) =>
+      theme.useColorModeValue("linear-gradient(180deg, #fff, #fff)", "linear-gradient(180deg, #13132C, #13132C)")},
     linear-gradient(180deg, #5946f8 0%, #2494dc 44.79%, #00cccb 100%);
   background-origin: padding-box, border-box;
   background-clip: padding-box, border-box;

@@ -9,6 +9,7 @@ import Unlock from "./Unlock";
 const Wrapper = styled.div`
   display: grid;
   gap: 25px;
+  padding: 4px;
   grid-auto-flow: column;
   grid-template-columns: 5fr 3fr;
   @media screen and (max-width: 768px) {

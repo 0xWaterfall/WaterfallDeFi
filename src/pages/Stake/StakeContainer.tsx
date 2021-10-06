@@ -16,10 +16,10 @@ const Wrapper = styled.div`
 const Label = styled.div`
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.primary.deep1};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
 
 const CardGroup = styled.div`

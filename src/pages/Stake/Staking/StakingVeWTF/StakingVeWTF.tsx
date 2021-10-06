@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   display: grid;
   gap: 25px;
   grid-auto-flow: column;
+  padding: 4px;
   @media screen and (max-width: 680px) {
     grid-auto-flow: row;
   }

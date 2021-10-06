@@ -22,14 +22,15 @@ const WrapperInput = styled(ANTDInput)`
     box-shadow: none;
   }
   input {
-    background: initial;
-    color: ${({ theme }) => theme.primary.deep};
+    background: transparent;
+    color: ${({ theme }) => theme.useColorModeValue(theme.primary.deep, theme.white.normal7)};
     font-size: 20px;
   }
   &.ant-input-affix-wrapper {
     border-radius: 8px;
     box-shadow: none;
     border-color: ${({ theme }) => theme.primary.deep2};
+    background-color: transparent;
   }
   &.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
   &.ant-input-affix-wrapper:focus,
@@ -38,9 +39,12 @@ const WrapperInput = styled(ANTDInput)`
     box-shadow: none;
   }
   &.ant-input-affix-wrapper-disabled {
-    background-color: ${({ theme }) => theme.white.normal};
+    background-color: transparent;
     color: ${({ theme }) => theme.primary.deep};
     opacity: 0.5;
+    :hover {
+      border-color: ${({ theme }) => theme.primary.deep2};
+    }
   }
 `;
 

@@ -12,12 +12,12 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const Wrapper = styled.div`
   padding: 32px 50px;
-  background: ${({ theme }) => theme.white.normal5};
-  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header)};
+  box-shadow: 0px 4px 10px 0px #0000000a;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   @media screen and (max-width: 768px) {
     padding: 32px;
   }
@@ -30,7 +30,7 @@ const Title = styled.div`
 
 const Line = styled.div`
   height: 1px;
-  background: ${({ theme }) => theme.gray.normal08};
+  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
   margin: 20px 0;
 `;
 
@@ -40,7 +40,7 @@ const Label = styled.div`
   justify-content: space-between;
   margin-bottom: 16px;
   p {
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     font-size: 16px;
     line-height: 125%;
   }
@@ -66,6 +66,34 @@ const ButtonWrapper = styled(Button)`
   font-weight: 600;
   font-size: 16px;
   margin-top: 55px;
+  background: transparent;
+  :hover,
+  :focus {
+    background: transparent;
+  }
+`;
+
+const DatePickerWrapper = styled(DatePicker)`
+  &.ant-picker {
+    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal2)};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+    :hover {
+      border-color: ${({ theme }) => theme.primary.deep};
+    }
+    input {
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+    }
+    .ant-picker-suffix {
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
+    }
+  }
+`;
+
+const SelectTimeLimitWrapper = styled(SelectTimeLimit)`
+  div {
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal2)};
+  }
 `;
 
 type TProps = WrappedComponentProps;
@@ -107,7 +135,7 @@ const LockUp = memo<TProps>(({ intl }) => {
         <p>{intl.formatMessage({ defaultMessage: "Choose a period" })}</p>
       </Label>
 
-      <SelectTimeLimit
+      <SelectTimeLimitWrapper
         onSelected={(e) => {
           setSelectedValue(e);
           setDatePickerShow(false);
@@ -127,7 +155,7 @@ const LockUp = memo<TProps>(({ intl }) => {
       />
 
       {isDatePickerShow && (
-        <DatePicker
+        <DatePickerWrapper
           style={{ marginBottom: 19 }}
           value={datePickerValue as moment.Moment | undefined}
           onChange={(e) => {

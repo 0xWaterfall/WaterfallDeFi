@@ -44,6 +44,7 @@ const ContainerWrapper = styled.div`
 const Card = styled.div`
   padding: 16px 19px;
   border: 1px solid ${({ theme }) => theme.primary.deep2};
+  background: ${({ theme }) => theme.useColorModeValue("transparent", theme.dark.block)};
   border-radius: 8px;
   position: relative;
 `;
@@ -52,7 +53,7 @@ const CardTitle = styled.div`
   display: flex;
   align-items: flex-start;
   font-size: 12px;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
 
 const CardValue = styled.div`
@@ -81,11 +82,11 @@ const Prompt = styled.div`
   height: fit-content;
   position: relative;
   border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   display: grid;
   gap: 5px;
   grid-auto-flow: column;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   font-size: 12px;
   font-weight: 500;
   line-height: 15.6px;
@@ -118,7 +119,7 @@ const SparePositionFold = memo<TProps>(
     tranchesPendingReward,
     fee
   }) => {
-    const { gray, primary, shadow, linearGradient, white } = useTheme();
+    const { gray, primary, shadow, linearGradient, white, useColorModeValue } = useTheme();
     return (
       <Wrapper>
         <LinearGradientWrapper />
@@ -135,8 +136,8 @@ const SparePositionFold = memo<TProps>(
                   <u
                     css={{
                       borderBottom: "1px dashed",
-                      borderColor: gray.normal7,
-                      color: gray.normal7,
+                      borderColor: useColorModeValue(gray.normal7, white.normal7),
+                      color: useColorModeValue(gray.normal7, white.normal7),
                       textDecoration: "none"
                     }}
                   >
@@ -151,7 +152,7 @@ const SparePositionFold = memo<TProps>(
                 })}
                 css={{ position: "absolute", top: 16, right: 17 }}
               >
-                <Union css={{ color: gray.normal3 }} />
+                <Union css={{ color: useColorModeValue(gray.normal3, white.normal7) }} />
               </Tooltip>
             </CardTitle>
             <CardValue>

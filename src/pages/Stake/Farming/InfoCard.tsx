@@ -15,11 +15,12 @@ const Wrapper = styled.div`
 `;
 
 const FarmCard = styled.div`
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block)};
   border-radius: 24px;
   padding: 19px 24px;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   position: relative;
+  z-index: 1;
   overflow: hidden;
 `;
 
@@ -51,10 +52,10 @@ const IconGroup = styled.div`
 const LabelLP = styled.div`
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.gray.normal04};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal1)};
 `;
 
 const DataWrapper = styled.div`
@@ -68,12 +69,12 @@ const DataWrapper = styled.div`
     p {
       font-size: 12px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal7};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     }
     span {
       font-size: 16px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal85};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
       font-weight: bold;
     }
   }
@@ -86,11 +87,12 @@ const FarmCardImageWrapper = styled(FarmCardImage)`
 `;
 
 const StakedCard = styled.div`
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block)};
   border-radius: 24px;
   /* padding: 19px 24px; */
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 240px;
   overflow: hidden;
@@ -102,7 +104,7 @@ const MyStaked = styled.div`
   div {
     display: block;
     line-height: 125%;
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     margin-bottom: 8px;
     line-height: 125%;
   }
@@ -111,7 +113,7 @@ const MyStaked = styled.div`
     font-weight: bold;
     font-size: 20px;
     line-height: 125%;
-    color: ${({ theme }) => theme.gray.normal85};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   }
   h1 {
     margin-bottom: 8px;

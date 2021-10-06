@@ -15,12 +15,16 @@ const DatePickerWrapper = styled(AntdDatePicker)`
     border-color: ${({ theme }) => theme.gray.normal2};
     color: ${({ theme }) => theme.gray.normal7};
     box-shadow: none;
+    background: transparent;
     :hover {
       border-color: ${({ theme }) => theme.primary.deep};
       box-shadow: none;
     }
     input {
       color: ${({ theme }) => theme.gray.normal7};
+    }
+    .ant-picker-suffix {
+      color: ${({ theme }) => theme.gray.normal5};
     }
   }
   &.ant-picker-focused {
@@ -39,6 +43,7 @@ const DatePicker = memo<TProps>(({ ...props }) => {
         return e.isBefore(dayjs() as moment.MomentInput);
       }}
       showToday={false}
+      allowClear={false}
       {...props}
     />
   );

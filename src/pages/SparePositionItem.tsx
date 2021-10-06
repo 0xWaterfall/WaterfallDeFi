@@ -73,15 +73,13 @@ const APRWrapper = styled.div`
     grid-auto-flow: row;
     font-size: 12px;
     section {
-      width: 120px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       title {
-        color: ${({ theme }) => theme.gray.normal5};
+        color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
       }
       span {
-        color: ${({ theme }) => theme.gray.normal85};
+        color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal7)};
       }
       p {
         font-weight: 500;
@@ -91,13 +89,13 @@ const APRWrapper = styled.div`
 `;
 
 const TableRowWrapper = styled(TableRow)`
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   font-size: 14px;
-  border-bottom: 1px solid ${({ theme }) => theme.primary.lightBrown};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.primary.deep2)};
   cursor: pointer;
   @media screen and (max-width: 768px) {
     padding: 26px 20px;
-    border: 1px solid ${({ theme }) => theme.primary.lightBrown};
+    border: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.primary.deep2)};
     border-radius: 12px;
   }
 `;
@@ -106,7 +104,7 @@ const TableColumnWrapper = styled(TableColumn)`
   @media screen and (max-width: 768px) {
     ::before {
       width: 100%;
-      color: ${({ theme }) => theme.gray.normal7};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     }
     &:nth-of-type(1)::before {
       content: "Portfolio Name";
@@ -188,9 +186,15 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={200} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
           <CycleWrapper>
-            <span>{trancheCycle.state !== 0 && formatTimestamp(trancheCycle.startAt)}</span>
-            <span>↓</span>
-            <span>{trancheCycle.state !== 0 && formatTimestamp(trancheCycle.endAt)}</span>
+            {trancheCycle.state !== 0 ? (
+              <>
+                <span>{formatTimestamp(trancheCycle.startAt)}</span>
+                <span>↓</span>
+                <span>{formatTimestamp(trancheCycle.endAt)}</span>
+              </>
+            ) : (
+              "--"
+            )}
           </CycleWrapper>
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Net APR" })}>
@@ -198,15 +202,15 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             <p>{tranchesDisplayText[userInvest.tranche]}</p>
             <div>
               <section>
-                <title>Total APR:</title>
+                <title>Total APR:</title>&nbsp;
                 <p>{netAPY} %</p>
               </section>
               <section>
-                <title>{tranchesDisplayText[userInvest.tranche]} APR:</title>
+                <title>{tranchesDisplayText[userInvest.tranche]} APR:</title>&nbsp;
                 <span>{trancheAPY} %</span>
               </section>
               <section>
-                <title>WTF APR:</title>
+                <title>WTF APR:</title>&nbsp;
                 <span>{wtfAPY} %</span>
               </section>
             </div>

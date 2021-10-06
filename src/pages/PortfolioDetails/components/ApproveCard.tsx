@@ -40,7 +40,7 @@ import { getTrancheBalance } from "store/position";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   display: flex;
   margin-bottom: 35px;
   justify-content: space-between;
@@ -55,7 +55,7 @@ const Container = styled.div`
   border: ${({ theme }) => theme.table.border};
   box-sizing: border-box;
   border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   padding: 34px 24px;
 
   @media screen and (max-width: 675px) {
@@ -96,7 +96,7 @@ const ValidateText = styled.div`
   min-height: 15px;
 `;
 const RedemptionFee = styled.div`
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal7)};
   margin-top: 10px;
   text-align: center;
   & > span {
@@ -106,7 +106,7 @@ const RedemptionFee = styled.div`
 const ImportantNotes = styled.div`
   margin-top: 20px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.primary.lightBrown};
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.header)};
   padding: 20px;
   display: flex;
   min-height: 140px;
@@ -121,7 +121,7 @@ const ImportantNotes = styled.div`
     margin-bottom: 10px;
   }
   & > div:nth-of-type(2) > div:nth-of-type(2) {
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   }
 `;
 type TProps = WrappedComponentProps & {

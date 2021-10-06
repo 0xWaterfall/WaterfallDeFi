@@ -69,7 +69,7 @@ const SelectGroup = styled.div`
   display: grid;
   gap: 14px;
   grid-auto-flow: column;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   title {
     font-size: 12px;
     margin-bottom: 6px;

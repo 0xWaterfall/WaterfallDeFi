@@ -13,7 +13,7 @@ interface ITableRowStyledComponentProps {
 }
 const TableRow = styled.ul<ITableRowStyledComponentProps>`
   height: ${({ height }) => height ?? 90}px;
-  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal7)};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
   display: flex;
   &:last-child {
     margin-bottom: 0;

@@ -8,7 +8,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const Wrapper = styled.div`
   padding: 0 42px;
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block5)};
   border-radius: 24px;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   @media screen and (max-width: 876px) {
@@ -26,31 +26,31 @@ const Tabs = styled.div`
   div {
     font-size: 24px;
     line-height: 125%;
-    color: ${({ theme }) => theme.gray.normal5};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
     cursor: pointer;
     &[data-actived="true"],
     :hover {
-      color: ${({ theme }) => theme.gray.normal85};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
     }
   }
 `;
 
 const Container = styled.div`
-  border-top: 1px solid ${({ theme }) => theme.gray.normal04};
+  border-top: 1px solid ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal1)};
   padding-top: 32px;
 `;
 
 const Label = styled.div`
   font-size: 14px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
 `;
 
 const Balance = styled.div`
   font-weight: 600;
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   margin: 12px 0;
 `;
 
@@ -60,6 +60,11 @@ const ButtonWrapper = styled(Button)`
   height: 56px;
   font-weight: 600;
   font-size: 16px;
+  background: transparent;
+  :hover,
+  :focus {
+    background: transparent;
+  }
 `;
 
 type TProps = WrappedComponentProps;

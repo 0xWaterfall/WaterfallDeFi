@@ -11,7 +11,9 @@ const theme = {
   dark: {
     basic: "#04050E",
     header: "#030C1B",
+    header3: "rgba(3, 12, 27, 0.7)",
     block: "#13132C",
+    block5: "rgba(19, 19, 44, 0.5)",
     light: "#181839",
     armyGreen: "#131B32"
   },

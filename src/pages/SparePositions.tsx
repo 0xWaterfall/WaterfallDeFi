@@ -106,8 +106,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
-  let userInvests = _userInvests.filter((_userInvest: UserInvest) => {
-    if (_userInvest?.cycle == Number(market.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
+  let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
+    if (_userInvest?.cycle === Number(market?.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
     return true;
   });
   for (let i = 0; i < position.length; i++) {

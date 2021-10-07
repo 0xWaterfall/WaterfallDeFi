@@ -153,7 +153,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
     <Wrapper>
       <RecordCard>
         <section>
-          <div>{intl.formatMessage({ defaultMessage: "Return principal+Interest" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Return principal + yield" })}</div>
           <div>
             {balance ? numeral(balance.toString()).format("0,0") : "--"} {data.assets}
           </div>
@@ -167,7 +167,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
             </ButtonWrapper>
-            <ButtonWrapper type="default" onClick={rollDepositPopup} disabled={!account}>
+            <ButtonWrapper type="default" onClick={rollDepositPopup} disabled={!account || !+balance}>
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </ButtonWrapper>
           </div>

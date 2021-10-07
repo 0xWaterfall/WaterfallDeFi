@@ -157,7 +157,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
       <p>
         {intl.formatMessage({
           defaultMessage:
-            "After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x 0.033%"
+            "After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x 0.033%"
         })}
       </p>
     </React.Fragment>

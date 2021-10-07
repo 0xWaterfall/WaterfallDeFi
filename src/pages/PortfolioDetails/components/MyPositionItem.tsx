@@ -223,7 +223,7 @@ const MyPositionItem = memo<TProps>(
           </div>
         </RowDiv>
         <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Interest" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Yield" })}</div>
           <div>
             {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && interest && interest}
             {!isCurrentPosition && _trancheCycle && _trancheCycle.state !== 0
@@ -269,7 +269,7 @@ const MyPositionItem = memo<TProps>(
                         textDecoration: "none"
                       }}
                     >
-                      {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                      {intl.formatMessage({ defaultMessage: "Est. yield" })}
                     </u>
                   </Tooltip>
                 </div>
@@ -277,7 +277,7 @@ const MyPositionItem = memo<TProps>(
                 <Tooltip
                   overlay={intl.formatMessage({
                     defaultMessage:
-                      "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                      "In the active state, the yield is the theoretical yield calculated based on the theoretical APR.The actual yield is subject to the system display after expiration."
                   })}
                   css={{ marginLeft: 5 }}
                 >
@@ -342,7 +342,7 @@ const MyPositionItem = memo<TProps>(
               </div>
               <div css={{ color: gray.normal7, fontSize: 12 }}>
                 {intl.formatMessage({
-                  defaultMessage: `Upon maturity, you can choose to withdraw all the principal + interest. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
+                  defaultMessage: `Upon maturity, you can choose to withdraw all the principal + yield. Alternatively you can choose to deposit to the next cycle - and choose the amount of re-deposit and tranche you re-deposit to.`
                 })}
               </div>
             </NoteDiv>

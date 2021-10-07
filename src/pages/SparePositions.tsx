@@ -106,8 +106,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
   useEffect(() => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
-  // const { loading, error, data } = useHistoryQuery(account);
-
   let userInvests = _userInvests.filter((_userInvest: UserInvest) => {
     if (_userInvest?.cycle == Number(market.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
     return true;
@@ -208,10 +206,10 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
-          <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Net APR" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Expected APR" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={150}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
-          <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Interest" })}</TableHeaderColumn>
+          <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Yield" })}</TableHeaderColumn>
           <TableHeaderColumn></TableHeaderColumn>
         </TableRow>
 

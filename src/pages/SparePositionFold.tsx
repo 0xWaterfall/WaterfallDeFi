@@ -141,14 +141,14 @@ const SparePositionFold = memo<TProps>(
                       textDecoration: "none"
                     }}
                   >
-                    {intl.formatMessage({ defaultMessage: "Est. interest" })}
+                    {intl.formatMessage({ defaultMessage: "Est. yield" })}
                   </u>
                 </Tooltip>
               </div>
               <Tooltip
                 overlay={intl.formatMessage({
                   defaultMessage:
-                    "In the active state, the interest is the theoretical interest calculated based on the theoretical APR.The actual interest is subject to the system display after expiration."
+                    "In the active state, the yield is the theoretical yield calculated based on the theoretical APR.The actual yield is subject to the system display after expiration."
                 })}
                 css={{ position: "absolute", top: 16, right: 17 }}
               >
@@ -185,7 +185,7 @@ const SparePositionFold = memo<TProps>(
                 {intl.formatMessage(
                   {
                     defaultMessage:
-                      "After maturity, you can choose to withdraw all the principal + interest. The platform will charge a fee of (principal + all interest in the current period) x {number}."
+                      "After maturity, you can choose to withdraw all the principal + yield. The platform will charge a fee of (principal + all yield in the current period) x {number}."
                   },
                   {
                     number: <span css={{ color: primary.deep }}>{fee}%</span>

@@ -77,6 +77,16 @@ const Header = memo<TProps>(({ intl }) => {
   const MENU = [
     { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: undefined },
     {
+      pathname: "/portfolio/markets",
+      text: intl.formatMessage({ defaultMessage: "Markets" }),
+      checked: "portfolio/markets"
+    },
+    {
+      pathname: "/portfolio/myPortfolio",
+      text: intl.formatMessage({ defaultMessage: "My Portfolio" }),
+      checked: "portfolio/myPortfolio"
+    },
+    {
       pathname: "/portfolio",
       text: intl.formatMessage({ defaultMessage: "Portfolio" }),
       checked: "portfolio",
@@ -252,7 +262,8 @@ const Header = memo<TProps>(({ intl }) => {
           }
         }}
       >
-        {text} {Boolean(subMenu) && <CaretDown css={{ transition: "transform .2s" }} />}
+        {text}
+        {Boolean(subMenu) && <CaretDown css={{ transition: "transform .2s" }} />}
       </Link>
       {Boolean(subMenu) && (
         <div

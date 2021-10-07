@@ -116,7 +116,7 @@ const TableColumnWrapper = styled(TableColumn)`
       content: "Cycle";
     }
     &:nth-of-type(4)::before {
-      content: "Net APR";
+      content: "Expected APR";
     }
     &:nth-of-type(5)::before {
       content: "Principal";
@@ -125,7 +125,7 @@ const TableColumnWrapper = styled(TableColumn)`
       content: "Status";
     }
     &:nth-of-type(7)::before {
-      content: "Interest";
+      content: "Yield";
     }
     &:nth-of-type(8)::before {
       content: "More";
@@ -197,7 +197,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             )}
           </CycleWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Net APR" })}>
+        <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Expected APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             <p>{tranchesDisplayText[userInvest.tranche]}</p>
             <div>
@@ -224,7 +224,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {trancheCycle.state === 1 && <Tag color="green" value="Active"></Tag>}
           {trancheCycle.state === 2 && <Tag color="red" value="Expired"></Tag>}
         </TableColumnWrapper>
-        <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Interest" })}>
+        <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
           {userInvest.interest} {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper>

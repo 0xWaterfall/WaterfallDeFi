@@ -8,13 +8,13 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const Wrapper = styled.div`
   padding: 32px;
-  background: ${({ theme }) => theme.white.normal5};
-  filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header)};
+  box-shadow: 0px 4px 10px 0px #0000000a;
   border-radius: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
 `;
 
 const Title = styled.div`
@@ -24,7 +24,7 @@ const Title = styled.div`
 
 const Line = styled.div`
   height: 1px;
-  background: ${({ theme }) => theme.gray.normal08};
+  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
   margin: 20px 0;
 `;
 
@@ -34,7 +34,7 @@ const Label = styled.div`
   justify-content: space-between;
   margin-bottom: 16px;
   p {
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     font-size: 16px;
     line-height: 125%;
   }
@@ -59,6 +59,11 @@ const ButtonWrapper = styled(Button)`
   font-weight: 600;
   font-size: 16px;
   margin-top: 25px;
+  background: transparent;
+  :hover,
+  :focus {
+    background: transparent;
+  }
 `;
 
 type TProps = WrappedComponentProps;

@@ -17,10 +17,10 @@ const Wrapper = styled.div`
 `;
 
 const FarmingCard = styled.div`
-  background: ${({ theme }) => theme.primary.lightBrown};
+  background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
   border-radius: 24px;
   padding: 45px 53px;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   font-weight: 500;
   font-size: 24px;
   line-height: 125%;

@@ -41,7 +41,7 @@ type ProgressBarProps = {
 const TrancheName = styled.div`
   font-size: 14px;
   line-height: 18px;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -56,14 +56,15 @@ const Text3 = styled.div`
   font-size: 12px;
   line-height: 125%;
   letter-spacing: -0.015em;
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal7)};
 `;
 const Text4 = styled.div`
   font-size: 12px;
   line-height: 16px;
   letter-spacing: -0.015em;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
+
 const StatusDiv = styled.div`
   display: flex;
   justify-content: space-between;
@@ -89,7 +90,7 @@ const SoldOut = styled.div`
   top: -9px;
   text-align: center;
   line-height: 30px;
-  background-color: white;
+  background-color: transparent;
   z-index: 11;
 `;
 const Container = styled.div`
@@ -100,7 +101,7 @@ const Container = styled.div`
   border: ${({ theme }) => theme.table.border};
   box-sizing: border-box;
   border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   @media screen and (max-width: 768px) {
     & {
       height: auto;
@@ -113,7 +114,7 @@ const ProgressBar = styled.div<ProgressBarProps>`
   width: 100%;
   height: 6px;
   position: relative;
-  background-color: ${({ theme }) => theme.primary.lightBrown};
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.white.normal2)};
   &:after {
     content: "";
     background-color: ${({ color }) => color};

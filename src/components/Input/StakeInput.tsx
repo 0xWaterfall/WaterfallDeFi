@@ -24,7 +24,7 @@ const WrapperInput = styled(Input)`
   }
   .ant-input-suffix {
     font-size: 14px;
-    color: ${({ theme }) => theme.gray.normal5};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
     cursor: pointer;
     p {
       font-weight: 600;

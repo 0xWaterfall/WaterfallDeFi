@@ -7,7 +7,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 
 const Wrapper = styled.div`
   padding: 32px 40px 36px;
-  background: ${({ theme }) => theme.primary.lightBrown};
+  background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
   border-radius: 24px;
   position: relative;
   margin-bottom: 48px;
@@ -15,7 +15,7 @@ const Wrapper = styled.div`
     font-weight: 500;
     font-size: 36px;
     line-height: 125%;
-    color: ${({ theme }) => theme.gray.normal85};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   }
 
   p {

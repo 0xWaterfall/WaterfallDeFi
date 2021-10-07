@@ -10,17 +10,17 @@ import { LinearGradientSubtract } from "styles";
 
 const Wrapper = styled.div`
   padding: 24px;
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header3)};
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
   border-radius: 24px;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
 `;
 
 const Line = styled.div`
   height: 1px;
-  background: ${({ theme }) => theme.gray.normal04};
+  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal08)};
   margin: 24px 0 20px;
 `;
 
@@ -53,7 +53,7 @@ const Container = styled.div`
   padding-right: 40px;
   p {
     margin-bottom: 8px;
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
     font-size: 14px;
     line-height: 125%;
   }

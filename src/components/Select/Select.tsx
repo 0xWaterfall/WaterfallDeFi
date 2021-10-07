@@ -19,13 +19,13 @@ const ANTDSelectStyled = styled(ANTDSelect)`
   }
   &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     border-radius: 4px;
-    border-color: ${({ theme }) => theme.gray.normal08};
+    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.dark.block)};
   }
   &.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-    border-color: ${({ theme }) => theme.gray.normal08};
+    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.dark.block)};
   }
   &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    border-color: ${({ theme }) => theme.gray.normal08};
+    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.dark.block)};
     box-shadow: none;
   }
 `;
@@ -46,7 +46,8 @@ const Select: React.FC<TProps> = ({ children, ...props }) => {
             },
             ".ant-select-item-option-active:not(.ant-select-item-option-disabled),.ant-select-item-option-selected:not(.ant-select-item-option-disabled)":
               {
-                backgroundColor: useColorModeValue(primary.lightBrown, dark.armyGreen)
+                backgroundColor: useColorModeValue(primary.lightBrown, dark.armyGreen),
+                color: useColorModeValue(gray.normal7, white.normal85)
               }
           })}
           {...props}

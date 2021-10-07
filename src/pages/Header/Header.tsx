@@ -1,38 +1,23 @@
 /** @jsxImportSource @emotion/react */
 
-import { ClassNames, useTheme } from "@emotion/react";
-import { useSize } from "ahooks";
-import {
-  CaretDown,
-  DarkIcon,
-  I18n,
-  LightIcon,
-  Menu,
-  ShortRight,
-  Wallet,
-  WaterFall,
-  WaterFallDark
-} from "assets/images";
+import { useTheme } from "@emotion/react";
+import { Menu, Wallet, WaterFall, WaterFallDark } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
-import Dropdown from "components/Dropdown/Dropdown";
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useEffect } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "store";
-import { fetchI18nMiddleware } from "store/i18n";
+import { useAppDispatch } from "store";
 import ConnectWalletModal from "./components/ConnectWalletModal";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import useAuth from "utils/useAuth";
 import { formatAccountAddress } from "utils/formatAddress";
-import { languages } from "config";
 import { setConnectWalletModalShow } from "store/showStatus";
 import styled from "@emotion/styled";
 import { colorMode } from "hooks/useColorMode";
-import { setTheme } from "store/selectedKeys";
 import ActionIconGroup from "./ActionIconGroup";
 
 const Wrapper = styled.div`

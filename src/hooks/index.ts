@@ -25,6 +25,7 @@ import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
 import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
+import useRefresh from "./useRefresh";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -155,6 +156,7 @@ export const usePendingWTFReward = (poolId?: number) => {
 export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
+  const { slowRefresh } = useRefresh();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
@@ -166,7 +168,7 @@ export const useBalance = (address: string) => {
 
   useEffect(() => {
     fetchBalance();
-  }, [fetchBalance]);
+  }, [fetchBalance, address, slowRefresh]);
 
   return { balance, fetchBalance };
 };

@@ -6,10 +6,23 @@ import Button from "components/Button/Button";
 import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
 import SelectTimeLimit, { Block } from "components/SelectTimeLimit/SelectTimeLimit";
+import { NETWORK } from "config";
+import { VeWTFAddress, WTFAddress } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import { useBalance } from "hooks";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { compareNum } from "utils/formatNumbers";
+import { useTheme } from "@emotion/react";
+import useLockAndStakeWTF from "pages/Stake/hooks/useLockAndStakeWTF";
+import { successNotification } from "utils/notification";
 
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import useCheckApprove from "pages/PortfolioDetails/hooks/useCheckApprove";
+import useApprove from "pages/PortfolioDetails/hooks/useApprove";
+import { useAppDispatch } from "store";
+import { setConnectWalletModalShow } from "store/showStatus";
 const Wrapper = styled.div`
   padding: 32px 50px;
   background: ${({ theme }) => theme.white.normal5};
@@ -68,15 +81,55 @@ const ButtonWrapper = styled(Button)`
   margin-top: 55px;
 `;
 
+const ValidateText = styled.div`
+  font-size: 12px;
+  line-height: 125%;
+  letter-spacing: -0.015em;
+  color: ${({ theme }) => theme.tags.redText};
+  margin-top: 4px;
+  min-height: 15px;
+`;
+
 type TProps = WrappedComponentProps;
 
 const LockUp = memo<TProps>(({ intl }) => {
   const [isDatePickerShow, setDatePickerShow] = useState(false);
+  const { tags } = useTheme();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
+  const [balanceInput, setBalanceInput] = useState(0);
+  const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
+  const { lockAndStakeWTF } = useLockAndStakeWTF();
+  const [approved, setApproved] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { account } = useWeb3React<Web3Provider>();
+  const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  const dispatch = useAppDispatch();
+  const { onApprove } = useApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  useEffect(() => {
+    const checkApproved = async (account: string) => {
+      const approved = await onCheckApprove();
+      console.log(approved);
+      setApproved(approved ? true : false);
+    };
+    if (account) checkApproved(account);
+  }, [account]);
 
+  const handleApprove = async () => {
+    setApproveLoading(true);
+    try {
+      await onApprove();
+      successNotification("Approve Success", "");
+      setApproved(true);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setApproveLoading(false);
+    }
+  };
   const newExpireDate = useMemo(() => {
     if (isDatePickerShow) {
       return datePickerValue;
@@ -84,25 +137,67 @@ const LockUp = memo<TProps>(({ intl }) => {
       return dayjs().add(selectedValue.value, selectedValue.unit);
     }
   }, [selectedValue, datePickerValue, isDatePickerShow]);
-
-  const onConfirm = useCallback(() => {
-    console.log(newExpireDate?.unix());
+  const duration = useMemo(() => {
+    if (!newExpireDate) return;
+    const diff = newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
+    return Math.ceil(diff / 100) * 100;
   }, [newExpireDate]);
 
+  const onConfirm = useCallback(async () => {
+    if (validateText !== undefined && validateText.length > 0) return;
+    if (balanceInput <= 0) return;
+    if (!duration) return;
+
+    setLoading(true);
+    try {
+      await lockAndStakeWTF(balanceInput, duration);
+      fetchBalance();
+      setBalanceInput(0);
+      successNotification("Lock & Stake Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [newExpireDate, balanceInput]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    let input = parseInt(value);
+    if (isNaN(input)) input = 0;
+    setBalanceInput(input);
+  };
+  const handleMaxInput = () => {
+    const _balance = wtfBalance.replace(/\,/g, "");
+    // const _remaining = remaining.replace(/\,/g, "");
+    const input = parseInt(_balance);
+
+    if (input) setBalanceInput(input);
+  };
+  const validateText = useMemo(() => {
+    const _balance = wtfBalance.replace(/\,/g, "");
+    const _balanceInput = balanceInput;
+    if (compareNum(_balanceInput, _balance, true)) {
+      return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+    }
+  }, [wtfBalance, balanceInput]);
   return (
     <Wrapper>
       <Title>{intl.formatMessage({ defaultMessage: "Lock-up" })}</Title>
       <Line />
       <Label>
         <p>{intl.formatMessage({ defaultMessage: "WTF balance" })}</p>
-        <span>0 WTF</span>
+        <span>{wtfBalance} WTF</span>
       </Label>
+
       <StakeInput
         suffixText="WTF"
-        onMAX={() => {
-          console.log(1);
-        }}
+        onMAX={handleMaxInput}
+        value={balanceInput}
+        onChange={handleInputChange}
+        style={validateText ? { borderColor: tags.redText } : {}}
       />
+      <ValidateText>{validateText}</ValidateText>
+
       <Label css={{ margin: "16px 0 10px" }}>
         <p>{intl.formatMessage({ defaultMessage: "Choose a period" })}</p>
       </Label>
@@ -154,9 +249,30 @@ const LockUp = memo<TProps>(({ intl }) => {
         <p>{newExpireDate ? newExpireDate?.format("YYYY-MM-DD") : "--"}</p>
       </Label>
 
-      <ButtonWrapper type="primaryLine" onClick={onConfirm}>
+      {/* <ButtonWrapper type="primaryLine" onClick={onConfirm}>
         {intl.formatMessage({ defaultMessage: "Lock & Stake Ve-WTF" })}
-      </ButtonWrapper>
+      </ButtonWrapper> */}
+      {account ? (
+        approved ? (
+          <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
+            {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
+          </ButtonWrapper>
+        ) : (
+          <ButtonWrapper type="primaryLine" onClick={handleApprove} loading={approveLoading}>
+            {intl.formatMessage({ defaultMessage: "Approve WTF" })}
+          </ButtonWrapper>
+        )
+      ) : (
+        <ButtonWrapper
+          type="primaryLine"
+          onClick={() => {
+            dispatch(setConnectWalletModalShow(true));
+          }}
+          loading={approveLoading}
+        >
+          {intl.formatMessage({ defaultMessage: "Connect Wallet" })}
+        </ButtonWrapper>
+      )}
     </Wrapper>
   );
 });

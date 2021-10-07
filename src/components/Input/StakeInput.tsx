@@ -3,8 +3,9 @@
 import React from "react";
 import styled from "@emotion/styled";
 import Input from "./Input";
+import { InputProps } from "antd";
 
-type TProps = Partial<typeof Input> & { suffixText?: React.ReactNode; onMAX?: () => void };
+type TProps = Partial<typeof Input> & InputProps & { suffixText?: React.ReactNode; onMAX?: () => void };
 
 const WrapperInput = styled(Input)`
   &.ant-input-affix-wrapper {

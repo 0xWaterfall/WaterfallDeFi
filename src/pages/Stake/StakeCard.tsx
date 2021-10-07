@@ -82,7 +82,11 @@ type TProps = WrappedComponentProps & {
 const StakeCard = memo<TProps>(({ intl, data }) => {
   const { account } = useWeb3React<Web3Provider>();
 
-  const result = useStakingPool(data.stakingTokenAddress, account);
+  const { totalStaked, isPoolActive, totalLocked, userStaked } = useStakingPool(
+    data.stakingTokenAddress,
+    data.earningTokenAddress,
+    account
+  );
   const earningTokenTotalSupply = useEarningTokenTotalSupply(data.earningTokenAddress);
   return (
     <Card>
@@ -97,7 +101,7 @@ const StakeCard = memo<TProps>(({ intl, data }) => {
       <DataWrapper>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>
-          <span>{result.totalStaked}</span>
+          <span>{totalLocked} WTF</span>
         </div>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
@@ -109,7 +113,7 @@ const StakeCard = memo<TProps>(({ intl, data }) => {
         </div>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
-          <span>{result.userStaked}</span>
+          <span>{userStaked}</span>
         </div>
       </DataWrapper>
     </Card>

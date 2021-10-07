@@ -1,10 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import { useWeb3React } from "@web3-react/core";
 import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { useGetLockingWTF } from "../hooks/useGetLockingWTF";
 import AddAmountModal from "./Modal/AddAmountModal";
 import ExtendModal from "./Modal/ExtendModal";
+import { Web3Provider } from "@ethersproject/providers";
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -88,13 +91,14 @@ type TProps = WrappedComponentProps;
 const MyStakingCard = memo<TProps>(({ intl }) => {
   const [amountModalVisit, setAmountModalVisit] = useState(false);
   const [extendModalVisit, setExtendModalVisit] = useState(false);
-
+  const { account } = useWeb3React<Web3Provider>();
+  const lockingWTF = useGetLockingWTF(account);
   return (
     <Wrapper>
       <Block css={{ gridArea: "a" }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "Locking" })}（WTF）</span>
-          <p>1,000,000,000</p>
+          <p>{lockingWTF}</p>
           <span>$ 2517.12</span>
         </div>
         <LinearGradientBtn onClick={setAmountModalVisit.bind(null, true)}>

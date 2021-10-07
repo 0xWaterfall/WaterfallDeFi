@@ -1,10 +1,12 @@
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 import { abi as VEWTFAbi } from "config/abi/VEWTF.json";
+import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
 
 import { useEffect, useMemo, useState } from "react";
 import multicall from "utils/multicall";
 import BigNumber from "bignumber.js";
 import useRefresh from "./useRefresh";
+import { BIG_TEN } from "utils/bigNumber";
 
 export const useEarningTokenTotalSupply = (tokenAddress: string) => {
   const [totalSupply, setTotalSupply] = useState("");
@@ -18,7 +20,7 @@ export const useEarningTokenTotalSupply = (tokenAddress: string) => {
         }
       ];
       const [_totalSupply] = await multicall(VEWTFAbi, calls);
-      setTotalSupply(new BigNumber(_totalSupply[0]?._hex).toString());
+      setTotalSupply(new BigNumber(_totalSupply[0]?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString());
     };
 
     fetchBalance();
@@ -26,11 +28,16 @@ export const useEarningTokenTotalSupply = (tokenAddress: string) => {
 
   return totalSupply;
 };
-export const useStakingPool = (tokenAddress: string, account: string | null | undefined) => {
+export const useStakingPool = (
+  tokenAddress: string,
+  earningTokenAddress: string,
+  account: string | null | undefined
+) => {
   const [result, setResult] = useState({
     isPoolActive: false,
     totalStaked: "",
-    userStaked: ""
+    userStaked: "",
+    totalLocked: ""
   });
   const { slowRefresh } = useRefresh();
 
@@ -51,12 +58,21 @@ export const useStakingPool = (tokenAddress: string, account: string | null | un
           params: [account]
         }
       ];
-      const result = await multicall(WTFRewardsABI, calls);
       const [isPoolActive, pool, user] = await multicall(WTFRewardsABI, calls);
+
+      const calls2 = [
+        {
+          address: earningTokenAddress,
+          name: "totalLocked"
+        }
+      ];
+      const [totalLocked] = await multicall(VotingEscrowAbi, calls2);
+      console.log(totalLocked);
       setResult({
         isPoolActive,
-        totalStaked: new BigNumber(pool.totalStaked?._hex).toString(),
-        userStaked: new BigNumber(user?.user.amount?._hex).toString()
+        totalStaked: new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString(),
+        userStaked: new BigNumber(user?.user.amount?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString(),
+        totalLocked: new BigNumber(totalLocked[0]?._hex).dividedBy(BIG_TEN.pow(18)).toString()
       });
     };
 

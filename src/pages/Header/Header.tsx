@@ -81,7 +81,7 @@ const MenuBlockWrapper = styled.div`
   }
 `;
 
-const LinkWrapepr = styled(Link)`
+const LinkWrapper = styled(Link)`
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal5)};
   &[data-selected="true"] {
     color: ${({ theme }) => theme.primary.deep};
@@ -226,9 +226,9 @@ const Header = memo<TProps>(({ intl }) => {
 
   const MenuLink = MENU.map(({ pathname, text }) => (
     <MenuBlockWrapper key={pathname}>
-      <LinkWrapepr to={pathname} data-selected={location.pathname === pathname}>
+      <LinkWrapper to={pathname} data-selected={location.pathname === pathname}>
         {text}
-      </LinkWrapepr>
+      </LinkWrapper>
     </MenuBlockWrapper>
   ));
 

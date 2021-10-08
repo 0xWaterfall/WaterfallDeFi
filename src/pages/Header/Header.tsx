@@ -81,6 +81,13 @@ const MenuBlockWrapper = styled.div`
   }
 `;
 
+const LinkWrapepr = styled(Link)`
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal5)};
+  &[data-selected="true"] {
+    color: ${({ theme }) => theme.primary.deep};
+  }
+`;
+
 const PCLeft = styled.div`
   display: grid;
   gap: 36px;
@@ -219,14 +226,9 @@ const Header = memo<TProps>(({ intl }) => {
 
   const MenuLink = MENU.map(({ pathname, text }) => (
     <MenuBlockWrapper key={pathname}>
-      <Link
-        to={pathname}
-        css={{
-          color: location.pathname === pathname ? primary.deep : useColorModeValue(gray.normal7, white.normal5)
-        }}
-      >
+      <LinkWrapepr to={pathname} data-selected={location.pathname === pathname}>
         {text}
-      </Link>
+      </LinkWrapepr>
     </MenuBlockWrapper>
   ));
 

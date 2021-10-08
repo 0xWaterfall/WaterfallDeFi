@@ -7,8 +7,9 @@ import { Coingecko, DashboardImage, MetaMask } from "assets/images";
 import { useSize } from "ahooks";
 import { useMarketCap, useWTFPrice } from "hooks/useSelectors";
 import numeral from "numeral";
-import { BASE_BSC_SCAN_URL } from "config";
+import { BASE_BSC_SCAN_URL, NETWORK } from "config";
 import { nodes } from "utils/getRpcUrl";
+import { WTFAddress } from "config/address";
 
 type TProps = WrappedComponentProps;
 
@@ -103,7 +104,7 @@ const DashboardCard = memo<TProps>(({ intl }) => {
           params: {
             type: "ERC20",
             options: {
-              address: "0xa9f302953082fb8412f55d5bca3714a51e5b9a97",
+              address: "0x" + WTFAddress[NETWORK],
               symbol: "WTF",
               decimals: 18,
               image: "https://waterfalldefi.org/wp-content/uploads/2021/04/cropped-favocon_wtf-192x192.png"

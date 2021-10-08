@@ -10,8 +10,9 @@ const ConnectedDataProvider: FC = ({ children }) => {
     dispatch(getMarkets(MarketList));
     dispatch(getInfo());
     const timer = setInterval(() => {
+      console.log("dispatch");
       dispatch(getMarkets(MarketList));
-    }, 30000);
+    }, 5000);
     return () => {
       clearInterval(timer);
     };

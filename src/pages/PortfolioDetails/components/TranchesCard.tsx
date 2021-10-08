@@ -90,7 +90,7 @@ const SoldOut = styled.div`
   top: -9px;
   text-align: center;
   line-height: 30px;
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   z-index: 11;
 `;
 const Container = styled.div`

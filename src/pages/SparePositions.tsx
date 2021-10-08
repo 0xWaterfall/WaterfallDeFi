@@ -99,6 +99,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
   const position = usePosition();
+  console.log(position);
   const markets = useMarkets();
   const market = markets[0];
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
@@ -135,7 +136,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
     { name: intl.formatMessage({ defaultMessage: "Active" }), value: "ACTIVE", status: 1 },
-    { name: intl.formatMessage({ defaultMessage: "Expired" }), value: "EXPIRED", status: 2 }
+    { name: intl.formatMessage({ defaultMessage: "Matured" }), value: "EXPIRED", status: 2 }
   ];
   const tranchesName = ["Senior", "Mezzanine", "Junior"];
   const handleTranchesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -206,7 +207,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Portfolio Name" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
-          <TableHeaderColumn minWidth={240}>{intl.formatMessage({ defaultMessage: "Expected APR" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Tranche" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={160}>{intl.formatMessage({ defaultMessage: "Expected APR" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={150}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Yield" })}</TableHeaderColumn>

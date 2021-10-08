@@ -72,7 +72,6 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   `);
   const _userInvests: UserInvest[] = [];
   const _trancheCycles: { [key: string]: TrancheCycle } = {};
-  console.log(data);
   if (!data)
     return {
       userInvests: _userInvests,

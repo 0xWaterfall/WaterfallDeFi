@@ -217,6 +217,7 @@ const ApproveCard = memo<TProps>(
         } else {
           successNotification("Deposit Fail", "");
         }
+        setDepositLoading(false);
         setBalanceInput(0);
         fetchBalance();
         if (account) dispatch(getTrancheBalance({ account }));
@@ -275,7 +276,7 @@ const ApproveCard = memo<TProps>(
 
         <div>
           <Input
-            style={validateText ? { borderColor: tags.redText } : {}}
+            style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
             placeholder=""
             value={balanceInput}
             onChange={handleInputChange}
@@ -283,7 +284,7 @@ const ApproveCard = memo<TProps>(
             disabled={!enabled || isSoldOut}
           />
         </div>
-        <ValidateText>{validateText}</ValidateText>
+        <ValidateText>{!depositLoading && validateText}</ValidateText>
 
         {selectTranche && (
           <ImportantNotes>

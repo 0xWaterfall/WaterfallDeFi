@@ -90,7 +90,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
     { name: intl.formatMessage({ defaultMessage: "Active" }), value: "ACTIVE", status: 1 },
-    { name: intl.formatMessage({ defaultMessage: "Expired" }), value: "EXPIRED", status: 2 }
+    { name: intl.formatMessage({ defaultMessage: "Matured" }), value: "EXPIRED", status: 2 }
   ];
   const tranchesName = ["Senior", "Mezzanine", "Junior"];
   const tranchesState = [PORTFOLIO_STATUS.PENDING, PORTFOLIO_STATUS.ACTIVE, PORTFOLIO_STATUS.EXPIRED];
@@ -287,7 +287,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                   <TableColumn>
                     {market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
                     {market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
-                    {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+                    {market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Matured" />}
                   </TableColumn>
                   <TableColumn>
                     {market?.status === PORTFOLIO_STATUS.ACTIVE && interests
@@ -535,7 +535,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
                   <TableColumn>
                     {trancheCycles[trancheCycleId].state === 0 ? <Tag color="yellow" value={"Pending"}></Tag> : null}
                     {trancheCycles[trancheCycleId].state === 1 ? <Tag color="green" value={"Active"}></Tag> : null}
-                    {trancheCycles[trancheCycleId].state === 2 ? <Tag color="red" value={"Expired"}></Tag> : null}
+                    {trancheCycles[trancheCycleId].state === 2 ? <Tag color="red" value={"Matured"}></Tag> : null}
                   </TableColumn>
                   <TableColumn>
                     {trancheCycles && trancheCycles[trancheCycleId] && trancheCycles[trancheCycleId].state !== 0

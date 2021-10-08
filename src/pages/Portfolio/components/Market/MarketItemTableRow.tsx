@@ -153,7 +153,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
         {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null}
 
-        {/* <Tag color="red" value={"Expired"}></Tag> */}
+        {/* <Tag color="red" value={"Matured"}></Tag> */}
         {/* {i === 2 ? <Tag color="yellow" value={"Pending"}></Tag> : null} */}
         {/* {i === 3 ? <Tag color="green" value={"Active"}></Tag> : null} */}
       </TableColumn>

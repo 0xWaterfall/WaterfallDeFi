@@ -153,7 +153,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
     <Wrapper>
       <RecordCard>
         <section>
-          <div>{intl.formatMessage({ defaultMessage: "Return principal + yield" })}</div>
+          <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
           <div>
             {balance ? numeral(balance.toString()).format("0,0") : "--"} {data.assets}
           </div>

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useSize } from "ahooks";
 import { compareNum, formatTVL, getRemaining } from "utils/formatNumbers";
 import { useBalance, useTrancheBalance } from "hooks";
+import { useSelectedMarket } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -33,6 +34,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
   const { primary } = useTheme();
   const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
   const [marketData, setMarketData] = useState(data);
+
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
   const { balance } = useBalance(data.depositAssetAddress);

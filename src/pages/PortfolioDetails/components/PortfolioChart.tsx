@@ -106,7 +106,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
   }, [options]);
   return (
     <Wrapper>
-      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Portfolio" })}</WrappetTitle>
+      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Portfolio Breakdown" })}</WrappetTitle>
       <WrappetContainer>
         <div id="portfolio-Chart" style={{ height: 200, width: 200 }} />
         <div>

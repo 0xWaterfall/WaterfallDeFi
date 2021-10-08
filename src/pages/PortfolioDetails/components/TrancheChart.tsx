@@ -67,7 +67,7 @@ const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
 
   return (
     <Wrapper>
-      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Tranche" })}</WrappetTitle>
+      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Tranche Structure" })}</WrappetTitle>
 
       <WrappetContainer>
         <InitialRenderTransition>

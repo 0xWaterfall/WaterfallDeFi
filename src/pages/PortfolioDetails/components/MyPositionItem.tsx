@@ -209,7 +209,7 @@ const MyPositionItem = memo<TProps>(
           <div>
             {isCurrentPosition && market?.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending" />}
             {isCurrentPosition && market?.status === PORTFOLIO_STATUS.ACTIVE && <Tag color="green" value="Active" />}
-            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Expired" />}
+            {isCurrentPosition && market?.status === PORTFOLIO_STATUS.EXPIRED && <Tag color="red" value="Matured" />}
 
             {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 0 ? (
               <Tag color="yellow" value={"Pending"}></Tag>
@@ -218,7 +218,7 @@ const MyPositionItem = memo<TProps>(
               <Tag color="green" value={"Active"}></Tag>
             ) : null}
             {!isCurrentPosition && _trancheCycle && _trancheCycle.state === 2 ? (
-              <Tag color="red" value={"Expired"}></Tag>
+              <Tag color="red" value={"Matured"}></Tag>
             ) : null}
           </div>
         </RowDiv>

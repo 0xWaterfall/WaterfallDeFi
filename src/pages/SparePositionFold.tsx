@@ -141,7 +141,7 @@ const SparePositionFold = memo<TProps>(
                       textDecoration: "none"
                     }}
                   >
-                    {intl.formatMessage({ defaultMessage: "Est. yield" })}
+                    {intl.formatMessage({ defaultMessage: "Est. Yield" })}
                   </u>
                 </Tooltip>
               </div>

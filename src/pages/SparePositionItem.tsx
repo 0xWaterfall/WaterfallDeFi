@@ -116,18 +116,21 @@ const TableColumnWrapper = styled(TableColumn)`
       content: "Cycle";
     }
     &:nth-of-type(4)::before {
-      content: "Expected APR";
+      content: "Tranche";
     }
     &:nth-of-type(5)::before {
-      content: "Principal";
+      content: "Expected APR";
     }
     &:nth-of-type(6)::before {
-      content: "Status";
+      content: "Principal";
     }
     &:nth-of-type(7)::before {
-      content: "Yield";
+      content: "Status";
     }
     &:nth-of-type(8)::before {
+      content: "Yield";
+    }
+    &:nth-of-type(9)::before {
       content: "More";
     }
   }
@@ -147,13 +150,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   const wtfPrice = useWTFPrice();
   const { tranchesPendingReward } = usePendingWTFReward();
-
   const totalAmount =
     userInvest.principal &&
     userInvest.capital &&
     new BigNumber(numeral(userInvest.principal).value() || 0)
       .plus(new BigNumber(numeral(userInvest.capital).value() || 0))
-      .dividedBy(BIG_TEN.pow(18))
       .toString();
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
@@ -197,9 +198,13 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             )}
           </CycleWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={240} content={intl.formatMessage({ defaultMessage: "Expected APR" })}>
+        <TableColumnWrapper minWidth={80} content={intl.formatMessage({ defaultMessage: "Tranche" })}>
+          <div css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
+            {tranchesDisplayText[userInvest.tranche]}
+          </div>
+        </TableColumnWrapper>
+        <TableColumnWrapper minWidth={160} content={intl.formatMessage({ defaultMessage: "Expected APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
-            <p>{tranchesDisplayText[userInvest.tranche]}</p>
             <div>
               <section>
                 <title>Total APR:</title>&nbsp;
@@ -222,7 +227,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
           {trancheCycle.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
           {trancheCycle.state === 1 && <Tag color="green" value="Active"></Tag>}
-          {trancheCycle.state === 2 && <Tag color="red" value="Expired"></Tag>}
+          {trancheCycle.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
           {userInvest.interest} {market?.assets}

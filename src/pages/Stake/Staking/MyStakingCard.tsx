@@ -2,23 +2,21 @@
 
 import styled from "@emotion/styled";
 import { useWeb3React } from "@web3-react/core";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useGetLockingWTF } from "../hooks/useGetLockingWTF";
-import AddAmountModal from "./Modal/AddAmountModal";
-import ExtendModal from "./Modal/ExtendModal";
 import { Web3Provider } from "@ethersproject/providers";
+import { useTheme } from "@emotion/react";
 
 const Wrapper = styled.div`
-  padding: 24px;
-  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header3)};
+  border-top: 1px solid ${({ theme }) => theme.primary.deep2};
+  padding: 31px 0 0 60px;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
-  border-radius: 24px;
   display: grid;
   gap: 24px;
   grid-template-areas: "a b c d e";
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-  margin-bottom: 50px;
+  margin-bottom: 150px;
 
   @media screen and (max-width: 1000px) {
     grid-template-areas:
@@ -51,47 +49,14 @@ const Wrapper = styled.div`
 `;
 
 const Block = styled.div`
-  padding: 18px 28px;
-  border-radius: 24px;
-  border: solid 1px transparent;
-  background-image: ${({ theme }) =>
-      theme.useColorModeValue("linear-gradient(180deg, #fff, #fff)", "linear-gradient(180deg, #13132C, #13132C)")},
-    linear-gradient(180deg, #5946f8 0%, #2494dc 44.79%, #00cccb 100%);
-  background-origin: padding-box, border-box;
-  background-clip: padding-box, border-box;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-`;
-
-const LinearGradientBtn = styled.button`
-  min-width: 138px;
-  height: 32px;
-  border-radius: 8px;
-  border: solid 2px transparent;
-  background-image: linear-gradient(93.83deg, #fff, #fff), linear-gradient(93.83deg, #e8f7ff 26.54%, #bffeff 70.96%);
-  background-origin: padding-box, border-box;
-  background-clip: padding-box, border-box;
-  box-shadow: 0px 4px 10px 0px #0f60e31a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  line-height: 125%;
-  color: ${({ theme }) => theme.primary.deep};
-  cursor: pointer;
-`;
-
-const NoBorderBlock = styled.div`
-  padding: 18px 0;
-  margin-left: 20px;
 `;
 
 type TProps = WrappedComponentProps;
 
 const MyStakingCard = memo<TProps>(({ intl }) => {
-  const [amountModalVisit, setAmountModalVisit] = useState(false);
-  const [extendModalVisit, setExtendModalVisit] = useState(false);
+  const { primary } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
   const lockingWTF = useGetLockingWTF(account);
   return (
@@ -102,39 +67,28 @@ const MyStakingCard = memo<TProps>(({ intl }) => {
           <p>{lockingWTF}</p>
           <span>$ 2517.12</span>
         </div>
-        <LinearGradientBtn onClick={setAmountModalVisit.bind(null, true)}>
-          {intl.formatMessage({ defaultMessage: "Add Amount" })}
-        </LinearGradientBtn>
       </Block>
       <Block css={{ gridArea: "b" }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "Expire date" })}</span>
           <p>Unlockable</p>
         </div>
-        <LinearGradientBtn onClick={setExtendModalVisit.bind(null, true)}>
-          {intl.formatMessage({ defaultMessage: "Extend" })}
-        </LinearGradientBtn>
       </Block>
-      <Block css={{ gridArea: "c" }}>
+      <Block css={{ gridArea: "c", borderRight: "1px solid", borderColor: primary.deep2 }}>
         <div>
           <span>{intl.formatMessage({ defaultMessage: "You get Ratio" })}</span>
           <p>0.83%</p>
         </div>
-        <LinearGradientBtn onClick={setExtendModalVisit.bind(null, true)}>
-          {intl.formatMessage({ defaultMessage: "Raise" })}
-        </LinearGradientBtn>
       </Block>
-      <NoBorderBlock css={{ gridArea: "d" }}>
+      <Block css={{ gridArea: "d" }}>
         <span>{intl.formatMessage({ defaultMessage: "Staking" })}（Ve-WTF）</span>
         <p>1,000,000,000</p>
         <span>$ 2517.12</span>
-      </NoBorderBlock>
-      <NoBorderBlock css={{ gridArea: "e" }}>
+      </Block>
+      <Block css={{ gridArea: "e" }}>
         <span>{intl.formatMessage({ defaultMessage: "Your Share" })}</span>
         <p>0.1%</p>
-      </NoBorderBlock>
-      {amountModalVisit && <AddAmountModal visible={amountModalVisit} onCancel={setAmountModalVisit} />}
-      {extendModalVisit && <ExtendModal visible={extendModalVisit} onCancel={setExtendModalVisit} />}
+      </Block>
     </Wrapper>
   );
 });

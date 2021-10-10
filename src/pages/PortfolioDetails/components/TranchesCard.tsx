@@ -102,6 +102,21 @@ const Container = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
+  &[data-disabled="false"][data-selected="true"] {
+    border-color: ${({ theme }) => theme.primary.deep};
+    background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
+  }
+
+  &[data-disabled="false"] {
+    :hover {
+      background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
+    }
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.5;
+    cursor: default;
+  }
   @media screen and (max-width: 768px) {
     & {
       height: auto;
@@ -157,7 +172,7 @@ const TranchesCard = memo<TProps>(
         )
       : "-";
     return (
-      <Container style={selected ? { borderColor: primary.deep } : undefined} css={{ opacity: isSoldout ? 0.5 : 1 }}>
+      <Container data-selected={selected} data-disabled={isSoldout}>
         {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
         <div>
           <TrancheName>

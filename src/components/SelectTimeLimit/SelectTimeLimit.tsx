@@ -44,8 +44,9 @@ const SelectTimeLimit = memo<TProps>(({ intl, onSelected, reset, suffixRender, .
 
   const TIMES = [
     { key: "1 Month", text: intl.formatMessage({ defaultMessage: "1 Month" }), value: 1, unit: "M" },
-    { key: "3 Month", text: intl.formatMessage({ defaultMessage: "3 Month" }), value: 3, unit: "M" },
-    { key: "6 Month", text: intl.formatMessage({ defaultMessage: "6 Month" }), value: 6, unit: "M" }
+    { key: "3 Month", text: intl.formatMessage({ defaultMessage: "3 Months" }), value: 3, unit: "M" },
+    { key: "6 Month", text: intl.formatMessage({ defaultMessage: "6 Months" }), value: 6, unit: "M" },
+    { key: "1 Year", text: intl.formatMessage({ defaultMessage: "1 Year" }), value: 12, unit: "M" }
   ];
 
   useEffect(() => {

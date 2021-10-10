@@ -7,6 +7,7 @@ import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
+import Chart from "./Chart";
 
 const Wrapper = styled.div`
   padding: 24px;
@@ -38,6 +39,12 @@ const LinearGradientWTF = styled.div`
   justify-content: center;
 `;
 
+const WTFWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const WTF = styled.div`
   width: fit-content;
   display: grid;
@@ -46,6 +53,8 @@ const WTF = styled.div`
   align-items: center;
   font-size: 20px;
 `;
+
+const ChartWrapepr = styled.div``;
 
 const Container = styled.div`
   display: flex;
@@ -68,12 +77,18 @@ type TProps = WrappedComponentProps;
 const TotalCard = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
-      <WTF>
-        <LinearGradientWTF>
-          <WTFIcon />
-        </LinearGradientWTF>
-        <span>WTF</span>
-      </WTF>
+      <WTFWrapper>
+        <WTF>
+          <LinearGradientWTF>
+            <WTFIcon />
+          </LinearGradientWTF>
+          <span>WTF</span>
+        </WTF>
+        <ChartWrapepr>
+          <Chart />
+        </ChartWrapepr>
+      </WTFWrapper>
+
       <Line />
       <Container>
         <div>

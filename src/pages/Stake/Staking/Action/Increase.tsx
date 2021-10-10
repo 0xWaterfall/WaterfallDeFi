@@ -24,27 +24,10 @@ import useApprove from "pages/PortfolioDetails/hooks/useApprove";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
 const Wrapper = styled.div`
-  padding: 32px 50px;
-  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header)};
-  box-shadow: 0px 4px 10px 0px #0000000a;
-  border-radius: 24px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
-  @media screen and (max-width: 768px) {
-    padding: 32px;
-  }
-`;
-
-const Title = styled.div`
-  font-size: 24px;
-  line-height: 125%;
-`;
-
-const Line = styled.div`
-  height: 1px;
-  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
-  margin: 20px 0;
 `;
 
 const Label = styled.div`
@@ -74,16 +57,11 @@ const Label = styled.div`
 `;
 
 const ButtonWrapper = styled(Button)`
-  width: 100%;
-  height: 56px;
+  width: fit-content;
+  height: 44px;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 55px;
-  background: transparent;
-  :hover,
-  :focus {
-    background: transparent;
-  }
+  margin: 20px auto 24px;
 `;
 
 const DatePickerWrapper = styled(DatePicker)`
@@ -118,10 +96,16 @@ const ValidateText = styled.div`
   min-height: 15px;
 `;
 
+const Line = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
+  margin-bottom: 24px;
+`;
+
 type TProps = WrappedComponentProps;
 
-const LockUp = memo<TProps>(({ intl }) => {
-  const [isDatePickerShow, setDatePickerShow] = useState(false);
+const Increase = memo<TProps>(({ intl }) => {
   const { tags } = useTheme();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
@@ -146,48 +130,20 @@ const LockUp = memo<TProps>(({ intl }) => {
     if (account) checkApproved(account);
   }, [account]);
 
-  const handleApprove = async () => {
-    setApproveLoading(true);
-    try {
-      await onApprove();
-      successNotification("Approve Success", "");
-      setApproved(true);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setApproveLoading(false);
-    }
-  };
   const newExpireDate = useMemo(() => {
-    if (isDatePickerShow) {
+    if (datePickerValue) {
       return datePickerValue;
     } else if (selectedValue) {
       return dayjs().add(selectedValue.value, selectedValue.unit);
     }
-  }, [selectedValue, datePickerValue, isDatePickerShow]);
+  }, [selectedValue, datePickerValue]);
+
   const duration = useMemo(() => {
     if (!newExpireDate) return;
     const diff = newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
     return Math.ceil(diff / 100) * 100;
   }, [newExpireDate]);
 
-  const onConfirm = useCallback(async () => {
-    if (validateText !== undefined && validateText.length > 0) return;
-    if (balanceInput <= 0) return;
-    if (!duration) return;
-
-    setLoading(true);
-    try {
-      await lockAndStakeWTF(balanceInput, duration);
-      fetchBalance();
-      setBalanceInput(0);
-      successNotification("Lock & Stake Success", "");
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }, [newExpireDate, balanceInput]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     let input = parseInt(value);
@@ -210,99 +166,53 @@ const LockUp = memo<TProps>(({ intl }) => {
   }, [wtfBalance, balanceInput]);
   return (
     <Wrapper>
-      <Title>{intl.formatMessage({ defaultMessage: "Lock-up" })}</Title>
-      <Line />
       <Label>
         <p>{intl.formatMessage({ defaultMessage: "WTF balance" })}</p>
         <span>{wtfBalance} WTF</span>
       </Label>
 
-      <StakeInput
-        suffixText="WTF"
-        onMAX={handleMaxInput}
-        value={balanceInput}
-        onChange={handleInputChange}
-        style={validateText ? { borderColor: tags.redText } : {}}
-      />
-      <ValidateText>{validateText}</ValidateText>
+      <StakeInput suffixText="WTF" onMAX={handleMaxInput} value={balanceInput} />
+      {validateText && <ValidateText>{validateText}</ValidateText>}
 
-      <Label css={{ margin: "16px 0 10px" }}>
-        <p>{intl.formatMessage({ defaultMessage: "Choose a period" })}</p>
+      <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Increase lock amount" })}</ButtonWrapper>
+
+      <Label css={{ margin: "15px 0 10px" }}>
+        <p>{intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;2021-11-31</p>
       </Label>
+
+      <DatePickerWrapper
+        style={{ marginBottom: 8 }}
+        value={datePickerValue as moment.Moment | undefined}
+        onChange={(e) => {
+          setDatePickerValue(e as Dayjs);
+        }}
+      />
 
       <SelectTimeLimitWrapper
         onSelected={(e) => {
           setSelectedValue(e);
-          setDatePickerShow(false);
+          setDatePickerValue(undefined);
         }}
-        css={{ marginBottom: 17 }}
-        reset={isDatePickerShow}
-        suffixRender={
-          <Block
-            data-actived={isDatePickerShow}
-            onClick={() => {
-              setDatePickerShow(true);
-            }}
-          >
-            {intl.formatMessage({ defaultMessage: "Custom" })}
-          </Block>
-        }
+        reset={Boolean(datePickerValue)}
       />
 
-      {isDatePickerShow && (
-        <DatePickerWrapper
-          style={{ marginBottom: 19 }}
-          value={datePickerValue as moment.Moment | undefined}
-          onChange={(e) => {
-            setDatePickerValue(e as Dayjs);
-          }}
-        />
-      )}
+      <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Extend Lock Time" })}</ButtonWrapper>
 
+      <Line />
       <Label>
         <div>
-          {intl.formatMessage({ defaultMessage: "Pending Rewards" })}
+          {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
         </div>
-        <span>0</span>
+        <span>--</span>
       </Label>
 
       <Label>
         <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
-        <span>100,000</span>
+        <span>--</span>
       </Label>
-
-      <Label>
-        <div>{intl.formatMessage({ defaultMessage: "Expire date" })}</div>
-        <p>{newExpireDate ? newExpireDate?.format("YYYY-MM-DD") : "--"}</p>
-      </Label>
-
-      {/* <ButtonWrapper type="primaryLine" onClick={onConfirm}>
-        {intl.formatMessage({ defaultMessage: "Lock & Stake Ve-WTF" })}
-      </ButtonWrapper> */}
-      {account ? (
-        approved ? (
-          <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
-            {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
-          </ButtonWrapper>
-        ) : (
-          <ButtonWrapper type="primaryLine" onClick={handleApprove} loading={approveLoading}>
-            {intl.formatMessage({ defaultMessage: "Approve WTF" })}
-          </ButtonWrapper>
-        )
-      ) : (
-        <ButtonWrapper
-          type="primaryLine"
-          onClick={() => {
-            dispatch(setConnectWalletModalShow(true));
-          }}
-          loading={approveLoading}
-        >
-          {intl.formatMessage({ defaultMessage: "Connect Wallet" })}
-        </ButtonWrapper>
-      )}
     </Wrapper>
   );
 });
 
-export default injectIntl(LockUp);
+export default injectIntl(Increase);

@@ -8,7 +8,7 @@ import position from "./position";
 import showStatus from "./showStatus";
 import WTFInfo from "./WTFInfo";
 
-const PERSISTED_KEYS: string[] = ["i18n.locale", "selectedKeys"];
+const PERSISTED_KEYS: string[] = ["i18n.locale", "selectedKeys", "showStatus.cookieModal"];
 
 const PERSISTED = { states: PERSISTED_KEYS, namespace: "waterfall", namespaceSeparator: "." };
 

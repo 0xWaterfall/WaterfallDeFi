@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
@@ -31,6 +31,7 @@ import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "sto
 import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
+import { ToStakeImg } from "assets/images";
 
 const Wrapper = styled.div`
   display: grid;
@@ -110,6 +111,8 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
 
+  const { push } = useHistory();
+
   const { onWithdraw } = useWithdraw();
 
   const { onClaimAll } = useClaimAll();
@@ -175,14 +178,27 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
           <div>{totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "--"} WTF</div>
-          <ButtonWrapper
-            type="default"
-            onClick={() => claimReward()}
-            loading={claimRewardLoading}
-            disabled={!account || !+totalPendingReward}
-          >
-            {intl.formatMessage({ defaultMessage: "Claim" })}
-          </ButtonWrapper>
+          <div>
+            <ButtonWrapper
+              type="default"
+              onClick={() => claimReward()}
+              loading={claimRewardLoading}
+              disabled={!account || !+totalPendingReward}
+            >
+              {intl.formatMessage({ defaultMessage: "Claim" })}
+            </ButtonWrapper>
+            <ButtonWrapper
+              type="default"
+              css={{ marginLeft: 17, position: "relative" }}
+              style={{ width: 90 }}
+              onClick={() => {
+                push("/stake");
+              }}
+            >
+              {intl.formatMessage({ defaultMessage: "To Stake" })}
+              <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
+            </ButtonWrapper>
+          </div>
         </section>
       </RecordCard>
       <Block>

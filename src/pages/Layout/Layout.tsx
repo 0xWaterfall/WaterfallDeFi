@@ -5,6 +5,8 @@ import Header from "pages/Header/Header";
 import Footer from "pages/Footer/Footer";
 import ConnectedRouteProvder from "providers/ConnectedRouteProvider/ConnectedRouteProvder";
 import React, { FC } from "react";
+import Cookie from "pages/Cookie/Cookie";
+import useCookieModal from "hooks/useCookieModal";
 
 const HeaderStyled = styled.header`
   width: 100%;
@@ -20,8 +22,10 @@ const MainStyled = styled.main`
 `;
 
 const Layout: FC = () => {
+  const isShow = useCookieModal();
   return (
     <React.Fragment>
+      {isShow && <Cookie />}
       <HeaderStyled>
         <Header />
       </HeaderStyled>

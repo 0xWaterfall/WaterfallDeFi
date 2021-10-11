@@ -230,17 +230,17 @@ const SparePositions = memo<TProps>(({ intl }) => {
             payload.map((_userInvest: UserInvest, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
               const trancheCycle = trancheCycles[trancheCycleId];
-              if (trancheCycle)
-                return (
-                  <SparePositionItem
-                    key={_idx}
-                    userInvest={_userInvest}
-                    market={market}
-                    trancheCycle={trancheCycle}
-                    redeemDirect={redeemDirect}
-                    redeemLoading={redeemLoading[_idx] || false}
-                  />
-                );
+              // if (trancheCycle)
+              return (
+                <SparePositionItem
+                  key={_idx}
+                  userInvest={_userInvest}
+                  market={market}
+                  trancheCycle={trancheCycle}
+                  redeemDirect={redeemDirect}
+                  redeemLoading={redeemLoading[_idx] || false}
+                />
+              );
             })}
         </NoDataWrapper>
       </Table>

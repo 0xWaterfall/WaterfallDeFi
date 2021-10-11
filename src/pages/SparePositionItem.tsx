@@ -151,7 +151,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const wtfPrice = useWTFPrice();
   const { tranchesPendingReward } = usePendingWTFReward();
   let totalAmount = userInvest.principal;
-  if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(2).toString();
+  if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
@@ -183,11 +183,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={200} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
           <CycleWrapper>
-            {trancheCycle.state !== 0 ? (
+            {trancheCycle && trancheCycle?.state !== 0 ? (
               <>
-                <span>{formatTimestamp(trancheCycle.startAt)}</span>
+                <span>{formatTimestamp(trancheCycle?.startAt)}</span>
                 <span>↓</span>
-                <span>{formatTimestamp(trancheCycle.endAt)}</span>
+                <span>{formatTimestamp(trancheCycle?.endAt)}</span>
               </>
             ) : (
               "--"
@@ -221,15 +221,16 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {userInvest.principal} {market?.assets}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
-          {trancheCycle.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
-          {Number(market.cycle) === trancheCycle.cycle && trancheCycle.state === 1 && (
+          {trancheCycle?.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
+          {!trancheCycle && market.status === PORTFOLIO_STATUS.PENDING && <Tag color="yellow" value="Pending"></Tag>}
+          {Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1 && (
             <Tag color="green" value="Active"></Tag>
           )}
           {/* subgraph delay */}
-          {Number(market.cycle) !== trancheCycle.cycle && trancheCycle.state === 1 && (
+          {Number(market.cycle) !== trancheCycle?.cycle && trancheCycle?.state === 1 && (
             <Tag color="red" value="Matured"></Tag>
           )}
-          {trancheCycle.state === 2 && <Tag color="red" value="Matured"></Tag>}
+          {trancheCycle?.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
           {userInvest.interest} {market?.assets}
@@ -254,8 +255,8 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           redeemDirect={redeemDirect}
           redeemLoading={redeemLoading}
           currentTranche={userInvest.tranche}
-          isPending={trancheCycle.state === 0}
-          isActive={trancheCycle.state === 1}
+          isPending={trancheCycle?.state === 0}
+          isActive={trancheCycle?.state === 1}
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}
         />

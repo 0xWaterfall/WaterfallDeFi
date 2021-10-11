@@ -39,7 +39,8 @@ import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 
 export const useHistoryQuery = (account: string | null | undefined, decimals = 18) => {
   if (!account) account = "";
-  const { data } = useQuery(gql`
+  const { data } = useQuery(
+    gql`
     {
       trancheCycles(orderBy: id, orderDirection: asc) {
         id
@@ -69,7 +70,9 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         harvestAt
       }
     }
-  `);
+  `,
+    { pollInterval: 30000 }
+  );
   const _userInvests: UserInvest[] = [];
   const _trancheCycles: { [key: string]: TrancheCycle } = {};
   if (!data)
@@ -107,7 +110,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         owner,
         principal: new BigNumber(principal).dividedBy(BIG_TEN.pow(decimals)).toString(),
         tranche,
-        interest: interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(2).toString(),
+        interest: interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString(),
         earningsAPY
       };
       _userInvests.push(_ui);

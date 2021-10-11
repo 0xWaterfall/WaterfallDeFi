@@ -20,7 +20,7 @@ export const useEarningTokenTotalSupply = (tokenAddress: string) => {
         }
       ];
       const [_totalSupply] = await multicall(VEWTFAbi, calls);
-      setTotalSupply(new BigNumber(_totalSupply[0]?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString());
+      setTotalSupply(new BigNumber(_totalSupply[0]?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString());
     };
 
     fetchBalance();
@@ -70,8 +70,8 @@ export const useStakingPool = (
       console.log(totalLocked);
       setResult({
         isPoolActive,
-        totalStaked: new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString(),
-        userStaked: new BigNumber(user?.user.amount?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(2).toString(),
+        totalStaked: new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(),
+        userStaked: new BigNumber(user?.user.amount?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(),
         totalLocked: new BigNumber(totalLocked[0]?._hex).dividedBy(BIG_TEN.pow(18)).toString()
       });
     };

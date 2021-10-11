@@ -156,7 +156,8 @@ const SparePositionFold = memo<TProps>(
               </Tooltip>
             </CardTitle>
             <CardValue>
-              {numeral(totalAmount).format("0,0")} {assets}{" "}
+              {totalAmount} {/* {numeral(totalAmount).format("0,0")} */}
+              {assets}
             </CardValue>
             <CardAction>
               {isCurrentCycle && isPending && (

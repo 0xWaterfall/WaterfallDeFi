@@ -150,12 +150,8 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   const wtfPrice = useWTFPrice();
   const { tranchesPendingReward } = usePendingWTFReward();
-  const totalAmount =
-    userInvest.principal &&
-    userInvest.capital &&
-    new BigNumber(numeral(userInvest.principal).value() || 0)
-      .plus(new BigNumber(numeral(userInvest.capital).value() || 0))
-      .toString();
+  let totalAmount = userInvest.principal;
+  if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(2).toString();
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
@@ -226,7 +222,13 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
           {trancheCycle.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
-          {trancheCycle.state === 1 && <Tag color="green" value="Active"></Tag>}
+          {Number(market.cycle) === trancheCycle.cycle && trancheCycle.state === 1 && (
+            <Tag color="green" value="Active"></Tag>
+          )}
+          {/* subgraph delay */}
+          {Number(market.cycle) !== trancheCycle.cycle && trancheCycle.state === 1 && (
+            <Tag color="red" value="Matured"></Tag>
+          )}
           {trancheCycle.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>

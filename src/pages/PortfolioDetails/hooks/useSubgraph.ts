@@ -99,15 +99,15 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         .toFormat(0)
         .toString();
       const _ui: UserInvest = {
-        capital,
+        capital: new BigNumber(capital).dividedBy(BIG_TEN.pow(decimals)).toString(),
         cycle,
         harvestAt,
         id,
         investAt,
         owner,
-        principal: new BigNumber(principal).dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString(),
+        principal: new BigNumber(principal).dividedBy(BIG_TEN.pow(decimals)).toString(),
         tranche,
-        interest: interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString(),
+        interest: interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(2).toString(),
         earningsAPY
       };
       _userInvests.push(_ui);

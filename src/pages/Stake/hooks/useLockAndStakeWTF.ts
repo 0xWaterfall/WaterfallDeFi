@@ -9,9 +9,6 @@ const createLock = async (contract: Contract, amount: number, duration: number) 
   //   const _amount = amount.toString();
   const _amount = utils.parseEther(amount.toString()).toString();
   const _duration = duration.toString();
-  console.log(contract);
-  console.log(_amount);
-  console.log(_duration);
   const tx = await contract.createLock(_amount, _duration);
   const receipt = await tx.wait();
   return receipt.status;

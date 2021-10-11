@@ -99,7 +99,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
   const position = usePosition();
-  console.log(position);
+  // console.log(position);
   const markets = useMarkets();
   const market = markets[0];
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
@@ -109,12 +109,17 @@ const SparePositions = memo<TProps>(({ intl }) => {
   }, [market, account]);
   let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
     if (_userInvest?.cycle === Number(market?.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
+    if (_userInvest?.cycle === Number(market?.cycle) && market.status === PORTFOLIO_STATUS.ACTIVE) return false;
     return true;
   });
+
   for (let i = 0; i < position.length; i++) {
     const _cycle = new BigNumber(position[i][0].hex).toString();
     const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0");
-    if (_cycle == market.cycle && market.status === PORTFOLIO_STATUS.PENDING) {
+    if (
+      _cycle == market.cycle &&
+      (market.status === PORTFOLIO_STATUS.PENDING || market.status === PORTFOLIO_STATUS.ACTIVE)
+    ) {
       userInvests = [
         {
           capital: "0",
@@ -163,11 +168,16 @@ const SparePositions = memo<TProps>(({ intl }) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
-      if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return false;
+      if (
+        selectedStatus > -1 &&
+        trancheCycles[trancheCycleId] &&
+        selectedStatus !== trancheCycles[trancheCycleId].state
+      )
+        return false;
       return true;
     });
-  }, [selectedTranche, selectedStatus, trancheCycles, userInvests]);
-
+  }, [selectedTranche, selectedStatus, trancheCycles, userInvests, market.status]);
+  console.log(payload);
   return (
     <React.Fragment>
       <FilterWrapper>

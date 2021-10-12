@@ -10,6 +10,7 @@ import numeral from "numeral";
 import { BASE_BSC_SCAN_URL, NETWORK } from "config";
 import { nodes } from "utils/getRpcUrl";
 import { WTFAddress } from "config/address";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 type TProps = WrappedComponentProps;
 
@@ -89,11 +90,16 @@ const IconGroup = styled.div`
   svg {
     cursor: pointer;
   }
+  & > svg,
+  & > a {
+    width: 32px;
+    height: 32px;
+  }
 `;
 
 const DashboardCard = memo<TProps>(({ intl }) => {
-  const price = useWTFPrice();
-  const marketPrice = useMarketCap();
+  // const price = useWTFPrice();
+  const { price, marketCap } = useWTFPriceLP();
 
   const addToken = useCallback(async () => {
     const provider = window.ethereum;
@@ -130,11 +136,11 @@ const DashboardCard = memo<TProps>(({ intl }) => {
       <Content>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "WTF Price" })}</Title>
-          <Value>$ {numeral(price).format("0,0.00")}</Value>
+          <Value>$ {price ? numeral(price).format("0,0.00") : "-"}</Value>
         </Block>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "Market Cap" })}</Title>
-          <Value>$ {numeral(marketPrice).format("0,0.00")}</Value>
+          <Value>$ -{/* {numeral().format("0,0.00")} */}</Value>
         </Block>
         <Block>
           <Title />
@@ -142,7 +148,7 @@ const DashboardCard = memo<TProps>(({ intl }) => {
             <a href="https://www.coingecko.com/en/coins/waterfall" target="_blank" rel="noopener noreferrer">
               <Coingecko />
             </a>
-            <MetaMask css={{ width: 30, height: 30, marginLeft: 15 }} onClick={addToken} />
+            <MetaMask css={{ width: 32, height: 32, marginLeft: 15 }} onClick={addToken} />
           </IconGroup>
         </Block>
       </Content>

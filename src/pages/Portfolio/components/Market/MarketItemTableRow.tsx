@@ -31,6 +31,7 @@ import { useSelectedMarket, useWTFPrice } from "hooks/useSelectors";
 import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
 import Tooltip from "components/Tooltip/Tooltip";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -100,7 +101,8 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { warn, green, primary, gray, useColorModeValue, white } = useTheme();
   const { push } = useHistory();
   const dispatch = useDispatch();
-  const wtfPrice = useWTFPrice();
+  // const wtfPrice = useWTFPrice();
+  const { price: wtfPrice } = useWTFPriceLP();
   const navigateMarketDetail = () => {
     dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolioDetails" });

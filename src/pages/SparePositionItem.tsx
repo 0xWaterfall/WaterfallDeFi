@@ -33,6 +33,7 @@ import numeral from "numeral";
 import { dataTool } from "echarts/core";
 import useInvest from "./PortfolioDetails/hooks/useInvest";
 import { BIG_TEN } from "utils/bigNumber";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 const Wrapper = styled.div``;
 
@@ -148,7 +149,8 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
-  const wtfPrice = useWTFPrice();
+  // const wtfPrice = useWTFPrice();
+  const { price: wtfPrice } = useWTFPriceLP();
   const { tranchesPendingReward } = usePendingWTFReward();
   let totalAmount = userInvest.principal;
   if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();

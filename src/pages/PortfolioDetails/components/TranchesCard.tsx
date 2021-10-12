@@ -20,6 +20,7 @@ import {
 import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
 import { useWTFPrice } from "hooks/useSelectors";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -161,7 +162,9 @@ const TranchesCard = memo<TProps>(
     };
     const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
     const trancheApr = tranche.apy;
-    const wtfPrice = useWTFPrice();
+    // const wtfPrice = useWTFPrice();
+    const { price: wtfPrice } = useWTFPriceLP();
+
     const wtfApr = data
       ? getWTFApr(
           formatAllocPoint(data?.pools[trancheIndex], data?.totalAllocPoints),

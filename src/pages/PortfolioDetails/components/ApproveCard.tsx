@@ -222,6 +222,7 @@ const ApproveCard = memo<TProps>(
         fetchBalance();
         if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
+        successNotification("Deposit Fail", "");
         console.error(e);
       } finally {
         setDepositLoading(false);

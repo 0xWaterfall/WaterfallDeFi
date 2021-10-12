@@ -192,13 +192,14 @@ export const useTotalTvl = () => {
   const [totalTvl, setTotalTvl] = useState("0");
   const markets = useMarkets();
   let _totalTvl = new BigNumber(BIG_ZERO);
+  const { fastRefresh } = useRefresh();
   useEffect(() => {
     markets.forEach((m) => {
       const _tvl = new BigNumber(m.tvl);
       _totalTvl = _totalTvl.plus(_tvl);
     });
     setTotalTvl(_totalTvl.toFormat(0).toString());
-  }, [markets]);
+  }, [markets, fastRefresh]);
 
   return totalTvl;
 };

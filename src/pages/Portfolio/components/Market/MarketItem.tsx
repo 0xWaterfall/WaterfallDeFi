@@ -24,6 +24,7 @@ import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
 import { useWTFPrice } from "hooks/useSelectors";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -128,7 +129,8 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
   const { warn, green, primary } = useTheme();
   const { push } = useHistory();
   const [marketData, setMarketData] = useState<Market>(data);
-  const wtfPrice = useWTFPrice();
+  // const wtfPrice = useWTFPrice();
+  const { price: wtfPrice } = useWTFPriceLP();
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const _md = await useMarket({ ...data });

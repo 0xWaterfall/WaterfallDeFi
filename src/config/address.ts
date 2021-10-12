@@ -32,6 +32,11 @@ export const VeWTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99"
 };
+export const PancakeLPAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
+  [NETWORKS.TESTNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
+  [NETWORKS.MAINNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9"
+};
 
 export const MulticallAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",

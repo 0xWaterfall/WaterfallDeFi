@@ -10,6 +10,7 @@ import { useMarkets, useWTFPrice } from "hooks/useSelectors";
 import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
 import { useHistory } from "react-router";
 import numeral from "numeral";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -149,19 +150,10 @@ type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
   const markets = useMarkets();
-  const wtfPrice = useWTFPrice();
+  // const wtfPrice = useWTFPrice();
+  const { price: wtfPrice } = useWTFPriceLP();
   const currentMarket = markets[0];
   const { push } = useHistory();
-  const msg = (
-    <React.Fragment>
-      <p>
-        {intl.formatMessage({
-          defaultMessage:
-            "After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x 0.033%"
-        })}
-      </p>
-    </React.Fragment>
-  );
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
 
   return (
@@ -213,7 +205,18 @@ const TrancheCard = memo<TProps>(({ intl }) => {
               </APRWrapper>
               <Line />
               <Fee>
-                <Tooltip overlay={msg}>
+                <Tooltip
+                  overlay={
+                    <React.Fragment>
+                      <p>
+                        {intl.formatMessage({
+                          defaultMessage: `After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x `
+                        })}
+                        {currentMarket?.tranches[_i].fee} %
+                      </p>
+                    </React.Fragment>
+                  }
+                >
                   <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
                 </Tooltip>
                 <span>{currentMarket?.tranches[_i].fee} %</span>

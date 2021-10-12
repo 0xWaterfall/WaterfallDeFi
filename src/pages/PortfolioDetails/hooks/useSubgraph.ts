@@ -87,6 +87,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       _trancheCycles[id] = trancheCycles[i];
     }
   }
+  console.log("asdfasdf", userInvests);
   if (userInvests) {
     for (let i = 0; i < userInvests.length; i++) {
       const { capital, cycle, harvestAt, id, investAt, owner, principal, tranche } = userInvests[i];
@@ -116,6 +117,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       _userInvests.push(_ui);
     }
   }
+  console.log(_userInvests);
   return {
     userInvests: _userInvests,
     trancheCycles: _trancheCycles

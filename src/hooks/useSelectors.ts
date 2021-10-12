@@ -50,3 +50,10 @@ export const useMarketCap = () => {
   const marketCap = useAppSelector((state) => state.WTFInfo.marketCap);
   return marketCap;
 };
+
+export const useConfirmModal = () => {
+  const confirmModal = useAppSelector((state) => state.showStatus.confirmModal);
+  return confirmModal;
+};
+
+export const useCookieModal = () => useAppSelector((state) => state.selectedKeys.cookieModal);

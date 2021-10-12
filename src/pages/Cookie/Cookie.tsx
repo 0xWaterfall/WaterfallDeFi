@@ -5,7 +5,7 @@ import React, { FC, useCallback } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Button from "components/Button/Button";
 import { useAppDispatch } from "store";
-import { setCookieModal } from "store/showStatus";
+import { setCookieModal } from "store/selectedKeys";
 
 const Wrapper = styled.div`
   width: 100%;

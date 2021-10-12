@@ -2,12 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IShowStatus {
   connectWalletModal: boolean;
-  cookieModal: boolean;
+  confirmModal?: {
+    isOpen: boolean;
+    tx: string;
+  };
 }
 
 const initialState: IShowStatus = {
-  connectWalletModal: false,
-  cookieModal: true
+  connectWalletModal: false
 };
 
 export const showStatusSlice = createSlice({
@@ -17,14 +19,14 @@ export const showStatusSlice = createSlice({
     setConnectWalletModalShow: (state, action: PayloadAction<boolean>) => {
       state.connectWalletModal = action.payload;
     },
-    setCookieModal: (state, action: PayloadAction<boolean>) => {
-      state.cookieModal = action.payload;
+    setConfirmModal: (state, action: PayloadAction<IShowStatus["confirmModal"]>) => {
+      state.confirmModal = action.payload;
     }
   }
 });
 
 // All here will be synchronized with localStorage
 
-export const { setConnectWalletModalShow, setCookieModal } = showStatusSlice.actions;
+export const { setConnectWalletModalShow, setConfirmModal } = showStatusSlice.actions;
 
 export default showStatusSlice.reducer;

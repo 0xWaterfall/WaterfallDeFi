@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ISelected {
   marketKey: string | null;
   theme: ITheme;
+  cookieModal: boolean;
 }
 
 const initialState: ISelected = {
   marketKey: null,
-  theme: "dark"
+  theme: "light",
+  cookieModal: true
 };
 
 export const selectedKeysSlice = createSlice({
@@ -19,12 +21,15 @@ export const selectedKeysSlice = createSlice({
     },
     setTheme: (state, action: PayloadAction<ITheme>) => {
       state.theme = action.payload;
+    },
+    setCookieModal: (state, action: PayloadAction<boolean>) => {
+      state.cookieModal = action.payload;
     }
   }
 });
 
 // All here will be synchronized with localStorage
 
-export const { setMarketKey, setTheme } = selectedKeysSlice.actions;
+export const { setMarketKey, setTheme, setCookieModal } = selectedKeysSlice.actions;
 
 export default selectedKeysSlice.reducer;

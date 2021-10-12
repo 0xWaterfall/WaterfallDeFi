@@ -47,3 +47,4 @@ export { ReactComponent as DateIcon } from "./DateIcon.svg";
 export { ReactComponent as LightIcon } from "./LightIcon.svg";
 export { ReactComponent as DarkIcon } from "./DarkIcon.svg";
 export { ReactComponent as ToStakeImg } from "./ToStakeImg.svg";
+export { ReactComponent as TxConfirmImg } from "./TxConfirmImg.svg";

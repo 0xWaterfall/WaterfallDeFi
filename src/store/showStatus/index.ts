@@ -2,9 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface IShowStatus {
   connectWalletModal: boolean;
-  confirmModal?: {
-    isOpen: boolean;
-    tx: string;
+  transactionModal?: {
+    isOpen?: boolean;
+    txn?: string;
+    status: "PENDING" | "SUBMITTED" | "REJECTED";
+    pendingMessage?: string;
   };
 }
 
@@ -19,8 +21,8 @@ export const showStatusSlice = createSlice({
     setConnectWalletModalShow: (state, action: PayloadAction<boolean>) => {
       state.connectWalletModal = action.payload;
     },
-    setConfirmModal: (state, action: PayloadAction<IShowStatus["confirmModal"]>) => {
-      state.confirmModal = action.payload;
+    setConfirmModal: (state, action: PayloadAction<IShowStatus["transactionModal"]>) => {
+      state.transactionModal = action.payload;
     }
   }
 });

@@ -1,3 +1,4 @@
+import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
 export const FlexRow = styled.div`
@@ -21,4 +22,13 @@ export const LinearGradientSubtract = styled.div`
   filter: blur(200px);
 
   transform: matrix(-1, 0, 0, 1, 0, 0);
+`;
+
+export const Spin = keyframes`
+   from {
+    transform: rotate(0);
+   }
+   to {
+    transform: rotate(360deg);
+  }
 `;

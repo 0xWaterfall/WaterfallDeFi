@@ -6,7 +6,7 @@ import Footer from "pages/Footer/Footer";
 import ConnectedRouteProvder from "providers/ConnectedRouteProvider/ConnectedRouteProvder";
 import React, { FC } from "react";
 import Cookie from "pages/Cookie/Cookie";
-import TxConfirm from "components/TxConfirm/TxConfirm";
+import TransactionModal from "components/TransactionModal/TransactionModal";
 import { useCookieModal } from "hooks/useSelectors";
 
 const HeaderStyled = styled.header`
@@ -27,7 +27,7 @@ const Layout: FC = () => {
   return (
     <React.Fragment>
       {isShow && <Cookie />}
-      <TxConfirm />
+      <TransactionModal />
       <HeaderStyled>
         <Header />
       </HeaderStyled>

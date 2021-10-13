@@ -51,9 +51,9 @@ export const useMarketCap = () => {
   return marketCap;
 };
 
-export const useConfirmModal = () => {
-  const confirmModal = useAppSelector((state) => state.showStatus.confirmModal);
-  return confirmModal;
+export const useTransactionModal = () => {
+  const transactionModal = useAppSelector((state) => state.showStatus.transactionModal);
+  return transactionModal;
 };
 
 export const useCookieModal = () => useAppSelector((state) => state.selectedKeys.cookieModal);

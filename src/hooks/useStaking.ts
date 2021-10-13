@@ -67,7 +67,6 @@ export const useStakingPool = (
         }
       ];
       const [totalLocked] = await multicall(VotingEscrowAbi, calls2);
-      console.log(totalLocked);
       setResult({
         isPoolActive,
         totalStaked: new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(),

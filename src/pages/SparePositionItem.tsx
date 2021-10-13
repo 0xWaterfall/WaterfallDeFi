@@ -24,7 +24,6 @@ import {
 import BigNumber from "bignumber.js";
 import { Market, PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
-import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
@@ -214,7 +213,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
               </section>
               <section>
                 <title>WTF APR:</title>&nbsp;
-                <span>{wtfAPY} %</span>
+                <span>{wtfAPY !== "-" ? wtfAPY + " %" : intl.formatMessage({ defaultMessage: "Unavailable" })}</span>
               </section>
             </div>
           </APRWrapper>

@@ -177,7 +177,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
       return true;
     });
   }, [selectedTranche, selectedStatus, trancheCycles, userInvests, market.status]);
-  console.log(payload);
   return (
     <React.Fragment>
       <FilterWrapper>

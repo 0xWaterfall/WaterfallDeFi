@@ -31,7 +31,7 @@ const NextCycleWrapper = styled.div`
 
 const ActiveCycle = styled.div`
   font-size: 14px;
-  color: ${({ theme }) => theme.gray.normal5};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
   margin-top: 13px;
 `;
 
@@ -71,7 +71,7 @@ const StepName = styled.div`
 const Line = styled.div`
   height: 1px;
   width: 173px;
-  background: ${({ theme }) => theme.gray.normal3};
+  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal3, theme.white.normal3)};
   @media screen and (max-width: 1024px) {
     width: auto;
   }

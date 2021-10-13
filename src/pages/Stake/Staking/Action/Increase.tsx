@@ -23,6 +23,8 @@ import useCheckApprove from "pages/PortfolioDetails/hooks/useCheckApprove";
 import useApprove from "pages/PortfolioDetails/hooks/useApprove";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
+import useIncreaseLockAmount from "pages/Stake/hooks/useIncreaseLockAmount";
+import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -113,12 +115,16 @@ const Increase = memo<TProps>(({ intl }) => {
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState(0);
   const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
-  const { lockAndStakeWTF } = useLockAndStakeWTF();
+  const { increaseLockAmount } = useIncreaseLockAmount();
   const [approved, setApproved] = useState(false);
+  const [locked, setLocked] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
+  const [increaseLockAmountLoading, setIncreaseLockAmountLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const { account } = useWeb3React<Web3Provider>();
+  const { lockAndStakeWTF } = useLockAndStakeWTF();
   const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  const { onCheckLocked } = useCheckLocked();
   const dispatch = useAppDispatch();
   const { onApprove } = useApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
   useEffect(() => {
@@ -129,7 +135,44 @@ const Increase = memo<TProps>(({ intl }) => {
     };
     if (account) checkApproved(account);
   }, [account]);
+  useEffect(() => {
+    if (approved) {
+      const checkLocked = async () => {
+        const _locked = await onCheckLocked();
+        setLocked(_locked);
+      };
+      checkLocked();
+    }
+  }, [approved]);
+  const handleApprove = async () => {
+    setApproveLoading(true);
+    try {
+      await onApprove();
+      successNotification("Approve Success", "");
+      setApproved(true);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setApproveLoading(false);
+    }
+  };
 
+  const onIncreaseLockAmount = useCallback(async () => {
+    if (validateText !== undefined && validateText.length > 0) return;
+    if (balanceInput <= 0) return;
+
+    setLoading(true);
+    try {
+      await increaseLockAmount(balanceInput);
+      fetchBalance();
+      setBalanceInput(0);
+      successNotification("Increase Amount Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [balanceInput]);
   const newExpireDate = useMemo(() => {
     if (datePickerValue) {
       return datePickerValue;
@@ -157,6 +200,23 @@ const Increase = memo<TProps>(({ intl }) => {
 
     if (input) setBalanceInput(input);
   };
+  const onConfirm = useCallback(async () => {
+    if (validateText !== undefined && validateText.length > 0) return;
+    if (balanceInput <= 0) return;
+    if (!duration) return;
+
+    setLoading(true);
+    try {
+      await lockAndStakeWTF(balanceInput, duration);
+      fetchBalance();
+      setBalanceInput(0);
+      successNotification("Lock & Stake Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [newExpireDate, balanceInput]);
   const validateText = useMemo(() => {
     const _balance = wtfBalance.replace(/\,/g, "");
     const _balanceInput = balanceInput;
@@ -171,11 +231,20 @@ const Increase = memo<TProps>(({ intl }) => {
         <span>{wtfBalance} WTF</span>
       </Label>
 
-      <StakeInput suffixText="WTF" onMAX={handleMaxInput} value={balanceInput} />
+      <StakeInput
+        suffixText="WTF"
+        onMAX={handleMaxInput}
+        value={balanceInput}
+        onChange={handleInputChange}
+        style={validateText ? { borderColor: tags.redText } : {}}
+      />
       {validateText && <ValidateText>{validateText}</ValidateText>}
 
-      <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Increase lock amount" })}</ButtonWrapper>
-
+      {account && approved && locked && (
+        <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
+          {intl.formatMessage({ defaultMessage: "Increase lock amount" })}
+        </ButtonWrapper>
+      )}
       <Label css={{ margin: "15px 0 10px" }}>
         <p>{intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;2021-11-31</p>
       </Label>
@@ -196,7 +265,30 @@ const Increase = memo<TProps>(({ intl }) => {
         reset={Boolean(datePickerValue)}
       />
 
-      <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Extend Lock Time" })}</ButtonWrapper>
+      {account && approved && locked && (
+        <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Extend Lock Time" })}</ButtonWrapper>
+      )}
+      {account && approved && !locked && (
+        <ButtonWrapper type="primaryLine" onClick={onConfirm}>
+          {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
+        </ButtonWrapper>
+      )}
+      {account && !approved && (
+        <ButtonWrapper type="primary" onClick={handleApprove} loading={approveLoading}>
+          {intl.formatMessage({ defaultMessage: "Approve WTF" })}
+        </ButtonWrapper>
+      )}
+      {!account && (
+        <ButtonWrapper
+          type="primary"
+          onClick={() => {
+            dispatch(setConnectWalletModalShow(true));
+          }}
+          loading={approveLoading}
+        >
+          {intl.formatMessage({ defaultMessage: "Connect Wallet" })}
+        </ButtonWrapper>
+      )}
 
       <Line />
       <Label>

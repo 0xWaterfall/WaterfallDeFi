@@ -158,7 +158,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
           <div>
-            {balance ? numeral(balance.toString()).format("0,0") : "--"} {data.assets}
+            {balance ? numeral(balance.toString()).format("0,0.[0000]") : "--"} {data.assets}
           </div>
           <div>
             <ButtonWrapper
@@ -177,7 +177,12 @@ const Charts = memo<TProps>(({ intl, data }) => {
         </section>
         <section>
           <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
-          <div>{totalPendingReward ? formatNumberDisplay(totalPendingReward.toString()) : "--"} WTF</div>
+          <div>
+            {totalPendingReward
+              ? numeral(new BigNumber(totalPendingReward.toString()).dividedBy(BIG_TEN.pow(18))).format("0,0.[0000]")
+              : "--"}{" "}
+            WTF
+          </div>
           <div>
             <ButtonWrapper
               type="default"

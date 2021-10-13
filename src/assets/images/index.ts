@@ -48,3 +48,4 @@ export { ReactComponent as LightIcon } from "./LightIcon.svg";
 export { ReactComponent as DarkIcon } from "./DarkIcon.svg";
 export { ReactComponent as ToStakeImg } from "./ToStakeImg.svg";
 export { ReactComponent as TxConfirmImg } from "./TxConfirmImg.svg";
+export { ReactComponent as AlarmImg } from "./alarm.svg";

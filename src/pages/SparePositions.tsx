@@ -115,7 +115,9 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
   for (let i = 0; i < position.length; i++) {
     const _cycle = new BigNumber(position[i][0].hex).toString();
-    const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0");
+    const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format(
+      "0,0.[0000]"
+    );
     if (
       _cycle == market.cycle &&
       (market.status === PORTFOLIO_STATUS.PENDING || market.status === PORTFOLIO_STATUS.ACTIVE)

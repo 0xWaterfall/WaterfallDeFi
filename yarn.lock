@@ -2742,6 +2742,13 @@
   resolved "https://registry.nlark.com/@types/q/download/@types/q-1.5.4.tgz?cache=0&sync_timestamp=1621242400776&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fq%2Fdownload%2F%40types%2Fq-1.5.4.tgz"
   integrity "sha1-FZJUFOCtLNdlv+9YhC9+JqesyyQ= sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug=="
 
+"@types/react-add-to-calendar@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@types/react-add-to-calendar/-/react-add-to-calendar-0.1.1.tgz#f5c479bc7e3b06ba555d5a0d4511a6d029fa3d0b"
+  integrity sha512-ItsxKlNmvq5CG8cgGzXCy1760TC3YYT+u6qWy6+D6Mb/9iHD90WeJIKVqUFW15ZqByjwfjKb+niDHNL1tJaN5w==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@^17.0.0":
   version "17.0.8"
   resolved "https://registry.nlark.com/@types/react-dom/download/@types/react-dom-17.0.8.tgz"

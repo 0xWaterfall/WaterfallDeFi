@@ -28,6 +28,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "@types/echarts": "^4.9.9",
+    "@types/react-add-to-calendar": "^0.1.1",
     "@types/react-transition-group": "^4.4.2",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",

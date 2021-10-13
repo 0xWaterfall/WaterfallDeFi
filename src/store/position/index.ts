@@ -75,7 +75,6 @@ export const getPendingWTFReward = createAsyncThunk<
     const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
     if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
     _tranchesPendingReward.push(!pendingReward2.isZero() ? pendingReward2.toString() : "0");
-
     return {
       totalPendingReward: _pendingReward.toString(),
       tranchesPendingReward: _tranchesPendingReward

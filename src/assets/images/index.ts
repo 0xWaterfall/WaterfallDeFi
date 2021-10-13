@@ -50,3 +50,4 @@ export { ReactComponent as ToStakeImg } from "./ToStakeImg.svg";
 export { ReactComponent as PendingIcon } from "./PendingIcon.svg";
 export { ReactComponent as RejectedIcon } from "./RejectedIcon.svg";
 export { ReactComponent as SubmittedIcon } from "./SubmittedIcon.svg";
+export { ReactComponent as AlarmImg } from "./alarm.svg";

@@ -139,7 +139,7 @@ type TProps = WrappedComponentProps & {
 const ApproveCard = memo<TProps>(
   ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut, selectTranche }) => {
     const { tags } = useTheme();
-    const [balanceInput, setBalanceInput] = useState(0);
+    const [balanceInput, setBalanceInput] = useState("0");
     const [approved, setApproved] = useState(false);
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
@@ -151,7 +151,7 @@ const ApproveCard = memo<TProps>(
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
     const { balance: balanceRe } = useTrancheBalance();
-    const balance = isRe === undefined ? balanceWallet : numeral(balanceRe).format("0,0");
+    const balance = isRe === undefined ? balanceWallet : numeral(balanceRe).format("0,0.[0000]");
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -175,7 +175,7 @@ const ApproveCard = memo<TProps>(
       if (account) checkApproved(account);
     }, [account]);
     useEffect(() => {
-      setBalanceInput(0);
+      setBalanceInput("0");
     }, [enabled]);
     const handleApprove = async () => {
       setApproveLoading(true);
@@ -203,7 +203,7 @@ const ApproveCard = memo<TProps>(
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
-      if (balanceInput <= 0) return;
+      if (Number(balanceInput) <= 0) return;
       if (selectTrancheIdx === undefined) return;
 
       setDepositLoading(true);
@@ -218,7 +218,7 @@ const ApproveCard = memo<TProps>(
           successNotification("Deposit Fail", "");
         }
         setDepositLoading(false);
-        setBalanceInput(0);
+        setBalanceInput("0");
         fetchBalance();
         if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
@@ -235,19 +235,27 @@ const ApproveCard = memo<TProps>(
       let input = 0;
       if (compareNum(_remaining, _balance)) {
         // if (_balance <= _remaining) {
-        input = parseInt(_balance);
+        input = parseFloat(_balance);
       } else if (compareNum(_balance, _remaining, true)) {
         // } else if (_balance > _remaining) {
-        input = parseInt(_remaining);
+        input = parseFloat(_remaining);
       }
-      if (input) setBalanceInput(input);
+      if (input) setBalanceInput(input.toString());
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      let input = parseInt(value);
+      console.log(value);
+      console.log(typeof value);
+      const d = value.split(".");
+      console.log(d);
+      if (d.length === 2 && d[1].length === 5) {
+        return;
+      }
+      let input = Number(value);
+      // console.log(input);
       if (isNaN(input)) input = 0;
-      setBalanceInput(input);
+      setBalanceInput(input.toString());
     };
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
@@ -267,7 +275,7 @@ const ApproveCard = memo<TProps>(
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
           <div>
-            {formatNumberSeparator(remaining)} {assets}
+            {parseFloat(formatNumberSeparator(remaining))} {assets}
           </div>
         </RowDiv>
         <Separator />
@@ -277,8 +285,11 @@ const ApproveCard = memo<TProps>(
 
         <div>
           <Input
+            type="number"
             style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
             placeholder=""
+            step={0.1}
+            min={0}
             value={balanceInput}
             onChange={handleInputChange}
             suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}

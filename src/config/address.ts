@@ -18,9 +18,9 @@ export const BUSDAddress: { [network: string]: string } = {
 };
 export const WTFAddress: { [network: string]: string } = {
   //for testing staking
-  // [NETWORKS.DEVNET]: "e82E0737ea6a0f0f78D37d649577FC4977Dd5Bd4",
+  [NETWORKS.DEVNET]: "e82E0737ea6a0f0f78D37d649577FC4977Dd5Bd4",
 
-  [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
+  // [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a"
 };
 

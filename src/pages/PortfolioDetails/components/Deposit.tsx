@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Mountain } from "assets/images";
+import { Mountain, AlarmImg } from "assets/images";
 import DepositItem from "./DepositItem";
 import { useHistory, useLocation } from "react-router-dom";
 import { Market, PORTFOLIO_STATUS } from "types";
@@ -11,7 +11,8 @@ import { useMarket } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
 import { formatTimestamp } from "utils/formatNumbers";
 import Countdown from "react-countdown";
-
+import Button from "components/Button/Button";
+import moment from "moment";
 type TProps = WrappedComponentProps & {
   data: Market;
 };
@@ -75,9 +76,18 @@ const Line = styled.div`
     width: auto;
   }
 `;
+const ButtonWrapper = styled(Button)`
+  margin-top: 10px !important;
+`;
 
 const Deposit = memo<TProps>(({ intl, data }) => {
   const marketData = data;
+  const handleReminder = (startTime: Number, endTime: Number) => {
+    if (!window || !startTime || !endTime) return;
+    const start = moment.unix(Number(startTime)).format("YYYYMMDDTHHmm");
+    const end = moment.unix(Number(endTime)).format("YYYYMMDDTHHmm");
+    window?.open(`https://calendar.google.com/calendar/u/0/r/eventedit?dates=${start}/${end}&text=Waterfall`, "_blank");
+  };
   return (
     <div css={{ padding: "0 20px" }}>
       {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
@@ -104,8 +114,18 @@ const Deposit = memo<TProps>(({ intl, data }) => {
             {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
             {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
           </ActiveCycle>
+          <ButtonWrapper
+            type="primary"
+            onClick={() =>
+              handleReminder(Number(data.actualStartAt), Number(data.actualStartAt) + Number(data.duration))
+            }
+          >
+            <AlarmImg />
+            {intl.formatMessage({ defaultMessage: "Remind me" })}
+          </ButtonWrapper>
         </NextCycleWrapper>
       ) : null}
+
       <StepBar>
         <Step>1</Step>
         <StepName>{intl.formatMessage({ defaultMessage: "Choose Tranche" })}</StepName>

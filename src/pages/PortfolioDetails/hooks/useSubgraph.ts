@@ -74,6 +74,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   `,
     { pollInterval: 10000 }
   );
+  console.log(data);
   const _userInvests: UserInvest[] = [];
   const _trancheCycles: { [key: string]: TrancheCycle } = {};
   if (!data)
@@ -94,7 +95,10 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       const trancheCycleId = tranche + "-" + cycle;
 
       const interest = new BigNumber(capital).isZero()
-        ? BIG_ZERO
+        ? new BigNumber(principal)
+            .times(_trancheCycles[trancheCycleId].rate)
+            .dividedBy(BIG_TEN.pow(18))
+            .minus(new BigNumber(principal))
         : new BigNumber(capital).minus(new BigNumber(principal));
       const earningsAPY = new BigNumber(interest)
         .dividedBy(new BigNumber(principal))
@@ -103,9 +107,17 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         .toFormat(0)
         .toString();
       const _ui: UserInvest = {
-        capital: numeral(new BigNumber(capital).dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format(
-          "0,0.[0000]"
-        ),
+        capital: new BigNumber(capital).isZero()
+          ? numeral(
+              new BigNumber(interest)
+                .plus(new BigNumber(principal))
+                .dividedBy(BIG_TEN.pow(decimals))
+                .toFormat(4)
+                .toString()
+            ).format("0,0.[0000]")
+          : numeral(new BigNumber(capital).dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format(
+              "0,0.[0000]"
+            ),
         cycle,
         harvestAt,
         id,
@@ -118,6 +130,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         interest: numeral(interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format("0,0.[0000]"),
         earningsAPY
       };
+
       _userInvests.push(_ui);
     }
   }

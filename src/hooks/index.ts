@@ -26,6 +26,7 @@ import MultiCallAbi from "config/abi/Multicall.json";
 import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
+import multicall from "utils/multicall";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -117,6 +118,44 @@ export const useTrancheBalance = () => {
   }, [account]);
 
   return { balance, invested };
+};
+export const useTrancheSnapshot = (cycle: string | undefined) => {
+  const [trancheSnapshot, setTrancheSnapshot] = useState([]);
+
+  useEffect(() => {
+    const getTrancheSnapshot = async () => {
+      if (!cycle) return;
+      cycle = (Number(cycle) - 1).toString();
+      // const contractTrancheMaster = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
+      // console.log(contractTrancheMaster);
+      // const result = await contractTrancheMaster.trancheSnapshots(cycle, 1);
+
+      const _address = TranchesAddress[NETWORK];
+      const calls = [
+        {
+          address: _address,
+          name: "trancheSnapshots",
+          params: [cycle, 0]
+        },
+        {
+          address: _address,
+          name: "trancheSnapshots",
+          params: [cycle, 1]
+        },
+        {
+          address: _address,
+          name: "trancheSnapshots",
+          params: [cycle, 2]
+        }
+      ];
+      const result = await multicall(TrancheMasterAbi, calls);
+      setTrancheSnapshot(result);
+    };
+
+    getTrancheSnapshot();
+  }, [cycle]);
+
+  return trancheSnapshot;
 };
 export const usePendingWTFReward = (poolId?: number) => {
   const [pendingReward, setPendingReward] = useState(BIG_ZERO);

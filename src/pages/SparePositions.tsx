@@ -29,6 +29,7 @@ import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
+import { useTrancheSnapshot } from "hooks";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -102,6 +103,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
   // console.log(position);
   const markets = useMarkets();
   const market = markets[0];
+  const trancheSnapshot = useTrancheSnapshot(market?.cycle);
+  console.log(trancheSnapshot);
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -152,6 +155,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const handleStatusChange = (value: IType, status: number) => {
     setActivedTab(value);
     setSelectedStatus(status);
+    console.log(status);
   };
   const redeemDirect = async (i: number) => {
     setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: true }));
@@ -178,7 +182,15 @@ const SparePositions = memo<TProps>(({ intl }) => {
         return false;
       return true;
     });
-  }, [selectedTranche, selectedStatus, trancheCycles, userInvests, market.status]);
+  }, [
+    selectedTranche,
+    selectedStatus,
+    trancheCycles,
+    trancheCycles.length,
+    userInvests,
+    userInvests.length,
+    market.status
+  ]);
   return (
     <React.Fragment>
       <FilterWrapper>

@@ -78,6 +78,9 @@ const Line = styled.div`
 `;
 const ButtonWrapper = styled(Button)`
   margin-top: 10px !important;
+  & > svg {
+    margin-right: 10px;
+  }
 `;
 
 const Deposit = memo<TProps>(({ intl, data }) => {

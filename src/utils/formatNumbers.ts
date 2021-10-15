@@ -34,7 +34,7 @@ export const formatNumberDisplay = (num: string | undefined, decimals = 18) => {
   if (!num) return "-";
   return new BigNumber(num)
     .dividedBy(BIG_TEN.pow(decimals))
-    .toFormat(0)
+    .toFormat(4)
     .toString()
     .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };

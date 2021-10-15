@@ -5,7 +5,7 @@ interface IShowStatus {
   transactionModal?: {
     isOpen?: boolean;
     txn?: string;
-    status: "PENDING" | "SUBMITTED" | "REJECTED";
+    status: "PENDING" | "SUBMITTED" | "REJECTED" | "COMPLETED";
     pendingMessage?: string;
   };
 }

@@ -156,8 +156,7 @@ const SparePositionFold = memo<TProps>(
               </Tooltip>
             </CardTitle>
             <CardValue>
-              {totalAmount} {/* {numeral(totalAmount).format("0,0")} */}
-              {assets}
+              {numeral(totalAmount).format("0,0.[0000]")} {assets}
             </CardValue>
             <CardAction>
               {isCurrentCycle && isPending && (
@@ -172,7 +171,12 @@ const SparePositionFold = memo<TProps>(
           </Card>
           <Card>
             <CardTitle>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</CardTitle>
-            <CardValue>{isCurrentCycle && isActive ? formatNumberDisplay(tranchesPendingReward) : "-"} WTF</CardValue>
+            <CardValue>
+              {isCurrentCycle && isActive
+                ? numeral(formatNumberDisplay(tranchesPendingReward)).format("0,0.[0000]")
+                : "-"}{" "}
+              WTF
+            </CardValue>
             <CardAction>
               <ButtonWrapper style={{ visibility: "hidden" }} type="primary">
                 {intl.formatMessage({ defaultMessage: "Claim" })}

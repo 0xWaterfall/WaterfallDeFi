@@ -7,14 +7,46 @@ import { Contract } from "@ethersproject/contracts";
 import { utils } from "ethers";
 import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
+import { setConfirmModal } from "store/showStatus";
+import { useAppDispatch } from "store";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
 
 const invest = async (contract: Contract, amount: string, selectTrancheIdx: string) => {
+  const dispatch = useAppDispatch();
   const _amount = utils.parseEther(amount).toString();
   const tx = await contract.invest(selectTrancheIdx, _amount, false);
+  dispatch(
+    setConfirmModal({
+      isOpen: true,
+      txn: tx.hash,
+      status: "SUBMITTED",
+      pendingMessage: "Deposit Submitted"
+    })
+  );
+  // return tx.hash;
   const receipt = await tx.wait();
+
+  if (receipt.status) {
+    dispatch(
+      setConfirmModal({
+        isOpen: true,
+        txn: tx.hash,
+        status: "SUBMITTED",
+        pendingMessage: "Deposit Success"
+      })
+    );
+  } else {
+    dispatch(
+      setConfirmModal({
+        isOpen: true,
+        txn: tx.hash,
+        status: "REJECTED",
+        pendingMessage: "Deposit Failed"
+      })
+    );
+  }
   return receipt.status;
 };
 

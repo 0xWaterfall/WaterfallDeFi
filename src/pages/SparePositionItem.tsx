@@ -33,6 +33,7 @@ import { dataTool } from "echarts/core";
 import useInvest from "./PortfolioDetails/hooks/useInvest";
 import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import { useEstimateYield } from "hooks/useEstimateYield";
 
 const Wrapper = styled.div``;
 
@@ -157,6 +158,10 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
+
+  const isActiveCycle = Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
+  const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
+
   const wtfAPY =
     market && isCurrentCycle
       ? getWTFApr(
@@ -169,6 +174,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
       : "-";
 
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
+
   return (
     <Wrapper>
       <TableRowWrapper
@@ -234,7 +240,9 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {trancheCycle?.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
-          {userInvest.interest} {market?.assets}
+          {trancheCycle?.state !== 2 && estimateYield}
+          {trancheCycle?.state === 2 && userInvest.interest} {market?.assets}
+          {/* {trancheCycle?.rate} */}
         </TableColumnWrapper>
         <TableColumnWrapper>
           <CaretDownWrapper>

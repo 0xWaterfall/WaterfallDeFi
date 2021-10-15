@@ -31,7 +31,7 @@ import useInvest from "../hooks/useInvest";
 import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 import { useAppDispatch } from "store";
-import { setConnectWalletModalShow } from "store/showStatus";
+import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
 import { useBalance } from "hooks";
 import { useTrancheBalance } from "hooks/useSelectors";
@@ -207,6 +207,14 @@ const ApproveCard = memo<TProps>(
       if (selectTrancheIdx === undefined) return;
 
       setDepositLoading(true);
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + assets
+        })
+      );
       const amount = balanceInput.toString();
       try {
         const success = !isRe
@@ -222,7 +230,15 @@ const ApproveCard = memo<TProps>(
         fetchBalance();
         if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
-        successNotification("Deposit Fail", "");
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Deposit Fail " })
+          })
+        );
+        // successNotification("Deposit Fail", "");
         console.error(e);
       } finally {
         setDepositLoading(false);

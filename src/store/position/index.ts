@@ -8,6 +8,7 @@ import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { MasterChefAddress, TranchesAddress } from "config/address";
 import { BIG_TEN } from "utils/bigNumber";
 import { NETWORK } from "config";
+import multicall from "utils/multicall";
 
 const initialState: IPosition = {
   positions: [],
@@ -42,11 +43,31 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
       const signer = getSigner();
       if (!signer) return [];
       const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
-      const userInvest = await Promise.all([
-        contractTrancheMaster.userInvest(account, 0),
-        contractTrancheMaster.userInvest(account, 1),
-        contractTrancheMaster.userInvest(account, 2)
-      ]);
+
+      const _marketAddress = market.address;
+      const calls = [
+        {
+          address: _marketAddress,
+          name: "userInvest",
+          params: [account, 0]
+        },
+        {
+          address: _marketAddress,
+          name: "userInvest",
+          params: [account, 1]
+        },
+        {
+          address: _marketAddress,
+          name: "userInvest",
+          params: [account, 2]
+        }
+      ];
+      const userInvest = await multicall(market.abi, calls);
+      // const userInvest = await Promise.all([
+      //   contractTrancheMaster.userInvest(account, 0),
+      //   contractTrancheMaster.userInvest(account, 1),
+      //   contractTrancheMaster.userInvest(account, 2)
+      // ]);
       return JSON.parse(JSON.stringify(userInvest));
     } catch (e) {
       console.error(e);

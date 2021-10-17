@@ -158,7 +158,6 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
-
   const isActiveCycle = Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
   const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
 

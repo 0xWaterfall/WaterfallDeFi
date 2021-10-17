@@ -43,7 +43,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   const { data } = useQuery(
     gql`
     {
-      trancheCycles(orderBy: id, orderDirection: asc) {
+      trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
         id
         cycle
         state
@@ -74,7 +74,6 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   `,
     { pollInterval: 10000 }
   );
-  console.log(data);
   const _userInvests: UserInvest[] = [];
   const _trancheCycles: { [key: string]: TrancheCycle } = {};
   if (!data)
@@ -93,17 +92,16 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
     for (let i = 0; i < userInvests.length; i++) {
       const { capital, cycle, harvestAt, id, investAt, owner, principal, tranche } = userInvests[i];
       const trancheCycleId = tranche + "-" + cycle;
-
       const interest = new BigNumber(capital).isZero()
         ? new BigNumber(principal)
-            .times(_trancheCycles[trancheCycleId].rate)
+            .times(_trancheCycles[trancheCycleId]?.rate || 0)
             .dividedBy(BIG_TEN.pow(18))
             .minus(new BigNumber(principal))
         : new BigNumber(capital).minus(new BigNumber(principal));
       const earningsAPY = new BigNumber(interest)
         .dividedBy(new BigNumber(principal))
         .times(new BigNumber(365 * 86400 * 100))
-        .dividedBy(new BigNumber(_trancheCycles[trancheCycleId].endAt - _trancheCycles[trancheCycleId].startAt))
+        .dividedBy(new BigNumber(_trancheCycles[trancheCycleId]?.endAt - _trancheCycles[trancheCycleId]?.startAt))
         .toFormat(0)
         .toString();
       const _ui: UserInvest = {

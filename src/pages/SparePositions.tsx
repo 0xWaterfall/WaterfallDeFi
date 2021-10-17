@@ -104,7 +104,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const markets = useMarkets();
   const market = markets[0];
   const trancheSnapshot = useTrancheSnapshot(market?.cycle);
-  console.log(trancheSnapshot);
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
   const dispatch = useAppDispatch();
   useEffect(() => {

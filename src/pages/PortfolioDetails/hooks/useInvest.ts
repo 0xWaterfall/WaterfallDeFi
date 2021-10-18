@@ -8,13 +8,13 @@ import { utils } from "ethers";
 import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
 import { setConfirmModal } from "store/showStatus";
-import { useAppDispatch } from "store";
+import { Dispatch } from "redux";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
 
-const invest = async (contract: Contract, amount: string, selectTrancheIdx: string) => {
-  const dispatch = useAppDispatch();
+const invest = async (contract: Contract, amount: string, selectTrancheIdx: string, dispatch: Dispatch<any>) => {
+  console.log("investing");
   const _amount = utils.parseEther(amount).toString();
   const tx = await contract.invest(selectTrancheIdx, _amount, false);
   dispatch(
@@ -33,7 +33,7 @@ const invest = async (contract: Contract, amount: string, selectTrancheIdx: stri
       setConfirmModal({
         isOpen: true,
         txn: tx.hash,
-        status: "SUBMITTED",
+        status: "COMPLETED",
         pendingMessage: "Deposit Success"
       })
     );
@@ -56,7 +56,7 @@ const useInvest = () => {
   const contract = useTrancheMasterContract();
   const handleInvest = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
-      const result = await invest(contract, amount, selectTrancheIdx);
+      const result = await invest(contract, amount, selectTrancheIdx, dispatch);
       dispatch(getMarkets(MarketList));
       return result;
     },

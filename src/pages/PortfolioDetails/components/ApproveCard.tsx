@@ -261,10 +261,7 @@ const ApproveCard = memo<TProps>(
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      console.log(value);
-      console.log(typeof value);
       const d = value.split(".");
-      console.log(d);
       if (d.length === 2 && d[1].length === 5) {
         return;
       }

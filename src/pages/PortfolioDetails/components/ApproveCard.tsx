@@ -151,7 +151,8 @@ const ApproveCard = memo<TProps>(
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
     const { balance: balanceRe } = useTrancheBalance();
-    const balance = isRe === undefined ? balanceWallet : numeral(balanceRe).format("0,0.[0000]");
+    const balance =
+      isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -179,12 +180,29 @@ const ApproveCard = memo<TProps>(
     }, [enabled]);
     const handleApprove = async () => {
       setApproveLoading(true);
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Approving " })
+        })
+      );
       try {
         await onApprove();
         successNotification("Approve Success", "");
         setApproved(true);
       } catch (e) {
         console.error(e);
+
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Approve Fail " })
+          })
+        );
       } finally {
         setApproveLoading(false);
       }

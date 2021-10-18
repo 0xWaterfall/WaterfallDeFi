@@ -32,6 +32,7 @@ import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
 import { ToStakeImg } from "assets/images";
+import { setConfirmModal } from "store/showStatus";
 
 const Wrapper = styled.div`
   display: grid;
@@ -128,23 +129,58 @@ const Charts = memo<TProps>(({ intl, data }) => {
   }, [account]);
   const claimReward = async () => {
     setClaimRewardLoading(true);
+
+    dispatch(
+      setConfirmModal({
+        isOpen: true,
+        txn: undefined,
+        status: "PENDING",
+        pendingMessage: intl.formatMessage({ defaultMessage: "Claiming " })
+      })
+    );
     try {
       await onClaimAll();
       successNotification("Claim Success", "");
     } catch (e) {
       console.error(e);
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "REJECTED",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Claim Fail " })
+        })
+      );
     } finally {
       setClaimRewardLoading(false);
     }
   };
   const withdrawAll = async () => {
     setWithdrawAllLoading(true);
+
+    dispatch(
+      setConfirmModal({
+        isOpen: true,
+        txn: undefined,
+        status: "PENDING",
+        pendingMessage: intl.formatMessage({ defaultMessage: "Withdrawing" })
+      })
+    );
     try {
       if (!balance) return;
       await onWithdraw(formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))));
       successNotification("Withdraw All Success", "");
     } catch (e) {
       console.error(e);
+
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "REJECTED",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Withdraw Fail " })
+        })
+      );
     } finally {
       setWithdrawAllLoading(false);
     }

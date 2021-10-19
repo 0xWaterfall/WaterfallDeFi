@@ -25,6 +25,8 @@ import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
 import useIncreaseLockAmount from "pages/Stake/hooks/useIncreaseLockAmount";
 import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
+import numeral from "numeral";
+import { utils } from "ethers";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -173,6 +175,7 @@ const Increase = memo<TProps>(({ intl }) => {
       setLoading(false);
     }
   }, [balanceInput]);
+
   const newExpireDate = useMemo(() => {
     if (datePickerValue) {
       return datePickerValue;
@@ -186,6 +189,20 @@ const Increase = memo<TProps>(({ intl }) => {
     const diff = newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
     return Math.ceil(diff / 100) * 100;
   }, [newExpireDate]);
+
+  const receivedVeWTF = useMemo(() => {
+    const secondsInYear = 3600 * 24 * 365;
+    if (!balanceInput) return "-";
+    if (!duration) return "-";
+    return numeral((balanceInput * duration) / secondsInYear).format("0,0.[0000]");
+  }, [duration, balanceInput]);
+
+  const convertRatio = useMemo(() => {
+    const secondsInYear = 3600 * 24 * 365;
+    if (!balanceInput) return "-";
+    if (!duration) return "-";
+    return numeral((balanceInput * duration) / 100 / secondsInYear).format("0,0.[0000]");
+  }, [duration, balanceInput]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -246,7 +263,9 @@ const Increase = memo<TProps>(({ intl }) => {
         </ButtonWrapper>
       )}
       <Label css={{ margin: "15px 0 10px" }}>
-        <p>{intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;2021-11-31</p>
+        <p>
+          {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;{newExpireDate?.format("YYYY-MM-DD")}
+        </p>
       </Label>
 
       <DatePickerWrapper
@@ -260,6 +279,7 @@ const Increase = memo<TProps>(({ intl }) => {
       <SelectTimeLimitWrapper
         onSelected={(e) => {
           setSelectedValue(e);
+          console.log(e);
           setDatePickerValue(undefined);
         }}
         reset={Boolean(datePickerValue)}
@@ -296,12 +316,12 @@ const Increase = memo<TProps>(({ intl }) => {
           {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
         </div>
-        <span>--</span>
+        <span>{convertRatio}</span>
       </Label>
 
       <Label>
         <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
-        <span>--</span>
+        <span>{receivedVeWTF}</span>
       </Label>
     </Wrapper>
   );

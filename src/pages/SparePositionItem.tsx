@@ -158,7 +158,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
-  const isActiveCycle = Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
+  const isActiveCycle = market && Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
   const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
 
   const wtfAPY =
@@ -210,11 +210,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             <div>
               <section>
                 <title>Total APR:</title>&nbsp;
-                <p>{netAPY} %</p>
+                <p>{numeral(netAPY).format("0,0.[0000]")} %</p>
               </section>
               <section>
                 <title>{tranchesDisplayText[userInvest.tranche]} APR:</title>&nbsp;
-                <span>{trancheAPY} %</span>
+                <span>{numeral(trancheAPY).format("0,0.[0000]")} %</span>
               </section>
               <section>
                 <title>WTF APR:</title>&nbsp;

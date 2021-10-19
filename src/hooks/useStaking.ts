@@ -74,9 +74,8 @@ export const useStakingPool = (
         totalLocked: new BigNumber(totalLocked[0]?._hex).dividedBy(BIG_TEN.pow(18)).toString()
       });
     };
-
-    fetchBalance();
-  }, [tokenAddress, slowRefresh]);
+    if (account) fetchBalance();
+  }, [tokenAddress, slowRefresh, account]);
 
   return result;
 };

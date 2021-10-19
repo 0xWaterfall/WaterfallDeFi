@@ -102,7 +102,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
         .dividedBy(new BigNumber(principal))
         .times(new BigNumber(365 * 86400 * 100))
         .dividedBy(new BigNumber(_trancheCycles[trancheCycleId]?.endAt - _trancheCycles[trancheCycleId]?.startAt))
-        .toFormat(0)
+        .toFormat(2)
         .toString();
       const _ui: UserInvest = {
         capital: new BigNumber(capital).isZero()

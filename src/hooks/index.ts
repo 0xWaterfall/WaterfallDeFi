@@ -27,6 +27,7 @@ import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
+import numeral from "numeral";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -202,7 +203,7 @@ export const useBalance = (address: string) => {
     const contract = getContract(ERC20Abi, address);
     const tokenBalance = await contract.balanceOf(account);
     const value = formatBalance(tokenBalance.toString());
-    setBalance(value);
+    setBalance(numeral(value).format("0,0[0000]"));
   }, [account]);
 
   useEffect(() => {

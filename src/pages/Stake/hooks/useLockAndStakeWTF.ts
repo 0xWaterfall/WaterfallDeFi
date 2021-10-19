@@ -8,6 +8,7 @@ import { utils } from "ethers";
 const createLock = async (contract: Contract, amount: number, duration: number) => {
   //   const _amount = amount.toString();
   const _amount = utils.parseEther(amount.toString()).toString();
+  console.log(_amount);
   const _duration = duration.toString();
   const tx = await contract.createLock(_amount, _duration);
   const receipt = await tx.wait();

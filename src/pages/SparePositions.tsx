@@ -110,8 +110,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
     market && account && dispatch(getPosition({ market, account }));
   }, [market, account]);
   let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
-    if (_userInvest?.cycle === Number(market?.cycle) && market.status === PORTFOLIO_STATUS.PENDING) return false;
-    if (_userInvest?.cycle === Number(market?.cycle) && market.status === PORTFOLIO_STATUS.ACTIVE) return false;
+    if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.PENDING) return false;
+    if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.ACTIVE) return false;
     return true;
   });
 
@@ -121,13 +121,13 @@ const SparePositions = memo<TProps>(({ intl }) => {
       "0,0.[0000]"
     );
     if (
-      _cycle == market.cycle &&
-      (market.status === PORTFOLIO_STATUS.PENDING || market.status === PORTFOLIO_STATUS.ACTIVE)
+      _cycle == market?.cycle &&
+      (market?.status === PORTFOLIO_STATUS.PENDING || market?.status === PORTFOLIO_STATUS.ACTIVE)
     ) {
       userInvests = [
         {
           capital: "0",
-          cycle: Number(market.cycle),
+          cycle: Number(market?.cycle),
           harvestAt: 0,
           id: "",
           investAt: 0,
@@ -181,15 +181,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
         return false;
       return true;
     });
-  }, [
-    selectedTranche,
-    selectedStatus,
-    trancheCycles,
-    trancheCycles.length,
-    userInvests,
-    userInvests.length,
-    market.status
-  ]);
+  }, [selectedTranche, selectedStatus, trancheCycles, trancheCycles.length, userInvests, userInvests.length]);
   return (
     <React.Fragment>
       <FilterWrapper>
@@ -239,6 +231,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
         <NoDataWrapper isNoData={!payload?.length}>
           {trancheCycles &&
+            market &&
             payload.map((_userInvest: UserInvest, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
               const trancheCycle = trancheCycles[trancheCycleId];

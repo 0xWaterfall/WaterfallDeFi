@@ -17,8 +17,9 @@ export const useEstimateYield = (principal: string, trancheAPY: string, startAt:
         .times(duration)
         .dividedBy(secondsInYear)
         .toString();
-
-      setEstYield(numeral(_yield).format("0,0.[000000]"));
+      console.log(_yield);
+      const num = numeral(_yield).format("0,0.[000000]");
+      setEstYield(num !== "NaN" ? num : "0");
     }
   }, [fastRefresh]);
 

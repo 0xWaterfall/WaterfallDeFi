@@ -13,23 +13,21 @@ type TProps = WrappedComponentProps;
 const Portfolio = memo<TProps>(() => {
   useScrollTop();
   return (
-    <React.Fragment>
-      <div
-        css={{
-          padding: "64px 24px",
-          maxWidth: 1248,
-          margin: "0 auto",
-          minHeight: "100vh",
-          "@media screen and (max-width: 1024px)": {
-            paddingBottom: 100
-          }
-        }}
-      >
-        <Header />
-        <WorkFlow />
-        <Content />
-      </div>
-    </React.Fragment>
+    <div
+      css={{
+        padding: "64px 24px",
+        maxWidth: 1248,
+        margin: "0 auto",
+        minHeight: "100vh",
+        "@media screen and (max-width: 1024px)": {
+          paddingBottom: 100
+        }
+      }}
+    >
+      <Header />
+      <WorkFlow />
+      <Content />
+    </div>
   );
 });
 

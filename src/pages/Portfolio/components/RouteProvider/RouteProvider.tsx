@@ -1,8 +1,9 @@
 import React, { FC } from "react";
 import { Route, Switch } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
-import Markets from "./components/Markets";
-import MyPortfolio from "./components/MyPortfolio/MyPortfolio";
+import RedirectPathToDashboard from "providers/ConnectedRouteProvider/RedirectPathToDashboard";
+import Markets from "../Markets";
+import MyPortfolio from "../MyPortfolio/MyPortfolio";
 
 export const Routes = [
   {
@@ -12,7 +13,7 @@ export const Routes = [
     exact: true
   },
   {
-    path: "/portfolio/myPortfolio",
+    path: "/portfolio/my-portfolio",
     name: <FormattedMessage defaultMessage="My Portfolio" />,
     component: MyPortfolio,
     exact: true
@@ -25,6 +26,7 @@ const ConnectedRouteComponent: FC = () => {
       {Routes.map((i) => {
         return <Route key={i.path} path={i.path} component={i.component} exact={i.exact} />;
       })}
+      <Route component={RedirectPathToDashboard} />
     </Switch>
   );
 };

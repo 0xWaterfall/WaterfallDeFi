@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo, useEffect, useMemo } from "react";
+import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { TwitterTimelineEmbed } from "react-twitter-embed";
-import { colorMode } from "hooks/useColorMode";
-import ReactDOM from "react-dom";
+import { useTheme } from "@emotion/react";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -33,12 +32,11 @@ const Title = styled.div`
 type TProps = WrappedComponentProps;
 
 const ContactCard = memo<TProps>(({ intl }) => {
-  const theme = colorMode();
-
+  const { colorMode } = useTheme();
   return (
     <Wrapper>
       <Title>{intl.formatMessage({ defaultMessage: "Announcements" })}</Title>
-      {theme === "dark" && (
+      {colorMode === "dark" && (
         <TwitterTimelineEmbed
           sourceType="profile"
           screenName="Waterfalldefi"
@@ -49,7 +47,7 @@ const ContactCard = memo<TProps>(({ intl }) => {
           transparent
         />
       )}
-      {(!theme || theme === "light") && (
+      {(!colorMode || colorMode === "light") && (
         <TwitterTimelineEmbed
           sourceType="profile"
           screenName="Waterfalldefi"

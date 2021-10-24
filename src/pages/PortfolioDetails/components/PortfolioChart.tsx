@@ -10,7 +10,6 @@ import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
-import { colorMode } from "hooks/useColorMode";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -41,7 +40,8 @@ type TProps = WrappedComponentProps;
 let chart: echarts.ECharts;
 
 const PortfolioChart = memo<TProps>(({ intl }) => {
-  const { white, gray, dark, useColorModeValue } = useTheme();
+  const { white, gray, dark, colorMode } = useTheme();
+
   const result = useStrategyFarm();
 
   const payload: any[] = [];
@@ -52,7 +52,6 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
   }
 
   const COLORS = ["#FFB0E3", "#4A63B9", "#85C872", "#F7C05F"];
-  const theme = colorMode();
   const options = useMemo(() => {
     const res = payload.map((p, i) => ({ value: p.value, name: p.name, itemStyle: { color: COLORS[i] } }));
     return {
@@ -67,7 +66,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: 2,
-            borderColor: theme === "dark" ? dark.block : white.normal,
+            borderColor: colorMode === "dark" ? dark.block : white.normal,
             borderWidth: 2
           },
           label: {
@@ -78,7 +77,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
             label: {
               show: true,
               fontSize: "12",
-              color: theme === "dark" ? white.normal : gray.normal
+              color: colorMode === "dark" ? white.normal : gray.normal
             }
           },
           labelLine: {
@@ -88,7 +87,7 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
         }
       ]
     };
-  }, [payload, theme]);
+  }, [payload, colorMode]);
   const [index, setIndex] = useState(-1);
 
   useEffect(() => {
@@ -119,8 +118,8 @@ const PortfolioChart = memo<TProps>(({ intl }) => {
                 padding: "8px 4px",
                 borderRadius: 4,
                 cursor: "pointer",
-                ...(index === i ? { backgroundColor: theme === "dark" ? white.normal5 : gray.normal04 } : {}),
-                ":hover": { backgroundColor: theme === "dark" ? white.normal5 : gray.normal04 }
+                ...(index === i ? { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 } : {}),
+                ":hover": { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 }
               }}
               onMouseMove={() => {
                 chart.dispatchAction({

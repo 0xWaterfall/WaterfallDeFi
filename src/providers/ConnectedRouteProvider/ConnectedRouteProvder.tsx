@@ -1,8 +1,7 @@
 import React, { FC } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
-import { loadableComponents, RouteComponents } from "pages";
-
-const { Dashboard } = loadableComponents;
+import { Route, Switch } from "react-router-dom";
+import { RouteComponents } from "./data";
+import RedirectPathToDashboard from "./RedirectPathToDashboard";
 
 const ConnectedRouteProvider: FC = () => {
   return (
@@ -10,7 +9,7 @@ const ConnectedRouteProvider: FC = () => {
       {RouteComponents.map((item) => {
         return <Route key={item.key} strict path={item.path} exact={item.exact} component={item.component} />;
       })}
-      <Route path="*" component={Dashboard} />
+      <Route component={RedirectPathToDashboard} />
     </Switch>
   );
 };

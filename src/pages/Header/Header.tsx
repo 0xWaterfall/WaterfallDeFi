@@ -17,7 +17,6 @@ import useAuth from "utils/useAuth";
 import { formatAccountAddress } from "utils/formatAddress";
 import { setConnectWalletModalShow } from "store/showStatus";
 import styled from "@emotion/styled";
-import { colorMode } from "hooks/useColorMode";
 import ActionIconGroup from "./ActionIconGroup";
 
 const Wrapper = styled.div`
@@ -146,14 +145,13 @@ const DrawerWrapper = styled.div`
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
-  const { gray, primary, white, useColorModeValue } = useTheme();
+  const { gray, white, colorMode } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
   const [isDrawerShow, setDrawerShow] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const theme = colorMode();
   const { active, account, chainId } = useWeb3React<Web3Provider>();
   const { login } = useAuth();
 
@@ -169,19 +167,19 @@ const Header = memo<TProps>(({ intl }) => {
       checked: "/portfolio/markets"
     },
     {
-      pathname: "/portfolio/myPortfolio",
+      pathname: "/portfolio/my-portfolio",
       text: intl.formatMessage({ defaultMessage: "My Portfolio" }),
-      checked: "/portfolio/myPortfolio"
+      checked: "/portfolio/my-portfolio"
     },
     {
       pathname: "/stake",
-      text: intl.formatMessage({ defaultMessage: "Staking" }),
+      text: intl.formatMessage({ defaultMessage: "Stake" }),
       checked: "/stake"
     }
   ];
 
   const WaterFallDeFiLogo =
-    theme === "dark" ? (
+    colorMode === "dark" ? (
       <WaterFallDark
         css={{ cursor: "pointer" }}
         onClick={() => {
@@ -240,7 +238,7 @@ const Header = memo<TProps>(({ intl }) => {
       </PCLeft>
       <MobileLeft>
         <Menu
-          css={{ marginRight: 16, fill: theme === "dark" ? white.normal7 : gray.normal5 }}
+          css={{ marginRight: 16, fill: colorMode === "dark" ? white.normal7 : gray.normal5 }}
           onClick={setDrawerShow.bind(null, true)}
         />
       </MobileLeft>
@@ -255,7 +253,7 @@ const Header = memo<TProps>(({ intl }) => {
           <div>
             <header>
               <Menu
-                css={{ fill: theme === "dark" ? white.normal7 : gray.normal5 }}
+                css={{ fill: colorMode === "dark" ? white.normal7 : gray.normal5 }}
                 onClick={setDrawerShow.bind(null, false)}
               />
               {WaterFallDeFiLogo}

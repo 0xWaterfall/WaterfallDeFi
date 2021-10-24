@@ -105,7 +105,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { price: wtfPrice } = useWTFPriceLP();
   const navigateMarketDetail = () => {
     dispatch(setMarketKey(selectId.toString()));
-    push({ pathname: "/portfolioDetails" });
+    push({ pathname: "/portfolio-details" });
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
 import { utils } from "ethers";
 
-const createLock = async (contract: Contract, amount: number, duration: number) => {
+const createLock = async (contract: Contract, amount: string, duration: number) => {
   //   const _amount = amount.toString();
   const _amount = utils.parseEther(amount.toString()).toString();
   console.log(_amount);
@@ -20,7 +20,7 @@ const useLockAndStakeWTF = () => {
   const { account } = useWeb3React();
   const contract = useVeWTFContract();
   const handleLockAndStakeWTF = useCallback(
-    async (amount: number, duration: number) => {
+    async (amount: string, duration: number) => {
       const result = await createLock(contract, amount, duration);
       //   dispatch();
       return result;

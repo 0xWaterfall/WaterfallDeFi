@@ -3,6 +3,7 @@
 import styled from "@emotion/styled";
 import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { StakingConfig } from "types";
 import Increase from "./Increase";
 import Stake from "./Stake";
 import Unstake from "./Unstake";
@@ -50,9 +51,10 @@ const Block = styled.div`
   }
 `;
 
-type TProps = WrappedComponentProps;
-
-const Action = memo<TProps>(({ intl }) => {
+type TProps = WrappedComponentProps & {
+  stakingConfig: StakingConfig;
+};
+const Action = memo<TProps>(({ intl, stakingConfig }) => {
   const [activedKey, setActivedKey] = useState("STAKE");
   const TABS = [
     { key: "STAKE", text: intl.formatMessage({ defaultMessage: "Stake" }) },
@@ -75,7 +77,7 @@ const Action = memo<TProps>(({ intl }) => {
       </Segement>
       {/* {activedKey === "STAKE" && <Stake />} */}
       {activedKey === "STAKE" && <Increase />}
-      {activedKey === "UNSTAKE" && <Unstake />}
+      {activedKey === "UNSTAKE" && <Unstake stakingConfig={stakingConfig} />}
     </Wrapper>
   );
 });

@@ -39,7 +39,7 @@ export const useStakingPool = (
     userStaked: "",
     totalLocked: ""
   });
-  const { slowRefresh } = useRefresh();
+  const { fastRefresh } = useRefresh();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -75,7 +75,7 @@ export const useStakingPool = (
       });
     };
     if (account) fetchBalance();
-  }, [tokenAddress, slowRefresh, account]);
+  }, [tokenAddress, fastRefresh, account]);
 
   return result;
 };

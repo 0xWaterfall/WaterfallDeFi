@@ -4,9 +4,14 @@ import styled from "@emotion/styled";
 import { ArrowLeft, ChevronLeft, Union } from "assets/images";
 import Button from "components/Button/Button";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-
+import { usePendingReward } from "../hooks/usePendingReward";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { StakingConfig } from "types";
+import useClaimRewards from "../hooks/useClaimRewards";
+import { successNotification } from "utils/notification";
 const Wrapper = styled.div`
   padding: 24px;
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header3)};
@@ -50,9 +55,30 @@ const Container = styled.div`
   }
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  stakingConfig: StakingConfig;
+};
 
-const RewardCard = memo<TProps>(({ intl }) => {
+const RewardCard = memo<TProps>(({ intl, stakingConfig }) => {
+  const { account } = useWeb3React<Web3Provider>();
+  const [loading, setLoading] = useState(false);
+  const pendingWTFRewards = usePendingReward(stakingConfig.rewardTokenAddress, account);
+  const { claimRewards } = useClaimRewards();
+
+  const onHarvest = async () => {
+    setLoading(true);
+    try {
+      const result = await claimRewards();
+      // fetchBalance();
+      // setBalanceInput(0);
+      // fetchLockingWTF();
+      successNotification("Claim Reward Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Wrapper>
       <Title>
@@ -62,14 +88,16 @@ const RewardCard = memo<TProps>(({ intl }) => {
       <Line />
       <Container>
         <div>
-          <p>0 WTF</p>
+          <p>{pendingWTFRewards ? pendingWTFRewards : "-"} WTF</p>
           <span>$ 0</span>
         </div>
         <div>
           <p>0 BUSD</p>
           <span>$ 0</span>
         </div>
-        <Button type="primary">{intl.formatMessage({ defaultMessage: "Harvest" })}</Button>
+        <Button type="primary" onClick={onHarvest} loading={loading}>
+          {intl.formatMessage({ defaultMessage: "Harvest" })}
+        </Button>
       </Container>
     </Wrapper>
   );

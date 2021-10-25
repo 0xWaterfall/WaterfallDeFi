@@ -5,29 +5,26 @@ import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
 import { utils } from "ethers";
 
-const increaseAmount = async (contract: Contract, amount: string) => {
-  //   const _amount = amount.toString();
-  const _amount = utils.parseEther(amount.toString()).toString();
-  console.log(_amount);
-  const tx = await contract.increaseAmount(_amount);
+const extendLockTime = async (contract: Contract, duration: number) => {
+  const tx = await contract.increaseTimeAndAmount("0", duration);
   const receipt = await tx.wait();
   return receipt.status;
 };
 
-const useIncreaseLockAmount = () => {
+const useExtendLockTime = () => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const contract = useVeWTFContract();
-  const handleIncreaseLockAmount = useCallback(
-    async (amount: string) => {
-      const result = await increaseAmount(contract, amount);
+  const handleExtendLockTime = useCallback(
+    async (duration: number) => {
+      const result = await extendLockTime(contract, duration);
       //   dispatch();
       return result;
     },
     [account, dispatch, contract]
   );
 
-  return { increaseLockAmount: handleIncreaseLockAmount };
+  return { extendLockTime: handleExtendLockTime };
 };
 
-export default useIncreaseLockAmount;
+export default useExtendLockTime;

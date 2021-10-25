@@ -27,6 +27,9 @@ import useIncreaseLockAmount from "pages/Stake/hooks/useIncreaseLockAmount";
 import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
 import numeral from "numeral";
 import { utils } from "ethers";
+import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
+import { useGetLockingWTF } from "pages/Stake/hooks/useGetLockingWTF";
+import { start } from "repl";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -111,19 +114,22 @@ type TProps = WrappedComponentProps;
 
 const Increase = memo<TProps>(({ intl }) => {
   const { tags } = useTheme();
+  const { account } = useWeb3React<Web3Provider>();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
-  const [balanceInput, setBalanceInput] = useState(0);
+  const [balanceInput, setBalanceInput] = useState("0");
   const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
   const { increaseLockAmount } = useIncreaseLockAmount();
+  const { extendLockTime } = useExtendLockTime();
   const [approved, setApproved] = useState(false);
   const [locked, setLocked] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [increaseLockAmountLoading, setIncreaseLockAmountLoading] = useState(false);
+  const [extendLockTimeLoading, setExtendLockTimeLoading] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { account } = useWeb3React<Web3Provider>();
+  const { total: lockingWTF, expiryTimestamp, startTimestamp, fetchLockingWTF } = useGetLockingWTF(account);
   const { lockAndStakeWTF } = useLockAndStakeWTF();
   const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
   const { onCheckLocked } = useCheckLocked();
@@ -132,7 +138,6 @@ const Increase = memo<TProps>(({ intl }) => {
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();
-      console.log(approved);
       setApproved(approved ? true : false);
     };
     if (account) checkApproved(account);
@@ -161,18 +166,19 @@ const Increase = memo<TProps>(({ intl }) => {
 
   const onIncreaseLockAmount = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
-    if (balanceInput <= 0) return;
+    if (Number(balanceInput) <= 0) return;
 
-    setLoading(true);
+    setIncreaseLockAmountLoading(true);
     try {
       await increaseLockAmount(balanceInput);
       fetchBalance();
-      setBalanceInput(0);
+      setBalanceInput("0");
+      fetchLockingWTF();
       successNotification("Increase Amount Success", "");
     } catch (e) {
       console.error(e);
     } finally {
-      setLoading(false);
+      setIncreaseLockAmountLoading(false);
     }
   }, [balanceInput]);
 
@@ -190,43 +196,87 @@ const Increase = memo<TProps>(({ intl }) => {
     return Math.ceil(diff / 100) * 100;
   }, [newExpireDate]);
 
+  const onExtendLockTime = useCallback(async () => {
+    if (!duration) return;
+    setExtendLockTimeLoading(true);
+    try {
+      await extendLockTime(Number(expiryTimestamp) + Number(duration));
+      fetchBalance();
+      successNotification("Extend Lock Time Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setExtendLockTimeLoading(false);
+    }
+  }, [duration, expiryTimestamp]);
+
   const receivedVeWTF = useMemo(() => {
     const secondsInYear = 3600 * 24 * 365;
-    if (!balanceInput) return "-";
-    if (!duration) return "-";
-    return numeral((balanceInput * duration) / secondsInYear).format("0,0.[0000]");
+    if (!locked) {
+      if (!balanceInput) return "-";
+      if (!duration) return "-";
+
+      return numeral((Number(balanceInput) * duration) / secondsInYear).format("0,0.[0000]");
+    }
+    if (locked) {
+      if (!balanceInput && !duration) return "-";
+      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
+      return numeral((_balanceInput * _duration) / secondsInYear).format("0,0.[0000]");
+    }
   }, [duration, balanceInput]);
 
   const convertRatio = useMemo(() => {
     const secondsInYear = 3600 * 24 * 365;
-    if (!balanceInput) return "-";
-    if (!duration) return "-";
-    return numeral((balanceInput * duration) / 100 / secondsInYear).format("0,0.[0000]");
+    if (!locked) {
+      if (!balanceInput) return "-";
+      if (!duration) return "-";
+
+      return numeral((Number(balanceInput) * duration) / 100 / secondsInYear).format("0,0.[0000]");
+    }
+    if (locked) {
+      if (!balanceInput && !duration) return "-";
+      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
+      return numeral((_balanceInput * _duration) / 100 / secondsInYear).format("0,0.[0000]");
+    }
   }, [duration, balanceInput]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    let input = parseInt(value);
+    const d = value.split(".");
+    if (d.length === 2 && d[1].length === 5) {
+      return;
+    }
+    let input = Number(value);
+    // console.log(input);
     if (isNaN(input)) input = 0;
-    setBalanceInput(input);
+
+    setBalanceInput(input.toString());
+
+    if (locked) {
+      //reset extend lock time
+      setSelectedValue({ value: 0, unit: "M" });
+      setDatePickerValue(undefined);
+    }
   };
   const handleMaxInput = () => {
     const _balance = wtfBalance.replace(/\,/g, "");
     // const _remaining = remaining.replace(/\,/g, "");
-    const input = parseInt(_balance);
+    const input = parseFloat(_balance);
 
-    if (input) setBalanceInput(input);
+    if (input) setBalanceInput(input.toString());
   };
   const onConfirm = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
-    if (balanceInput <= 0) return;
+    if (Number(balanceInput) <= 0) return;
     if (!duration) return;
 
     setLoading(true);
     try {
       await lockAndStakeWTF(balanceInput, duration);
       fetchBalance();
-      setBalanceInput(0);
+      setBalanceInput("0");
       successNotification("Lock & Stake Success", "");
     } catch (e) {
       console.error(e);
@@ -249,6 +299,9 @@ const Increase = memo<TProps>(({ intl }) => {
       </Label>
 
       <StakeInput
+        type="number"
+        step={0.1}
+        min={0}
         suffixText="WTF"
         onMAX={handleMaxInput}
         value={balanceInput}
@@ -264,7 +317,14 @@ const Increase = memo<TProps>(({ intl }) => {
       )}
       <Label css={{ margin: "15px 0 10px" }}>
         <p>
-          {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;{newExpireDate?.format("YYYY-MM-DD")}
+          {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;
+          {expiryTimestamp !== "0" &&
+            duration !== 0 &&
+            dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")}
+          {expiryTimestamp !== "0" &&
+            duration === 0 &&
+            dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+          {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
       </Label>
 
@@ -281,15 +341,21 @@ const Increase = memo<TProps>(({ intl }) => {
           setSelectedValue(e);
           console.log(e);
           setDatePickerValue(undefined);
+
+          if (locked) {
+            setBalanceInput("0");
+          }
         }}
         reset={Boolean(datePickerValue)}
       />
 
       {account && approved && locked && (
-        <ButtonWrapper type="primary">{intl.formatMessage({ defaultMessage: "Extend Lock Time" })}</ButtonWrapper>
+        <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
+          {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
+        </ButtonWrapper>
       )}
       {account && approved && !locked && (
-        <ButtonWrapper type="primaryLine" onClick={onConfirm}>
+        <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
           {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
         </ButtonWrapper>
       )}

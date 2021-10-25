@@ -18,18 +18,18 @@ export const BUSDAddress: { [network: string]: string } = {
 };
 export const WTFAddress: { [network: string]: string } = {
   //for testing staking
-  [NETWORKS.DEVNET]: "e82E0737ea6a0f0f78D37d649577FC4977Dd5Bd4",
+  // [NETWORKS.DEVNET]: "e82E0737ea6a0f0f78D37d649577FC4977Dd5Bd4",
 
-  // [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
+  [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a"
 };
 
 export const WTFRewardsAddress: { [network: string]: string } = {
-  [NETWORKS.DEVNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
+  [NETWORKS.DEVNET]: "0x9be9bb36848CC9C2C447F9BEe078C4977C4FFd57",
   [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594"
 };
 export const VeWTFAddress: { [network: string]: string } = {
-  [NETWORKS.DEVNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
+  [NETWORKS.DEVNET]: "0xD9c58DEF9280847082144Cd6B72B45b8F16964Ac",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99"
 };
 export const PancakeLPAddress: { [network: string]: string } = {

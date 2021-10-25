@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { useStakingPool, useEarningTokenTotalSupply } from "hooks/useStaking";
+import { useStakingPool } from "hooks/useStaking";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { StakingConfig } from "types";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { useTotalSupply } from "hooks";
 const Card = styled.div`
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block5)};
   box-shadow: 0px 4px 10px 0px #0000000a;
@@ -83,11 +84,11 @@ const StakeCard = memo<TProps>(({ intl, data }) => {
   const { account } = useWeb3React<Web3Provider>();
 
   const { totalStaked, isPoolActive, totalLocked, userStaked } = useStakingPool(
-    data.stakingTokenAddress,
+    data.rewardTokenAddress,
     data.earningTokenAddress,
     account
   );
-  const earningTokenTotalSupply = useEarningTokenTotalSupply(data.earningTokenAddress);
+  const earningTokenTotalSupply = useTotalSupply(data.earningTokenAddress);
   return (
     <Card>
       <IconWrapper>

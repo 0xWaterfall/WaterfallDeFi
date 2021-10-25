@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import { ChevronLeft } from "assets/images";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
@@ -11,7 +11,9 @@ import Action from "./Action/Action";
 import MyStakingCard from "./MyStakingCard";
 import RewardCard from "./RewardCard";
 import TotalCard from "./TotalCard";
-
+import { useParams } from "react-router-dom";
+import Stakings from "config/staking";
+import { StakingConfig } from "types";
 const Wrapper = styled.div`
   max-width: 1048px;
   padding: 104px 15px 0;
@@ -56,12 +58,25 @@ const LinearGradientSubtractWrapper = styled(LinearGradientSubtract)`
 `;
 
 type TProps = WrappedComponentProps;
-
+type UrlParams = {
+  id: string;
+};
 const Staking = memo<TProps>(({ intl }) => {
   useScrollTop();
 
+  const { id } = useParams<UrlParams>();
+  const [stakingConfig, setStakingConfig] = useState<StakingConfig>();
   const { goBack } = useHistory();
+  const history = useHistory();
 
+  useEffect(() => {
+    if (Stakings[Number(id)]) {
+      setStakingConfig(Stakings[Number(id)]);
+    } else {
+      history.push("/");
+    }
+  }, [id]);
+  if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
       <StakingCard onClick={goBack}>
@@ -70,11 +85,11 @@ const Staking = memo<TProps>(({ intl }) => {
       </StakingCard>
       <CardGroup>
         <LinearGradientSubtractWrapper />
-        <TotalCard />
-        <RewardCard />
+        <TotalCard stakingConfig={stakingConfig} />
+        <RewardCard stakingConfig={stakingConfig} />
       </CardGroup>
-      <Action />
-      <MyStakingCard />
+      <Action stakingConfig={stakingConfig} />
+      <MyStakingCard stakingConfig={stakingConfig} />
     </Wrapper>
   );
 });

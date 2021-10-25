@@ -193,22 +193,41 @@ export const usePendingWTFReward = (poolId?: number) => {
 
   return pendingReward;
 };
+export const useTotalSupply = (address: string) => {
+  const [totalSupply, setTotalSupply] = useState("0");
+  const { account, ...p } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
+
+  const fetchBalance = useCallback(async () => {
+    if (!account) return;
+    const contract = getContract(ERC20Abi, address);
+    const tokenBalance = await contract.totalSupply();
+    const value = formatBalance(tokenBalance.toString());
+    setTotalSupply(numeral(value).format("0,0.[0000]"));
+  }, [account]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance, address, fastRefresh]);
+
+  return totalSupply;
+};
 export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
-  const { slowRefresh } = useRefresh();
+  const { slowRefresh, fastRefresh } = useRefresh();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
     const contract = getContract(ERC20Abi, address);
     const tokenBalance = await contract.balanceOf(account);
-    const value = formatBalance(tokenBalance.toString());
-    setBalance(numeral(value).format("0,0[0000]"));
+    const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
+    setBalance(numeral(value.toString()).format("0,0.[0000]"));
   }, [account]);
 
   useEffect(() => {
     fetchBalance();
-  }, [fetchBalance, address, slowRefresh]);
+  }, [fetchBalance, address, fastRefresh]);
 
   return { balance, fetchBalance };
 };

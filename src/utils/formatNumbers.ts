@@ -148,7 +148,7 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   const decimals = 18;
 
   //"500000000000000000" 50%
-  let expectedAPY = new BigNumber("500000000000000000").dividedBy(BIG_TEN.pow(decimals));
+  let expectedAPY = new BigNumber("210000000000000000").dividedBy(BIG_TEN.pow(decimals));
   expectedAPY = expectedAPY.plus(new BigNumber(1));
   const juniorTVL = new BigNumber(tranches[tranches.length - 1].target).dividedBy(BIG_TEN.pow(decimals));
   const _duration = new BigNumber(86400 * 7);

@@ -104,7 +104,7 @@ const Stake = memo<TProps>(({ intl }) => {
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
-  const [balanceInput, setBalanceInput] = useState(0);
+  const [balanceInput, setBalanceInput] = useState("0");
   const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
   const { lockAndStakeWTF } = useLockAndStakeWTF();
   const [approved, setApproved] = useState(false);
@@ -117,7 +117,6 @@ const Stake = memo<TProps>(({ intl }) => {
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();
-      console.log(approved);
       setApproved(approved ? true : false);
     };
     if (account) checkApproved(account);
@@ -151,14 +150,15 @@ const Stake = memo<TProps>(({ intl }) => {
 
   const onConfirm = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
-    if (balanceInput <= 0) return;
+    if (Number(balanceInput) <= 0) return;
     if (!duration) return;
 
     setLoading(true);
     try {
       await lockAndStakeWTF(balanceInput, duration);
       fetchBalance();
-      setBalanceInput(0);
+
+      setBalanceInput("0");
       successNotification("Lock & Stake Success", "");
     } catch (e) {
       console.error(e);
@@ -168,16 +168,21 @@ const Stake = memo<TProps>(({ intl }) => {
   }, [newExpireDate, balanceInput]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    let input = parseInt(value);
+    const d = value.split(".");
+    if (d.length === 2 && d[1].length === 5) {
+      return;
+    }
+    let input = Number(value);
+    // console.log(input);
     if (isNaN(input)) input = 0;
-    setBalanceInput(input);
+    setBalanceInput(input.toString());
   };
   const handleMaxInput = () => {
     const _balance = wtfBalance.replace(/\,/g, "");
     // const _remaining = remaining.replace(/\,/g, "");
     const input = parseInt(_balance);
 
-    if (input) setBalanceInput(input);
+    if (input) setBalanceInput(input.toString());
   };
   const validateText = useMemo(() => {
     const _balance = wtfBalance.replace(/\,/g, "");
@@ -194,6 +199,7 @@ const Stake = memo<TProps>(({ intl }) => {
       </Label>
 
       <StakeInput
+        step={0.1}
         suffixText="WTF"
         onMAX={handleMaxInput}
         value={balanceInput}

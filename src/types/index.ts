@@ -25,7 +25,7 @@ export interface Pool {
 }
 
 export interface StakingConfig {
-  stakingTokenAddress: string;
+  rewardTokenAddress: string;
   earningTokenAddress: string;
   name: string;
 }

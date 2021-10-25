@@ -2,13 +2,18 @@
 
 import styled from "@emotion/styled";
 import { ArrowLeft, ChevronLeft, WTF as WTFIcon } from "assets/images";
+import { useBalance, useTotalSupply } from "hooks";
 import useScrollTop from "hooks/useScrollTop";
+import { useStakingPool } from "hooks/useStaking";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router";
-import { LinearGradientSubtract } from "styles";
 import Chart from "./Chart";
 
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import Stakings from "config/staking";
+import { useParams } from "react-router-dom";
+import { StakingConfig } from "types";
 const Wrapper = styled.div`
   padding: 24px;
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header3)};
@@ -71,10 +76,23 @@ const Container = styled.div`
     font-size: 16px;
   }
 `;
+type UrlParams = {
+  id: string;
+};
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  stakingConfig: StakingConfig;
+};
 
-const TotalCard = memo<TProps>(({ intl }) => {
+const TotalCard = memo<TProps>(({ intl, stakingConfig }) => {
+  const { account } = useWeb3React<Web3Provider>();
+
+  const { id } = useParams<UrlParams>();
+  const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
+  const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
+  const { totalLocked } = useStakingPool(stakingConfig.rewardTokenAddress, stakingConfig.earningTokenAddress, account);
+  const earningTokenTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
+
   return (
     <Wrapper>
       <WTFWrapper>
@@ -93,11 +111,11 @@ const TotalCard = memo<TProps>(({ intl }) => {
       <Container>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>
-          <span>1,000,000</span>
+          <span>{totalLocked}</span>
         </div>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
-          <span>800,000</span>
+          <span>{earningTokenTotalSupply}</span>
         </div>
         <div>
           <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>

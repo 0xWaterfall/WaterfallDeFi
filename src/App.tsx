@@ -5,9 +5,6 @@ import { Router } from "react-router-dom";
 import { history } from "utils/history";
 import Global from "styles/global";
 import ConnectedIntlProvider from "providers/ConnectedIntlProvider/ConnectedIntlProvider";
-import Layout from "pages/Layout/Layout";
-import { ThemeProvider } from "@emotion/react";
-import theme from "styles/theme";
 import { Web3ReactProvider } from "@web3-react/core";
 import { getLibrary } from "utils/web3React";
 import Reset from "styles/global/Reset";
@@ -15,6 +12,8 @@ import ConnectedDataProvider from "providers/ConnectedDataProvider/ConnectedData
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { RefreshContextProvider } from "contexts/RefreshContext";
 import { PersistGate } from "redux-persist/integration/react";
+import ConnectedThemeProvider from "providers/ConnectedThemeProvider/ConnectedThemeProvider";
+import Pages from "pages/Pages";
 
 const client = new ApolloClient({
   // uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.9",
@@ -32,13 +31,13 @@ const App: FC = () => {
             <ApolloProvider client={client}>
               <ConnectedIntlProvider>
                 <Router history={history}>
-                  <ThemeProvider theme={theme}>
+                  <ConnectedThemeProvider>
                     <RefreshContextProvider>
                       <Reset />
                       <Global />
-                      <Layout />
+                      <Pages />
                     </RefreshContextProvider>
-                  </ThemeProvider>
+                  </ConnectedThemeProvider>
                 </Router>
               </ConnectedIntlProvider>
             </ApolloProvider>

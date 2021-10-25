@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from "store";
 import { fetchI18nMiddleware } from "store/i18n";
 import { languages } from "config";
 import styled from "@emotion/styled";
-import { colorMode } from "hooks/useColorMode";
 import { setTheme } from "store/selectedKeys";
 
 const Wrapper = styled.div`
@@ -57,12 +56,12 @@ const ActionIconGroup = memo<TProps>(({ intl, ...props }) => {
   const dispatch = useAppDispatch();
   const { locale } = useAppSelector((state) => state.i18n);
 
-  const theme = colorMode();
+  const { colorMode } = useTheme();
 
   return (
     <Wrapper {...props}>
       <ThemeIcon>
-        {theme === "dark" ? (
+        {colorMode === "dark" ? (
           <LightIcon
             onClick={() => {
               dispatch(setTheme("light"));

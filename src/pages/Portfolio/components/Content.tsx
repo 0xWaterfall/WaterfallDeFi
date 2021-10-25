@@ -4,7 +4,7 @@ import Tabs, { TabPane } from "components/Tabs/Tabs";
 import React, { memo, useEffect, useState } from "react";
 import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
-import ConnectedRouteComponent, { Routes } from "../ConnectRouteComponent";
+import RouteProvider, { Routes } from "./RouteProvider/RouteProvider";
 
 type TProps = WrappedComponentProps;
 
@@ -33,7 +33,7 @@ const Content = memo<TProps>(({ intl }) => {
           <TabPane tab={p.name} key={p.path} />
         ))}
       </Tabs>
-      <ConnectedRouteComponent />
+      <RouteProvider />
     </div>
   );
 });

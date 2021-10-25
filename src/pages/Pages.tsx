@@ -22,7 +22,7 @@ const MainStyled = styled.main`
   position: relative;
 `;
 
-const Layout: FC = () => {
+const Page: FC = () => {
   const isShow = useCookieModal();
   return (
     <React.Fragment>
@@ -39,4 +39,4 @@ const Layout: FC = () => {
   );
 };
 
-export default Layout;
+export default Page;

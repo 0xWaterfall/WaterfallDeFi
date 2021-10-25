@@ -1,6 +1,4 @@
-import { colorMode, useColorModeValue } from "hooks/useColorMode";
-
-const theme = {
+const theme = (colorMode: "dark" | "light") => ({
   fonts: {
     IBMPlexSans: "IBM Plex Sans"
   },
@@ -86,11 +84,15 @@ const theme = {
   footer: {
     background: "#030C1B"
   },
-  useColorModeValue,
-  colorMode
-};
+  colorMode,
+  useColorModeValue: (light?: string, dark?: string) => {
+    if (colorMode === "light" && light) return light;
+    if (colorMode === "dark" && dark) return dark;
+    return light;
+  }
+});
 
-export type ITheme = typeof theme;
+export type ITheme = ReturnType<typeof theme>;
 export default theme;
 
 export const COLORS = ["#FFB0E3", "#4A63B9", "#85C872", "#F7C05F", "#7A79FF", "#23B899"];

@@ -10,10 +10,11 @@ import { memo } from "react";
 
 const DatePickerWrapper = styled(AntdDatePicker)`
   &.ant-picker {
+    height: 48px;
     padding: 7px 16px;
-    border-radius: 4px;
+    border-radius: 8px;
     border-color: ${({ theme }) => theme.gray.normal2};
-    color: ${({ theme }) => theme.gray.normal7};
+    color: ${({ theme }) => theme.gray.normal85};
     box-shadow: none;
     background: transparent;
     :hover {
@@ -21,7 +22,8 @@ const DatePickerWrapper = styled(AntdDatePicker)`
       box-shadow: none;
     }
     input {
-      color: ${({ theme }) => theme.gray.normal7};
+      color: ${({ theme }) => theme.gray.normal85};
+      font-size: 16px;
     }
     .ant-picker-suffix {
       color: ${({ theme }) => theme.gray.normal5};

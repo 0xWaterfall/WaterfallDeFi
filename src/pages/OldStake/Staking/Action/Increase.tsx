@@ -5,7 +5,7 @@ import { Union } from "assets/images";
 import Button from "components/Button/Button";
 import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
-import SelectTimeLimit, { Block } from "components/SelectTimeLimit/SelectTimeLimit";
+import SelectTimeLimit from "components/SelectTimeLimit/SelectTimeLimit";
 import { NETWORK } from "config";
 import { VeWTFAddress, WTFAddress } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";

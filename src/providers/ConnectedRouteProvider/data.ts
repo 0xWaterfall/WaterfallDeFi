@@ -27,7 +27,7 @@ export const RouteComponents = [
   },
   {
     key: "Stake",
-    component: OldStake,
+    component: Stake,
     exact: true,
     path: "/stake"
   }

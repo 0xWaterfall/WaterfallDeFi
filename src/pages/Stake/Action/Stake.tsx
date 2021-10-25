@@ -34,25 +34,19 @@ const Label = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   p {
     color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-    font-size: 16px;
-    line-height: 125%;
-  }
-  span {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 125%;
-  }
-
-  div {
     font-size: 14px;
-    line-height: 18px;
+    line-height: 125%;
     display: grid;
     gap: 5px;
     grid-auto-flow: column;
     align-items: center;
+  }
+  span {
+    font-size: 16px;
+    line-height: 125%;
   }
 `;
 
@@ -61,29 +55,22 @@ const ButtonWrapper = styled(Button)`
   height: 56px;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 55px;
+  margin-top: 32px;
 `;
 
 const DatePickerWrapper = styled(DatePicker)`
   &.ant-picker {
     border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal2)};
-    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
     :hover {
       border-color: ${({ theme }) => theme.primary.deep};
     }
     input {
-      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
     }
     .ant-picker-suffix {
       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
     }
-  }
-`;
-
-const SelectTimeLimitWrapper = styled(SelectTimeLimit)`
-  div {
-    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-    border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal2)};
   }
 `;
 
@@ -94,6 +81,13 @@ const ValidateText = styled.div`
   color: ${({ theme }) => theme.tags.redText};
   margin-top: 4px;
   min-height: 15px;
+`;
+
+const MAX = styled.div`
+  font-size: 14px;
+  line-height: 125%;
+  color: ${({ theme }) => theme.primary.deep};
+  cursor: pointer;
 `;
 
 type TProps = WrappedComponentProps;
@@ -194,33 +188,35 @@ const Stake = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
       <Label>
-        <p>{intl.formatMessage({ defaultMessage: "WTF balance" })}</p>
-        <span>{wtfBalance} WTF</span>
+        <p>
+          {intl.formatMessage({ defaultMessage: "WTF balance" })}: <span>{wtfBalance}</span>
+        </p>
+        <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
       </Label>
 
       <StakeInput
         step={0.1}
         suffixText="WTF"
-        onMAX={handleMaxInput}
         value={balanceInput}
         onChange={handleInputChange}
         style={validateText ? { borderColor: tags.redText } : {}}
       />
       {validateText && <ValidateText>{validateText}</ValidateText>}
 
-      <Label css={{ margin: "15px 0 10px" }}>
+      <Label css={{ margin: "24px 0 10px" }}>
         <p>{intl.formatMessage({ defaultMessage: "Look for" })}</p>
+        <MAX>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
       </Label>
 
       <DatePickerWrapper
-        style={{ marginBottom: 8 }}
+        style={{ marginBottom: 16 }}
         value={datePickerValue as moment.Moment | undefined}
         onChange={(e) => {
           setDatePickerValue(e as Dayjs);
         }}
       />
 
-      <SelectTimeLimitWrapper
+      <SelectTimeLimit
         onSelected={(e) => {
           setSelectedValue(e);
           setDatePickerValue(undefined);
@@ -230,15 +226,15 @@ const Stake = memo<TProps>(({ intl }) => {
       />
 
       <Label>
-        <div>
+        <p>
           {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
-        </div>
+        </p>
         <span>--</span>
       </Label>
 
       <Label>
-        <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
+        <p>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</p>
         <span>--</span>
       </Label>
 

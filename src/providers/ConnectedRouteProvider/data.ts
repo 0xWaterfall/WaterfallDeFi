@@ -4,6 +4,7 @@ const Dashboard = loadable(() => import("../../pages/Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
 const PortfolioDetails = loadable(() => import("../../pages/PortfolioDetails/PortfolioDetails"));
 const Stake = loadable(() => import("../../pages/Stake/Stake"));
+const OldStake = loadable(() => import("../../pages/OldStake/Stake"));
 
 export const RouteComponents = [
   {
@@ -26,7 +27,7 @@ export const RouteComponents = [
   },
   {
     key: "Stake",
-    component: Stake,
+    component: OldStake,
     exact: true,
     path: "/stake"
   }

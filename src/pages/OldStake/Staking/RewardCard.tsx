@@ -6,11 +6,11 @@ import Button from "components/Button/Button";
 import useScrollTop from "hooks/useScrollTop";
 import React, { memo, useCallback, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { usePendingReward } from "../hooks/usePendingReward";
+import { usePendingReward } from "./../../Stake/hooks/usePendingReward";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { StakingConfig } from "types";
-import useClaimRewards from "../hooks/useClaimRewards";
+import useClaimRewards from "./../../Stake/hooks/useClaimRewards";
 import { successNotification } from "utils/notification";
 const Wrapper = styled.div`
   padding: 24px;

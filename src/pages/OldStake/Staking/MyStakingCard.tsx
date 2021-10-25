@@ -10,7 +10,6 @@ import { useTheme } from "@emotion/react";
 import dayjs from "dayjs";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import numeral from "numeral";
-import { useVeWTFBalance } from "../hooks/useVeWTFBalance";
 import { useParams } from "react-router";
 import Stakings from "config/staking";
 import { useEarningTokenTotalSupply } from "hooks/useStaking";

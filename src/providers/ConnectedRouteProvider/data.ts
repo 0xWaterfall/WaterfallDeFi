@@ -24,11 +24,11 @@ export const RouteComponents = [
     component: PortfolioDetails,
     exact: true,
     path: "/portfolio-details"
-  },
-  {
-    key: "Stake",
-    component: OldStake,
-    exact: true,
-    path: "/stake"
   }
+  // {
+  //   key: "Stake",
+  //   component: OldStake,
+  //   exact: true,
+  //   path: "/stake"
+  // }
 ];

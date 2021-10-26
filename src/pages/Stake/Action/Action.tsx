@@ -13,14 +13,13 @@ const Wrapper = styled.div`
   width: 500px;
   padding: 24px 32px;
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.header)};
-  box-shadow: 0px 8px 40px 0px rgba(0, 108, 253, 0.1);
+  box-shadow: ${({ theme }) => theme.useColorModeValue("0px 8px 40px 0px rgba(0, 108, 253, 0.1)", "none")};
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   position: relative;
   z-index: 1;
-  margin-bottom: 94px;
   @media screen and (max-width: 700px) {
     width: 100%;
   }

@@ -54,6 +54,7 @@ const theme = (colorMode: "dark" | "light") => ({
   },
   white: {
     normal: "#FFFFFF",
+    normal04: "rgba(255, 255, 255, .04)",
     normal08: "rgba(255, 255, 255, .08)",
     normal1: "rgba(255, 255, 255, .1)",
     normal2: "rgba(255, 255, 255, .2)",

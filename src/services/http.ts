@@ -26,6 +26,14 @@ export const getPrice = async () => {
   return new BigNumber(pancake?.data?.data?.price).toFixed(2);
 };
 
+export const getWTFSupply = async () => {
+  const supply = await axios.get("https://supply.waterfalldefi.org/");
+  if (supply.status === 200) {
+    return supply.data;
+  }
+  return;
+};
+
 export const getMarketCap = async () => {
   const coingecko = await axios.get(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&ids=binancecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false"

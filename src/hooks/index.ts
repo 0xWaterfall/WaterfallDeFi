@@ -91,6 +91,7 @@ export const useStrategyFarm = () => {
         const farm2 = await contractStrategy.farms(2);
         if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
         setResult(_result);
+        console.log(_result);
       } catch (e) {
         console.error(e);
       }
@@ -125,7 +126,7 @@ export const useTrancheSnapshot = (cycle: string | undefined) => {
 
   useEffect(() => {
     const getTrancheSnapshot = async () => {
-      if (!cycle) return;
+      if (!cycle || cycle === "0") return;
       cycle = (Number(cycle) - 1).toString();
       // const contractTrancheMaster = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
       // console.log(contractTrancheMaster);

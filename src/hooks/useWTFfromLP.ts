@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import useRefresh from "./useRefresh";
 import { getContract } from "hooks";
 import PancakeLPAbi from "config/abi/PancakeLP.json";
-import { NETWORK } from "config";
-import { PancakeLPAddress, WTFAddress } from "config/address";
+import { NETWORK, NETWORKS } from "config";
+import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD, WTFAddress } from "config/address";
 import { abi as WTFAbi } from "config/abi/WTF.json";
 import { BIG_TEN } from "utils/bigNumber";
+import { getWTFSupply } from "services/http";
 
 export const useWTFPriceLP = () => {
   const [price, setPrice] = useState("");
@@ -16,13 +17,27 @@ export const useWTFPriceLP = () => {
     const fetchPrice = async () => {
       const contractLP = getContract(PancakeLPAbi, PancakeLPAddress[NETWORK]);
       const reserves = await contractLP.getReserves();
-      const _price = (reserves[1] / reserves[0]).toFixed(2);
-      setPrice(_price);
+      let price = "0";
+      if (NETWORK !== NETWORKS.MAINNET) {
+        price = (reserves[1] / reserves[0]).toFixed(2);
+      }
 
-      //   const contractWTF = getContract(WTFAbi, WTFAddress[NETWORK]);
-      //   const totalSupply = await contractWTF.totalSupply();
+      //mainnet
+      if (NETWORK === NETWORKS.MAINNET) {
+        const contractLP_WBNBBUSD = getContract(PancakeLPAbi, PancakeLPAddress_WBNBBUSD[NETWORK]);
+        const reserves2 = await contractLP_WBNBBUSD.getReserves();
+        const _price = new BigNumber(reserves[1]?._hex).dividedBy(new BigNumber(reserves[0]?._hex));
+        const _price_WBNBBUSD = new BigNumber(reserves2[1]?._hex).dividedBy(new BigNumber(reserves2[0]?._hex));
+        price = _price.times(_price_WBNBBUSD).toFormat(2).toString();
+      }
 
-      //   setMarketCap(new BigNumber(totalSupply._hex).dividedBy(BIG_TEN.pow(18)).times(_price).toString());
+      setPrice(price);
+
+      const supply = await getWTFSupply();
+
+      // const contractWTF = getContract(WTFAbi, WTFAddress[NETWORK]);
+      // const totalSupply = await contractWTF.totalSupply();
+      setMarketCap(new BigNumber(supply).times(price).toFormat(0).toString());
     };
     fetchPrice();
   }, [NETWORK, slowRefresh]);

@@ -10,6 +10,26 @@ export const StrategyAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "f822451E1294Fb879826A8212763a9AccB833589",
   [NETWORKS.MAINNET]: "001F35695200585170d32842749CAAcdE4C0e102"
 };
+export const mBUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x001F35695200585170d32842749CAAcdE4C0e102"
+};
+export const sALPACAAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x7208e2643e84e94d6b0225233abf7bd357b494c5"
+};
+export const sVENUSAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x2d49da462ed54b6e7b80434b0a97064a5df69906"
+};
+export const sCREAMAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xa9ec446679331502ed80ca50b025f20319bd9645"
+};
 export const MasterChefAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "E6127428E7efBCC68d6C2e117C135386a7F11663",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",

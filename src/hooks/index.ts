@@ -4,7 +4,11 @@ import {
   WTFAddress,
   BUSDAddress,
   StrategyAddress,
-  MulticallAddress
+  MulticallAddress,
+  mBUSDAddress,
+  sALPACAAddress,
+  sCREAMAddress,
+  sVENUSAddress
 } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback, useRef } from "react";
@@ -23,6 +27,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
+import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
 import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
@@ -75,26 +80,59 @@ export const useStrategyFarm = () => {
 
   const getFarmResult = (shares: BigNumber, addr: string) => {
     return {
-      shares: new BigNumber(shares.toString()).dividedBy(BIG_TEN.pow(16)).toNumber(),
+      shares: new BigNumber(shares.toString()).dividedBy(BIG_TEN.pow(16)).toNumber().toFixed(0),
       farmName: farmsConfig[addr]
     };
   };
   useEffect(() => {
     const fetchFarms = async () => {
-      const contractStrategy = getContract(StrategyAbi, StrategyAddress[NETWORK]);
+      // console.log(StrategyAddress[NETWORK]);
+      if (!mBUSDAddress[NETWORK]) return;
+      const farms = [sALPACAAddress[NETWORK], sVENUSAddress[NETWORK], sCREAMAddress[NETWORK]];
+      const calls = [
+        {
+          address: sALPACAAddress[NETWORK],
+          name: "balanceOf",
+          params: [mBUSDAddress[NETWORK]]
+        },
+        {
+          address: sVENUSAddress[NETWORK],
+          name: "balanceOf",
+          params: [mBUSDAddress[NETWORK]]
+        },
+        {
+          address: sCREAMAddress[NETWORK],
+          name: "balanceOf",
+          params: [mBUSDAddress[NETWORK]]
+        }
+      ];
+
+      const result = await multicall(SingleStrategyTokenAbi, calls);
       const _result = [];
-      try {
-        const farm0 = await contractStrategy.farms(0);
-        if (farm0) _result.push(getFarmResult(farm0.shares, farm0.addr));
-        const farm1 = await contractStrategy.farms(1);
-        if (farm1) _result.push(getFarmResult(farm1.shares, farm1.addr));
-        const farm2 = await contractStrategy.farms(2);
-        if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
-        setResult(_result);
-        console.log(_result);
-      } catch (e) {
-        console.error(e);
+      let total = BIG_ZERO;
+      for (let i = 0; i < result.length; i++) {
+        const f = result[i];
+        total = new BigNumber(total).plus(new BigNumber(f[0]._hex));
       }
+      for (let i = 0; i < result.length; i++) {
+        const f = result[i];
+        const percentage = new BigNumber(f[0]._hex).dividedBy(new BigNumber(total)).times(BIG_TEN.pow(18));
+        if (f) _result.push(getFarmResult(percentage, farms[i]));
+      }
+      setResult(_result);
+
+      // try {
+      //   const farm0 = await contractStrategy.farms(0);
+      //   if (farm0) _result.push(getFarmResult(farm0.shares, farm0.addr));
+      //   const farm1 = await contractStrategy.farms(1);
+      //   if (farm1) _result.push(getFarmResult(farm1.shares, farm1.addr));
+      //   const farm2 = await contractStrategy.farms(2);
+      //   if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
+      //   setResult(_result);
+      //   console.log(_result);
+      // } catch (e) {
+      //   console.error(e);
+      // }
     };
 
     fetchFarms();

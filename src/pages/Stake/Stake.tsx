@@ -235,11 +235,14 @@ const Footer = styled.div`
       background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal04)};
     }
   }
+  @media screen and (max-width: 1000px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const VeWTF = styled.div`
   padding-left: 30px;
-
   p {
     font-weight: 500;
     font-size: 20px;
@@ -276,6 +279,9 @@ const WeeklyWrapper = styled.div`
   gap: 76px;
   grid-auto-flow: column;
   width: fit-content;
+  @media screen and (max-width: 560px) {
+    grid-auto-flow: row;
+  }
   & > div {
     p {
       font-size: 14px;
@@ -419,7 +425,7 @@ const Stake = memo<TProps>(({ intl }) => {
               </div>
             </WeeklyWrapper>
           </div>
-          {/* <LiquidfillChart /> */}
+          <LiquidfillChart />
         </Footer>
       </BodyWrapper>
     </Wrapper>

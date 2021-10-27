@@ -13,6 +13,9 @@ export const Group = styled(Radio.Group)`
     display: grid;
     gap: 20px;
     grid-auto-flow: column;
+    @media screen and (max-width: 560px) {
+      grid-template-rows: repeat(2, 1fr);
+    }
     .ant-radio-inner {
       border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
       background: transparent;

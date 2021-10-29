@@ -82,6 +82,7 @@ const Header = memo<TProps>(({ intl }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minWidth: 300,
           "@media screen and (max-width: 1024px)": {
             position: "static",
             transform: "translateX(0)"
@@ -90,10 +91,13 @@ const Header = memo<TProps>(({ intl }) => {
       >
         <WaterFallMountain
           css={{
-            transform: "translate(-20px,20px)"
+            transform: "translate(-10px,20px)"
           }}
         />
-        <div
+        <div css={{}}>
+          <Claim />
+        </div>
+        {/* <div
           css={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -106,7 +110,7 @@ const Header = memo<TProps>(({ intl }) => {
         >
           <Claim />
           <Airdrop />
-        </div>
+        </div> */}
       </div>
     </Wrapper>
   );

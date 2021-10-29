@@ -21,6 +21,7 @@ import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
 import { useWTFPrice } from "hooks/useSelectors";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import { useWTF } from "hooks";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -164,6 +165,8 @@ const TranchesCard = memo<TProps>(
     const trancheApr = tranche.apy;
     // const wtfPrice = useWTFPrice();
     const { price: wtfPrice } = useWTFPriceLP();
+    const { weekDistribution } = useWTF();
+    const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
 
     const wtfApr = data
       ? getWTFApr(
@@ -186,7 +189,7 @@ const TranchesCard = memo<TProps>(
             <CheckIcon css={{ color: selected ? primary.deep : gray.normal3 }} />
           </TrancheName>
           <Text2 color={Types[type].color}>
-            APR {trancheApr}% + {wtfApr}% WTF
+            APR {trancheApr}% <span css={{ visibility: isHide }}>+ {wtfApr}% WTF</span>
           </Text2>
           <Text3>{Types[type].riskText}</Text3>
           <Separator margin={15} />

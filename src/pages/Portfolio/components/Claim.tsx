@@ -26,6 +26,8 @@ const Label = styled.span`
 const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white, useColorModeValue, dark } = useTheme();
   const { weekDistribution } = useWTF();
+  const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
+
   return (
     <div
       css={{
@@ -38,6 +40,7 @@ const Claim = memo<TProps>(({ intl }) => {
         borderRadius: 8,
         position: "relative",
         zIndex: 1,
+        visibility: `${isHide}`,
         backgroundColor: useColorModeValue(white.normal, dark.block)
       }}
     >

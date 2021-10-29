@@ -18,6 +18,8 @@ import { formatAccountAddress } from "utils/formatAddress";
 import { setConnectWalletModalShow } from "store/showStatus";
 import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
+import { NETWORK, NETWORKS } from "config";
+import { NetworkStatus } from "@apollo/client";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -213,7 +215,7 @@ const Header = memo<TProps>(({ intl }) => {
     }
     return (
       <WalletWrapper>
-        <Network>BSC Testnet</Network>
+        <Network>{NETWORK === NETWORKS.MAINNET ? "BSC" : "BSC Testnet"}</Network>
         <Address>
           <span>{formatAccountAddress(account)}</span>
           <Wallet css={{ marginLeft: 10 }} />

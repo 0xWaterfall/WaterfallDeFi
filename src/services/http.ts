@@ -35,29 +35,37 @@ export const getWTFSupply = async () => {
   return;
 };
 
-export const getVenusAPY = async () => {
-  const venusFarmAddress = "0x95c78222b3d6e262426483d42cfa53685a67ab9d";
-  const url = "https://api.venus.io/api/vtoken?addresses=" + venusFarmAddress;
+export const getFarmsAPY = async () => {
+  const url = "https://supply.waterfalldefi.org/farms";
   const result = await axios.get(url);
   if (result.status === 200) {
-    return parseFloat(result?.data?.data?.markets[0].supplyApy) / 100;
+    return result.data;
   }
   return;
 };
-export const getCreamAPY = async () => {
-  const creamFarmAddress = "0x2Bc4eb013DDee29D37920938B96d353171289B7C";
-  const url = "https://api.cream.finance/api/v1/crtoken?comptroller=bsc";
-  const result = await axios.get(url);
-  if (result.status === 200) {
-    if (result.data.length > 0) {
-      const a = result.data.find((d: any) => {
-        return d.token_address == creamFarmAddress;
-      });
-      return parseFloat(a.supply_apy.value);
-    }
-  }
-  return;
-};
+// export const getVenusAPY = async () => {
+//   const venusFarmAddress = "0x95c78222b3d6e262426483d42cfa53685a67ab9d";
+//   const url = "https://api.venus.io/api/vtoken?addresses=" + venusFarmAddress;
+//   const result = await axios.get(url);
+//   if (result.status === 200) {
+//     return parseFloat(result?.data?.data?.markets[0].supplyApy) / 100;
+//   }
+//   return;
+// };
+// export const getCreamAPY = async () => {
+//   const creamFarmAddress = "0x2Bc4eb013DDee29D37920938B96d353171289B7C";
+//   const url = "https://api.cream.finance/api/v1/crtoken?comptroller=bsc";
+//   const result = await axios.get(url);
+//   if (result.status === 200) {
+//     if (result.data.length > 0) {
+//       const a = result.data.find((d: any) => {
+//         return d.token_address == creamFarmAddress;
+//       });
+//       return parseFloat(a.supply_apy.value);
+//     }
+//   }
+//   return;
+// };
 
 export const getMarketCap = async () => {
   const coingecko = await axios.get(

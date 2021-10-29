@@ -10,8 +10,9 @@ import multicall from "utils/multicall";
 import { formatAPY } from "utils/formatNumbers";
 import { useWTFPrice } from "hooks/useSelectors";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
-import { getCreamAPY, getVenusAPY } from "services/http";
+import { getFarmsAPY } from "services/http";
 import numeral from "numeral";
+import { lte } from "lodash";
 
 const initialState: Market[] = [];
 const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorTarget: BigNumber, decimals = 18) => {
@@ -68,20 +69,24 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "cycle"
           }
         ];
-        const venusAPY = await getVenusAPY();
-        const creamAPY = await getCreamAPY();
-        const apacaAPY = 0.136;
-
+        const farmsAPYResult = await getFarmsAPY();
+        console.log(farmsAPYResult);
+        // const venusAPY = await getVenusAPY();
+        // const creamAPY = await getCreamAPY();
+        // const apacaAPY = 0.136;
         let farmsAPY = 0;
-        if (venusAPY) {
-          farmsAPY += 0.3 * venusAPY;
+        if (farmsAPYResult) {
+          if (farmsAPYResult?.venus) {
+            farmsAPY += 0.3 * farmsAPYResult?.venus;
+          }
+          if (farmsAPYResult?.cream) {
+            farmsAPY += 0.3 * farmsAPYResult?.cream;
+          }
+          if (farmsAPYResult?.alpaca) {
+            farmsAPY += 0.4 * farmsAPYResult?.alpaca;
+          }
         }
-        if (creamAPY) {
-          farmsAPY += 0.3 * creamAPY;
-        }
-        if (apacaAPY) {
-          farmsAPY += 0.4 * apacaAPY;
-        }
+
         const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;

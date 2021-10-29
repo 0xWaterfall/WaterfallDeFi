@@ -5,7 +5,6 @@ import { BIG_TEN } from "./bigNumber";
 import moment from "moment";
 import dayjs from "dayjs";
 import { compose } from "redux";
-import { getVenusAPY } from "services/http";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";

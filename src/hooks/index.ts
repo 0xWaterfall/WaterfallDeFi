@@ -86,7 +86,6 @@ export const useStrategyFarm = () => {
   };
   useEffect(() => {
     const fetchFarms = async () => {
-      // console.log(StrategyAddress[NETWORK]);
       if (!mBUSDAddress[NETWORK]) return;
       const farms = [sALPACAAddress[NETWORK], sVENUSAddress[NETWORK], sCREAMAddress[NETWORK]];
       const calls = [

@@ -70,7 +70,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           }
         ];
         const farmsAPYResult = await getFarmsAPY();
-        console.log(farmsAPYResult);
         // const venusAPY = await getVenusAPY();
         // const creamAPY = await getCreamAPY();
         // const apacaAPY = 0.136;

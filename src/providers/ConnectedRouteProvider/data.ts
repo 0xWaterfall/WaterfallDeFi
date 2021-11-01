@@ -5,7 +5,7 @@ const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
 const PortfolioDetails = loadable(() => import("../../pages/PortfolioDetails/PortfolioDetails"));
 const Stake = loadable(() => import("../../pages/Stake/Stake"));
 const OldStake = loadable(() => import("../../pages/OldStake/Stake"));
-
+const CommingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
 export const RouteComponents = [
   {
     key: "Dashboard",
@@ -24,11 +24,11 @@ export const RouteComponents = [
     component: PortfolioDetails,
     exact: true,
     path: "/portfolio-details"
+  },
+  {
+    key: "Stake",
+    component: CommingSoon,
+    exact: true,
+    path: "/stake"
   }
-  // {
-  //   key: "Stake",
-  //   component: OldStake,
-  //   exact: true,
-  //   path: "/stake"
-  // }
 ];

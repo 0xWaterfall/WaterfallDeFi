@@ -8,8 +8,9 @@ import * as echarts from "echarts/core";
 import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-import { useStrategyFarm } from "hooks";
+// import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
+import { StrategyFarm } from "types";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -35,19 +36,21 @@ const WrappetContainer = styled.title`
   justify-content: center;
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  strategyFarms: StrategyFarm[];
+};
 
 let chart: echarts.ECharts;
 
-const PortfolioChart = memo<TProps>(({ intl }) => {
+const PortfolioChart = memo<TProps>(({ intl, strategyFarms }) => {
   const { white, gray, dark, colorMode } = useTheme();
 
-  const result = useStrategyFarm();
+  // const result = useStrategyFarm();
 
   const payload: any[] = [];
-  if (result && result.length > 0) {
-    result.map((r: any) => {
-      payload.push({ name: r?.farmName, value: r?.shares });
+  if (strategyFarms && strategyFarms.length > 0) {
+    strategyFarms.map((r: any) => {
+      payload.push({ name: r?.farmName, value: r?.shares * 100 });
     });
   }
 

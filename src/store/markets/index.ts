@@ -75,15 +75,20 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         // const apacaAPY = 0.136;
         let farmsAPY = 0;
         if (farmsAPYResult) {
-          if (farmsAPYResult?.venus) {
-            farmsAPY += 0.3 * farmsAPYResult?.venus;
+          for (let i = 0; i < marketData.strategyFarms.length; i++) {
+            const sf = marketData.strategyFarms[i];
+            if (!sf || !sf.shares || !farmsAPYResult[sf.apiKey]) continue;
+            farmsAPY += sf.shares * farmsAPYResult[sf.apiKey];
           }
-          if (farmsAPYResult?.cream) {
-            farmsAPY += 0.3 * farmsAPYResult?.cream;
-          }
-          if (farmsAPYResult?.alpaca) {
-            farmsAPY += 0.4 * farmsAPYResult?.alpaca;
-          }
+          // if (farmsAPYResult?.venus) {
+          //   farmsAPY += 0.3 * farmsAPYResult?.venus;
+          // }
+          // if (farmsAPYResult?.cream) {
+          //   farmsAPY += 0.3 * farmsAPYResult?.cream;
+          // }
+          // if (farmsAPYResult?.alpaca) {
+          //   farmsAPY += 0.4 * farmsAPYResult?.alpaca;
+          // }
         }
 
         const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);

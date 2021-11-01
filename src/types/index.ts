@@ -59,7 +59,14 @@ export interface Market {
   strategyAddress: string;
   strategyContract?: Contract;
   rewardPerBlock?: string;
+  strategyFarms: StrategyFarm[];
 }
+export type StrategyFarm = {
+  farmName: string;
+  shares: number;
+  sAddress: string;
+  apiKey: string;
+};
 
 export type TrancheCycle = {
   capital: string;

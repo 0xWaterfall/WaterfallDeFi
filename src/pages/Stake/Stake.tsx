@@ -3,12 +3,23 @@
 import styled from "@emotion/styled";
 import { Bulb, WaterFall, WTF, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
+import Stakings from "config/staking";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
+import { useHistory } from "react-router-dom";
+import { StakingConfig } from "types";
 import Action from "./Action/Action";
 import LiquidfillChart from "./LiquidfillChart";
-
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
+import { useStakingPool } from "hooks/useStaking";
+import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
+import { useBalance, useTotalSupply } from "hooks";
+import numeral from "numeral";
+import dayjs from "dayjs";
+import Countdown from "react-countdown";
+import { usePendingReward } from "./hooks/usePendingReward";
 const Wrapper = styled.div`
   max-width: 1072px;
   padding: 86px 24px 160px;
@@ -326,6 +337,25 @@ type TProps = WrappedComponentProps;
 
 const Stake = memo<TProps>(({ intl }) => {
   useScrollTop();
+
+  const { goBack } = useHistory();
+  const history = useHistory();
+  const { account } = useWeb3React<Web3Provider>();
+  const stakingConfig = Stakings[0];
+  if (!stakingConfig) {
+    history.push("/");
+  }
+  const { totalStaked, isPoolActive, totalLocked, userStaked } = useStakingPool(
+    stakingConfig?.rewardTokenAddress || "",
+    stakingConfig?.earningTokenAddress || "",
+    account
+  );
+
+  const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
+  const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
+  const { total: lockingWTF, expiryTimestamp, startTimestamp, fetchLockingWTF } = useGetLockingWTF(account);
+  const pendingWTFRewards = usePendingReward(stakingConfig.rewardTokenAddress, account);
+  // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
       <Unclaim>
@@ -352,18 +382,19 @@ const Stake = memo<TProps>(({ intl }) => {
         </APYCard>
 
         <Total>
-          <span>{intl.formatMessage({ defaultMessage: "Total locked WTF" })}: 16,784,611.32</span>
+          <span>
+            {intl.formatMessage({ defaultMessage: "Total locked WTF" })}: {totalLocked}
+          </span>
           <span>{intl.formatMessage({ defaultMessage: "Average lock duration" })}: 4.0 months</span>
         </Total>
 
         <Actions>
-          <Action />
-
+          <Action stakingConfig={stakingConfig} />
           <StakeInfo>
             <div>
               <p>{intl.formatMessage({ defaultMessage: "Daily WTF Reward" })}</p>
               <div>
-                <WTFToken /> <p>10</p>
+                <WTFToken /> <p>{pendingWTFRewards}</p>
               </div>
               <span>$ 10.12 (1 WTF= $ 1.1)</span>
               <Button type="primaryLine">{intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳</Button>
@@ -373,16 +404,40 @@ const Stake = memo<TProps>(({ intl }) => {
               <p>{intl.formatMessage({ defaultMessage: "Your info" })}</p>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your stake" })}:</span>
-                <span>1000 WTF</span>
+                <span>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"} VeWTF</span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your ratio" })}:</span>
-                <span>1000 WTF</span>
+                <span>
+                  {VeWTFTotalSupply &&
+                    VeWTFBalance &&
+                    numeral((parseFloat(VeWTFBalance) / parseFloat(VeWTFTotalSupply)) * 100).format("0,0.[0000]")}
+                  %
+                </span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Expire date" })}:</span>
-                <span>2021-10-10</span>
-                <span>2D 12:56:56</span>
+                <span>
+                  {expiryTimestamp &&
+                    expiryTimestamp !== "0" &&
+                    dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+                </span>
+                {expiryTimestamp && expiryTimestamp !== "0" && (
+                  <Countdown
+                    date={Number(expiryTimestamp) * 1000}
+                    renderer={({ days, hours, minutes, seconds, completed }) => {
+                      return (
+                        <span>
+                          {!completed && (
+                            <>
+                              {days}D {hours}H {minutes}M {seconds}S
+                            </>
+                          )}
+                        </span>
+                      );
+                    }}
+                  />
+                )}
               </section>
             </div>
           </StakeInfo>
@@ -392,7 +447,7 @@ const Stake = memo<TProps>(({ intl }) => {
           <div>
             <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your Ve-WTF" })}</p>
-              <p>0</p>
+              <p>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"}</p>
               <span>(1 ve-WTF= 0.25 WTF)</span>
               <div>
                 <Bulb />

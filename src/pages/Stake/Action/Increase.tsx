@@ -30,6 +30,7 @@ import { utils } from "ethers";
 import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
 import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
 import { start } from "repl";
+import { StakingConfig } from "types";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -111,9 +112,11 @@ const MAX = styled.div`
   cursor: pointer;
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  stakingConfig: StakingConfig;
+};
 
-const Increase = memo<TProps>(({ intl }) => {
+const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { tags } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
 
@@ -168,7 +171,6 @@ const Increase = memo<TProps>(({ intl }) => {
   const onIncreaseLockAmount = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
     if (Number(balanceInput) <= 0) return;
-
     setIncreaseLockAmountLoading(true);
     try {
       await increaseLockAmount(balanceInput);
@@ -320,12 +322,9 @@ const Increase = memo<TProps>(({ intl }) => {
       <Label css={{ margin: "15px 0 10px" }}>
         <p>
           {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;
-          {expiryTimestamp !== "0" &&
-            duration !== 0 &&
-            dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")}
-          {expiryTimestamp !== "0" &&
-            duration === 0 &&
-            dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+          {expiryTimestamp !== "0" && duration
+            ? dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")
+            : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
           {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
         <MAX>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
@@ -342,7 +341,6 @@ const Increase = memo<TProps>(({ intl }) => {
       <SelectTimeLimitWrapper
         onSelected={(e) => {
           setSelectedValue(e);
-          console.log(e);
           setDatePickerValue(undefined);
 
           if (locked) {

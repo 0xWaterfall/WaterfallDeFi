@@ -8,7 +8,6 @@ import { utils } from "ethers";
 const increaseAmount = async (contract: Contract, amount: string) => {
   //   const _amount = amount.toString();
   const _amount = utils.parseEther(amount.toString()).toString();
-  console.log(_amount);
   const tx = await contract.increaseAmount(_amount);
   const receipt = await tx.wait();
   return receipt.status;

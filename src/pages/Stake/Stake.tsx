@@ -20,6 +20,9 @@ import numeral from "numeral";
 import dayjs from "dayjs";
 import Countdown from "react-countdown";
 import { usePendingReward } from "./hooks/usePendingReward";
+import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import useClaimRewards from "./hooks/useClaimRewards";
+import { successNotification } from "utils/notification";
 const Wrapper = styled.div`
   max-width: 1072px;
   padding: 86px 24px 160px;
@@ -355,6 +358,27 @@ const Stake = memo<TProps>(({ intl }) => {
   const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
   const { total: lockingWTF, expiryTimestamp, startTimestamp, fetchLockingWTF } = useGetLockingWTF(account);
   const pendingWTFRewards = usePendingReward(stakingConfig.rewardTokenAddress, account);
+  const { price: wtfPrice } = useWTFPriceLP();
+  const { claimRewards } = useClaimRewards();
+  const [harvestLoading, setHarvestLoading] = useState(false);
+  const onHarvest = async () => {
+    setHarvestLoading(true);
+    try {
+      const result = await claimRewards();
+      // fetchBalance();
+      // setBalanceInput(0);
+      // fetchLockingWTF();
+      successNotification("Claim Reward Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setHarvestLoading(false);
+    }
+  };
+  const VeWTFRatio =
+    VeWTFTotalSupply && VeWTFBalance
+      ? numeral((parseFloat(VeWTFBalance) / parseFloat(VeWTFTotalSupply)) * 100).format("0,0.[0000]")
+      : "-";
   // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
@@ -392,28 +416,34 @@ const Stake = memo<TProps>(({ intl }) => {
           <Action stakingConfig={stakingConfig} />
           <StakeInfo>
             <div>
-              <p>{intl.formatMessage({ defaultMessage: "Daily WTF Reward" })}</p>
+              <p>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</p>
               <div>
                 <WTFToken /> <p>{pendingWTFRewards}</p>
               </div>
-              <span>$ 10.12 (1 WTF= $ 1.1)</span>
-              <Button type="primaryLine">{intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳</Button>
+              <span>
+                ${" "}
+                {pendingWTFRewards && wtfPrice
+                  ? numeral(
+                      parseFloat(pendingWTFRewards.replace(/,/g, "")) *
+                        parseFloat(wtfPrice.replace(/,/g, "").toString())
+                    ).format("0,0.[00]")
+                  : ""}{" "}
+                (1 WTF= $ {wtfPrice})
+              </span>
+              <Button type="primaryLine" onClick={onHarvest} loading={harvestLoading}>
+                {intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳
+              </Button>
             </div>
             <div />
             <div>
               <p>{intl.formatMessage({ defaultMessage: "Your info" })}</p>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your stake" })}:</span>
-                <span>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"} VeWTF</span>
+                <span>{lockingWTF ? numeral(lockingWTF).format("0,0.[0000]") : "-"} WTF</span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your ratio" })}:</span>
-                <span>
-                  {VeWTFTotalSupply &&
-                    VeWTFBalance &&
-                    numeral((parseFloat(VeWTFBalance) / parseFloat(VeWTFTotalSupply)) * 100).format("0,0.[0000]")}
-                  %
-                </span>
+                <span>%</span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Expire date" })}:</span>
@@ -480,7 +510,7 @@ const Stake = memo<TProps>(({ intl }) => {
               </div>
             </WeeklyWrapper>
           </div>
-          <LiquidfillChart />
+          <LiquidfillChart share={VeWTFRatio} />
         </Footer>
       </BodyWrapper>
     </Wrapper>

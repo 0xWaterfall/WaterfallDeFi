@@ -2,6 +2,7 @@ import { BigNumber } from "bignumber.js";
 import axios from "axios";
 import { I18N } from "config";
 import dayjs from "dayjs";
+import { sVENUSAddress } from "config/address";
 
 export const getI18nLanguages = async () => {
   const response = await fetch(`${I18N}languages.json`);
@@ -25,6 +26,46 @@ export const getPrice = async () => {
   );
   return new BigNumber(pancake?.data?.data?.price).toFixed(2);
 };
+
+export const getWTFSupply = async () => {
+  const supply = await axios.get("https://supply.waterfalldefi.org/");
+  if (supply.status === 200) {
+    return supply.data;
+  }
+  return;
+};
+
+export const getFarmsAPY = async () => {
+  const url = "https://supply.waterfalldefi.org/farms";
+  const result = await axios.get(url);
+  if (result.status === 200) {
+    return result.data;
+  }
+  return;
+};
+// export const getVenusAPY = async () => {
+//   const venusFarmAddress = "0x95c78222b3d6e262426483d42cfa53685a67ab9d";
+//   const url = "https://api.venus.io/api/vtoken?addresses=" + venusFarmAddress;
+//   const result = await axios.get(url);
+//   if (result.status === 200) {
+//     return parseFloat(result?.data?.data?.markets[0].supplyApy) / 100;
+//   }
+//   return;
+// };
+// export const getCreamAPY = async () => {
+//   const creamFarmAddress = "0x2Bc4eb013DDee29D37920938B96d353171289B7C";
+//   const url = "https://api.cream.finance/api/v1/crtoken?comptroller=bsc";
+//   const result = await axios.get(url);
+//   if (result.status === 200) {
+//     if (result.data.length > 0) {
+//       const a = result.data.find((d: any) => {
+//         return d.token_address == creamFarmAddress;
+//       });
+//       return parseFloat(a.supply_apy.value);
+//     }
+//   }
+//   return;
+// };
 
 export const getMarketCap = async () => {
   const coingecko = await axios.get(

@@ -54,11 +54,13 @@ const Block = styled.div`
   }
 `;
 
-type TProps = WrappedComponentProps;
+type TProps = WrappedComponentProps & {
+  share: string;
+};
 
 let chart: echarts.ECharts;
 
-const LiquidfillChart = memo<TProps>(({ intl }) => {
+const LiquidfillChart = memo<TProps>(({ intl, share }) => {
   const { colorMode } = useTheme();
 
   const options = useMemo(() => {
@@ -121,7 +123,7 @@ const LiquidfillChart = memo<TProps>(({ intl }) => {
             <Union />
           </Tooltip>
         </div>
-        <p css={{ marginBottom: 5 }}>0%</p>
+        <p css={{ marginBottom: 5 }}>{share}%</p>
         <div>{intl.formatMessage({ defaultMessage: "Your Share" })}</div>
       </Block>
     </Wrapper>

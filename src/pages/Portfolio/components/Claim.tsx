@@ -26,6 +26,8 @@ const Label = styled.span`
 const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white, useColorModeValue, dark } = useTheme();
   const { weekDistribution } = useWTF();
+  const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
+
   return (
     <div
       css={{
@@ -37,7 +39,7 @@ const Claim = memo<TProps>(({ intl }) => {
         border: `2px solid ${primary.deep2}`,
         borderRadius: 8,
         position: "relative",
-        zIndex: 1,
+        zIndex: 1, // visibility: `${isHide}`,
         backgroundColor: useColorModeValue(white.normal, dark.block)
       }}
     >
@@ -78,12 +80,14 @@ const Claim = memo<TProps>(({ intl }) => {
         css={{
           fontSize: 20,
           fontWeight: 600,
+          textAlign: "center",
           "@media screen and (max-width: 678px)": {
             fontSize: 12
           }
         }}
       >
-        {formatNumberSeparator(weekDistribution.toString())} WTF
+        👀
+        {/*  {formatNumberSeparator(weekDistribution.toString())} WTF */}
       </div>
     </div>
   );

@@ -136,11 +136,11 @@ const DashboardCard = memo<TProps>(({ intl }) => {
       <Content>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "WTF Price" })}</Title>
-          <Value>$ {price ? numeral(price).format("0,0.00") : "-"}</Value>
+          <Value>$ {price ? numeral(price).format("0,0.[00]") : "-"}</Value>
         </Block>
         <Block>
           <Title>{intl.formatMessage({ defaultMessage: "Market Cap" })}</Title>
-          <Value>$ -{/* {numeral().format("0,0.00")} */}</Value>
+          <Value>$ {marketCap ? numeral(marketCap).format("0,0") : "-"}</Value>
         </Block>
         <Block>
           <Title />

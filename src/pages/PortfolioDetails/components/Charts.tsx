@@ -243,7 +243,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
         </section>
       </RecordCard>
       <Block>
-        <PortfolioChart />
+        <PortfolioChart strategyFarms={data.strategyFarms} />
       </Block>
       <Block>
         <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />

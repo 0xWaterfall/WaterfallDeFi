@@ -10,6 +10,9 @@ import multicall from "utils/multicall";
 import { formatAPY } from "utils/formatNumbers";
 import { useWTFPrice } from "hooks/useSelectors";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
+import { getFarmsAPY } from "services/http";
+import numeral from "numeral";
+import { lte } from "lodash";
 
 const initialState: Market[] = [];
 const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorTarget: BigNumber, decimals = 18) => {
@@ -22,7 +25,7 @@ const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorT
     totalTarget = totalTarget.minus(_apy.times(_target));
   });
   totalTarget = totalTarget.dividedBy(juniorTVL);
-  const result = totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString();
+  const result = numeral(totalTarget.minus(new BigNumber(1)).times(new BigNumber(100)).toString()).format("0,0.[00]");
   return result;
 };
 export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("markets/getMarket", async (payload) => {
@@ -66,12 +69,36 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "cycle"
           }
         ];
+        const farmsAPYResult = await getFarmsAPY();
+        // const venusAPY = await getVenusAPY();
+        // const creamAPY = await getCreamAPY();
+        // const apacaAPY = 0.136;
+        let farmsAPY = 0;
+        if (farmsAPYResult) {
+          for (let i = 0; i < marketData.strategyFarms.length; i++) {
+            const sf = marketData.strategyFarms[i];
+            if (!sf || !sf.shares || !farmsAPYResult[sf.apiKey]) continue;
+            farmsAPY += sf.shares * farmsAPYResult[sf.apiKey];
+          }
+          // if (farmsAPYResult?.venus) {
+          //   farmsAPY += 0.3 * farmsAPYResult?.venus;
+          // }
+          // if (farmsAPYResult?.cream) {
+          //   farmsAPY += 0.3 * farmsAPYResult?.cream;
+          // }
+          // if (farmsAPYResult?.alpaca) {
+          //   farmsAPY += 0.4 * farmsAPYResult?.alpaca;
+          // }
+        }
+
         const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;
         let totalTarget = BIG_ZERO;
-        let expectedAPY = new BigNumber("210000000000000000").dividedBy(BIG_TEN.pow(18));
+        // let expectedAPY = new BigNumber("210000000000000000").dividedBy(BIG_TEN.pow(18));
+        let expectedAPY = new BigNumber(farmsAPY);
+
         expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
         _tranches.map((_t, _i) => {

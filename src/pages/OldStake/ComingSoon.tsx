@@ -147,10 +147,25 @@ const CommingSoon = memo<TProps>(({ intl }) => {
           <Description>
             {intl.formatMessage({ defaultMessage: "Please try to put WTF on pancakeswap to earn liquidity income!" })}
           </Description>
-          <ButtonWrapper type="primary">
-            <Pancake css={{ marginRight: 4 }} />
-            <span css={{ marginRight: 6 }}>pancakeswap</span>
-            <ArrowRight />
+          <ButtonWrapper
+            type="primary"
+            href="https://pancakeswap.finance/add/0x2fA0cac2c75Efb50382B5091C6494194eAcF65B0/BNB"
+            target="_blank"
+          >
+            {/* <Pancake css={{ marginRight: 4 }} /> */}
+
+            {/* <span css={{ marginRight: 6 }}>pancakeswap</span>
+            <ArrowRight /> */}
+            <div
+              style={{
+                backgroundImage: `url(/coins/PANCAKE.png)`,
+                width: "150px",
+                height: "60px",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center"
+              }}
+            />
           </ButtonWrapper>
         </IndexWrapper>
       </CardWrapper>

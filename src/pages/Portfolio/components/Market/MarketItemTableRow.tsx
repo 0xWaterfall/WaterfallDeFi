@@ -23,7 +23,7 @@ import Tag from "components/Tag/Tag";
 import { useHistory } from "react-router-dom";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils";
-import { useMarket } from "hooks";
+import { useMarket, useWTF } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
 import _ from "lodash";
@@ -101,6 +101,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { warn, green, primary, gray, useColorModeValue, white } = useTheme();
   const { push } = useHistory();
   const dispatch = useDispatch();
+  const { weekDistribution } = useWTF();
+  const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
+
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
   const navigateMarketDetail = () => {
@@ -128,7 +131,8 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
-                <span>
+
+                <span css={{ visibility: isHide }}>
                   <div>
                     <WTFToken />
                   </div>

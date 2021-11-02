@@ -1,4 +1,13 @@
-import { TranchesAddress, MasterChefAddress, BUSDAddress, WTFAddress, StrategyAddress } from "./address";
+import {
+  TranchesAddress,
+  MasterChefAddress,
+  BUSDAddress,
+  WTFAddress,
+  StrategyAddress,
+  sCREAMAddress,
+  sVENUSAddress,
+  sALPACAAddress
+} from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
@@ -26,6 +35,26 @@ export const MarketList: Market[] = [
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAbi: WTFAbi,
     strategyAddress: StrategyAddress[NETWORK],
-    strategyAbi: StrategyAbi
+    strategyAbi: StrategyAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.4,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Cream BUSD",
+        shares: 0.3,
+        sAddress: sCREAMAddress[NETWORK],
+        apiKey: "cream"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.3,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ]
   }
 ];

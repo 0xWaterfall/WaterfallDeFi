@@ -84,6 +84,11 @@ const RecordCard = styled.div`
         color: ${({ theme }) => theme.primary.deep};
         font-size: 20px;
       }
+
+      :nth-of-type(3) {
+        color: ${({ theme }) => theme.primary.deep};
+        font-size: 12px;
+      }
     }
   }
 `;

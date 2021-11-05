@@ -21,11 +21,8 @@ export const formatBalance = (num: string | undefined, decimals = 18) => {
 };
 export const formatDisplayTVL = (num: string | undefined, decimals = 18) => {
   if (!num) return "-";
-  return new BigNumber(num)
-    .dividedBy(BIG_TEN.pow(decimals))
-    .toFormat(0)
-    .toString()
-    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return numeral(new BigNumber(num).dividedBy(BIG_TEN.pow(decimals)).toFormat(0).toString()).format("0,0");
+  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 export const formatTVL = (num: string | undefined, decimals = 18) => {
   if (!num) return "- -";
@@ -33,11 +30,8 @@ export const formatTVL = (num: string | undefined, decimals = 18) => {
 };
 export const formatNumberDisplay = (num: string | undefined, decimals = 18) => {
   if (!num) return "-";
-  return new BigNumber(num)
-    .dividedBy(BIG_TEN.pow(decimals))
-    .toFormat(4)
-    .toString()
-    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return numeral(new BigNumber(num).dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format("0,0.[0000]");
+  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 export const formatNumberWithDecimalsDisplay = (num: string | undefined, decimals = 18) => {
   if (!num) return "-";
@@ -51,7 +45,7 @@ export const formatNumberWithDecimalsDisplay = (num: string | undefined, decimal
 };
 export const formatNumberSeparator = (num: string) => {
   // return num.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-  return num.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return numeral(num).format("0,0.[0000]");
 };
 export const formatTimestamp = (num: string | number) => {
   const format1 = "YYYY/MM/DD HH:mm:ss";
@@ -121,23 +115,18 @@ export const getInterest = (
         ? new BigNumber(tranches[_i].apy).dividedBy(BIG_TEN.pow(decimals))
         : new BigNumber(getJuniorAPY(tranches, true)).dividedBy(100);
     const _principal = new BigNumber(position[_i]?.[1].hex);
-    const _interest = _apy
-      .times(_principal)
-      .times(_timePeriod)
-      .dividedBy(BIG_TEN.pow(18))
-      .toFormat(0)
-      .toString()
-      .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    const _interest = _apy.times(_principal).times(_timePeriod).dividedBy(BIG_TEN.pow(18)).toFormat(0).toString();
+    // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     const _principalAndInterest = _principal
       .times(_apy)
       .times(_timePeriod)
       .plus(_principal)
       .dividedBy(BIG_TEN.pow(18))
       .toFormat(0)
-      .toString()
-      .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    interests.push(_interest);
-    principalAndInterests.push(_principalAndInterest);
+      .toString();
+    // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    interests.push(numeral(_interest).format("0,0.[0000]"));
+    principalAndInterests.push(numeral(_principalAndInterest).format("0,0.[0000]"));
   });
   return { interests, principalAndInterests };
 };
@@ -189,10 +178,8 @@ export const getRemaining = (target: string | undefined, principal: string | und
 
   const result = _target.minus(_principal);
 
-  return result
-    .toFormat(4)
-    .toString()
-    .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
+  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 export const compareNum = (num1: string | number | undefined, num2: string | undefined, largerOnly = false) => {
   if (num1 === undefined) return;

@@ -5,6 +5,7 @@ import { BIG_TEN } from "./bigNumber";
 import moment from "moment";
 import dayjs from "dayjs";
 import { compose } from "redux";
+import numeral from "numeral";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
@@ -99,7 +100,7 @@ export const getPortfolioTotalTarget = (tranches: Tranche[]) => {
 export const getLockupPeriod = (duration: string) => {
   const lockupPeriod = Number(duration) / 86400;
   //for testing
-  return lockupPeriod > 1 ? lockupPeriod.toFixed(1) + " Days" : Number(duration) / 60 + " Mins";
+  return lockupPeriod >= 1 ? numeral(lockupPeriod).format("0.[0]") + " Days" : Number(duration) / 60 + " Mins";
 };
 
 export const getInterest = (

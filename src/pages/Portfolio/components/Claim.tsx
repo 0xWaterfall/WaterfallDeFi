@@ -57,6 +57,11 @@ const Claim = memo<TProps>(({ intl }) => {
               <br />
               <p>
                 {intl.formatMessage({
+                  defaultMessage: "Details will be revealed soon."
+                })}
+              </p>
+              {/* <p>
+                {intl.formatMessage({
                   defaultMessage: "• Senior: 25% of total WTF"
                 })}
               </p>
@@ -69,7 +74,7 @@ const Claim = memo<TProps>(({ intl }) => {
                 {intl.formatMessage({
                   defaultMessage: "• Junior: 40% of total WTF"
                 })}
-              </p>
+              </p> */}
             </React.Fragment>
           }
         >

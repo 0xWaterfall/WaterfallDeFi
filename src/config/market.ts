@@ -43,15 +43,15 @@ export const MarketList: Market[] = [
         sAddress: sALPACAAddress[NETWORK],
         apiKey: "alpaca"
       },
-      {
-        farmName: "Cream BUSD",
-        shares: 0.2,
-        sAddress: sCREAMAddress[NETWORK],
-        apiKey: "cream"
-      },
+      // {
+      //   farmName: "Cream BUSD",
+      //   shares: 0.2,
+      //   sAddress: sCREAMAddress[NETWORK],
+      //   apiKey: "cream"
+      // },
       {
         farmName: "Venus BUSD",
-        shares: 0.3,
+        shares: 0.5,
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }

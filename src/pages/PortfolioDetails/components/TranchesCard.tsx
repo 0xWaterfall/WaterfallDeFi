@@ -195,7 +195,7 @@ const TranchesCard = memo<TProps>(
           <Separator margin={15} />
           <StatusDiv>
             <Text3>
-              TVL: {parseFloat(formatNumberSeparator(formatTVL(tranche.principal)))} {assets}
+              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
             </Text3>
             <Text4>
               Remaining: {getRemaining(tranche?.target, tranche?.principal)} {assets}

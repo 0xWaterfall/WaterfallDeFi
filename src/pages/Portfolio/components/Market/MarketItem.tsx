@@ -19,7 +19,7 @@ import {
   getLockupPeriod,
   getWTFApr
 } from "utils/formatNumbers";
-import { useMarket } from "hooks";
+import { useMarket, useWTF } from "hooks";
 import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
@@ -131,6 +131,9 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
   const [marketData, setMarketData] = useState<Market>(data);
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
+
+  const { weekDistribution } = useWTF();
+  const isHide = weekDistribution.toString() !== "0" ? false : true;
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const _md = await useMarket({ ...data });
@@ -182,19 +185,21 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
-                <span>
-                  <div>
-                    <WTFToken />
-                  </div>
-                  {getWTFApr(
-                    formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
-                    marketData?.tranches[_i],
-                    marketData.duration,
-                    marketData.rewardPerBlock,
-                    wtfPrice
-                  )}
-                  {" %"}
-                </span>
+                {!isHide && (
+                  <span>
+                    <div>
+                      <WTFToken />
+                    </div>
+                    {getWTFApr(
+                      formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
+                      marketData?.tranches[_i],
+                      marketData.duration,
+                      marketData.rewardPerBlock,
+                      wtfPrice
+                    )}
+                    {" %"}
+                  </span>
+                )}
               </APYStyled2>
               //{/* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */}
               // </div>

@@ -306,7 +306,7 @@ const ApproveCard = memo<TProps>(
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
           <div>
-            {parseFloat(formatNumberSeparator(remaining))} {assets}
+            {formatNumberSeparator(remaining)} {assets}
           </div>
         </RowDiv>
         <Separator />

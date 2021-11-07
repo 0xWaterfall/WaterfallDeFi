@@ -195,10 +195,10 @@ const TranchesCard = memo<TProps>(
           <Separator margin={15} />
           <StatusDiv>
             <Text3>
-              TVL: {parseFloat(formatNumberSeparator(formatTVL(tranche.principal)))} {assets}
+              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
             </Text3>
             <Text4>
-              Remaining:{parseFloat(getRemaining(tranche?.target, tranche?.principal))} {assets}
+              Remaining: {getRemaining(tranche?.target, tranche?.principal)} {assets}
             </Text4>
           </StatusDiv>
           <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />

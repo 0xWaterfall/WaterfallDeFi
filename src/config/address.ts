@@ -3,7 +3,8 @@ import { NETWORKS } from "config";
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
-  [NETWORKS.MAINNET]: "8060a28e41275a3181e8f96ab8dc65ebe8e119d7"
+  [NETWORKS.MAINNET]: "6b032B5c1E69f581F057495A94b7dc3d70713d77"
+  // [NETWORKS.MAINNET]: "8060a28e41275a3181e8f96ab8dc65ebe8e119d7"
 };
 export const StrategyAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "8293d06165c79eb024A975d3CFFB1b74250c6B8c",
@@ -13,7 +14,8 @@ export const StrategyAddress: { [network: string]: string } = {
 export const mBUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x001F35695200585170d32842749CAAcdE4C0e102"
+  // [NETWORKS.MAINNET]: "0x001F35695200585170d32842749CAAcdE4C0e102"
+  [NETWORKS.MAINNET]: "0x7adCE471f812FB1c5E063B43d446a31333Ab3E41"
 };
 export const sALPACAAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
@@ -33,7 +35,8 @@ export const sCREAMAddress: { [network: string]: string } = {
 export const MasterChefAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "E6127428E7efBCC68d6C2e117C135386a7F11663",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
-  [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
+  // [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
+  [NETWORKS.MAINNET]: "0b3f6AF28ecc67EF41767348083b6D9111De0118"
 };
 export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "9Ad6a4A86CAE27024F693C933488070a70b56f5E",

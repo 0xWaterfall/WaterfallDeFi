@@ -19,7 +19,7 @@ const client = new ApolloClient({
   // uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.9",
   // uri: "https://subgraph-test.icarus.finance/subgraphs/name/ica/waterfall-subgraph",
   // uri: "https://api.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph",
-  uri: "https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph/graphql",
+  uri: "https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph",
   cache: new InMemoryCache()
 });
 

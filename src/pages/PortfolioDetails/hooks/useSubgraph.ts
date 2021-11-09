@@ -81,6 +81,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       userInvests: _userInvests,
       trancheCycles: _trancheCycles
     };
+  console.log(data);
   const { trancheCycles, tranches, userInvests } = data;
   if (trancheCycles) {
     for (let i = 0; i < trancheCycles.length; i++) {

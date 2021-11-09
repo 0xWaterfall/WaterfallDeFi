@@ -11,6 +11,8 @@ import { Union } from "assets/images";
 import styled from "@emotion/styled";
 import numeral from "numeral";
 import { formatNumberDisplay } from "utils/formatNumbers";
+import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
+import { successNotification } from "utils/notification";
 
 const Wrapper = styled.div`
   padding: 24px 32px;
@@ -95,14 +97,15 @@ const Prompt = styled.div`
 type TProps = WrappedComponentProps & {
   totalAmount: string;
   assets: string;
-  redeemLoading?: boolean;
-  redeemDirect: (i: number) => Promise<void>;
+  // redeemLoading?: boolean;
+  // redeemDirect: (i: number) => Promise<void>;
   isCurrentCycle: boolean;
   isPending: boolean;
   isActive: boolean;
   currentTranche: number;
   tranchesPendingReward: any;
   fee: string;
+  trancheMasterAddress: string;
 };
 
 const SparePositionFold = memo<TProps>(
@@ -110,16 +113,36 @@ const SparePositionFold = memo<TProps>(
     intl,
     totalAmount,
     assets,
-    redeemLoading,
-    redeemDirect,
+    // redeemLoading,
+    // redeemDirect,
     isCurrentCycle,
     currentTranche,
     isPending,
     isActive,
     tranchesPendingReward,
-    fee
+    fee,
+    trancheMasterAddress
   }) => {
     const { gray, primary, shadow, linearGradient, white, useColorModeValue } = useTheme();
+
+    const [redeemLoading, setRedeemLoading] = useState(false);
+    const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
+    const redeemDirect = async (i: number) => {
+      setRedeemLoading(true);
+      try {
+        await onRedeemDirect(i);
+        successNotification("Redeem Success", "");
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setRedeemLoading(false);
+      }
+    };
+    useEffect(() => {
+      return () => {
+        console.log("clean");
+      };
+    }, []);
     return (
       <Wrapper>
         <LinearGradientWrapper />
@@ -164,6 +187,9 @@ const SparePositionFold = memo<TProps>(
                   {intl.formatMessage({ defaultMessage: "Redeem" })}
                 </ButtonWrapper>
               )}
+              <ButtonWrapper type="primary" onClick={() => redeemDirect(currentTranche)} loading={redeemLoading}>
+                {intl.formatMessage({ defaultMessage: "Redeem" })}
+              </ButtonWrapper>
               <ButtonWrapper type="primary" style={{ visibility: "hidden" }}>
                 {intl.formatMessage({ defaultMessage: "Re-deposit" })}
               </ButtonWrapper>

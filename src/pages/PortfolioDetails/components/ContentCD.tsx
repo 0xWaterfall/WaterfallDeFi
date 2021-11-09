@@ -3,7 +3,7 @@
 import Tabs, { TabPane } from "components/Tabs/Tabs";
 import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import MyPositions from "./MyPositions";
+// import MyPositions from "./MyPositions";
 import Deposit from "./Deposit";
 import { Market } from "types";
 import SparePositions from "pages/SparePositions";

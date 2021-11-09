@@ -33,8 +33,8 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance } from "hooks";
-import { useTrancheBalance } from "hooks/useSelectors";
+import { useBalance, useTrancheBalance } from "hooks";
+// import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
 const RowDiv = styled.div`
@@ -146,11 +146,11 @@ const ApproveCard = memo<TProps>(
     const { account } = useWeb3React<Web3Provider>();
     const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
-    const { onInvestDirect } = useInvestDirect();
-    const { onInvest } = useInvest();
+    const { onInvestDirect } = useInvestDirect(data.address);
+    const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
-    const { balance: balanceRe } = useTrancheBalance();
+    const { balance: balanceRe } = useTrancheBalance(data.address);
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
     const notes = [

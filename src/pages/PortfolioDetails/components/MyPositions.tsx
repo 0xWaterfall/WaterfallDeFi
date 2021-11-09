@@ -79,7 +79,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const dispatch = useAppDispatch();
   const market = useSelectedMarket();
   const position = usePosition();
-  const { onRedeemDirect } = useRedeemDirect();
+  // const { onRedeemDirect } = useRedeemDirect("");
   const { tranchesPendingReward } = usePendingWTFReward();
   const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
   // const { loading, error, data } = useHistoryQuery(account);
@@ -109,7 +109,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const redeemDirect = async (i: number) => {
     setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: true }));
     try {
-      await onRedeemDirect(i);
+      // await onRedeemDirect(i);
       successNotification("Redeem Success", "");
     } catch (e) {
       console.error(e);

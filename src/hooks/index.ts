@@ -33,6 +33,7 @@ import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
 import numeral from "numeral";
+import { useTrancheMasterContract } from "./useContract";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -139,24 +140,42 @@ export const useMarket = async (marketData: Market) => {
 
 //   return result;
 // };
-export const useTrancheBalance = () => {
-  const [balance, setBalance] = useState(BIG_ZERO);
-  const [invested, setInvested] = useState(BIG_ZERO);
+export const useTrancheBalance = (trancheMasterAddress: string) => {
+  // const [balance, setBalance] = useState(BIG_ZERO);
+  // const [invested, setInvested] = useState(BIG_ZERO);
+  const [result, setResult] = useState({
+    balance: "",
+    invested: ""
+  });
   const { account } = useWeb3React<Web3Provider>();
+
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useTrancheMasterContract(trancheMasterAddress);
 
   useEffect(() => {
     const fetchBalance = async () => {
-      if (!account) return;
-      const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
-      const result = await contractMasterChef.balanceOf(account);
-      setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
-      setInvested(result.invested);
+      const result = await trancheMasterContract.balanceOf(account);
+      setResult({
+        balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
+        invested: result.invested.toString()
+      });
     };
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
 
-    fetchBalance();
-  }, [account]);
+  // useEffect(() => {
+  //   const fetchBalance = async () => {
+  //     if (!account) return;
+  //     const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
+  //     const result = await contractMasterChef.balanceOf(account);
+  //     setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
+  //     setInvested(result.invested);
+  //   };
 
-  return { balance, invested };
+  //   fetchBalance();
+  // }, [account]);
+
+  return result;
 };
 export const useTrancheSnapshot = (cycle: string | undefined) => {
   const [trancheSnapshot, setTrancheSnapshot] = useState([]);

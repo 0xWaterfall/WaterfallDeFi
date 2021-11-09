@@ -91,8 +91,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [activedTab, setActivedTab] = useState<IType>("ALL");
   const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
-  const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
-  const { onRedeemDirect } = useRedeemDirect();
+  // const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
+  // const { onRedeemDirect } = useRedeemDirect();
 
   const { width } = useSize(document.body);
   const { account } = useWeb3React<Web3Provider>();
@@ -156,17 +156,17 @@ const SparePositions = memo<TProps>(({ intl }) => {
     setSelectedStatus(status);
     console.log(status);
   };
-  const redeemDirect = async (i: number) => {
-    setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: true }));
-    try {
-      await onRedeemDirect(i);
-      successNotification("Redeem Success", "");
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: false }));
-    }
-  };
+  // const redeemDirect = async (i: number) => {
+  //   setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: true }));
+  //   try {
+  //     await onRedeemDirect(market, i);
+  //     successNotification("Redeem Success", "");
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: false }));
+  //   }
+  // };
   const payload = useMemo(() => {
     return userInvests?.filter((_userInvest: any) => {
       if (!trancheCycles) return false;
@@ -242,8 +242,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
                   userInvest={_userInvest}
                   market={market}
                   trancheCycle={trancheCycle}
-                  redeemDirect={redeemDirect}
-                  redeemLoading={redeemLoading[_idx] || false}
+                  // redeemDirect={redeemDirect}
+                  // redeemLoading={redeemLoading[_idx] || false}
                 />
               );
             })}

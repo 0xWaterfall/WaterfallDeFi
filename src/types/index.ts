@@ -55,9 +55,9 @@ export interface Market {
   depositAssetAddress: string;
   depositAssetAbi: any;
   depositAssetContract?: Contract;
-  strategyAbi: any;
-  strategyAddress: string;
-  strategyContract?: Contract;
+  // strategyAbi: any;
+  // strategyAddress: string;
+  // strategyContract?: Contract;
   rewardPerBlock?: string;
   strategyFarms: StrategyFarm[];
 }

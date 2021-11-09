@@ -9,14 +9,14 @@ import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
 import { useMemo } from "react";
 import { NETWORK } from "config";
 
-export const useMasterchefContract = () => {
+export const useMasterchefContract = (masterChefAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(MasterChefAbi, MasterChefAddress[NETWORK], signer), [signer]);
+  return useMemo(() => getContract(MasterChefAbi, masterChefAddress, signer), [signer]);
 };
 
-export const useTrancheMasterContract = () => {
+export const useTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(TrancheMasterAbi, TranchesAddress[NETWORK], signer), [signer]);
+  return useMemo(() => getContract(TrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
 
 export const useERC20Contract = (address: string) => {

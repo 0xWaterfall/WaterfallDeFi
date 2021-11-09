@@ -53,10 +53,10 @@ const withdraw = async (trancheContract: Contract, amount: string, dispatch: Dis
   return receipt.status;
 };
 
-const useWithdraw = () => {
+const useWithdraw = (trancheMasterAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const trancheContract = useTrancheMasterContract();
+  const trancheContract = useTrancheMasterContract(trancheMasterAddress);
   const market = useSelectedMarket();
   const handleWithdraw = useCallback(
     async (amount: string) => {

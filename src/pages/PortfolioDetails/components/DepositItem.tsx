@@ -38,7 +38,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
   const { balance } = useBalance(data.depositAssetAddress);
-  const { balance: balanceRe } = useTrancheBalance();
+  const { balance: balanceRe } = useTrancheBalance(data.address);
   return (
     <div
       css={{

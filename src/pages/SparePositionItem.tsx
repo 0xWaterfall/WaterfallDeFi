@@ -141,11 +141,11 @@ type TProps = WrappedComponentProps & {
   userInvest: UserInvest;
   market: Market;
   trancheCycle: TrancheCycle;
-  redeemDirect: (i: number) => Promise<void>;
-  redeemLoading: boolean;
+  // redeemDirect: (i: number) => Promise<void>;
+  // redeemLoading: boolean;
 };
 
-const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle, redeemLoading, redeemDirect }) => {
+const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle }) => {
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
@@ -260,13 +260,14 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           totalAmount={totalAmount}
           assets={market?.assets}
           isCurrentCycle={isCurrentCycle}
-          redeemDirect={redeemDirect}
-          redeemLoading={redeemLoading}
+          // redeemDirect={redeemDirect}
+          // redeemLoading={redeemLoading}
           currentTranche={userInvest.tranche}
           isPending={trancheCycle?.state === 0}
           isActive={trancheCycle?.state === 1}
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}
+          trancheMasterAddress={market.address}
         />
       )}
     </Wrapper>

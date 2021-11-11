@@ -28,18 +28,46 @@ export const getPrice = async () => {
 };
 
 export const getWTFSupply = async () => {
-  const supply = await axios.get("https://supply.waterfalldefi.org/");
-  if (supply.status === 200) {
-    return supply.data;
+  try {
+    const supply = await axios.get("https://supply.waterfalldefi.org/");
+    if (supply.status === 200) {
+      return supply.data;
+    }
+  } catch (err) {
+    // Error handling here
+    return;
   }
   return;
 };
+export const getSubgraphQuery = async () => {
+  try {
+    const res = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph", {
+      query: `
 
+     {
+        tranches(first:5) {
+           apy
+           fee
+           cycle
+        }
+      }`
+    });
+
+    const tranches = res.data.data.tranches;
+    console.log(tranches);
+  } catch (e) {
+    console.error(e);
+  }
+};
 export const getFarmsAPY = async () => {
-  const url = "https://supply.waterfalldefi.org/farms";
-  const result = await axios.get(url);
-  if (result.status === 200) {
-    return result.data;
+  try {
+    const result = await axios.get("https://supply.waterfalldefi.org/farms");
+    if (result.status === 200) {
+      return result.data;
+    }
+  } catch (err) {
+    // Error handling here
+    return;
   }
   return;
 };

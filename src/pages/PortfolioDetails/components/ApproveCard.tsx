@@ -246,7 +246,7 @@ const ApproveCard = memo<TProps>(
         setDepositLoading(false);
         setBalanceInput("0");
         fetchBalance();
-        if (account) dispatch(getTrancheBalance({ account }));
+        // if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         dispatch(
           setConfirmModal({

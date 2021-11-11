@@ -56,7 +56,7 @@ const useClaimAll = (masterChefAddress: string) => {
   const masterChefContract = useMasterchefContract(masterChefAddress);
   const handleClaimAll = useCallback(async () => {
     await claim(masterChefContract, dispatch);
-    account && dispatch(getPendingWTFReward({ account }));
+    // account && dispatch(getPendingWTFReward({ account }));
     //   dispatch(updateUserStakedBalance(sousId, account));
   }, [account, dispatch, masterChefContract]);
 

@@ -9,8 +9,7 @@ export const TranchesAddress: { [network: string]: string } = {
 export const TranchesAddress2: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
-  [NETWORKS.MAINNET]: "6b032B5c1E69f581F057495A94b7dc3d70713d77"
-  // [NETWORKS.MAINNET]: "8060a28e41275a3181e8f96ab8dc65ebe8e119d7"
+  [NETWORKS.MAINNET]: "57897386B90bc6F99a0d2243102AEEadd98412b3"
 };
 export const StrategyAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "8293d06165c79eb024A975d3CFFB1b74250c6B8c",
@@ -48,7 +47,7 @@ export const MasterChefAddress2: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
   // [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
-  [NETWORKS.MAINNET]: "0b3f6AF28ecc67EF41767348083b6D9111De0118"
+  [NETWORKS.MAINNET]: "f43A654223B82448fAbE3f02AC67e9D6c07De145"
 };
 export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "9Ad6a4A86CAE27024F693C933488070a70b56f5E",

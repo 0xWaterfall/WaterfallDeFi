@@ -92,7 +92,7 @@ export const MarketList: Market[] = [
       },
       {
         farmName: "Venus BUSD",
-        shares: 0.5,
+        shares: 0.3,
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }

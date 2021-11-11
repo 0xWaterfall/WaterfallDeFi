@@ -25,7 +25,7 @@ import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
 import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
-import { usePendingWTFReward } from "hooks/useSelectors";
+// import { usePendingWTFReward } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "store/position";
 import BigNumber from "bignumber.js";
@@ -33,7 +33,7 @@ import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
 import { ToStakeImg } from "assets/images";
 import { setConfirmModal } from "store/showStatus";
-import { useTrancheBalance } from "hooks";
+import { usePendingWTFReward, useTrancheBalance } from "hooks";
 
 const Wrapper = styled.div`
   display: grid;
@@ -127,12 +127,13 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const { balance, invested } = useTrancheBalance(data.address);
   const { account } = useWeb3React<Web3Provider>();
 
-  const { totalPendingReward } = usePendingWTFReward();
+  // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
+  const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    account && dispatch(getPendingWTFReward({ account }));
-    // account && dispatch(getTrancheBalance({ account }));
-  }, [account]);
+  // useEffect(() => {
+  //   account && dispatch(getPendingWTFReward({ account }));
+  //   // account && dispatch(getTrancheBalance({ account }));
+  // }, [account]);
   const claimReward = async () => {
     setClaimRewardLoading(true);
 

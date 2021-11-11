@@ -29,7 +29,7 @@ import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { useTrancheSnapshot } from "hooks";
+import { usePositions, useTrancheSnapshot } from "hooks";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -100,6 +100,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
   const position = usePosition();
+  const positions = usePositions(undefined);
+  console.log(positions);
   // console.log(position);
   const markets = useMarkets();
   const market = markets[0];

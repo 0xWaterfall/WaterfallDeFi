@@ -62,7 +62,7 @@ const useWithdraw = (trancheMasterAddress: string) => {
     async (amount: string) => {
       await withdraw(trancheContract, amount, dispatch);
       dispatch(getMarkets(MarketList));
-      account && dispatch(getTrancheBalance({ account }));
+      // account && dispatch(getTrancheBalance({ account }));
       market && account && dispatch(getPosition({ market, account }));
     },
     [account, dispatch, trancheContract, market]

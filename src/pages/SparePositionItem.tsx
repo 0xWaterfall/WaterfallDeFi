@@ -27,13 +27,15 @@ import Tag from "components/Tag/Tag";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
-import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
+// import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
+
 import numeral from "numeral";
 import { dataTool } from "echarts/core";
 import useInvest from "./PortfolioDetails/hooks/useInvest";
 import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useEstimateYield } from "hooks/useEstimateYield";
+import { usePendingWTFReward } from "hooks";
 
 const Wrapper = styled.div``;
 
@@ -151,7 +153,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
-  const { tranchesPendingReward } = usePendingWTFReward();
+  const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress);
   let totalAmount = userInvest.principal;
   if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
 

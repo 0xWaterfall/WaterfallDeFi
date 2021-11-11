@@ -28,7 +28,7 @@ const useRedeemDirect = (trancheMasterAddress: string) => {
   const handleRedeemDirect = useCallback(
     async (i: number) => {
       await redeem(contract, i);
-      account && dispatch(getTrancheBalance({ account }));
+      // account && dispatch(getTrancheBalance({ account }));
       market && account && dispatch(getPosition({ market, account }));
       //   dispatch(updateUserStakedBalance(sousId, account));
     },

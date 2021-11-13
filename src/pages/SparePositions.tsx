@@ -30,6 +30,7 @@ import { useAppDispatch } from "store";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
 import { usePositions, useTrancheSnapshot } from "hooks";
+import { useHistory, useLocation } from "react-router";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -99,15 +100,19 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
+  const { state, pathname } = useLocation<{ id: string }>();
+
+  const id = pathname === "/portfolio/my-portfolio" ? undefined : state?.id ?? 0;
+
+  console.log(id);
   //old
   const position = usePosition();
   //new
-  const positions = usePositions(undefined);
+  const positions = usePositions(id);
   //
   //market A - position[0] history
   //market B - position[1] history
 
-  console.log(positions);
   // console.log(position);
 
   //array

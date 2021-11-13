@@ -145,7 +145,11 @@ const DashboardCard = memo<TProps>(({ intl }) => {
         <Block>
           <Title />
           <IconGroup>
-            <a href="https://www.coingecko.com/en/coins/waterfall" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.coingecko.com/en/coins/waterfall-governance-token"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Coingecko />
             </a>
             <MetaMask css={{ width: 32, height: 32, marginLeft: 15 }} onClick={addToken} />

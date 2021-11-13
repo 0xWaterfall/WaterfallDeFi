@@ -39,9 +39,9 @@ export const getWTFSupply = async () => {
   }
   return;
 };
-export const getSubgraphQuery = async () => {
+export const getSubgraphQuery = async (subgraphURL: string) => {
   try {
-    const res = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph", {
+    const res = await axios.post(subgraphURL, {
       query: `
 
      {

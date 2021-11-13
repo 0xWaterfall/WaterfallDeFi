@@ -99,11 +99,22 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
+  //old
   const position = usePosition();
+  //new
   const positions = usePositions(undefined);
+  //
+  //market A - position[0] history
+  //market B - position[1] history
+
   console.log(positions);
   // console.log(position);
+
+  //array
   const markets = useMarkets();
+  //market[0]
+  //market[1]
+
   const market = markets[0];
   const trancheSnapshot = useTrancheSnapshot(market?.cycle);
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);

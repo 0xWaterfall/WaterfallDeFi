@@ -230,6 +230,7 @@ export const usePositions = (marketId: string | undefined) => {
     const fetchBalance = async () => {
       const _result = [];
       for (let i = 0; i < MarketList.length; i++) {
+        if (marketId && parseInt(marketId) !== i) continue;
         const _marketAddress = MarketList[i].address;
         const calls = [
           {

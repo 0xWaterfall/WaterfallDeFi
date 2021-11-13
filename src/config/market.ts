@@ -57,7 +57,8 @@ export const MarketList: Market[] = [
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }
-    ]
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph"
   },
   {
     portfolio: NETWORK === "TESTNET" ? "TBUSD Vault 3" : "BUSD Vault 3",
@@ -96,6 +97,7 @@ export const MarketList: Market[] = [
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }
-    ]
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph2"
   }
 ];

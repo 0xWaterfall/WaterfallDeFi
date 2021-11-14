@@ -100,15 +100,14 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
-  const { state, pathname } = useLocation<{ id: string }>();
+  const { state, pathname } = useLocation<{ id: number }>();
 
   const id = pathname === "/portfolio/my-portfolio" ? undefined : state?.id ?? 0;
 
-  console.log(id);
   //old
   const position = usePosition();
   //new
-  const positions = usePositions(id);
+  const positions = usePositions(id?.toString());
   //
   //market A - position[0] history
   //market B - position[1] history
@@ -120,6 +119,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   //market[0]
   //market[1]
 
+  // const market = id ? markets[id] : markets;
   const market = markets[0];
   const trancheSnapshot = useTrancheSnapshot(market?.cycle);
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);

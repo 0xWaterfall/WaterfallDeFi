@@ -3,6 +3,8 @@ import { TrancheCycle, UserInvest } from "types";
 import BigNumber from "bignumber.js";
 import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import numeral from "numeral";
+import { MarketList } from "config/market";
+import axios from "axios";
 // export const useHistoryQuery = (account: string | null | undefined) => {
 //   if (!account) account = "";
 //   return useQuery(gql`
@@ -74,6 +76,47 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   `,
     { pollInterval: 10000 }
   );
+
+  // const r = await Promise.all(
+  //   MarketList.map(async (p) => {
+  //     const res = await axios.post(p.subgraphURL, {
+  //       query: `
+  //   {
+  //     trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
+  //       id
+  //       cycle
+  //       state
+  //       principal
+  //       capital
+  //       rate
+  //       startAt
+  //       endAt
+  //     }
+  //     tranches {
+  //       id
+  //       cycle
+  //       target
+  //       apy
+  //       fee
+  //     }
+  //     userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
+  //       id
+  //       owner
+  //       tranche
+  //       cycle
+  //       principal
+  //       capital
+  //       investAt
+  //       harvestAt
+  //     }
+  //   }
+  // `
+  //     });
+  //     console.log(res.data.data);
+  //     return res.data.data;
+  //   })
+  // );
+  // console.log(r);
   const _userInvests: UserInvest[] = [];
   const _trancheCycles: { [key: string]: TrancheCycle } = {};
   if (!data)

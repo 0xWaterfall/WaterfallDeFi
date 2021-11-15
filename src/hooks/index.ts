@@ -224,7 +224,7 @@ export const useTrancheSnapshot = (cycle: string | undefined) => {
 };
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
-  const { fastRefresh } = useRefresh();
+  const { slowRefresh } = useRefresh();
   const [result, setResult] = useState<any>([]);
   useEffect(() => {
     const fetchBalance = async () => {
@@ -256,7 +256,7 @@ export const usePositions = (marketId: string | undefined) => {
       setResult(_result);
     };
     if (account) fetchBalance();
-  }, [fastRefresh, account]);
+  }, [slowRefresh, account]);
 
   return result;
 };

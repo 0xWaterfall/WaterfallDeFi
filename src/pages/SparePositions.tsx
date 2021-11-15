@@ -89,6 +89,7 @@ const NoDataWrapper = styled(NoData)`
 type TProps = WrappedComponentProps;
 
 const SparePositions = memo<TProps>(({ intl }) => {
+  console.log("sp rendered");
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [activedTab, setActivedTab] = useState<IType>("ALL");
   const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
@@ -103,6 +104,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { state, pathname } = useLocation<{ id: number }>();
 
   const id = pathname === "/portfolio/my-portfolio" ? undefined : state?.id ?? 0;
+  const isAllMarket = id === undefined;
 
   //old
   const position = usePosition();
@@ -123,10 +125,10 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const market = markets[0];
   const trancheSnapshot = useTrancheSnapshot(market?.cycle);
   const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    market && account && dispatch(getPosition({ market, account }));
-  }, [market, account]);
+  // const dispatch = useAppDispatch();
+  // useEffect(() => {
+  //   market && account && dispatch(getPosition({ market, account }));
+  // }, [market, account]);
   let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
     if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.PENDING) return false;
     if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.ACTIVE) return false;

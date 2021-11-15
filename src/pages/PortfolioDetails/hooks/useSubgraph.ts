@@ -5,6 +5,7 @@ import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import numeral from "numeral";
 import { MarketList } from "config/market";
 import axios from "axios";
+import { getSubgraphQuery } from "services/http";
 // export const useHistoryQuery = (account: string | null | undefined) => {
 //   if (!account) account = "";
 //   return useQuery(gql`
@@ -42,45 +43,14 @@ import axios from "axios";
 
 export const useHistoryQuery = (account: string | null | undefined, decimals = 18) => {
   if (!account) account = "";
-  const { data } = useQuery(
-    gql`
-    {
-      trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
-        id
-        cycle
-        state
-        principal
-        capital
-        rate
-        startAt
-        endAt
-      }
-      tranches {
-        id
-        cycle
-        target
-        apy
-        fee
-      }
-      userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
-        id
-        owner
-        tranche
-        cycle
-        principal
-        capital
-        investAt
-        harvestAt
-      }
-    }
-  `,
-    { pollInterval: 10000 }
-  );
 
-  // const r = await Promise.all(
-  //   MarketList.map(async (p) => {
-  //     const res = await axios.post(p.subgraphURL, {
-  //       query: `
+  const data = {
+    trancheCycles: [],
+    tranches: [],
+    userInvests: []
+  };
+  // const { data } = useQuery(
+  //   gql`
   //   {
   //     trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
   //       id
@@ -110,11 +80,18 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
   //       harvestAt
   //     }
   //   }
-  // `
-  //     });
-  //     console.log(res.data.data);
-  //     return res.data.data;
-  //   })
+  // `,
+  //   { pollInterval: 10000 }
+  // );
+
+  // const r = await Promise.all(
+
+  MarketList.map(async (p) => {
+    if (!account) return;
+    const res = await getSubgraphQuery(p.subgraphURL, account);
+    console.log(res);
+    // return res.data.data;
+  });
   // );
   // console.log(r);
   const _userInvests: UserInvest[] = [];

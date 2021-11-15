@@ -30,19 +30,19 @@ const App: FC = () => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ConnectedDataProvider>
-            <ConnectedApolloClientProvider>
-              <ConnectedIntlProvider>
-                <Router history={history}>
-                  <ConnectedThemeProvider>
-                    <RefreshContextProvider>
-                      <Reset />
-                      <Global />
-                      <Pages />
-                    </RefreshContextProvider>
-                  </ConnectedThemeProvider>
-                </Router>
-              </ConnectedIntlProvider>
-            </ConnectedApolloClientProvider>
+            {/* <ConnectedApolloClientProvider> */}
+            <ConnectedIntlProvider>
+              <Router history={history}>
+                <ConnectedThemeProvider>
+                  <RefreshContextProvider>
+                    <Reset />
+                    <Global />
+                    <Pages />
+                  </RefreshContextProvider>
+                </ConnectedThemeProvider>
+              </Router>
+            </ConnectedIntlProvider>
+            {/* </ConnectedApolloClientProvider> */}
           </ConnectedDataProvider>
         </PersistGate>
       </Provider>

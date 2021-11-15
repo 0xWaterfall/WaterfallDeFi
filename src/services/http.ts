@@ -39,22 +39,54 @@ export const getWTFSupply = async () => {
   }
   return;
 };
-export const getSubgraphQuery = async (subgraphURL: string) => {
+export const getSubgraphQuery = async (subgraphURL: string, account: string) => {
   try {
-    const res = await axios.post(subgraphURL, {
-      query: `
+    // const res2 = await axios.post("https://api.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph", {
+    //   query: `
 
-     {
-        tranches(first:5) {
-           apy
-           fee
-           cycle
-        }
-      }`
+    //  {
+    //     tranches(first:5) {
+    //        apy
+    //        fee
+    //        cycle
+    //     }
+    //   }`
+    // });
+    // console.log(res2);
+
+    const res = await axios.post(subgraphURL + "/", {
+      query: `{
+      trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
+        id
+        cycle
+        state
+        principal
+        capital
+        rate
+        startAt
+        endAt
+      }
+      tranches {
+        id
+        cycle
+        target
+        apy
+        fee
+      }
+      userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
+        id
+        owner
+        tranche
+        cycle
+        principal
+        capital
+        investAt
+        harvestAt
+      }
+    }`
     });
-
-    const tranches = res.data.data.tranches;
-    console.log(tranches);
+    console.log(res);
+    return res;
   } catch (e) {
     console.error(e);
   }

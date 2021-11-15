@@ -11,7 +11,7 @@ const ConnectedDataProvider: FC = ({ children }) => {
     dispatch(getInfo());
     const timer = setInterval(() => {
       dispatch(getMarkets(MarketList));
-    }, 10000);
+    }, 60000);
     return () => {
       clearInterval(timer);
     };

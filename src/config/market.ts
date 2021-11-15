@@ -39,7 +39,7 @@ export const MarketList: Market[] = [
     strategyFarms: [
       {
         farmName: "Alpaca BUSD",
-        shares: 0.5,
+        shares: 0.6,
         sAddress: sALPACAAddress[NETWORK],
         apiKey: "alpaca"
       },
@@ -51,7 +51,7 @@ export const MarketList: Market[] = [
       // },
       {
         farmName: "Venus BUSD",
-        shares: 0.5,
+        shares: 0.4,
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }

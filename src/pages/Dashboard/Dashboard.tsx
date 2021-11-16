@@ -62,6 +62,7 @@ const Dashboard = memo<TProps>(() => {
           </Button>
         )}
       </div> */}
+
       <Wrapper>
         <DashboardCard />
         <LockedCard />

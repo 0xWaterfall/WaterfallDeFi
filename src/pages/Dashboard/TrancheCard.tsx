@@ -189,7 +189,9 @@ const TrancheCard = memo<TProps>(({ intl }) => {
               </APRWrapper>
               <APRWrapper>
                 <span>
-                  {trancheText} {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
+                  {_i !== 2 ? "Fixed " : "Variable "}
+                  {/* {trancheText} */}
+                  {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
                 </span>
                 <span>
                   {trancheApr}

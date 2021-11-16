@@ -16,9 +16,9 @@ import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Vault 2",
+    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Fall 1",
     assets: "BUSD",
-    listingDate: "2021/08/29",
+    listingDate: "2021/11/16",
     // lockupPeriod: "7 Days",
     // duration: 0,
     // actualStartAt:

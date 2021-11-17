@@ -120,7 +120,7 @@ const TableColumnWrapper = styled(TableColumn)`
       content: "Tranche";
     }
     &:nth-of-type(5)::before {
-      content: "Expected APR";
+      content: "APR";
     }
     &:nth-of-type(6)::before {
       content: "Principal";
@@ -205,7 +205,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             {tranchesDisplayText[userInvest.tranche]}
           </div>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={160} content={intl.formatMessage({ defaultMessage: "Expected APR" })}>
+        <TableColumnWrapper minWidth={160} content={intl.formatMessage({ defaultMessage: "APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             <div>
               <section>

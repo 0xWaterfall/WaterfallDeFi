@@ -90,7 +90,7 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
     if (!account) return;
     const res = await getSubgraphQuery(p.subgraphURL, account);
     console.log(res);
-    // return res.data.data;
+    if (res) return res.data.data;
   });
   // );
   // console.log(r);

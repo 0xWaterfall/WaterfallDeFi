@@ -41,7 +41,7 @@ export const getWTFSupply = async () => {
 };
 export const getSubgraphQuery = async (subgraphURL: string, account: string) => {
   try {
-    // const res2 = await axios.post("https://api.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph", {
+    // const res2 = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod", {
     //   query: `
 
     //  {
@@ -54,7 +54,7 @@ export const getSubgraphQuery = async (subgraphURL: string, account: string) => 
     // });
     // console.log(res2);
 
-    const res = await axios.post(subgraphURL + "/", {
+    const res = await axios.post(subgraphURL, {
       query: `{
       trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
         id
@@ -85,7 +85,6 @@ export const getSubgraphQuery = async (subgraphURL: string, account: string) => 
       }
     }`
     });
-    console.log(res);
     return res;
   } catch (e) {
     console.error(e);

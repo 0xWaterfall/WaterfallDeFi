@@ -7,6 +7,7 @@ import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
 import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
+import numeral from "numeral";
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,7 +97,7 @@ const Information = memo<TProps>(({ data }) => {
         <Block>
           <div />
           <span>
-            TVL: {data?.tvl} {data?.assets}
+            TVL: {numeral(data?.tvl).format("0,0.[0000]")} {data?.assets}
           </span>
         </Block>
       </InformationWrapper>

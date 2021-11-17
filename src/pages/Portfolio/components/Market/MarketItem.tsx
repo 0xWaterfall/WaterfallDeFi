@@ -25,6 +25,8 @@ import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
 import { useWTFPrice } from "hooks/useSelectors";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import { useDispatch } from "react-redux";
+import { setMarketKey } from "store/selectedKeys";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -125,7 +127,7 @@ const NextTime = styled.div`
   justify-content: center;
 `;
 
-const MarketItem = memo<TProps>(({ intl, data }) => {
+const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
   const { warn, green, primary } = useTheme();
   const { push } = useHistory();
   const [marketData, setMarketData] = useState<Market>(data);
@@ -144,6 +146,12 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
+  const dispatch = useDispatch();
+
+  const navigateMarketDetail = () => {
+    dispatch(setMarketKey(selectId.toString()));
+    push({ pathname: "/portfolio-details" });
+  };
   return (
     <Container>
       <RowDiv>
@@ -222,7 +230,7 @@ const MarketItem = memo<TProps>(({ intl, data }) => {
       </RowDiv>
 
       <ButtonDiv>
-        <Button type="primary" onClick={() => push({ pathname: "/portfolio-details", state: marketData })}>
+        <Button type="primary" onClick={navigateMarketDetail}>
           {marketData.status !== PORTFOLIO_STATUS.PENDING
             ? intl.formatMessage({ defaultMessage: "More" })
             : intl.formatMessage({ defaultMessage: "Deposit" })}

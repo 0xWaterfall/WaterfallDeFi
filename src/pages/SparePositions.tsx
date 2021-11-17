@@ -222,7 +222,29 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn minWidth={60}>{intl.formatMessage({ defaultMessage: "Asset" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={200}>{intl.formatMessage({ defaultMessage: "Cycle" })}</TableHeaderColumn>
           <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Tranche" })}</TableHeaderColumn>
-          <TableHeaderColumn minWidth={160}>{intl.formatMessage({ defaultMessage: "Expected APR" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={160}>
+            {intl.formatMessage({ defaultMessage: "APR" })}&nbsp;
+            <Tooltip
+              overlay={
+                <React.Fragment>
+                  <p>
+                    {intl.formatMessage({
+                      defaultMessage: "For Pending and Active position, EXPECTED APR is displayed"
+                    })}
+                  </p>
+                  <br />
+                  <p>
+                    {intl.formatMessage({
+                      defaultMessage:
+                        "For Matured position, ACTUAL APR is displayed, after taking into consideration withdrawal fee"
+                    })}
+                  </p>
+                </React.Fragment>
+              }
+            >
+              <Union />
+            </Tooltip>
+          </TableHeaderColumn>
           <TableHeaderColumn minWidth={150}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Yield" })}</TableHeaderColumn>

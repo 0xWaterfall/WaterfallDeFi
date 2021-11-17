@@ -177,6 +177,12 @@ const Header = memo<TProps>(({ intl }) => {
       pathname: "/stake",
       text: intl.formatMessage({ defaultMessage: "Stake" }),
       checked: "/stake"
+    },
+    {
+      pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
+      text: intl.formatMessage({ defaultMessage: "User Guide" }),
+      target: "_blank"
+      // checked: ""
     }
   ];
 
@@ -224,13 +230,21 @@ const Header = memo<TProps>(({ intl }) => {
     );
   }, [account, active, chainId]);
 
-  const MenuLink = MENU.map(({ pathname, text }) => (
-    <MenuBlockWrapper key={pathname}>
-      <LinkWrapper to={pathname} data-selected={location.pathname === pathname}>
-        {text}
-      </LinkWrapper>
-    </MenuBlockWrapper>
-  ));
+  const MenuLink = MENU.map(({ pathname, text, target }) =>
+    target ? (
+      <MenuBlockWrapper key={pathname}>
+        <LinkWrapper to={{ pathname }} data-selected={location.pathname === pathname} target="_blank">
+          {text}
+        </LinkWrapper>
+      </MenuBlockWrapper>
+    ) : (
+      <MenuBlockWrapper key={pathname}>
+        <LinkWrapper to={pathname} data-selected={location.pathname === pathname}>
+          {text}
+        </LinkWrapper>
+      </MenuBlockWrapper>
+    )
+  );
 
   return (
     <Wrapper>

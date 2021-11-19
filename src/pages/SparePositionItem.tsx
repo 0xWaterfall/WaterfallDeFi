@@ -160,6 +160,10 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
   const isActiveCycle = market && Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
   const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
+  if (isActiveCycle && isCurrentCycle)
+    totalAmount = numeral(new BigNumber(userInvest.principal).plus(new BigNumber(estimateYield)).toString()).format(
+      "0,0.[0000]"
+    );
 
   const wtfAPY =
     market && isCurrentCycle

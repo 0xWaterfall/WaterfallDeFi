@@ -10,10 +10,6 @@ import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Tabl
 import { CaretDown, Union } from "assets/images";
 import Tooltip from "components/Tooltip/Tooltip";
 import styled from "@emotion/styled";
-import { useSize } from "ahooks";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
-import { MarketList } from "config/market";
 import {
   formatAllocPoint,
   formatNumberDisplay,

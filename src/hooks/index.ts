@@ -250,7 +250,8 @@ export const usePositions = (marketId: string | undefined) => {
           }
         ];
         const userInvest = await multicall(MarketList[i].abi, calls);
-        _result.push(userInvest);
+        // _result.push(userInvest);
+        _result[i] = userInvest;
       }
 
       setResult(_result);

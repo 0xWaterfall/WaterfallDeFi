@@ -18,7 +18,7 @@ import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp }
 import BigNumber from "bignumber.js";
 import { PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
-import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
+import { useHistoryQuery, useHistoryQuery2 } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionItem from "./SparePositionItem";
@@ -91,13 +91,16 @@ type TProps = WrappedComponentProps;
 const SparePositions = memo<TProps>(({ intl }) => {
   console.log("sp rendered");
   const { gray, primary, shadow, linearGradient, white } = useTheme();
+  const [subgraphResult, setSubgraphResult] = useState<any[]>([]);
+
+  const { width } = useSize(document.body);
+  const { account } = useWeb3React<Web3Provider>();
+
   const [activedTab, setActivedTab] = useState<IType>("ALL");
   const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
   // const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
   // const { onRedeemDirect } = useRedeemDirect();
 
-  const { width } = useSize(document.body);
-  const { account } = useWeb3React<Web3Provider>();
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
@@ -107,7 +110,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const isAllMarket = id === undefined;
 
   //old
-  const position = usePosition();
+  // const position = usePosition();
   //new
   const positions = usePositions(id?.toString());
   //
@@ -122,45 +125,68 @@ const SparePositions = memo<TProps>(({ intl }) => {
   //market[1]
 
   // const market = id ? markets[id] : markets;
-  const market = markets[0];
-  const trancheSnapshot = useTrancheSnapshot(market?.cycle);
-  const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
+  // const market = markets[0];
+  // const trancheSnapshot = useTrancheSnapshot(market?.cycle);
+  // const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account);
+  useEffect(() => {
+    if (account) fetchSubgraph();
+  }, []);
+
+  const fetchSubgraph = async () => {
+    const _subgraphResult = await useHistoryQuery2(id?.toString(), account);
+    console.log("_subgraphResult", _subgraphResult);
+    setSubgraphResult(_subgraphResult);
+  };
   // const dispatch = useAppDispatch();
   // useEffect(() => {
   //   market && account && dispatch(getPosition({ market, account }));
   // }, [market, account]);
-  let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
-    if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.PENDING) return false;
-    if (_userInvest?.cycle === Number(market?.cycle) && market?.status === PORTFOLIO_STATUS.ACTIVE) return false;
-    return true;
-  });
+  const _investHistoryResult = subgraphResult && subgraphResult.length > 0 ? [...subgraphResult] : [];
+  for (let marketIdx = 0; marketIdx < _investHistoryResult.length; marketIdx++) {
+    const _subgraphResultMarket = subgraphResult[marketIdx];
+    if (!_subgraphResultMarket) continue;
+    const _market = markets[marketIdx];
+    const { userInvests: _userInvests, trancheCycles } = _subgraphResultMarket;
+    const _position = positions[marketIdx];
+    console.log(positions);
 
-  for (let i = 0; i < position.length; i++) {
-    const _cycle = new BigNumber(position[i][0].hex).toString();
-    const _principal = numeral(new BigNumber(position[i][1].hex).dividedBy(BIG_TEN.pow(18)).toString()).format(
-      "0,0.[0000]"
-    );
-    if (
-      _cycle == market?.cycle &&
-      (market?.status === PORTFOLIO_STATUS.PENDING || market?.status === PORTFOLIO_STATUS.ACTIVE)
-    ) {
-      userInvests = [
-        {
-          capital: "0",
-          cycle: Number(market?.cycle),
-          harvestAt: 0,
-          id: "",
-          investAt: 0,
-          owner: "",
-          principal: _principal,
-          tranche: i,
-          interest: "0",
-          earningsAPY: "NaN"
-        },
-        ...userInvests
-      ];
-    }
+    let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
+      if (_userInvest?.cycle === Number(_market?.cycle) && _market?.status === PORTFOLIO_STATUS.PENDING) return false;
+      if (_userInvest?.cycle === Number(_market?.cycle) && _market?.status === PORTFOLIO_STATUS.ACTIVE) return false;
+      return true;
+    });
+    if (_position)
+      for (let i = 0; i < _position.length; i++) {
+        const _cycle = new BigNumber(_position[i][0]._hex).toString();
+        const _principal = numeral(new BigNumber(_position[i][1]._hex).dividedBy(BIG_TEN.pow(18)).toString()).format(
+          "0,0.[0000]"
+        );
+        if (
+          _cycle == _market?.cycle &&
+          (_market?.status === PORTFOLIO_STATUS.PENDING || _market?.status === PORTFOLIO_STATUS.ACTIVE)
+        ) {
+          userInvests = [
+            {
+              capital: "0",
+              cycle: Number(_market?.cycle),
+              harvestAt: 0,
+              id: "",
+              investAt: 0,
+              owner: "",
+              principal: _principal,
+              tranche: i,
+              interest: "0",
+              earningsAPY: "NaN"
+            },
+            ...userInvests
+          ];
+        }
+      }
+    _investHistoryResult[marketIdx].userInvests = userInvests;
   }
+  console.log(_investHistoryResult);
+  // setSubgraphResult(_subgraphResult);
+
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
     { name: intl.formatMessage({ defaultMessage: "Pending" }), value: "PENDING", status: 0 },
@@ -187,8 +213,28 @@ const SparePositions = memo<TProps>(({ intl }) => {
   //     setRedeemLoading((redeemLoading) => ({ ...redeemLoading, [i]: false }));
   //   }
   // };
-  const payload = useMemo(() => {
-    return userInvests?.filter((_userInvest: any) => {
+  // const payload = useMemo(() => {
+  //   return userInvests?.filter((_userInvest: any) => {
+  //     if (!trancheCycles) return false;
+  //     const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+  //     if (_userInvest.principal == "0") return false;
+  //     if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+  //     if (
+  //       selectedStatus > -1 &&
+  //       trancheCycles[trancheCycleId] &&
+  //       selectedStatus !== trancheCycles[trancheCycleId].state
+  //     )
+  //       return false;
+  //     return true;
+  //   });
+  // }, [selectedTranche, selectedStatus, trancheCycles, trancheCycles.length, userInvests, userInvests.length]);
+
+  const userInvestsPayload: { _userInvest: UserInvest[] }[] = [];
+  let filteredCount = 0;
+  for (let marketIdx = 0; marketIdx < _investHistoryResult.length; marketIdx++) {
+    if (!_investHistoryResult[marketIdx]) continue;
+    const { userInvests: _userInvests, trancheCycles } = _investHistoryResult[marketIdx];
+    const filtered = _userInvests?.filter((_userInvest: any) => {
       if (!trancheCycles) return false;
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
@@ -201,7 +247,28 @@ const SparePositions = memo<TProps>(({ intl }) => {
         return false;
       return true;
     });
-  }, [selectedTranche, selectedStatus, trancheCycles, trancheCycles.length, userInvests, userInvests.length]);
+    filteredCount += filtered.length;
+    console.log("filtered", filtered);
+    console.log(filteredCount);
+
+    // console.log(userInvestsPayload[marketIdx]);
+    userInvestsPayload[marketIdx] = { _userInvest: filtered };
+    // return true;
+  }
+  // return userInvests?.filter((_userInvest: any) => {
+  //   if (!trancheCycles) return false;
+  //   const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+  //   if (_userInvest.principal == "0") return false;
+  //   if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+  //   if (
+  //     selectedStatus > -1 &&
+  //     trancheCycles[trancheCycleId] &&
+  //     selectedStatus !== trancheCycles[trancheCycleId].state
+  //   )
+  //     return false;
+  //   return true;
+  // });
+  console.log(userInvestsPayload);
   return (
     <React.Fragment>
       <FilterWrapper>
@@ -249,24 +316,31 @@ const SparePositions = memo<TProps>(({ intl }) => {
           <TableHeaderColumn></TableHeaderColumn>
         </TableRow>
 
-        <NoDataWrapper isNoData={!payload?.length}>
-          {trancheCycles &&
-            market &&
-            payload.map((_userInvest: UserInvest, _idx: number) => {
+        <NoDataWrapper isNoData={!filteredCount}>
+          {userInvestsPayload.map((_userInvestMarket, __idx) => {
+            console.log(_userInvestMarket);
+            const { _userInvest: userInvests } = _userInvestMarket;
+            const { trancheCycles } = _investHistoryResult[__idx];
+            console.log("trancheCycles", _investHistoryResult[__idx]);
+            return userInvests.map((_userInvest: UserInvest, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
               const trancheCycle = trancheCycles[trancheCycleId];
+              console.log("trancheCycle", _userInvest);
+              console.log("trancheCycleId", trancheCycleId);
+              const _market = markets[__idx];
               // if (trancheCycle)
               return (
                 <SparePositionItem
-                  key={_idx}
+                  key={`${_idx} ${__idx} ${trancheCycleId}`}
                   userInvest={_userInvest}
-                  market={market}
+                  market={_market}
                   trancheCycle={trancheCycle}
                   // redeemDirect={redeemDirect}
                   // redeemLoading={redeemLoading[_idx] || false}
                 />
               );
-            })}
+            });
+          })}
         </NoDataWrapper>
       </Table>
     </React.Fragment>

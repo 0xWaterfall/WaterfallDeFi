@@ -157,3 +157,101 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
     trancheCycles: _trancheCycles
   };
 };
+
+export const useHistoryQuery2 = async (
+  marketId: string | undefined,
+  account: string | null | undefined,
+  decimals = 18
+) => {
+  if (!account) return [];
+  const data = {
+    trancheCycles: [],
+    tranches: [],
+    userInvests: []
+  };
+  const historyQueryResult: any = [];
+  const subgraphResult: any = [];
+  for (let marketIdx = 0; marketIdx < MarketList.length; marketIdx++) {
+    const p = MarketList[marketIdx];
+    if (marketId === undefined || (marketId !== undefined && marketId === marketIdx.toString())) {
+      const res = await getSubgraphQuery(p.subgraphURL, account);
+      if (res && res.data.data) subgraphResult[marketIdx] = res.data.data;
+    }
+  }
+  if (subgraphResult.length === 0) return;
+  for (let marketIdx = 0; marketIdx < subgraphResult.length; marketIdx++) {
+    const _subgraphResult = subgraphResult[marketIdx];
+    if (!_subgraphResult) continue;
+
+    const _userInvests: UserInvest[] = [];
+    const _trancheCycles: { [key: string]: TrancheCycle } = {};
+    let returnData = {
+      userInvests: _userInvests,
+      trancheCycles: _trancheCycles
+    };
+    // if (!data)
+    //   return {
+    //     userInvests: _userInvests,
+    //     trancheCycles: _trancheCycles
+    //   };
+    const { trancheCycles, tranches, userInvests } = _subgraphResult;
+    if (trancheCycles) {
+      for (let i = 0; i < trancheCycles.length; i++) {
+        const { id } = trancheCycles[i];
+        _trancheCycles[id] = trancheCycles[i];
+      }
+    }
+    if (userInvests) {
+      for (let i = 0; i < userInvests.length; i++) {
+        console.log(userInvests[i]);
+        const { capital, cycle, harvestAt, id, investAt, owner, principal, tranche } = userInvests[i];
+        const trancheCycleId = tranche + "-" + cycle;
+        const interest = new BigNumber(capital).isZero()
+          ? new BigNumber(principal)
+              .times(_trancheCycles[trancheCycleId]?.rate || 0)
+              .dividedBy(BIG_TEN.pow(18))
+              .minus(new BigNumber(principal))
+          : new BigNumber(capital).minus(new BigNumber(principal));
+        const earningsAPY = new BigNumber(interest)
+          .dividedBy(new BigNumber(principal))
+          .times(new BigNumber(365 * 86400 * 100))
+          .dividedBy(new BigNumber(_trancheCycles[trancheCycleId]?.endAt - _trancheCycles[trancheCycleId]?.startAt))
+          .toFormat(2)
+          .toString();
+        const _ui: UserInvest = {
+          capital: new BigNumber(capital).isZero()
+            ? numeral(
+                new BigNumber(interest)
+                  .plus(new BigNumber(principal))
+                  .dividedBy(BIG_TEN.pow(decimals))
+                  .toFormat(4)
+                  .toString()
+              ).format("0,0.[0000]")
+            : numeral(new BigNumber(capital).dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format(
+                "0,0.[0000]"
+              ),
+          cycle,
+          harvestAt,
+          id,
+          investAt,
+          owner,
+          principal: numeral(new BigNumber(principal).dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format(
+            "0,0.[0000]"
+          ),
+          tranche,
+          interest: numeral(interest.dividedBy(BIG_TEN.pow(decimals)).toFormat(4).toString()).format("0,0.[0000]"),
+          earningsAPY
+        };
+
+        _userInvests.push(_ui);
+      }
+    }
+    returnData = {
+      userInvests: _userInvests,
+      trancheCycles: _trancheCycles
+    };
+    historyQueryResult[marketIdx] = returnData;
+  }
+  console.log("historyQueryResult result", historyQueryResult);
+  return historyQueryResult;
+};

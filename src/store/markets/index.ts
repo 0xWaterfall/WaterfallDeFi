@@ -92,6 +92,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         }
 
         const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
+        console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;

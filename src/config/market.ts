@@ -58,7 +58,7 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/ica/waterfall-subgraph"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-test"
   },
   {
     portfolio: NETWORK === "TESTNET" ? "TBUSD Vault 3" : "BUSD Vault 3",
@@ -98,6 +98,6 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph2"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-test2"
   }
 ];

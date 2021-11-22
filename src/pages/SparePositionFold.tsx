@@ -130,7 +130,7 @@ const SparePositionFold = memo<TProps>(
     const redeemDirect = async (i: number) => {
       setRedeemLoading(true);
       try {
-        await onRedeemDirect(i);
+        const result = await onRedeemDirect(i);
         successNotification("Redeem Success", "");
       } catch (e) {
         console.error(e);
@@ -187,9 +187,6 @@ const SparePositionFold = memo<TProps>(
                   {intl.formatMessage({ defaultMessage: "Redeem" })}
                 </ButtonWrapper>
               )}
-              <ButtonWrapper type="primary" onClick={() => redeemDirect(currentTranche)} loading={redeemLoading}>
-                {intl.formatMessage({ defaultMessage: "Redeem" })}
-              </ButtonWrapper>
               <ButtonWrapper type="primary" style={{ visibility: "hidden" }}>
                 {intl.formatMessage({ defaultMessage: "Re-deposit" })}
               </ButtonWrapper>

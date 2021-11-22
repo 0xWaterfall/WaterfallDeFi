@@ -53,7 +53,6 @@ export const getSubgraphQuery = async (subgraphURL: string, account: string) => 
     //   }`
     // });
     // console.log(res2);
-
     const res = await axios.post(subgraphURL, {
       query: `{
       trancheCycles(first:1000,orderBy: id, orderDirection: asc) {

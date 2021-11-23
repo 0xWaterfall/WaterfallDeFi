@@ -10,9 +10,15 @@ import { IType } from "./Portfolio/components/MyPortfolio/type";
 import { Union } from "assets/images";
 import styled from "@emotion/styled";
 import numeral from "numeral";
-import { formatNumberDisplay } from "utils/formatNumbers";
+import { formatBigNumber2HexString, formatNumberDisplay } from "utils/formatNumbers";
 import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
 import { successNotification } from "utils/notification";
+import useWithdraw from "./PortfolioDetails/hooks/useWithdraw";
+import { useAppDispatch } from "store";
+import { useTrancheBalance } from "hooks";
+import { setConfirmModal } from "store/showStatus";
+import BigNumber from "bignumber.js";
+import { BIG_TEN } from "utils/bigNumber";
 
 const Wrapper = styled.div`
   padding: 24px 32px;
@@ -124,9 +130,49 @@ const SparePositionFold = memo<TProps>(
     trancheMasterAddress
   }) => {
     const { gray, primary, shadow, linearGradient, white, useColorModeValue } = useTheme();
+    const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
 
     const [redeemLoading, setRedeemLoading] = useState(false);
     const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
+    const { onWithdraw } = useWithdraw(trancheMasterAddress);
+    const { balance, invested } = useTrancheBalance(trancheMasterAddress);
+    const dispatch = useAppDispatch();
+
+    const withdrawAll = async () => {
+      setWithdrawAllLoading(true);
+
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage:
+            intl.formatMessage({ defaultMessage: `Withdrawing` }) +
+            " " +
+            balance +
+            " " +
+            intl.formatMessage({ defaultMessage: "from All Tranches" })
+        })
+      );
+      try {
+        if (!balance) return;
+        await onWithdraw(formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))));
+        successNotification("Withdraw All Success", "");
+      } catch (e) {
+        console.error(e);
+
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Withdraw Fail " })
+          })
+        );
+      } finally {
+        setWithdrawAllLoading(false);
+      }
+    };
     const redeemDirect = async (i: number) => {
       setRedeemLoading(true);
       try {
@@ -185,6 +231,11 @@ const SparePositionFold = memo<TProps>(
               {isCurrentCycle && isPending && (
                 <ButtonWrapper type="primary" onClick={() => redeemDirect(currentTranche)} loading={redeemLoading}>
                   {intl.formatMessage({ defaultMessage: "Redeem" })}
+                </ButtonWrapper>
+              )}
+              {!isPending && !isActive && (
+                <ButtonWrapper type="primary" onClick={withdrawAll} loading={withdrawAllLoading} disabled={!+balance}>
+                  {intl.formatMessage({ defaultMessage: "Withdraw All Tranches" })}
                 </ButtonWrapper>
               )}
               <ButtonWrapper type="primary" style={{ visibility: "hidden" }}>

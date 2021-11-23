@@ -47,7 +47,7 @@ const Positions = memo<TProps>(({ intl }) => {
   const [selectedStatus, setSelectedStatus] = useState(-1);
   const market = MarketList[0];
   // const { loading, error, data } = useHistoryQuery(account);
-  const { userInvests, trancheCycles } = useHistoryQuery(account);
+  const { userInvests, trancheCycles } = useHistoryQuery(account, market.duration);
 
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },

@@ -38,8 +38,15 @@ import numeral from "numeral";
 //   `);
 // };
 
-export const useHistoryQuery = (account: string | null | undefined, decimals = 18) => {
+export const useHistoryQuery = (
+  account: string | null | undefined,
+  duration: string | null | undefined,
+  decimals = 18
+) => {
   if (!account) account = "";
+  //multi-farm
+  if (!duration) duration = "0";
+
   const { data } = useQuery(
     gql`
     {
@@ -81,7 +88,6 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       userInvests: _userInvests,
       trancheCycles: _trancheCycles
     };
-  console.log(data);
   const { trancheCycles, tranches, userInvests } = data;
   if (trancheCycles) {
     for (let i = 0; i < trancheCycles.length; i++) {
@@ -102,7 +108,8 @@ export const useHistoryQuery = (account: string | null | undefined, decimals = 1
       const earningsAPY = new BigNumber(interest)
         .dividedBy(new BigNumber(principal))
         .times(new BigNumber(365 * 86400 * 100))
-        .dividedBy(new BigNumber(_trancheCycles[trancheCycleId]?.endAt - _trancheCycles[trancheCycleId]?.startAt))
+        // .dividedBy(new BigNumber(_trancheCycles[trancheCycleId]?.endAt - _trancheCycles[trancheCycleId]?.startAt))
+        .dividedBy(new BigNumber(duration).plus(new BigNumber(_trancheCycles[trancheCycleId]?.startAt))) //multi-farm
         .toFormat(2)
         .toString();
       const _ui: UserInvest = {

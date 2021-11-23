@@ -173,7 +173,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
       : "-";
 
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
-
+  console.log(+trancheCycle?.startAt + +Number(market?.duration));
   return (
     <Wrapper>
       <TableRowWrapper
@@ -193,7 +193,16 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
               <>
                 <span>{formatTimestamp(trancheCycle?.startAt)}</span>
                 <span>↓</span>
-                <span>{formatTimestamp(trancheCycle?.endAt)}</span>
+                <span>
+                  {
+                    //multi-farm
+                    formatTimestamp(
+                      trancheCycle?.endAt > +trancheCycle?.startAt + +Number(market?.duration)
+                        ? trancheCycle?.endAt
+                        : +trancheCycle?.startAt + +Number(market?.duration)
+                    )
+                  }
+                </span>
               </>
             ) : (
               "--"

@@ -83,7 +83,7 @@ const MyPositions = memo<TProps>(({ intl }) => {
   const { tranchesPendingReward } = usePendingWTFReward();
   const { interests, principalAndInterests } = getInterest(market?.tranches, position, market?.duration);
   // const { loading, error, data } = useHistoryQuery(account);
-  const { userInvests, trancheCycles } = useHistoryQuery(account);
+  const { userInvests, trancheCycles } = useHistoryQuery(account, market?.duration);
   const wtfPrice = useWTFPrice();
 
   const TYPES: { name: string; value: IType; status: number }[] = [

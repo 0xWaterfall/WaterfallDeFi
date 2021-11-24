@@ -11,7 +11,7 @@ import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSize } from "ahooks";
-import { compareNum, formatTVL, getRemaining } from "utils/formatNumbers";
+import { compareNum, formatTVL, getRemaining, getRemaining2 } from "utils/formatNumbers";
 import { useBalance, useTrancheBalance } from "hooks";
 import { useSelectedMarket } from "hooks/useSelectors";
 
@@ -93,6 +93,11 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
         remaining={
           selectTrancheIdx !== undefined
             ? getRemaining(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+            : "0"
+        }
+        remainingExact={
+          selectTrancheIdx !== undefined
+            ? getRemaining2(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
             : "0"
         }
         enabled={selectTranche !== undefined}

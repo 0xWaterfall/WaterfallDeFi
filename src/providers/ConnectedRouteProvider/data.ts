@@ -34,7 +34,7 @@ export const RouteComponents = [
   },
   {
     key: "Stake",
-    component: CommingSoon,
+    component: Stake,
     exact: true,
     path: "/stake"
   }

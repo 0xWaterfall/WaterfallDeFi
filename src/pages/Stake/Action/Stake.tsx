@@ -162,14 +162,17 @@ const Stake = memo<TProps>(({ intl }) => {
   }, [newExpireDate, balanceInput]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const d = value.split(".");
-    if (d.length === 2 && d[1].length === 5) {
-      return;
+    if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
+      const d = value.split(".");
+      if (d.length === 2 && d[1].length > 18) {
+        return;
+      }
+
+      const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];
+      const _decimal = value.includes(".") ? "." : "";
+      const _input2 = d[1]?.length > 0 ? d[1] : "";
+      setBalanceInput(_input1 + _decimal + _input2);
     }
-    let input = Number(value);
-    // console.log(input);
-    if (isNaN(input)) input = 0;
-    setBalanceInput(input.toString());
   };
   const handleMaxInput = () => {
     const _balance = wtfBalance.replace(/\,/g, "");

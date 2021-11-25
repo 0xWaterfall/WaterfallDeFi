@@ -312,7 +312,7 @@ const Increase = memo<TProps>(({ intl }) => {
 
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
-          {intl.formatMessage({ defaultMessage: "Increase lock amount" })}
+          {intl.formatMessage({ defaultMessage: "Increase lock amount__" })}
         </ButtonWrapper>
       )}
       <Label css={{ margin: "15px 0 10px" }}>

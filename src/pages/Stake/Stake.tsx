@@ -407,7 +407,7 @@ const Stake = memo<TProps>(({ intl }) => {
 
         <Total>
           <span>
-            {intl.formatMessage({ defaultMessage: "Total locked WTF" })}: {totalLocked}
+            {intl.formatMessage({ defaultMessage: "Total locked WTF" })}: {numeral(totalLocked).format("0,0.[0000]")}
           </span>
           <span>{intl.formatMessage({ defaultMessage: "Average lock duration" })}: 4.0 months</span>
         </Total>
@@ -482,11 +482,11 @@ const Stake = memo<TProps>(({ intl }) => {
               <div>
                 <Bulb />
                 <div>
-                  <span>{intl.formatMessage({ defaultMessage: "Stake WTF get ve-WTF" })}</span>
+                  <span>{intl.formatMessage({ defaultMessage: "ve-WTF" })}</span>
                   <span>
                     {intl.formatMessage({
                       defaultMessage:
-                        "Ve-WTF holders can get dividends from the transaction fee income in each cycle. Rewards will be available for withdrawal after the end of each period."
+                        "veWTF holders can get dividends from the transaction fee income in each cycle.Rewards will be available for withdrawal fees generated from each cycleavailable for claiming after the end of each period."
                     })}
                   </span>
                 </div>

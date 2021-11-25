@@ -247,15 +247,17 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    const d = value.split(".");
-    if (d.length === 2 && d[1].length === 5) {
-      return;
-    }
-    let input = Number(value);
-    // console.log(input);
-    if (isNaN(input)) input = 0;
+    if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
+      const d = value.split(".");
+      if (d.length === 2 && d[1].length > 18) {
+        return;
+      }
 
-    setBalanceInput(input.toString());
+      const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];
+      const _decimal = value.includes(".") ? "." : "";
+      const _input2 = d[1]?.length > 0 ? d[1] : "";
+      setBalanceInput(_input1 + _decimal + _input2);
+    }
 
     if (locked) {
       //reset extend lock time
@@ -316,7 +318,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
 
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
-          {intl.formatMessage({ defaultMessage: "Increase lock amount" })}
+          {intl.formatMessage({ defaultMessage: "Increase Lock Amount" })}
         </ButtonWrapper>
       )}
       <Label css={{ margin: "15px 0 10px" }}>

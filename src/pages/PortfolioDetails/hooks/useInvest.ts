@@ -14,7 +14,6 @@ const options = {
 };
 
 const invest = async (contract: Contract, amount: string, selectTrancheIdx: string, dispatch: Dispatch<any>) => {
-  console.log("investing");
   const _amount = utils.parseEther(amount).toString();
   const tx = await contract.invest(selectTrancheIdx, _amount, false);
   dispatch(
@@ -50,10 +49,10 @@ const invest = async (contract: Contract, amount: string, selectTrancheIdx: stri
   return receipt.status;
 };
 
-const useInvest = () => {
+const useInvest = (trancheMasterAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useTrancheMasterContract();
+  const contract = useTrancheMasterContract(trancheMasterAddress);
   const handleInvest = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
       const result = await invest(contract, amount, selectTrancheIdx, dispatch);

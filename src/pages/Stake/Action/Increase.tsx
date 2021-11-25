@@ -14,7 +14,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { compareNum } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
-import useLockAndStakeWTF from "pages/Stake/hooks/useLockAndStakeWTF";
+import useLockAndStakeWTF from "pages/OldStake/hooks/useLockAndStakeWTF";
 import { successNotification } from "utils/notification";
 
 import { useWeb3React } from "@web3-react/core";
@@ -23,13 +23,14 @@ import useCheckApprove from "pages/PortfolioDetails/hooks/useCheckApprove";
 import useApprove from "pages/PortfolioDetails/hooks/useApprove";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
-import useIncreaseLockAmount from "pages/Stake/hooks/useIncreaseLockAmount";
-import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
+import useIncreaseLockAmount from "pages/OldStake/hooks/useIncreaseLockAmount";
+import useCheckLocked from "pages/OldStake/hooks/useCheckLocked";
 import numeral from "numeral";
 import { utils } from "ethers";
 import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
 import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
 import { start } from "repl";
+import { StakingConfig } from "types";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -44,22 +45,16 @@ const Label = styled.div`
   margin-bottom: 16px;
   p {
     color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-    font-size: 16px;
-    line-height: 125%;
-  }
-  span {
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 125%;
-  }
-
-  div {
     font-size: 14px;
-    line-height: 18px;
+    line-height: 125%;
     display: grid;
     gap: 5px;
     grid-auto-flow: column;
     align-items: center;
+  }
+  span {
+    font-size: 16px;
+    line-height: 125%;
   }
 `;
 
@@ -110,9 +105,18 @@ const Line = styled.div`
   margin-bottom: 24px;
 `;
 
-type TProps = WrappedComponentProps;
+const MAX = styled.div`
+  font-size: 14px;
+  line-height: 125%;
+  color: ${({ theme }) => theme.primary.deep};
+  cursor: pointer;
+`;
 
-const Increase = memo<TProps>(({ intl }) => {
+type TProps = WrappedComponentProps & {
+  stakingConfig: StakingConfig;
+};
+
+const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { tags } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
 
@@ -167,7 +171,6 @@ const Increase = memo<TProps>(({ intl }) => {
   const onIncreaseLockAmount = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
     if (Number(balanceInput) <= 0) return;
-
     setIncreaseLockAmountLoading(true);
     try {
       await increaseLockAmount(balanceInput);
@@ -294,8 +297,10 @@ const Increase = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
       <Label>
-        <p>{intl.formatMessage({ defaultMessage: "WTF balance" })}</p>
-        <span>{wtfBalance} WTF</span>
+        <p>
+          {intl.formatMessage({ defaultMessage: "WTF balance" })}: <span>{wtfBalance}</span>
+        </p>
+        <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
       </Label>
 
       <StakeInput
@@ -303,7 +308,6 @@ const Increase = memo<TProps>(({ intl }) => {
         step={0.1}
         min={0}
         suffixText="WTF"
-        onMAX={handleMaxInput}
         value={balanceInput}
         onChange={handleInputChange}
         style={validateText ? { borderColor: tags.redText } : {}}
@@ -318,14 +322,12 @@ const Increase = memo<TProps>(({ intl }) => {
       <Label css={{ margin: "15px 0 10px" }}>
         <p>
           {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;
-          {expiryTimestamp !== "0" &&
-            duration !== 0 &&
-            dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")}
-          {expiryTimestamp !== "0" &&
-            duration === 0 &&
-            dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+          {expiryTimestamp !== "0" && duration
+            ? dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")
+            : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
           {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
+        <MAX>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
       </Label>
 
       <DatePickerWrapper
@@ -339,7 +341,6 @@ const Increase = memo<TProps>(({ intl }) => {
       <SelectTimeLimitWrapper
         onSelected={(e) => {
           setSelectedValue(e);
-          // console.log(e);
           setDatePickerValue(undefined);
 
           if (locked) {
@@ -376,17 +377,16 @@ const Increase = memo<TProps>(({ intl }) => {
         </ButtonWrapper>
       )}
 
-      <Line />
       <Label>
-        <div>
+        <p>
           {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
-        </div>
+        </p>
         <span>{convertRatio}</span>
       </Label>
 
-      <Label>
-        <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
+      <Label css={{ margin: 0 }}>
+        <p>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</p>
         <span>{receivedVeWTF}</span>
       </Label>
     </Wrapper>

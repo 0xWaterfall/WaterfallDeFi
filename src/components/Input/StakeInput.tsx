@@ -8,19 +8,21 @@ import { InputProps } from "antd";
 type TProps = Partial<typeof Input> & InputProps & { suffixText?: React.ReactNode; onMAX?: () => void };
 
 const WrapperInput = styled(Input)`
+  height: 48px;
   &.ant-input-affix-wrapper {
-    padding: 16px 19px;
-    border: 2px solid ${({ theme }) => theme.primary.deep2};
-    border-right-width: 2px !important;
+    padding: 14px 20px;
+    border: 1px solid ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal2)};
+    border-radius: 8px;
+    border-right-width: 1px !important;
     :hover {
-      border-right-width: 2px !important;
+      border-right-width: 1px !important;
     }
   }
   &.ant-input-affix-wrapper-focused {
     border-color: ${({ theme }) => theme.primary.deep};
   }
   &.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
-    border-right-width: 2px !important;
+    border-right-width: 1px !important;
   }
   .ant-input-suffix {
     font-size: 14px;
@@ -33,23 +35,14 @@ const WrapperInput = styled(Input)`
   }
 `;
 
-const SplitLine = styled.div`
-  width: 1px;
-  height: 100%;
-  background: ${({ theme }) => theme.primary.deep2};
-  margin: 0 16px;
-`;
-
-const StakeInput: React.FC<TProps> = ({ suffixText, onMAX, ...props }) => {
+const StakeInput: React.FC<TProps> = ({ suffixText, ...props }) => {
   return (
     <WrapperInput
       {...props}
       suffix={
         <>
-          <p onClick={onMAX}>MAX</p>
           {suffixText && (
             <>
-              <SplitLine />
               <span>{suffixText}</span>
             </>
           )}

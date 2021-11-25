@@ -1,18 +1,39 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import { Radio } from "antd";
 import { OpUnitType } from "dayjs";
 import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 
-const Wrapper = styled.div`
-  display: grid;
-  gap: 15px;
-  grid-auto-flow: column;
-`;
+const Wrapper = styled.div``;
 
-export const Block = styled.div`
-  display: flex;
+export const Group = styled(Radio.Group)`
+  &.ant-radio-group {
+    display: grid;
+    gap: 20px;
+    grid-auto-flow: column;
+    @media screen and (max-width: 560px) {
+      grid-template-rows: repeat(2, 1fr);
+    }
+    .ant-radio-inner {
+      border-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+      background: transparent;
+    }
+    .ant-radio-wrapper:hover .ant-radio,
+    .ant-radio:hover .ant-radio-inner,
+    .ant-radio-input:focus + .ant-radio-inner,
+    .ant-radio-checked .ant-radio-inner {
+      border-color: ${({ theme }) => theme.primary.normal};
+    }
+    span {
+      font-size: 14px;
+      line-height: 125%;
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+    }
+  }
+
+  /* display: flex;
   align-items: center;
   justify-content: center;
   height: 32px;
@@ -29,7 +50,7 @@ export const Block = styled.div`
   }
   &[data-actived="true"] {
     cursor: default;
-  }
+  } */
 `;
 
 type TProps = React.HTMLAttributes<HTMLDivElement> &
@@ -57,19 +78,20 @@ const SelectTimeLimit = memo<TProps>(({ intl, onSelected, reset, suffixRender, .
 
   return (
     <Wrapper {...props}>
-      {TIMES.map((p) => (
-        <Block
-          key={p.key}
-          data-actived={p.key === actived}
-          onClick={() => {
-            setActived(p.key);
-            onSelected?.({ value: p.value, unit: p.unit as OpUnitType });
-          }}
-        >
-          {p.text}
-        </Block>
-      ))}
-      {suffixRender}
+      <Group
+        onChange={(e) => {
+          setActived(e.target.value);
+          const selected = TIMES.find((p) => p.key === e.target.value);
+          selected && onSelected?.({ value: selected.value, unit: selected.unit as OpUnitType });
+        }}
+        value={actived}
+      >
+        {TIMES.map((p) => (
+          <Radio key={p.key} value={p.key}>
+            {p.text}
+          </Radio>
+        ))}
+      </Group>
     </Wrapper>
   );
 });

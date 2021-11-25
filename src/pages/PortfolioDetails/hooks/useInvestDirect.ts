@@ -53,10 +53,10 @@ const invest = async (contract: Contract, amount: string, selectTrancheIdx: stri
   return receipt.status;
 };
 
-const useInvestDirect = () => {
+const useInvestDirect = (trancheMasterAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useTrancheMasterContract();
+  const contract = useTrancheMasterContract(trancheMasterAddress);
   const handleInvestDirect = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
       const result = await invest(contract, amount, selectTrancheIdx, dispatch);

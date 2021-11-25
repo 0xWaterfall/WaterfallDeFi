@@ -23,13 +23,15 @@ import Tag from "components/Tag/Tag";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
-import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
+// import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
+
 import numeral from "numeral";
 import { dataTool } from "echarts/core";
 import useInvest from "./PortfolioDetails/hooks/useInvest";
 import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useEstimateYield } from "hooks/useEstimateYield";
+import { usePendingWTFReward } from "hooks";
 
 const Wrapper = styled.div``;
 
@@ -137,17 +139,17 @@ type TProps = WrappedComponentProps & {
   userInvest: UserInvest;
   market: Market;
   trancheCycle: TrancheCycle;
-  redeemDirect: (i: number) => Promise<void>;
-  redeemLoading: boolean;
+  // redeemDirect: (i: number) => Promise<void>;
+  // redeemLoading: boolean;
 };
 
-const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle, redeemLoading, redeemDirect }) => {
+const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle }) => {
   const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
-  const { tranchesPendingReward } = usePendingWTFReward();
+  const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress);
   let totalAmount = userInvest.principal;
   if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
 
@@ -173,7 +175,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
       : "-";
 
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
-  console.log(+trancheCycle?.startAt + +Number(market?.duration));
+  // console.log(+trancheCycle?.startAt + +Number(market?.duration));
   return (
     <Wrapper>
       <TableRowWrapper
@@ -269,13 +271,14 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           totalAmount={totalAmount}
           assets={market?.assets}
           isCurrentCycle={isCurrentCycle}
-          redeemDirect={redeemDirect}
-          redeemLoading={redeemLoading}
+          // redeemDirect={redeemDirect}
+          // redeemLoading={redeemLoading}
           currentTranche={userInvest.tranche}
           isPending={trancheCycle?.state === 0}
           isActive={trancheCycle?.state === 1}
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}
+          trancheMasterAddress={market.address}
         />
       )}
     </Wrapper>

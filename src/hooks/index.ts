@@ -33,6 +33,10 @@ import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
 import numeral from "numeral";
+import { useTrancheMasterContract } from "./useContract";
+import { setPendingWTFReward } from "store/position";
+import markets from "store/markets";
+import { MarketList } from "config/market";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -139,24 +143,46 @@ export const useMarket = async (marketData: Market) => {
 
 //   return result;
 // };
-export const useTrancheBalance = () => {
-  const [balance, setBalance] = useState(BIG_ZERO);
-  const [invested, setInvested] = useState(BIG_ZERO);
+export const useTrancheBalance = (trancheMasterAddress: string) => {
+  // const [balance, setBalance] = useState(BIG_ZERO);
+  // const [invested, setInvested] = useState(BIG_ZERO);
+  const [result, setResult] = useState({
+    balance: "",
+    invested: ""
+  });
   const { account } = useWeb3React<Web3Provider>();
+
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useTrancheMasterContract(trancheMasterAddress);
 
   useEffect(() => {
     const fetchBalance = async () => {
-      if (!account) return;
-      const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
-      const result = await contractMasterChef.balanceOf(account);
-      setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
-      setInvested(result.invested);
+      try {
+        const result = await trancheMasterContract.balanceOf(account);
+        setResult({
+          balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
+          invested: result.invested.toString()
+        });
+      } catch (e) {
+        console.error(e);
+      }
     };
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
 
-    fetchBalance();
-  }, [account]);
+  // useEffect(() => {
+  //   const fetchBalance = async () => {
+  //     if (!account) return;
+  //     const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
+  //     const result = await contractMasterChef.balanceOf(account);
+  //     setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
+  //     setInvested(result.invested);
+  //   };
 
-  return { balance, invested };
+  //   fetchBalance();
+  // }, [account]);
+
+  return result;
 };
 export const useTrancheSnapshot = (cycle: string | undefined) => {
   const [trancheSnapshot, setTrancheSnapshot] = useState([]);
@@ -196,41 +222,120 @@ export const useTrancheSnapshot = (cycle: string | undefined) => {
 
   return trancheSnapshot;
 };
-export const usePendingWTFReward = (poolId?: number) => {
-  const [pendingReward, setPendingReward] = useState(BIG_ZERO);
+export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
-  const allPool = poolId == undefined ? true : false;
+  const { slowRefresh } = useRefresh();
+  const [result, setResult] = useState<any>([]);
   useEffect(() => {
-    const fetchPendingReward = async () => {
-      try {
-        if (!account) return;
-        const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
-        let _pendingReward = new BigNumber(0);
-
-        if (poolId == 0 || allPool) {
-          const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
-          if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
-        }
-        if (poolId == 1 || allPool) {
-          const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
-          if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
-        }
-        if (poolId == 2 || allPool) {
-          const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
-          if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
-        }
-
-        if (!_pendingReward.isZero()) setPendingReward(_pendingReward);
-      } catch (e) {
-        console.error(e);
+    const fetchBalance = async () => {
+      const _result = [];
+      for (let i = 0; i < MarketList.length; i++) {
+        if (marketId && parseInt(marketId) !== i) continue;
+        const _marketAddress = MarketList[i].address;
+        const calls = [
+          {
+            address: _marketAddress,
+            name: "userInvest",
+            params: [account, 0]
+          },
+          {
+            address: _marketAddress,
+            name: "userInvest",
+            params: [account, 1]
+          },
+          {
+            address: _marketAddress,
+            name: "userInvest",
+            params: [account, 2]
+          }
+        ];
+        const userInvest = await multicall(MarketList[i].abi, calls);
+        // _result.push(userInvest);
+        _result[i] = userInvest;
       }
+
+      setResult(_result);
     };
+    if (account) fetchBalance();
+  }, [slowRefresh, account]);
 
-    fetchPendingReward();
-  }, [account]);
-
-  return pendingReward;
+  return result;
 };
+export const usePendingWTFReward = (masterChefAddress: string) => {
+  const { account } = useWeb3React<Web3Provider>();
+  const [totalPendingReward, setTotalPendingReward] = useState("0");
+  const [tranchesPendingReward, setTranchesPendingReward] = useState<string[]>([]);
+  const { slowRefresh } = useRefresh();
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const calls = [
+        {
+          address: masterChefAddress,
+          name: "pendingReward",
+          params: [account, 0]
+        },
+        {
+          address: masterChefAddress,
+          name: "pendingReward",
+          params: [account, 1]
+        },
+        {
+          address: masterChefAddress,
+          name: "pendingReward",
+          params: [account, 2]
+        }
+      ];
+      const result = await multicall(MasterChefAbi, calls);
+      let _pendingReward = new BigNumber(0);
+      const _tranchesPendingReward = [];
+      for (let i = 0; i < result.length; i++) {
+        _pendingReward = _pendingReward.plus(new BigNumber(result[i][0]?._hex));
+        _tranchesPendingReward.push(new BigNumber(result[i][0]?._hex).toString());
+      }
+      setTotalPendingReward(_pendingReward.toString());
+      setTranchesPendingReward(_tranchesPendingReward);
+    };
+    if (account) fetchBalance();
+  }, [masterChefAddress, slowRefresh, account]);
+
+  return { totalPendingReward, tranchesPendingReward };
+};
+// export const usePendingWTFReward = (poolId?: number) => {
+//   const [pendingReward, setPendingReward] = useState(BIG_ZERO);
+//   const { account } = useWeb3React<Web3Provider>();
+//   const allPool = poolId == undefined ? true : false;
+//   useEffect(() => {
+//     const fetchPendingReward = async () => {
+//       try {
+//         if (!account) return;
+//         const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
+//         let _pendingReward = new BigNumber(0);
+
+//         if (poolId == 0 || allPool) {
+//           const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
+//           if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
+//         }
+//         if (poolId == 1 || allPool) {
+//           const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
+//           if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
+//         }
+//         if (poolId == 2 || allPool) {
+//           const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
+//           if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
+//         }
+
+//         if (!_pendingReward.isZero()) setPendingReward(_pendingReward);
+//       } catch (e) {
+//         console.error(e);
+//       }
+//     };
+
+//     fetchPendingReward();
+//   }, [account]);
+
+//   return pendingReward;
+// };
 export const useTotalSupply = (address: string) => {
   const [totalSupply, setTotalSupply] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();

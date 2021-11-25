@@ -28,18 +28,76 @@ export const getPrice = async () => {
 };
 
 export const getWTFSupply = async () => {
-  const supply = await axios.get("https://supply.waterfalldefi.org/");
-  if (supply.status === 200) {
-    return supply.data;
+  try {
+    const supply = await axios.get("https://supply.waterfalldefi.org/");
+    if (supply.status === 200) {
+      return supply.data;
+    }
+  } catch (err) {
+    // Error handling here
+    return;
   }
   return;
 };
+export const getSubgraphQuery = async (subgraphURL: string, account: string) => {
+  try {
+    // const res2 = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod", {
+    //   query: `
 
+    //  {
+    //     tranches(first:5) {
+    //        apy
+    //        fee
+    //        cycle
+    //     }
+    //   }`
+    // });
+    // console.log(res2);
+    const res = await axios.post(subgraphURL, {
+      query: `{
+      trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
+        id
+        cycle
+        state
+        principal
+        capital
+        rate
+        startAt
+        endAt
+      }
+      tranches {
+        id
+        cycle
+        target
+        apy
+        fee
+      }
+      userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
+        id
+        owner
+        tranche
+        cycle
+        principal
+        capital
+        investAt
+        harvestAt
+      }
+    }`
+    });
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
 export const getFarmsAPY = async () => {
-  const url = "https://supply.waterfalldefi.org/farms";
-  const result = await axios.get(url);
-  if (result.status === 200) {
-    return result.data;
+  try {
+    const result = await axios.get("https://supply.waterfalldefi.org/farms");
+    if (result.status === 200) {
+      return result.data;
+    }
+  } catch (err) {
+    // Error handling here
+    return;
   }
   return;
 };

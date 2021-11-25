@@ -8,6 +8,9 @@ import { BIG_TEN } from "utils/bigNumber";
 import { Contract } from "@ethersproject/contracts";
 import { getPosition, getTrancheBalance } from "store/position";
 import { useSelectedMarket } from "hooks/useSelectors";
+import { Market } from "types";
+import { getMarkets } from "store/markets";
+import { MarketList } from "config/market";
 
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
@@ -19,16 +22,20 @@ const redeem = async (contract: Contract, i: number) => {
   return receipt.status;
 };
 
-const useRedeemDirect = () => {
+const useRedeemDirect = (trancheMasterAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useTrancheMasterContract();
-  const market = useSelectedMarket();
+  const contract = useTrancheMasterContract(trancheMasterAddress);
+  // const market = useSelectedMarket();
   const handleRedeemDirect = useCallback(
     async (i: number) => {
-      await redeem(contract, i);
-      account && dispatch(getTrancheBalance({ account }));
-      market && account && dispatch(getPosition({ market, account }));
+      const result = await redeem(contract, i);
+      dispatch(getMarkets(MarketList));
+
+      return result;
+
+      // account && dispatch(getTrancheBalance({ account }));
+      // market && account && dispatch(getPosition({ market, account }));
       //   dispatch(updateUserStakedBalance(sousId, account));
     },
     [account, dispatch, contract]

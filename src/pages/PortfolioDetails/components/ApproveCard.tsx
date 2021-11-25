@@ -33,8 +33,8 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance } from "hooks";
-import { useTrancheBalance } from "hooks/useSelectors";
+import { useBalance, useTrancheBalance } from "hooks";
+// import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
 const RowDiv = styled.div`
@@ -128,6 +128,7 @@ type TProps = WrappedComponentProps & {
   isRe?: boolean;
   assets: string;
   remaining: string;
+  remainingExact: string;
   myBalance: string;
   enabled: boolean;
   data: Market;
@@ -137,7 +138,19 @@ type TProps = WrappedComponentProps & {
 };
 
 const ApproveCard = memo<TProps>(
-  ({ intl, isRe, assets, remaining, myBalance, enabled, data, selectTrancheIdx, isSoldOut, selectTranche }) => {
+  ({
+    intl,
+    isRe,
+    assets,
+    remaining,
+    remainingExact,
+    myBalance,
+    enabled,
+    data,
+    selectTrancheIdx,
+    isSoldOut,
+    selectTranche
+  }) => {
     const { tags } = useTheme();
     const [balanceInput, setBalanceInput] = useState("0");
     const [approved, setApproved] = useState(false);
@@ -146,11 +159,11 @@ const ApproveCard = memo<TProps>(
     const { account } = useWeb3React<Web3Provider>();
     const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
-    const { onInvestDirect } = useInvestDirect();
-    const { onInvest } = useInvest();
+    const { onInvestDirect } = useInvestDirect(data.address);
+    const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
-    const { balance: balanceRe } = useTrancheBalance();
+    const { balance: balanceRe } = useTrancheBalance(data.address);
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
     const notes = [
@@ -209,7 +222,8 @@ const ApproveCard = memo<TProps>(
     };
     const validateText = useMemo(() => {
       const _balance = balance.replace(/\,/g, "");
-      const _remaining = remaining.replace(/\,/g, "");
+      // const _remaining = remaining.replace(/\,/g, "");
+      const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
       if (compareNum(_balanceInput, _balance, true)) {
         return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
@@ -246,7 +260,7 @@ const ApproveCard = memo<TProps>(
         setDepositLoading(false);
         setBalanceInput("0");
         fetchBalance();
-        if (account) dispatch(getTrancheBalance({ account }));
+        // if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         dispatch(
           setConfirmModal({
@@ -264,29 +278,43 @@ const ApproveCard = memo<TProps>(
     };
     const handleMaxInput = () => {
       const _balance = balance.replace(/\,/g, "");
-      const _remaining = remaining.replace(/\,/g, "");
+      // const _remaining = remaining.replace(/\,/g, "");
+      const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      let input = 0;
+      // let input = 0;
       if (compareNum(_remaining, _balance)) {
         // if (_balance <= _remaining) {
-        input = parseFloat(_balance);
+        // input = parseFloat(_balance);
+        if (_balance) setBalanceInput(balance);
       } else if (compareNum(_balance, _remaining, true)) {
         // } else if (_balance > _remaining) {
-        input = parseFloat(_remaining);
+        // input = parseFloat(_remaining);
+        if (_remaining) setBalanceInput(_remaining);
       }
-      if (input) setBalanceInput(input.toString());
+      // if (input) setBalanceInput(input.toString());
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      const d = value.split(".");
-      if (d.length === 2 && d[1].length === 5) {
-        return;
+      if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
+        const d = value.split(".");
+        if (d.length === 2 && d[1].length > 18) {
+          return;
+        }
+
+        const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];
+        const _decimal = value.includes(".") ? "." : "";
+        const _input2 = d[1]?.length > 0 ? d[1] : "";
+        setBalanceInput(_input1 + _decimal + _input2);
       }
-      let input = Number(value);
+      // const d = value.split(".");
+      // if (d.length === 2 && d[1].length === 18) {
+      //   return;
+      // }
+      // let input = Number(value);
       // console.log(input);
-      if (isNaN(input)) input = 0;
-      setBalanceInput(input.toString());
+      // if (isNaN(input)) input = 0;
+      // setBalanceInput(input.toString());
     };
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
@@ -316,11 +344,11 @@ const ApproveCard = memo<TProps>(
 
         <div>
           <Input
-            type="number"
+            // type="number"
             style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
             placeholder=""
-            step={0.1}
-            min={0}
+            // step={0.1}
+            // min={0}
             value={balanceInput}
             onChange={handleInputChange}
             suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}

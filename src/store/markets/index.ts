@@ -33,6 +33,8 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
     // if (!Web3.givenProvider) return;
     const _payload: Market[] = JSON.parse(JSON.stringify(payload));
     const _tt1 = Date.now();
+    const farmsAPYResult = await getFarmsAPY();
+
     const markets = await Promise.all(
       _payload.map(async (marketData) => {
         const _marketAddress = marketData.address;
@@ -69,7 +71,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "cycle"
           }
         ];
-        const farmsAPYResult = await getFarmsAPY();
         // const venusAPY = await getVenusAPY();
         // const creamAPY = await getCreamAPY();
         // const apacaAPY = 0.136;
@@ -92,6 +93,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         }
 
         const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
+        // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;

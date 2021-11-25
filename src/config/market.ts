@@ -6,7 +6,13 @@ import {
   StrategyAddress,
   sCREAMAddress,
   sVENUSAddress,
-  sALPACAAddress
+  sALPACAAddress,
+  TranchesAddress2,
+  MasterChefAddress2,
+  MasterChefAddressTest2,
+  TranchesAddressTest2,
+  MasterChefAddressTest,
+  TranchesAddressTest
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
@@ -34,8 +40,8 @@ export const MarketList: Market[] = [
     pools: [],
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAbi: WTFAbi,
-    strategyAddress: StrategyAddress[NETWORK],
-    strategyAbi: StrategyAbi,
+    // strategyAddress: StrategyAddress[NETWORK],
+    // strategyAbi: StrategyAbi,
     strategyFarms: [
       {
         farmName: "Alpaca BUSD",
@@ -55,6 +61,122 @@ export const MarketList: Market[] = [
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }
-    ]
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod"
   }
+  // {
+  //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Falls 2",
+  //   assets: "BUSD",
+  //   listingDate: "2021/11/24",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddress2[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefAddress2[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.6,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.4,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
+  // }
+  // {
+  //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD TVault 2",
+  //   assets: "BUSD",
+  //   listingDate: "2021/08/29",
+  //   // lockupPeriod: "7 Days",
+  //   // duration: 0,
+  //   // actualStartAt:
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddressTest[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefAddressTest[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAbi: WTFAbi,
+  //   // strategyAddress: StrategyAddress[NETWORK],
+  //   // strategyAbi: StrategyAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.5,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     // {
+  //     //   farmName: "Cream BUSD",
+  //     //   shares: 0.2,
+  //     //   sAddress: sCREAMAddress[NETWORK],
+  //     //   apiKey: "cream"
+  //     // },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.5,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-test"
+  // },
+  // {
+  //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault 3" : "BUSD TVault 3",
+  //   assets: "BUSD",
+  //   listingDate: "2021/11/08",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddressTest2[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefAddressTest2[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAbi: WTFAbi,
+  //   // strategyAddress: StrategyAddress[NETWORK],
+  //   // strategyAbi: StrategyAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.5,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Cream BUSD",
+  //       shares: 0.2,
+  //       sAddress: sCREAMAddress[NETWORK],
+  //       apiKey: "cream"
+  //     },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.3,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-test2"
+  // }
 ];

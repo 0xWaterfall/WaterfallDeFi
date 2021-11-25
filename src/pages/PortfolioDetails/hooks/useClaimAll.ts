@@ -9,6 +9,7 @@ import { Contract } from "@ethersproject/contracts";
 import { getPendingWTFReward, getTrancheBalance } from "store/position";
 import { Dispatch } from "redux";
 import { setConfirmModal } from "store/showStatus";
+import { MasterChefAddress } from "config/address";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
@@ -49,13 +50,13 @@ const claim = async (masterChefContract: Contract, dispatch: Dispatch<any>) => {
   return receipt.status;
 };
 
-const useClaimAll = () => {
+const useClaimAll = (masterChefAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const masterChefContract = useMasterchefContract();
+  const masterChefContract = useMasterchefContract(masterChefAddress);
   const handleClaimAll = useCallback(async () => {
     await claim(masterChefContract, dispatch);
-    account && dispatch(getPendingWTFReward({ account }));
+    // account && dispatch(getPendingWTFReward({ account }));
     //   dispatch(updateUserStakedBalance(sousId, account));
   }, [account, dispatch, masterChefContract]);
 

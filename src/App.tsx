@@ -14,6 +14,7 @@ import { RefreshContextProvider } from "contexts/RefreshContext";
 import { PersistGate } from "redux-persist/integration/react";
 import ConnectedThemeProvider from "providers/ConnectedThemeProvider/ConnectedThemeProvider";
 import Pages from "pages/Pages";
+import ConnectedApolloClientProvider from "providers/ConnectedApolloClientProvider/ConnectedApolloClientProvider";
 
 const client = new ApolloClient({
   // uri: "https://api.studio.thegraph.com/query/7076/waterfall-subgraph/v0.0.9",
@@ -29,19 +30,19 @@ const App: FC = () => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ConnectedDataProvider>
-            <ApolloProvider client={client}>
-              <ConnectedIntlProvider>
-                <Router history={history}>
-                  <ConnectedThemeProvider>
-                    <RefreshContextProvider>
-                      <Reset />
-                      <Global />
-                      <Pages />
-                    </RefreshContextProvider>
-                  </ConnectedThemeProvider>
-                </Router>
-              </ConnectedIntlProvider>
-            </ApolloProvider>
+            {/* <ConnectedApolloClientProvider> */}
+            <ConnectedIntlProvider>
+              <Router history={history}>
+                <ConnectedThemeProvider>
+                  <RefreshContextProvider>
+                    <Reset />
+                    <Global />
+                    <Pages />
+                  </RefreshContextProvider>
+                </ConnectedThemeProvider>
+              </Router>
+            </ConnectedIntlProvider>
+            {/* </ConnectedApolloClientProvider> */}
           </ConnectedDataProvider>
         </PersistGate>
       </Provider>

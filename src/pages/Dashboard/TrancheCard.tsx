@@ -11,22 +11,30 @@ import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from 
 import { useHistory } from "react-router";
 import numeral from "numeral";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import { Carousel } from "antd";
+import { Market } from "types";
 
 const Wrapper = styled.div`
   border-radius: 24px;
   background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.armyGreen)};
   padding: 77px 40px 46px;
-  display: grid;
-  gap: 24px;
-  grid-auto-flow: row;
+  // display: grid;
+  // gap: 24px;
+  // grid-auto-flow: row;
+  display: flex;
+  flex-direction: column;
   position: relative;
   filter: drop-shadow(0px 4px 20px rgba(0, 108, 253, 0.04));
+  min-width: 100%;
 `;
 
 const Block = styled.section`
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: 40% 60%;
+  // display: grid;
+  // grid-auto-flow: column;
+  // grid-template-columns: 40% 60%;
+  display: flex;
+  margin-bottom: 20px;
+  margin-right: 1px;
   font-size: 14px;
   background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.armyGreen)};
   border-radius: 12px;
@@ -50,6 +58,12 @@ const Block = styled.section`
     justify-content: center;
     font-weight: 500;
     font-size: 18px;
+  }
+  > h1 {
+    width: 40%;
+  }
+  > section {
+    width: 60%;
   }
   p {
     font-weight: 600;
@@ -145,88 +159,129 @@ const Fee = styled.div`
     border-bottom: 1px dashed ${({ theme }) => theme.useColorModeValue(theme.gray.normal3, theme.white.normal3)};
   }
 `;
-
+const CarouselContainer = styled(Carousel)`
+  min-width: 100%;
+  max-width: 100%;
+  width: 100%;
+  padding-bottom: 12px;
+  // & > div {
+  //   height: auto;
+  //   margin-right: 1px !important;
+  // }
+  > .slick-dots li button {
+    // width: 6px !important;
+    // height: 6px !important;
+    // border-radius: 100% !important;
+    background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)} !important;
+  }
+  > .slick-dots li.slick-active button {
+    // width: 7px !important;
+    // height: 7px !important;
+    // border-radius: 100% !important;
+    background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)} !important;
+  }
+`;
+const Title = styled.div`
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.gray.normal08};
+  font-size: 24px;
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
+  font-weight: 500;
+`;
 type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
   const markets = useMarkets();
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
-  const currentMarket = markets[0];
+
   const { push } = useHistory();
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
-
+  const __markets = markets.length > 0 ? [markets[0]] : [];
   return (
     <Wrapper>
       <IconWrapper>
         <BUSD />
       </IconWrapper>
-      {tranchesDisplayText.map((trancheText, _i) => {
-        const trancheApr = currentMarket && currentMarket.tranches ? currentMarket.tranches[_i].apy : "-";
-        const wtfApr = currentMarket
-          ? getWTFApr(
-              formatAllocPoint(currentMarket?.pools[_i], currentMarket?.totalAllocPoints),
-              currentMarket?.tranches[_i],
-              currentMarket?.duration,
-              currentMarket?.rewardPerBlock,
-              wtfPrice
-            )
-          : "-";
+      <CarouselContainer dotPosition="bottom" autoplay={true}>
+        {__markets.map((_market: Market, index) => {
+          return (
+            <div key={index}>
+              <Title>{_market.portfolio}</Title>
+              {tranchesDisplayText.map((trancheText, _i) => {
+                const trancheApr = _market && _market.tranches ? _market.tranches[_i].apy : "-";
+                const wtfApr = _market
+                  ? getWTFApr(
+                      formatAllocPoint(_market?.pools[_i], _market?.totalAllocPoints),
+                      _market?.tranches[_i],
+                      _market?.duration,
+                      _market?.rewardPerBlock,
+                      wtfPrice
+                    )
+                  : "-";
 
-        const netApr =
-          trancheApr && wtfApr && wtfApr !== null ? Number(trancheApr) + Number(numeral(wtfApr).value()) : "-";
+                const netApr =
+                  trancheApr && wtfApr && wtfApr !== null ? Number(trancheApr) + Number(numeral(wtfApr).value()) : "-";
 
-        return (
-          <Block key={trancheText}>
-            <h1>{trancheText}</h1>
-            <Section>
-              <APRWrapper>
-                <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
-                <p>
-                  {netApr}
-                  {" %"}
-                </p>
-              </APRWrapper>
-              <APRWrapper>
-                <span>
-                  {_i !== 2 ? "Fixed " : "Variable "}
-                  {/* {trancheText} */}
-                  {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
-                </span>
-                <span>
-                  {trancheApr}
-                  {" %"}
-                </span>
-              </APRWrapper>
-              <APRWrapper>
-                <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
-                <span>
-                  {wtfApr}
-                  {" %"}
-                </span>
-              </APRWrapper>
-              <Line />
-              <Fee>
-                <Tooltip
-                  overlay={
-                    <React.Fragment>
-                      <p>
-                        {intl.formatMessage({
-                          defaultMessage: `After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x `
-                        })}
-                        {currentMarket?.tranches[_i].fee} %
-                      </p>
-                    </React.Fragment>
-                  }
-                >
-                  <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
-                </Tooltip>
-                <span>{currentMarket?.tranches[_i].fee} %</span>
-              </Fee>
-            </Section>
-          </Block>
-        );
-      })}
+                return (
+                  <Block key={trancheText}>
+                    <h1>{trancheText}</h1>
+                    <Section>
+                      <APRWrapper>
+                        <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+                        <p>
+                          {netApr}
+                          {" %"}
+                        </p>
+                      </APRWrapper>
+                      <APRWrapper>
+                        <span>
+                          {_i !== 2 ? "Fixed " : "Variable "}
+                          {/* {trancheText} */}
+                          {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
+                        </span>
+                        <span>
+                          {trancheApr}
+                          {" %"}
+                        </span>
+                      </APRWrapper>
+                      <APRWrapper>
+                        <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+                        <span>
+                          {wtfApr}
+                          {" %"}
+                        </span>
+                      </APRWrapper>
+                      <Line />
+                      <Fee>
+                        <Tooltip
+                          overlay={
+                            <React.Fragment>
+                              <p>
+                                {intl.formatMessage({
+                                  defaultMessage: `After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x `
+                                })}
+                                {_market?.tranches[_i].fee} %
+                              </p>
+                            </React.Fragment>
+                          }
+                        >
+                          <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+                        </Tooltip>
+                        <span>{_market?.tranches[_i].fee} %</span>
+                      </Fee>
+                    </Section>
+                  </Block>
+                );
+              })}
+            </div>
+          );
+        })}
+      </CarouselContainer>
+
       <ButtonWrapper
         type="primary"
         onClick={() => {

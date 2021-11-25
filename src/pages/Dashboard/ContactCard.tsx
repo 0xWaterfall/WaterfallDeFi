@@ -45,6 +45,7 @@ const ContactCard = memo<TProps>(({ intl }) => {
           noFooter
           options={{ height: "100%" }}
           transparent
+          noScrollbar
         />
       )}
       {(!colorMode || colorMode === "light") && (
@@ -56,6 +57,7 @@ const ContactCard = memo<TProps>(({ intl }) => {
           noFooter
           options={{ height: "100%" }}
           transparent
+          noScrollbar
         />
       )}
     </Wrapper>

@@ -26,12 +26,19 @@ const Wrapper = styled.div`
 `;
 
 const InfoWrapper = styled.div`
+  // display: flex;
+  // width: 100%;
   display: grid;
   gap: 20px;
   grid-auto-flow: column;
   grid-template-columns: 1fr 1fr;
   position: relative;
+  // justify-content: space-between;
+  // & > div {
+  //   width: 49%;
+  // }
   @media screen and (max-width: 768px) {
+    // flex-direction: column;
     grid-auto-flow: row;
     gap: 80px;
     grid-template-columns: auto;

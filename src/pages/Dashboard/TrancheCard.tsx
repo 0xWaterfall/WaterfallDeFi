@@ -200,14 +200,13 @@ const TrancheCard = memo<TProps>(({ intl }) => {
 
   const { push } = useHistory();
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
-  const __markets = markets.length > 0 ? [markets[0]] : [];
   return (
     <Wrapper>
       <IconWrapper>
         <BUSD />
       </IconWrapper>
       <CarouselContainer dotPosition="bottom" autoplay={true}>
-        {__markets.map((_market: Market, index) => {
+        {markets.map((_market: Market, index) => {
           return (
             <div key={index}>
               <Title>{_market.portfolio}</Title>

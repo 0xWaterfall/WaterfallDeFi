@@ -351,7 +351,7 @@ const Increase = memo<TProps>(({ intl }) => {
 
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
-          {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
+          {intl.formatMessage({ defaultMessage: "Extend Lock Time__" })}
         </ButtonWrapper>
       )}
       {account && approved && !locked && (

@@ -124,7 +124,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState("0");
-  const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
+  const { balance: wtfBalance, fetchBalance, actualBalance: actualWtfBalance } = useBalance(WTFAddress[NETWORK]);
   const { increaseLockAmount } = useIncreaseLockAmount();
   const { extendLockTime } = useExtendLockTime();
   const [approved, setApproved] = useState(false);
@@ -265,8 +265,9 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       setDatePickerValue(undefined);
     }
   };
+  const handleMaxLockTime = () => {};
   const handleMaxInput = () => {
-    const _balance = wtfBalance.replace(/\,/g, "");
+    const _balance = actualWtfBalance.replace(/\,/g, "");
     // const _remaining = remaining.replace(/\,/g, "");
     const input = parseFloat(_balance);
 
@@ -329,7 +330,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
             : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
           {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
-        <MAX>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+        <MAX onClick={handleMaxLockTime}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
       </Label>
 
       <DatePickerWrapper

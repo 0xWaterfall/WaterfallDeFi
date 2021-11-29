@@ -92,6 +92,12 @@ export const VeWTFAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
   [NETWORKS.MAINNET]: ""
 };
+export const FeeRewardsAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x14c4ec080ba871008797f9e6b20068de22756ad1",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: ""
+};
+
 export const PancakeLPAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
   [NETWORKS.TESTNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",

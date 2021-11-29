@@ -115,13 +115,14 @@ const MAX = styled.div`
 type TProps = WrappedComponentProps & {
   stakingConfig: StakingConfig;
 };
+const MAX_LOCK_TIME = 31536000;
+const MIN_LOCK_TIME = 2592000;
 
 const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { tags } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
-
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState("0");
   const { balance: wtfBalance, fetchBalance, actualBalance: actualWtfBalance } = useBalance(WTFAddress[NETWORK]);
@@ -154,7 +155,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       };
       checkLocked();
     }
-  }, [approved]);
+  }, [approved, account]);
   const handleApprove = async () => {
     setApproveLoading(true);
     try {
@@ -189,13 +190,18 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     if (datePickerValue) {
       return datePickerValue;
     } else if (selectedValue) {
-      return dayjs().add(selectedValue.value, selectedValue.unit);
+      if (expiryTimestamp === "0") return dayjs().add(selectedValue.value, selectedValue.unit);
+      if (expiryTimestamp !== "0")
+        return dayjs.unix(Number(expiryTimestamp)).add(selectedValue.value, selectedValue.unit);
     }
-  }, [selectedValue, datePickerValue]);
+  }, [selectedValue, datePickerValue, expiryTimestamp]);
 
   const duration = useMemo(() => {
     if (!newExpireDate) return;
-    const diff = newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
+    const diff =
+      expiryTimestamp !== "0"
+        ? newExpireDate?.unix() - Number(expiryTimestamp)
+        : newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
     return Math.ceil(diff / 100) * 100;
   }, [newExpireDate]);
 
@@ -265,7 +271,9 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       setDatePickerValue(undefined);
     }
   };
-  const handleMaxLockTime = () => {};
+  const handleMaxLockTime = () => {
+    setDatePickerValue(dayjs.unix(Number(startTimestamp) + Number(MAX_LOCK_TIME)));
+  };
   const handleMaxInput = () => {
     const _balance = actualWtfBalance.replace(/\,/g, "");
     // const _remaining = remaining.replace(/\,/g, "");
@@ -282,6 +290,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     try {
       await lockAndStakeWTF(balanceInput, duration);
       fetchBalance();
+      setLocked(true);
       setBalanceInput("0");
       successNotification("Lock & Stake Success", "");
     } catch (e) {
@@ -297,6 +306,19 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
     }
   }, [wtfBalance, balanceInput]);
+  const validateTextLockTime = useMemo(() => {
+    if (!duration) return;
+    const _duration = duration || 0;
+    const totalLockTime =
+      expiryTimestamp !== "0" ? Number(expiryTimestamp) - Number(startTimestamp) + _duration : _duration;
+
+    if (totalLockTime > MAX_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Maximum Lock Time = 1 Year." });
+
+    if (totalLockTime < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 30 days." });
+
+    if (newExpireDate && expiryTimestamp !== "0" && newExpireDate?.unix() < Number(expiryTimestamp))
+      return intl.formatMessage({ defaultMessage: "Extend Lock Time has to be greater than previous expire date." });
+  }, [duration, newExpireDate, account]);
   return (
     <Wrapper>
       <Label>
@@ -325,9 +347,10 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       <Label css={{ margin: "15px 0 10px" }}>
         <p>
           {intl.formatMessage({ defaultMessage: "Lock will expire in:" })}&nbsp;
-          {expiryTimestamp !== "0" && duration
-            ? dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")
-            : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+          {expiryTimestamp !== "0" &&
+            (duration
+              ? dayjs.unix(Number(expiryTimestamp) + Number(duration)).format("YYYY-MM-DD HH:mm:ss")
+              : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss"))}
           {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
         <MAX onClick={handleMaxLockTime}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
@@ -337,6 +360,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         style={{ marginBottom: 8 }}
         value={datePickerValue as moment.Moment | undefined}
         onChange={(e) => {
+          //
           setDatePickerValue(e as Dayjs);
         }}
       />
@@ -352,7 +376,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         }}
         reset={Boolean(datePickerValue)}
       />
-
+      {validateTextLockTime && <ValidateText>{validateTextLockTime}</ValidateText>}
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
           {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
@@ -385,12 +409,12 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
           {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
         </p>
-        <span>{convertRatio}</span>
+        <span>{!validateText && !validateTextLockTime && convertRatio}</span>
       </Label>
 
       <Label css={{ margin: 0 }}>
         <p>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</p>
-        <span>{receivedVeWTF}</span>
+        <span>{!validateText && !validateTextLockTime && receivedVeWTF}</span>
       </Label>
     </Wrapper>
   );

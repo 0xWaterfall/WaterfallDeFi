@@ -348,7 +348,7 @@ const Stake = memo<TProps>(({ intl }) => {
   if (!stakingConfig) {
     history.push("/");
   }
-  const { totalStaked, isPoolActive, totalLocked, userStaked } = useStakingPool(
+  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR } = useStakingPool(
     stakingConfig?.rewardTokenAddress || "",
     stakingConfig?.earningTokenAddress || "",
     account
@@ -382,9 +382,9 @@ const Stake = memo<TProps>(({ intl }) => {
   // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
-      <Unclaim>
+      {/* <Unclaim>
         <section>
-          <p>{intl.formatMessage({ defaultMessage: "You unclaim WTF" })}: 123.321</p>
+          <p>{intl.formatMessage({ defaultMessage: "Your unclaim WTF" })}: 123.321</p>
           <span>({intl.formatMessage({ defaultMessage: "From portfolio reward" })})</span>
         </section>
         <Button>{intl.formatMessage({ defaultMessage: "Claim" })}</Button>
@@ -392,7 +392,7 @@ const Stake = memo<TProps>(({ intl }) => {
           <Bulb />
           <span>{intl.formatMessage({ defaultMessage: "Claim to the wallet first, then stake WTF." })}</span>
         </div>
-      </Unclaim>
+      </Unclaim> */}
 
       <BodyWrapper>
         <APYCard>
@@ -402,14 +402,14 @@ const Stake = memo<TProps>(({ intl }) => {
               {intl.formatMessage({ defaultMessage: "Earn daily WTF rewards and weekly trade fee dividends. " })}
             </span>
           </div>
-          <span>APY 150%</span>
+          <span>up to APY {maxAPR}%</span>
         </APYCard>
 
         <Total>
           <span>
             {intl.formatMessage({ defaultMessage: "Total locked WTF" })}: {numeral(totalLocked).format("0,0.[0000]")}
           </span>
-          <span>{intl.formatMessage({ defaultMessage: "Average lock duration" })}: 4.0 months</span>
+          {/* <span>{intl.formatMessage({ defaultMessage: "Average lock duration" })}: 4.0 months</span> */}
         </Total>
 
         <Actions>
@@ -439,11 +439,16 @@ const Stake = memo<TProps>(({ intl }) => {
               <p>{intl.formatMessage({ defaultMessage: "Your info" })}</p>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your stake" })}:</span>
-                <span>{lockingWTF ? numeral(lockingWTF).format("0,0.[0000]") : "-"} WTF</span>
+                <span>{lockingWTF !== "0" ? numeral(lockingWTF).format("0,0.[0000]") : "-"} WTF</span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Your ratio" })}:</span>
-                <span>%</span>
+                <span>
+                  {lockingWTF !== "0"
+                    ? numeral((Number(VeWTFBalance) / Number(lockingWTF)) * 100).format("0,0.[00]")
+                    : "-"}{" "}
+                  %
+                </span>
               </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Expire date" })}:</span>
@@ -478,15 +483,18 @@ const Stake = memo<TProps>(({ intl }) => {
             <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your Ve-WTF" })}</p>
               <p>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"}</p>
-              <span>(1 ve-WTF= 0.25 WTF)</span>
+              <span>
+                {VeWTFBalance !== "0" &&
+                  `(1 ve-WTF= ${numeral(Number(lockingWTF) / Number(VeWTFBalance)).format("0,0.[0000]")} WTF)`}
+              </span>
               <div>
                 <Bulb />
                 <div>
-                  <span>{intl.formatMessage({ defaultMessage: "ve-WTF" })}</span>
+                  <span>{intl.formatMessage({ defaultMessage: "Stake WTF get Ve-WTF" })}</span>
                   <span>
                     {intl.formatMessage({
                       defaultMessage:
-                        "veWTF holders can get dividends from the transaction fee income in each cycle.Rewards will be available for withdrawal fees generated from each cycleavailable for claiming after the end of each period."
+                        "Ve-WTF holders can get dividends from the transaction fee income in each cycle. Rewards will be available for withdrawal after the end of each period."
                     })}
                   </span>
                 </div>

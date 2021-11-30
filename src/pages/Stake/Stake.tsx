@@ -493,7 +493,6 @@ const Stake = memo<TProps>(({ intl }) => {
             </div>
           </StakeInfo>
         </Actions>
-
         <Footer>
           <div>
             <VeWTF>

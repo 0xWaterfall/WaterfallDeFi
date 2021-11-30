@@ -42,7 +42,8 @@ export const useStakingPool = (
     totalStaked: "",
     userStaked: "",
     totalLocked: "",
-    maxAPR: ""
+    maxAPR: "",
+    pendingBUSDReward: ""
   });
   const { fastRefresh } = useRefresh();
 
@@ -81,6 +82,7 @@ export const useStakingPool = (
           .times(20 * 60 * 24 * 365 * 100)
           .toString()
       ).format("0,0.[00]");
+
       const calls3 = [
         {
           address: FeeRewardsAddress[NETWORK],
@@ -89,13 +91,17 @@ export const useStakingPool = (
         }
       ];
       const [pending] = await multicall(FeeRewardsAbi, calls3);
-      console.log(pending);
+      const pendingBUSDReward = pending
+        ? numeral(new BigNumber(pending.reward?._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[00]")
+        : "";
+
       setResult({
         isPoolActive,
         totalStaked: new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(), //total VeWTF
         userStaked: new BigNumber(user?.user.amount?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(),
         totalLocked: new BigNumber(totalLocked[0]?._hex).dividedBy(BIG_TEN.pow(18)).toString(),
-        maxAPR: maxAPR
+        maxAPR: maxAPR,
+        pendingBUSDReward
       });
     };
     if (account) fetchBalance();

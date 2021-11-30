@@ -123,6 +123,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { account } = useWeb3React<Web3Provider>();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
+
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState("0");
   const { balance: wtfBalance, fetchBalance, actualBalance: actualWtfBalance } = useBalance(WTFAddress[NETWORK]);
@@ -130,6 +131,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { extendLockTime } = useExtendLockTime();
   const [approved, setApproved] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [resetSelect, setResetSelect] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [increaseLockAmountLoading, setIncreaseLockAmountLoading] = useState(false);
   const [extendLockTimeLoading, setExtendLockTimeLoading] = useState(false);
@@ -236,6 +238,9 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   }, [duration, balanceInput]);
 
   const convertRatio = useMemo(() => {
+    console.log(lockingWTF);
+    console.log(balanceInput);
+    console.log(duration);
     const secondsInYear = 3600 * 24 * 365;
     if (!locked) {
       if (!balanceInput) return "-";
@@ -267,8 +272,10 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
 
     if (locked) {
       //reset extend lock time
+      // setSelectedValue(undefined);
       setSelectedValue({ value: 0, unit: "M" });
       setDatePickerValue(undefined);
+      setResetSelect(true);
     }
   };
   const handleMaxLockTime = () => {
@@ -362,6 +369,8 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         onChange={(e) => {
           //
           setDatePickerValue(e as Dayjs);
+
+          if (locked) setBalanceInput("0");
         }}
       />
 
@@ -369,12 +378,13 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         onSelected={(e) => {
           setSelectedValue(e);
           setDatePickerValue(undefined);
+          setResetSelect(false);
 
           if (locked) {
             setBalanceInput("0");
           }
         }}
-        reset={Boolean(datePickerValue)}
+        reset={Boolean(datePickerValue) || resetSelect}
       />
       {validateTextLockTime && <ValidateText>{validateTextLockTime}</ValidateText>}
       {account && approved && locked && (

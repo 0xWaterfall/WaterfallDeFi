@@ -56,11 +56,12 @@ const Block = styled.div`
 
 type TProps = WrappedComponentProps & {
   share: string;
+  pendingBUSDReward: string;
 };
 
 let chart: echarts.ECharts;
 
-const LiquidfillChart = memo<TProps>(({ intl, share }) => {
+const LiquidfillChart = memo<TProps>(({ intl, share, pendingBUSDReward }) => {
   const { colorMode } = useTheme();
 
   const options = useMemo(() => {
@@ -110,7 +111,7 @@ const LiquidfillChart = memo<TProps>(({ intl, share }) => {
     <Wrapper>
       <div id="liquidfill-Chart" style={{ height: "100%", width: "100%" }} />
       <Block>
-        <p css={{ marginBottom: 5 }}>110.1234</p>
+        <p css={{ marginBottom: 5 }}>{pendingBUSDReward ? pendingBUSDReward : "-"}</p>
 
         <div css={{ marginBottom: 20 }}>
           Est. Reward Pool（BUSD）

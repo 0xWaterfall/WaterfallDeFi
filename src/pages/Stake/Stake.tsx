@@ -23,6 +23,7 @@ import { usePendingReward } from "./hooks/usePendingReward";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import useClaimRewards from "./hooks/useClaimRewards";
 import { successNotification } from "utils/notification";
+import useClaimFeeRewards from "./hooks/useClaimFeeRewards";
 const Wrapper = styled.div`
   max-width: 1072px;
   padding: 86px 24px 160px;
@@ -348,7 +349,7 @@ const Stake = memo<TProps>(({ intl }) => {
   if (!stakingConfig) {
     history.push("/");
   }
-  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR } = useStakingPool(
+  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR, pendingBUSDReward } = useStakingPool(
     stakingConfig?.rewardTokenAddress || "",
     stakingConfig?.earningTokenAddress || "",
     account
@@ -360,7 +361,9 @@ const Stake = memo<TProps>(({ intl }) => {
   const pendingWTFRewards = usePendingReward(stakingConfig.rewardTokenAddress, account);
   const { price: wtfPrice } = useWTFPriceLP();
   const { claimRewards } = useClaimRewards();
+  const { claimFeeRewards } = useClaimFeeRewards();
   const [harvestLoading, setHarvestLoading] = useState(false);
+  const [feeRewardsHarvestLoading, setFeeRewardsHarvestLoading] = useState(false);
   const onHarvest = async () => {
     setHarvestLoading(true);
     try {
@@ -375,10 +378,21 @@ const Stake = memo<TProps>(({ intl }) => {
       setHarvestLoading(false);
     }
   };
+  const onFeeRewardsHarvest = async () => {
+    setFeeRewardsHarvestLoading(true);
+    try {
+      const result = await claimFeeRewards();
+      successNotification("Claim Reward Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setFeeRewardsHarvestLoading(false);
+    }
+  };
+  const _VeWTFBalance = numeral(VeWTFBalance).value() || 0;
+  const _VeWTFTotalSupply = numeral(VeWTFTotalSupply).value() || 0;
   const VeWTFRatio =
-    VeWTFTotalSupply && VeWTFBalance
-      ? numeral((parseFloat(VeWTFBalance) / parseFloat(VeWTFTotalSupply)) * 100).format("0,0.[0000]")
-      : "-";
+    VeWTFTotalSupply && VeWTFBalance ? numeral((_VeWTFBalance / _VeWTFTotalSupply) * 100).format("0,0.[0000]") : "-";
   // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
@@ -445,7 +459,7 @@ const Stake = memo<TProps>(({ intl }) => {
                 <span>{intl.formatMessage({ defaultMessage: "Your ratio" })}:</span>
                 <span>
                   {lockingWTF !== "0"
-                    ? numeral((Number(VeWTFBalance) / Number(lockingWTF)) * 100).format("0,0.[00]")
+                    ? numeral((Number(_VeWTFBalance) / Number(lockingWTF)) * 100).format("0,0.[00]")
                     : "-"}{" "}
                   %
                 </span>
@@ -512,13 +526,15 @@ const Stake = memo<TProps>(({ intl }) => {
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "Est. weekly dividends:" })}</p>
                 <div>
-                  10 <span>BUSD</span>
+                  {pendingBUSDReward} <span>BUSD</span>
                 </div>
-                <Button type="primaryLine">{intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳</Button>
+                <Button type="primaryLine" onClick={onFeeRewardsHarvest} loading={feeRewardsHarvestLoading}>
+                  {intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳
+                </Button>
               </div>
             </WeeklyWrapper>
           </div>
-          <LiquidfillChart share={VeWTFRatio} />
+          <LiquidfillChart share={VeWTFRatio} pendingBUSDReward={pendingBUSDReward} />
         </Footer>
       </BodyWrapper>
     </Wrapper>

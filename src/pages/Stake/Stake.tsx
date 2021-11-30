@@ -496,8 +496,10 @@ const Stake = memo<TProps>(({ intl }) => {
           <div>
             <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your Ve-WTF" })}</p>
-              <p>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"}</p>
+              <p>{VeWTFBalance ? numeral(_VeWTFBalance).format("0,0.[0000]") : "-"}</p>
               <span>
+                {lockingWTF}
+                {VeWTFBalance}
                 {VeWTFBalance !== "0" &&
                   `(1 ve-WTF= ${numeral(Number(lockingWTF) / Number(VeWTFBalance)).format("0,0.[0000]")} WTF)`}
               </span>

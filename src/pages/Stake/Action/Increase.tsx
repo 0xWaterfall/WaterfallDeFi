@@ -224,13 +224,13 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const receivedVeWTF = useMemo(() => {
     const secondsInYear = 3600 * 24 * 365;
     if (!locked) {
-      if (!balanceInput) return "-";
+      if (balanceInput === "0") return "-";
       if (!duration) return "-";
 
       return numeral((Number(balanceInput) * duration) / secondsInYear).format("0,0.[0000]");
     }
     if (locked) {
-      if (!balanceInput && !duration) return "-";
+      if (balanceInput === "0" && !duration) return "-";
       const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
       const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
       return numeral((_balanceInput * _duration) / secondsInYear).format("0,0.[0000]");
@@ -243,13 +243,13 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     console.log(duration);
     const secondsInYear = 3600 * 24 * 365;
     if (!locked) {
-      if (!balanceInput) return "-";
+      if (balanceInput === "0") return "-";
       if (!duration) return "-";
 
       return numeral((Number(balanceInput) * duration) / 100 / secondsInYear).format("0,0.[0000]");
     }
     if (locked) {
-      if (!balanceInput && !duration) return "-";
+      if (balanceInput === "0" && !duration) return "-";
       const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
       const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
       return numeral((_balanceInput * _duration) / 100 / secondsInYear).format("0,0.[0000]");
@@ -282,11 +282,13 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     setDatePickerValue(dayjs.unix(Number(startTimestamp) + Number(MAX_LOCK_TIME)));
   };
   const handleMaxInput = () => {
+    console.log(actualWtfBalance);
     const _balance = actualWtfBalance.replace(/\,/g, "");
+    console.log(_balance);
     // const _remaining = remaining.replace(/\,/g, "");
-    const input = parseFloat(_balance);
+    // const input = parseFloat(_balance);
 
-    if (input) setBalanceInput(input.toString());
+    if (_balance) setBalanceInput(_balance);
   };
   const onConfirm = useCallback(async () => {
     if (validateText !== undefined && validateText.length > 0) return;
@@ -307,7 +309,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     }
   }, [newExpireDate, balanceInput]);
   const validateText = useMemo(() => {
-    const _balance = wtfBalance.replace(/\,/g, "");
+    const _balance = actualWtfBalance.replace(/\,/g, "");
     const _balanceInput = balanceInput;
     if (compareNum(_balanceInput, _balance, true)) {
       return intl.formatMessage({ defaultMessage: "Insufficient Balance" });

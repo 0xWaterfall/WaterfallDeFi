@@ -391,6 +391,8 @@ const Stake = memo<TProps>(({ intl }) => {
   };
   const _VeWTFBalance = numeral(VeWTFBalance).value() || 0;
   const _VeWTFTotalSupply = numeral(VeWTFTotalSupply).value() || 0;
+  console.log(Number(lockingWTF));
+  console.log(Number(_VeWTFBalance));
   const VeWTFRatio =
     VeWTFTotalSupply && VeWTFBalance ? numeral((_VeWTFBalance / _VeWTFTotalSupply) * 100).format("0,0.[0000]") : "-";
   // if (!stakingConfig) return <Wrapper />;
@@ -498,10 +500,8 @@ const Stake = memo<TProps>(({ intl }) => {
               <p>{intl.formatMessage({ defaultMessage: "Your Ve-WTF" })}</p>
               <p>{VeWTFBalance ? numeral(_VeWTFBalance).format("0,0.[0000]") : "-"}</p>
               <span>
-                {lockingWTF}
-                {VeWTFBalance}
                 {VeWTFBalance !== "0" &&
-                  `(1 ve-WTF= ${numeral(Number(lockingWTF) / Number(VeWTFBalance)).format("0,0.[0000]")} WTF)`}
+                  `(1 ve-WTF= ${numeral(Number(lockingWTF) / Number(_VeWTFBalance)).format("0,0.[0000]")} WTF)`}
               </span>
               <div>
                 <Bulb />

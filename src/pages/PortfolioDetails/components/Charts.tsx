@@ -213,7 +213,11 @@ const Charts = memo<TProps>(({ intl, data }) => {
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
             </ButtonWrapper>
-            <ButtonWrapper type="default" onClick={rollDepositPopup} disabled={!account || !+balance}>
+            <ButtonWrapper
+              type="default"
+              onClick={rollDepositPopup}
+              disabled={!account || !+balance || data?.isRetired}
+            >
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </ButtonWrapper>
           </div>

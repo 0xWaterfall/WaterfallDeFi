@@ -61,6 +61,7 @@ export interface Market {
   rewardPerBlock?: string;
   strategyFarms: StrategyFarm[];
   subgraphURL: string;
+  isRetired?: boolean;
 }
 export type StrategyFarm = {
   farmName: string;

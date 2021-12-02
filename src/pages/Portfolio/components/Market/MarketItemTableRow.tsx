@@ -112,6 +112,11 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   };
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
+  const getMarketStatusTag = () => {
+    if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
+    if (marketData.status === PORTFOLIO_STATUS.PENDING) return <Tag color="yellow" value={"Pending"} />;
+    if (marketData.status === PORTFOLIO_STATUS.ACTIVE) return <Tag color="green" value={"Active"} />;
+  };
   return (
     <TableRowMarket
       height={100}
@@ -156,8 +161,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         {formatNumberSeparator(marketData.tvl)} {marketData.assets}
       </TableColumn>
       <TableColumn minWidth={80}>
-        {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
-        {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null}
+        {getMarketStatusTag()}
 
         {/* <Tag color="red" value={"Matured"}></Tag> */}
         {/* {i === 2 ? <Tag color="yellow" value={"Pending"}></Tag> : null} */}
@@ -166,7 +170,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
       <TableColumn>
         <APYStyled>
           <Button type="primary" onClick={navigateMarketDetail}>
-            {marketData.status !== PORTFOLIO_STATUS.PENDING
+            {marketData.status !== PORTFOLIO_STATUS.PENDING || marketData?.isRetired
               ? intl.formatMessage({ defaultMessage: "More" })
               : intl.formatMessage({ defaultMessage: "Deposit" })}
           </Button>

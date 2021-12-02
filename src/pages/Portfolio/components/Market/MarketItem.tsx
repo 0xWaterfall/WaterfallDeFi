@@ -152,6 +152,12 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
     dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolio-details" });
   };
+
+  const getMarketStatusTag = () => {
+    if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
+    if (marketData.status === PORTFOLIO_STATUS.PENDING) return <Tag color="yellow" value={"Pending"} />;
+    if (marketData.status === PORTFOLIO_STATUS.ACTIVE) return <Tag color="green" value={"Active"} />;
+  };
   return (
     <Container>
       <RowDiv>
@@ -224,14 +230,15 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
         <div>
-          {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
-          {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null}
+          {getMarketStatusTag()}
+          {/* {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
+          {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null} */}
         </div>
       </RowDiv>
 
       <ButtonDiv>
         <Button type="primary" onClick={navigateMarketDetail}>
-          {marketData.status !== PORTFOLIO_STATUS.PENDING
+          {marketData.status !== PORTFOLIO_STATUS.PENDING || marketData?.isRetired
             ? intl.formatMessage({ defaultMessage: "More" })
             : intl.formatMessage({ defaultMessage: "Deposit" })}
         </Button>

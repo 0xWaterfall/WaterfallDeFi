@@ -11,6 +11,9 @@ const Wrapper = styled.div`
   position: relative;
   z-index: 1;
   margin-bottom: 48px;
+  max-width: 1072px;
+  padding: 86px 24px 160px;
+  margin: 0 auto;
 `;
 
 const Label = styled.div`
@@ -128,7 +131,7 @@ const FarmContainer = memo<TProps>(({ intl }) => {
           <Card
             key={p}
             onClick={() => {
-              push({ pathname: `/stake/farming/${p}` });
+              push({ pathname: `/farm/${p}` });
             }}
           >
             <IconWrapper>

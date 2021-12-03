@@ -30,6 +30,12 @@ export interface StakingConfig {
   name: string;
 }
 
+export interface FarmConfig {
+  lpTokenAddress: string;
+  lpRewardAddress: string;
+  name: string;
+}
+
 export interface Market {
   portfolio: string;
   assets: string;

@@ -179,6 +179,11 @@ const Header = memo<TProps>(({ intl }) => {
       checked: "/stake"
     },
     {
+      pathname: "/farms",
+      text: intl.formatMessage({ defaultMessage: "Farm" }),
+      checked: "/farms"
+    },
+    {
       pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
       text: intl.formatMessage({ defaultMessage: "User Guide" }),
       target: "_blank"

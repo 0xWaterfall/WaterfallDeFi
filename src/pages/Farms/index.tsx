@@ -2,24 +2,29 @@
 
 import styled from "@emotion/styled";
 import useScrollTop from "hooks/useScrollTop";
+import numeral from "numeral";
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";
+import { useFarms } from "./hooks/useFarms";
 
 const Wrapper = styled.div`
   position: relative;
   z-index: 1;
   margin-bottom: 48px;
+  max-width: 1072px;
+  padding: 86px 24px 160px;
+  margin: 0 auto;
 `;
 
 const Label = styled.div`
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.primary.deep1};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
 
 const CardGroup = styled.div`
@@ -41,7 +46,7 @@ const CardGroup = styled.div`
 `;
 
 const Card = styled.div`
-  background: ${({ theme }) => theme.white.normal5};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal5, theme.dark.block5)};
   border-radius: 24px;
   padding: 19px 16px 22px;
   filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.02));
@@ -86,10 +91,10 @@ const IconGroup = styled.div`
 const LabelLP = styled.div`
   font-size: 20px;
   line-height: 125%;
-  color: ${({ theme }) => theme.gray.normal85};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   padding-bottom: 20px;
   margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.gray.normal04};
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.gray.normal04, theme.white.normal08)};
 `;
 
 const DataWrapper = styled.div`
@@ -103,12 +108,12 @@ const DataWrapper = styled.div`
     p {
       font-size: 12px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal5};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
     }
     span {
       font-size: 16px;
       line-height: 125%;
-      color: ${({ theme }) => theme.gray.normal85};
+      color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
       font-weight: bold;
     }
   }
@@ -116,19 +121,20 @@ const DataWrapper = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const FarmCard = memo<TProps>(({ intl }) => {
+const FarmContainer = memo<TProps>(({ intl }) => {
   const { push } = useHistory();
-
+  const farms = useFarms();
+  console.log(farms);
   return (
     <Wrapper>
       <Label>{intl.formatMessage({ defaultMessage: "Farming WTF" })}</Label>
       <CardGroup>
         <LinearGradientSubtractWrapper />
-        {[1, 2, 3, 4].map((p) => (
+        {farms.map((_farm, idx) => (
           <Card
-            key={p}
+            key={idx}
             onClick={() => {
-              push({ pathname: `/farm/${p}` });
+              push({ pathname: `/farm/${idx}` });
             }}
           >
             <IconWrapper>
@@ -141,19 +147,19 @@ const FarmCard = memo<TProps>(({ intl }) => {
               </IconGroup>
               <span>WTF</span>
             </IconWrapper>
-            <LabelLP>WTF-BUSD LP</LabelLP>
+            <LabelLP>{_farm.name}</LabelLP>
             <DataWrapper>
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>
-                <span>1,000,000</span>
+                <span>{numeral(_farm.totalStaked).format("0,0.[0000]")}</span>
               </div>
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
-                <span>736%</span>
+                <span>{_farm.maxAPR}%</span>
               </div>
               <div>
                 <p>{intl.formatMessage({ defaultMessage: "Your stake" })}</p>
-                <span>0</span>
+                <span>{numeral(_farm.userStakedLP).format("0,0.[0000]")}</span>
               </div>
             </DataWrapper>
           </Card>
@@ -163,4 +169,4 @@ const FarmCard = memo<TProps>(({ intl }) => {
   );
 });
 
-export default injectIntl(FarmCard);
+export default injectIntl(FarmContainer);

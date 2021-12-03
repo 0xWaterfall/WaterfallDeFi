@@ -6,6 +6,10 @@ const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
 const PortfolioDetails = loadable(() => import("../../pages/PortfolioDetails/PortfolioDetails"));
 const Stake = loadable(() => import("../../pages/Stake/Stake"));
 const OldStake = loadable(() => import("../../pages/OldStake/Stake"));
+// const Farms = loadable(() => import("../../pages/OldStake/FarmContainer"));
+// const Farm = loadable(() => import("../../pages/OldStake/Farming/Farming"));
+const Farms = loadable(() => import("../../pages/Farms"));
+const Farm = loadable(() => import("../../pages/Farms/Detail/Farm"));
 const CommingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
 export const RouteComponents = [
   // {
@@ -37,5 +41,17 @@ export const RouteComponents = [
     component: Stake,
     exact: true,
     path: "/stake"
+  },
+  {
+    key: "Farms",
+    component: Farms,
+    exact: true,
+    path: "/farms"
+  },
+  {
+    key: "Farm",
+    component: Farm,
+    exact: false,
+    path: "/farm/:id"
   }
 ];

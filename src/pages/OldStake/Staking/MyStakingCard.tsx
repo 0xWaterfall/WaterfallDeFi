@@ -100,7 +100,7 @@ const MyStakingCard = memo<TProps>(({ intl, stakingConfig }) => {
         </div>
       </Block>
       <Block css={{ gridArea: "d" }}>
-        <span>Ve-WTF</span>
+        <span>veWTF</span>
         <p>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"}</p>
         {/* <span>$ 2517.12</span> */}
       </Block>

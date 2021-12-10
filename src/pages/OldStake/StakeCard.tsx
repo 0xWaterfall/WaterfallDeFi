@@ -109,7 +109,7 @@ const StakeCard = memo<TProps>(({ intl, data }) => {
           <span>736%</span>
         </div>
         <div>
-          <p>{intl.formatMessage({ defaultMessage: "Total supply (Ve-WTF)" })}</p>
+          <p>{intl.formatMessage({ defaultMessage: "Total supply (veWTF)" })}</p>
           <span>{earningTokenTotalSupply}</span>
         </div>
         <div>

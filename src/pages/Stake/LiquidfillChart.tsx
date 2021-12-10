@@ -9,25 +9,29 @@ import styled from "@emotion/styled";
 import "echarts-liquidfill";
 import { Union } from "assets/images";
 import Tooltip from "components/Tooltip/Tooltip";
+import { useSize } from "ahooks";
 
 const Wrapper = styled.div`
-  width: 800px;
-  height: 800px;
+  width: 100%;
+  // height: 400px;
+  // width: 800px;
+  height: 500px;
+
   display: flex;
   flex-direction: column;
-  transform: translate(-200px, -150px);
-  position: relative;
-  @media screen and (max-width: 1000px) {
-    transform: translate(0);
-    width: 100vw;
-    height: 100vw;
+  // transform: translate(-200px, -150px);
+  position: relative !important;
+  @media screen and (max-width: 900px) {
+    // transform: translate(0);
+    width: 100%;
+    height: 400px;
   }
 
-  @media screen and (max-width: 500px) {
-    transform: translate(-40vw, -40vw);
-    width: 160vw;
-    height: 160vw;
-  }
+  // @media screen and (max-width: 500px) {
+  //   transform: translate(-40vw, -40vw);
+  //   width: 160vw;
+  //   height: 160vw;
+  // }
 `;
 
 const Block = styled.div`
@@ -70,7 +74,9 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingBUSDReward }) => {
         {
           type: "liquidFill",
           data: [0.3],
+          center: ["50%", "50%"],
           color: ["#88F8FF"],
+          radius: "80%",
           itemStyle: {
             shadowBlur: 0
           },
@@ -124,8 +130,8 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingBUSDReward }) => {
             <Union />
           </Tooltip>
         </div>
-        <p css={{ marginBottom: 5 }}>{share}%</p>
-        <div>{intl.formatMessage({ defaultMessage: "Your Share" })}</div>
+        {/* <p css={{ marginBottom: 5 }}>{share}%</p> */}
+        {/* <div>{intl.formatMessage({ defaultMessage: "Your Share" })}</div> */}
       </Block>
     </Wrapper>
   );

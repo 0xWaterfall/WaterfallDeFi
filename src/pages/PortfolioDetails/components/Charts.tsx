@@ -31,9 +31,10 @@ import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "sto
 import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { ToStakeImg } from "assets/images";
+import { ArrowRight2, ToStakeImg } from "assets/images";
 import { setConfirmModal } from "store/showStatus";
 import { usePendingWTFReward, useTrancheBalance } from "hooks";
+import ClaimPopup from "./ClaimPopup";
 
 const Wrapper = styled.div`
   display: grid;
@@ -107,6 +108,10 @@ const ButtonWrapper = styled(Button)`
   border-radius: 4px;
   height: 28px;
   font-size: 12px;
+
+  & > svg {
+    margin-left: 5px;
+  }
 `;
 
 type TProps = WrappedComponentProps & {
@@ -117,6 +122,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
+  const [showClaim, setShowClaim] = useState(false);
 
   const { push } = useHistory();
 
@@ -134,7 +140,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   //   account && dispatch(getPendingWTFReward({ account }));
   //   // account && dispatch(getTrancheBalance({ account }));
   // }, [account]);
-  const claimReward = async () => {
+  const claimReward = async (duration: string) => {
     setClaimRewardLoading(true);
 
     dispatch(
@@ -195,6 +201,10 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const rollDepositPopup = () => {
     setShowRedeposit(!showRedeposit);
   };
+  const claimPopup = () => {
+    if (totalPendingReward !== "0") setShowClaim(!showClaim);
+  };
+  console.log(totalPendingReward);
   return (
     <Wrapper>
       <RecordCard>
@@ -226,9 +236,12 @@ const Charts = memo<TProps>(({ intl, data }) => {
               : "--"}{" "}
             WTF
           </div>
-          <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div>
-          {/* <div>
-            <ButtonWrapper
+          {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
+          <div>
+            <ButtonWrapper type="default" onClick={() => claimPopup()}>
+              {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
+            </ButtonWrapper>
+            {/* <ButtonWrapper
               type="default"
               onClick={() => claimReward()}
               loading={claimRewardLoading}
@@ -246,8 +259,8 @@ const Charts = memo<TProps>(({ intl, data }) => {
             >
               {intl.formatMessage({ defaultMessage: "To Stake" })}
               <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
-            </ButtonWrapper>
-          </div> */}
+            </ButtonWrapper> */}
+          </div>
         </section>
       </RecordCard>
       <Block>
@@ -262,6 +275,13 @@ const Charts = memo<TProps>(({ intl, data }) => {
         data={data}
         onCancel={rollDepositPopup}
         balance={formatBalance(balance.toString())}
+      />
+      <ClaimPopup
+        visible={showClaim}
+        data={data}
+        onCancel={claimPopup}
+        balance={totalPendingReward}
+        claimReward={claimReward}
       />
     </Wrapper>
   );

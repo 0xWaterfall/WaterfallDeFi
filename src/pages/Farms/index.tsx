@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
+import Coin from "components/Coin";
 import useScrollTop from "hooks/useScrollTop";
 import numeral from "numeral";
 import React, { memo } from "react";
@@ -19,10 +20,17 @@ const Wrapper = styled.div`
 `;
 
 const Label = styled.div`
-  padding-bottom: 20px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
+  padding-bottom: 10px;
+  // border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
   font-size: 20px;
+  line-height: 125%;
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+`;
+
+const Label2 = styled.div`
+  padding-bottom: 10px;
+  border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.deep1, theme.white.normal1)};
+  font-size: 16px;
   line-height: 125%;
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
 `;
@@ -79,12 +87,16 @@ const IconWrapper = styled.div`
 
 const IconGroup = styled.div`
   display: flex;
-  img {
+  & > div {
     width: 44px;
     height: 44px;
     background: ${({ theme }) => theme.white.normal};
+    background-size: contain;
     border-radius: 50%;
     padding: 11px;
+  }
+  & > div:nth-of-type(2) {
+    transform: translateX(-11px);
   }
 `;
 
@@ -124,10 +136,12 @@ type TProps = WrappedComponentProps;
 const FarmContainer = memo<TProps>(({ intl }) => {
   const { push } = useHistory();
   const farms = useFarms();
-  console.log(farms);
   return (
     <Wrapper>
-      <Label>{intl.formatMessage({ defaultMessage: "Farming WTF" })}</Label>
+      <Label>{intl.formatMessage({ defaultMessage: "Waterfall Liquidity Mining" })}</Label>
+      <Label2>
+        {intl.formatMessage({ defaultMessage: "Provide Liquidity for $WTF pairs and earn $WTF rewards!" })}
+      </Label2>
       <CardGroup>
         <LinearGradientSubtractWrapper />
         {farms.map((_farm, idx) => (
@@ -139,11 +153,8 @@ const FarmContainer = memo<TProps>(({ intl }) => {
           >
             <IconWrapper>
               <IconGroup>
-                <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
-                <img
-                  src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013"
-                  css={{ transform: "translateX(-11px)" }}
-                />
+                <Coin assetName={_farm.logo1} size={44} />
+                <Coin assetName={_farm.logo2} size={44} />
               </IconGroup>
               <span>WTF</span>
             </IconWrapper>

@@ -74,7 +74,7 @@ const Action = memo<TProps>(({ intl, stakingConfig }) => {
         ))}
       </Segement>
       {/* {activedKey === "STAKE" && <Stake />} */}
-      {activedKey === "STAKE" && <Increase stakingConfig={stakingConfig} />}
+      {activedKey === "STAKE" && <Increase stakingConfig={stakingConfig} fromMasterChef={false} />}
       {activedKey === "UNSTAKE" && <Unstake stakingConfig={stakingConfig} />}
     </Wrapper>
   );

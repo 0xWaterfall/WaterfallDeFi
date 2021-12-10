@@ -16,6 +16,7 @@ import useClaimRewards from "../hooks/useClaimRewards";
 
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import Coin from "components/Coin";
 const Wrapper = styled.div`
   position: relative;
   z-index: 1;
@@ -50,15 +51,18 @@ const IconWrapper = styled.div`
 
 const IconGroup = styled.div`
   display: flex;
-  img {
+  & > div {
     width: 44px;
     height: 44px;
     background: ${({ theme }) => theme.white.normal};
+    background-size: contain;
     border-radius: 50%;
     padding: 11px;
   }
+  & > div:nth-of-type(2) {
+    transform: translateX(-11px);
+  }
 `;
-
 const LabelLP = styled.div`
   font-size: 20px;
   line-height: 125%;
@@ -189,14 +193,11 @@ const InfoCard = memo<TProps>(({ intl, farm }) => {
         <FarmCardImageWrapper />
         <IconWrapper>
           <IconGroup>
-            <img src="https://cryptologos.cc/logos/bitcoin-cash-bch-logo.png?v=013" />
-            <img
-              src="https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013"
-              css={{ transform: "translateX(-11px)" }}
-            />
+            <Coin assetName={farm.logo1} size={44} />
+            <Coin assetName={farm.logo2} size={44} />
           </IconGroup>
         </IconWrapper>
-        <LabelLP>WTF-BUSD LP</LabelLP>
+        <LabelLP>{farm.name}</LabelLP>
         <DataWrapper>
           <div>
             <p>{intl.formatMessage({ defaultMessage: "Total Stake" })}</p>

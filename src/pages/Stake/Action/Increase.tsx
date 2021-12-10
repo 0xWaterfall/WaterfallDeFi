@@ -31,6 +31,10 @@ import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
 import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
 import { start } from "repl";
 import { StakingConfig } from "types";
+import BigNumber from "bignumber.js";
+import { getMultiplier } from "utils/multiplier";
+import { from } from "@apollo/client";
+import { BIG_TEN } from "utils/bigNumber";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -114,11 +118,15 @@ const MAX = styled.div`
 
 type TProps = WrappedComponentProps & {
   stakingConfig: StakingConfig;
+  fromMasterChef: boolean;
+  wtfRewardsBalance?: string;
+  claimReward?: (duration: string) => Promise<void>;
 };
-const MAX_LOCK_TIME = 31536000;
-const MIN_LOCK_TIME = 2592000;
+const MAX_LOCK_TIME = 63113904; //2 years
+const MIN_LOCK_TIME = 7889238; //3 months
+7862400;
 
-const Increase = memo<TProps>(({ intl, stakingConfig }) => {
+const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewardsBalance, claimReward }) => {
   const { tags } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
 
@@ -133,6 +141,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const [locked, setLocked] = useState(false);
   const [resetSelect, setResetSelect] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
+  const [lockWTFRewardsLoading, setLockWTFRewardsLoading] = useState(false);
   const [increaseLockAmountLoading, setIncreaseLockAmountLoading] = useState(false);
   const [extendLockTimeLoading, setExtendLockTimeLoading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -142,6 +151,10 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   const { onCheckLocked } = useCheckLocked();
   const dispatch = useAppDispatch();
   const { onApprove } = useApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  const _wtfRewardsBalance =
+    wtfRewardsBalance && wtfRewardsBalance !== "0"
+      ? new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString()
+      : "0";
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();
@@ -204,14 +217,17 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       expiryTimestamp !== "0"
         ? newExpireDate?.unix() - Number(expiryTimestamp)
         : newExpireDate?.unix() - Math.ceil(new Date().getTime() / 1000);
-    return Math.ceil(diff / 100) * 100;
+
+    // return Math.ceil(diff / 100) * 100;
+    return diff;
   }, [newExpireDate]);
 
   const onExtendLockTime = useCallback(async () => {
     if (!duration) return;
     setExtendLockTimeLoading(true);
     try {
-      await extendLockTime(Number(expiryTimestamp) + Number(duration));
+      // await extendLockTime(Number(expiryTimestamp) + Number(duration));
+      await extendLockTime(Number(duration));
       fetchBalance();
       successNotification("Extend Lock Time Success", "");
     } catch (e) {
@@ -221,40 +237,103 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     }
   }, [duration, expiryTimestamp]);
 
+  const onConfirmLockWTFRewards = async () => {
+    if (!fromMasterChef) return;
+    console.log("A");
+    setLockWTFRewardsLoading(true);
+    try {
+      // await extendLockTime(Number(expiryTimestamp) + Number(duration));
+      // await extendLockTime(Number(duration));
+      if (claimReward) await claimReward("0");
+      // fetchBalance();
+      successNotification("Lock Rewards Success", "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLockWTFRewardsLoading(false);
+    }
+  };
+
   const receivedVeWTF = useMemo(() => {
-    const secondsInYear = 3600 * 24 * 365;
+    // const secondsInYear = 3600 * 24 * 365;
+    if (fromMasterChef) {
+      if (!wtfRewardsBalance || wtfRewardsBalance === "0") return "-";
+      const _wtfRewardsBalance = new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString();
+      if (!locked) {
+        if (!duration) return "-";
+        const multiplier = getMultiplier(Number(duration || 0));
+
+        return numeral((Number(_wtfRewardsBalance) * duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
+      }
+      if (locked) {
+        if (!expiryTimestamp) return "-";
+        const timeNow = Math.floor(Date.now() / 1000);
+        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+        const multiplier = getMultiplier(Number(_duration || 0));
+        const _balanceInput = Number(_wtfRewardsBalance);
+        return numeral((_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
+      }
+    }
     if (!locked) {
       if (balanceInput === "0") return "-";
       if (!duration) return "-";
+      const multiplier = getMultiplier(Number(duration || 0));
 
-      return numeral((Number(balanceInput) * duration) / secondsInYear).format("0,0.[0000]");
+      return numeral((Number(balanceInput) * duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
     }
     if (locked) {
       if (balanceInput === "0" && !duration) return "-";
-      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const timeNow = Math.floor(Date.now() / 1000);
+      // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
       const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
-      return numeral((_balanceInput * _duration) / secondsInYear).format("0,0.[0000]");
+      const multiplier = getMultiplier(Number(_duration || 0));
+      return numeral((_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
     }
-  }, [duration, balanceInput]);
+  }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
 
   const convertRatio = useMemo(() => {
     console.log(lockingWTF);
     console.log(balanceInput);
     console.log(duration);
-    const secondsInYear = 3600 * 24 * 365;
+    // const secondsInYear = 3600 * 24 * 365;
+    if (fromMasterChef) {
+      if (!wtfRewardsBalance || wtfRewardsBalance === "0") return "-";
+      const _wtfRewardsBalance = new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString();
+      if (!locked) {
+        if (!duration) return "-";
+        const multiplier = getMultiplier(Number(duration || 0));
+
+        return numeral((Number(_wtfRewardsBalance) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format(
+          "0,0.[0000]"
+        );
+      }
+      if (locked) {
+        if (!expiryTimestamp) return "-";
+        const timeNow = Math.floor(Date.now() / 1000);
+        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+        const multiplier = getMultiplier(Number(_duration || 0));
+        const _balanceInput = Number(_wtfRewardsBalance);
+        return numeral((_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
+      }
+    }
     if (!locked) {
       if (balanceInput === "0") return "-";
       if (!duration) return "-";
+      const multiplier = getMultiplier(Number(duration || 0));
 
-      return numeral((Number(balanceInput) * duration) / 100 / secondsInYear).format("0,0.[0000]");
+      return numeral((Number(balanceInput) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
     }
     if (locked) {
       if (balanceInput === "0" && !duration) return "-";
-      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const timeNow = Math.floor(Date.now() / 1000);
+      // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+      const multiplier = getMultiplier(Number(_duration || 0));
       const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
-      return numeral((_balanceInput * _duration) / 100 / secondsInYear).format("0,0.[0000]");
+      return numeral((_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
     }
-  }, [duration, balanceInput]);
+  }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -279,12 +358,11 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
     }
   };
   const handleMaxLockTime = () => {
+    console.log("max", Number(MAX_LOCK_TIME) - (Number(expiryTimestamp) - Number(startTimestamp)));
     setDatePickerValue(dayjs.unix(Number(startTimestamp) + Number(MAX_LOCK_TIME)));
   };
   const handleMaxInput = () => {
-    console.log(actualWtfBalance);
     const _balance = actualWtfBalance.replace(/\,/g, "");
-    console.log(_balance);
     // const _remaining = remaining.replace(/\,/g, "");
     // const input = parseFloat(_balance);
 
@@ -317,38 +395,61 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
   }, [wtfBalance, balanceInput]);
   const validateTextLockTime = useMemo(() => {
     if (!duration) return;
+    const timeNow = Math.floor(Date.now() / 1000);
+    // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
     const _duration = duration || 0;
+
     const totalLockTime =
       expiryTimestamp !== "0" ? Number(expiryTimestamp) - Number(startTimestamp) + _duration : _duration;
+    console.log("totalLockTime", totalLockTime, expiryTimestamp, duration);
+    if (totalLockTime > MAX_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Maximum Lock Time = 2 Year." });
 
-    if (totalLockTime > MAX_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Maximum Lock Time = 1 Year." });
-
-    if (totalLockTime < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 30 days." });
+    if (totalLockTime < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 3 Months" });
 
     if (newExpireDate && expiryTimestamp !== "0" && newExpireDate?.unix() < Number(expiryTimestamp))
       return intl.formatMessage({ defaultMessage: "Extend Lock Time has to be greater than previous expire date." });
   }, [duration, newExpireDate, account]);
   return (
     <Wrapper>
-      <Label>
-        <p>
-          {intl.formatMessage({ defaultMessage: "WTF balance" })}: <span>{wtfBalance}</span>
-        </p>
-        <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
-      </Label>
+      {!fromMasterChef && (
+        <Label>
+          <p>
+            {intl.formatMessage({ defaultMessage: "WTF Balance" })}: <span>{wtfBalance}</span>
+          </p>
+          <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+        </Label>
+      )}
+      {!fromMasterChef && (
+        <StakeInput
+          type="number"
+          step={0.1}
+          min={0}
+          suffixText="WTF"
+          value={balanceInput}
+          onChange={handleInputChange}
+          style={validateText ? { borderColor: tags.redText } : {}}
+        />
+      )}
+      {fromMasterChef && (
+        <Label>
+          <p>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</p>
+        </Label>
+      )}
 
-      <StakeInput
-        type="number"
-        step={0.1}
-        min={0}
-        suffixText="WTF"
-        value={balanceInput}
-        onChange={handleInputChange}
-        style={validateText ? { borderColor: tags.redText } : {}}
-      />
+      {fromMasterChef && (
+        <StakeInput
+          type="number"
+          step={0.1}
+          min={0}
+          suffixText="WTF"
+          value={_wtfRewardsBalance}
+          style={validateText ? { borderColor: tags.redText } : {}}
+          disabled={fromMasterChef}
+        />
+      )}
       {validateText && <ValidateText>{validateText}</ValidateText>}
 
-      {account && approved && locked && (
+      {account && approved && locked && !fromMasterChef && (
         <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
           {intl.formatMessage({ defaultMessage: "Increase Lock Amount" })}
         </ButtonWrapper>
@@ -378,6 +479,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
 
       <SelectTimeLimitWrapper
         onSelected={(e) => {
+          console.log(e);
           setSelectedValue(e);
           setDatePickerValue(undefined);
           setResetSelect(false);
@@ -389,7 +491,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         reset={Boolean(datePickerValue) || resetSelect}
       />
       {validateTextLockTime && <ValidateText>{validateTextLockTime}</ValidateText>}
-      {account && approved && locked && (
+      {account && approved && locked && !fromMasterChef && (
         <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
           {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
         </ButtonWrapper>
@@ -416,7 +518,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
         </ButtonWrapper>
       )}
 
-      <Label>
+      <Label css={{ marginTop: 10 }}>
         <p>
           {intl.formatMessage({ defaultMessage: "Convert Ratio" })}
           <Union />
@@ -425,9 +527,14 @@ const Increase = memo<TProps>(({ intl, stakingConfig }) => {
       </Label>
 
       <Label css={{ margin: 0 }}>
-        <p>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</p>
+        <p>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</p>
         <span>{!validateText && !validateTextLockTime && receivedVeWTF}</span>
       </Label>
+      {account && fromMasterChef && (
+        <ButtonWrapper type="primary" onClick={onConfirmLockWTFRewards} loading={lockWTFRewardsLoading}>
+          {intl.formatMessage({ defaultMessage: "Confirm" })}
+        </ButtonWrapper>
+      )}
     </Wrapper>
   );
 });

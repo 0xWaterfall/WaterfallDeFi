@@ -237,12 +237,12 @@ const Stake = memo<TProps>(({ intl }) => {
       </Label>
 
       <Label>
-        <p>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</p>
+        <p>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</p>
         <span>--</span>
       </Label>
 
       {/* <ButtonWrapper type="primaryLine" onClick={onConfirm}>
-        {intl.formatMessage({ defaultMessage: "Lock & Stake Ve-WTF" })}
+        {intl.formatMessage({ defaultMessage: "Lock & Stake veWTF" })}
       </ButtonWrapper> */}
       {account ? (
         approved ? (

@@ -34,6 +34,8 @@ export interface FarmConfig {
   lpTokenAddress: string;
   lpRewardAddress: string;
   name: string;
+  logo1: string;
+  logo2: string;
 }
 
 export interface Market {

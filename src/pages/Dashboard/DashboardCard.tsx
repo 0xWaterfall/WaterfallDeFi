@@ -5,7 +5,6 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { Coingecko, DashboardImage, MetaMask } from "assets/images";
 import { useSize } from "ahooks";
-import { useMarketCap, useWTFPrice } from "hooks/useSelectors";
 import numeral from "numeral";
 import { BASE_BSC_SCAN_URL, NETWORK } from "config";
 import { nodes } from "utils/getRpcUrl";

@@ -10,12 +10,16 @@ import { getPendingWTFReward, getTrancheBalance } from "store/position";
 import { Dispatch } from "redux";
 import { setConfirmModal } from "store/showStatus";
 import { MasterChefAddress } from "config/address";
+import { utils } from "ethers";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
 
 const claim = async (masterChefContract: Contract, dispatch: Dispatch<any>) => {
-  const tx = await masterChefContract.claimAll();
+  const _amount = utils.parseEther("0").toString();
+  console.log(_amount);
+
+  const tx = await masterChefContract.claimAll(_amount, _amount);
   dispatch(
     setConfirmModal({
       isOpen: true,

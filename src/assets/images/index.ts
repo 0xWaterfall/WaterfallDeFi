@@ -16,6 +16,7 @@ export { ReactComponent as Medium } from "./Medium.svg";
 export { ReactComponent as Twitter } from "./Twitter.svg";
 export { ReactComponent as ArrowLeft } from "./ArrowLeft.svg";
 export { ReactComponent as ArrowRight } from "./ArrowRight.svg";
+export { ReactComponent as ArrowRight2 } from "./ArrowRight2.svg";
 export { ReactComponent as WaterFallMountain } from "./WaterfallMountain.svg";
 export { ReactComponent as Boxes } from "./Boxes.svg";
 export { ReactComponent as Deposit } from "./Deposit.svg";

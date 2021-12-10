@@ -5,7 +5,9 @@ const Farms: FarmConfig[] = [
   {
     lpTokenAddress: TestLPTokenAddress[NETWORK],
     lpRewardAddress: TestLPRewardAddress[NETWORK],
-    name: "WTF-LP"
+    name: "PancakeSwap WTF-BNB LP",
+    logo1: "wtf",
+    logo2: "bnb"
   }
 ];
 export default Farms;

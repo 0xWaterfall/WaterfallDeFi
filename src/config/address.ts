@@ -3,7 +3,7 @@ import { NETWORKS } from "config";
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
-  [NETWORKS.MAINNET]: "FDDA6514a13161a5a1724F8DD787d9d3faeC9557"
+  [NETWORKS.MAINNET]: "2c5460AC0bb1bf04f149f2A2A043d51D468D0De5"
   // [NETWORKS.MAINNET]: "8060a28e41275a3181e8f96ab8dc65ebe8e119d7"
 };
 export const TranchesAddress2: { [network: string]: string } = {
@@ -51,7 +51,7 @@ export const MasterChefAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "E6127428E7efBCC68d6C2e117C135386a7F11663",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
   // [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
-  [NETWORKS.MAINNET]: "Ee0C679c7e1D676ED919F97290D62dcCD4f4F853"
+  [NETWORKS.MAINNET]: "4EE6ee2a7945f2A0f2154430712A19eE5500CaE5"
 };
 export const MasterChefAddress2: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
@@ -79,23 +79,23 @@ export const BUSDAddress: { [network: string]: string } = {
 export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
-  [NETWORKS.MAINNET]: "2fa0cac2c75efb50382b5091c6494194eacf65b0"
+  [NETWORKS.MAINNET]: "74CAe157Cb65399D13f6B01e284C8ECc9eCDb2Ae"
 };
 
 export const WTFRewardsAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x9be9bb36848CC9C2C447F9BEe078C4977C4FFd57",
   [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0xEF0244A34B4Ee15e04c9Bd47582C318143f1c45C"
 };
 export const VeWTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xD9c58DEF9280847082144Cd6B72B45b8F16964Ac",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0xc1C29B8E40fe1530CC11fFE8C47AaA29a5bF890B"
 };
 export const FeeRewardsAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x14c4ec080ba871008797f9e6b20068de22756ad1",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0xEabdA368d73024B88CD855b7a4BeFc14bBbe18fE"
 };
 
 export const PancakeLPAddress: { [network: string]: string } = {

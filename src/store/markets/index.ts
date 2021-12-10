@@ -36,7 +36,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
     const farmsAPYResult = await getFarmsAPY();
 
     const markets = await Promise.all(
-      _payload.map(async (marketData) => {
+      _payload.map(async (marketData, marketId) => {
         const _marketAddress = marketData.address;
         const calls = [
           {
@@ -130,17 +130,20 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         });
         const status = active[0] ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
 
+        const originalDuration = duration.toString();
+        const hackDuration = new BigNumber(duration).plus(86400).toString();
         marketData = {
           ...marketData,
           tranches,
-          duration: duration.toString(),
+          // duration: duration.toString(),
+          duration: marketId === 0 ? hackDuration : originalDuration,
           actualStartAt: actualStartAt.toString(),
           status,
           totalTranchesTarget: totalTranchesTarget.toString(),
           tvl: tvl.toString(),
           cycle: cycle.toString()
         };
-
+        console.log(marketData);
         const _masterchefAddress = marketData.masterChefAddress;
         const calls2 = [
           {

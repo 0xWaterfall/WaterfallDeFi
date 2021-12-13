@@ -50,16 +50,16 @@ const Dashboard = memo<TProps>(() => {
   const handleConfirmClick = async (account: string) => {
     try {
       const web3 = new Web3(Web3.givenProvider);
-      // const contractTrancheMaster = new web3.eth.Contract(TrancheMasterAbi as AbiItem[], TranchesAddressTest[NETWORK]);
-      // const stop = await contractTrancheMaster.methods.stop().send({ from: account });
+      const contractTrancheMaster = new web3.eth.Contract(TrancheMasterAbi as AbiItem[], TranchesAddress[NETWORK]);
+      const stop = await contractTrancheMaster.methods.stop().send({ from: account });
 
-      const contractFees = new web3.eth.Contract(FeeRewardsAbi as AbiItem[], FeeRewardsAddress[NETWORK]);
-      const pool = await contractFees.methods.pool().call();
-      console.log("pool:", pool);
-      const rewardSender = await contractFees.methods.rewardSender().call();
-      console.log("rewardSender:", rewardSender);
-      console.log("account:", account);
-      const stop = await contractFees.methods.sendRewards("1000000000000000000000").send({ from: account });
+      // const contractFees = new web3.eth.Contract(FeeRewardsAbi as AbiItem[], FeeRewardsAddress[NETWORK]);
+      // const pool = await contractFees.methods.pool().call();
+      // console.log("pool:", pool);
+      // const rewardSender = await contractFees.methods.rewardSender().call();
+      // console.log("rewardSender:", rewardSender);
+      // console.log("account:", account);
+      // const stop = await contractFees.methods.sendRewards("1000000000000000000000").send({ from: account });
       // const result2 = await onApprove();
       // console.log(result2);
     } catch (e) {

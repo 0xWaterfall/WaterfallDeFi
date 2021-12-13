@@ -521,7 +521,7 @@ const Stake = memo<TProps>(({ intl }) => {
               })}
             </div>
           </div>
-          <span>up to APY {maxAPR}%</span>
+          <span>APY up to {maxAPR}%</span>
         </APYCard>
 
         <Total>

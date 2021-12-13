@@ -118,10 +118,10 @@ export const MulticallAddress: { [network: string]: string } = {
 export const TestLPTokenAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x727B439108B1ECc4493cA637254D78a581f0CC28",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0xE5d7E2993BfC33d5212281d4E8EfCE6634534A62"
 };
 export const TestLPRewardAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x1F854aBA48720407C64e674952512CDbea5d3c9A",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
 };

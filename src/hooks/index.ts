@@ -357,6 +357,7 @@ export const useTotalSupply = (address: string) => {
 };
 export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
+  const [actualBalance, setActualBalance] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
   const { slowRefresh, fastRefresh } = useRefresh();
 
@@ -366,13 +367,14 @@ export const useBalance = (address: string) => {
     const tokenBalance = await contract.balanceOf(account);
     const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
     setBalance(numeral(value.toString()).format("0,0.[0000]"));
+    setActualBalance(value.toString());
   }, [account]);
 
   useEffect(() => {
     fetchBalance();
   }, [fetchBalance, address, fastRefresh]);
 
-  return { balance, fetchBalance };
+  return { balance, fetchBalance, actualBalance };
 };
 export const useWTF = () => {
   const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);

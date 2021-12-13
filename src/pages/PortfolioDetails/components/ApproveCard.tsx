@@ -162,7 +162,11 @@ const ApproveCard = memo<TProps>(
     const { onInvestDirect } = useInvestDirect(data.address);
     const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
-    const { balance: balanceWallet, fetchBalance } = useBalance(data.depositAssetAddress);
+    const {
+      balance: balanceWallet,
+      fetchBalance,
+      actualBalance: actualBalanceWallet
+    } = useBalance(data.depositAssetAddress);
     const { balance: balanceRe } = useTrancheBalance(data.address);
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
@@ -277,7 +281,7 @@ const ApproveCard = memo<TProps>(
       }
     };
     const handleMaxInput = () => {
-      const _balance = balance.replace(/\,/g, "");
+      const _balance = actualBalanceWallet.replace(/\,/g, "");
       // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
@@ -285,7 +289,7 @@ const ApproveCard = memo<TProps>(
       if (compareNum(_remaining, _balance)) {
         // if (_balance <= _remaining) {
         // input = parseFloat(_balance);
-        if (_balance) setBalanceInput(balance);
+        if (_balance) setBalanceInput(actualBalanceWallet);
       } else if (compareNum(_balance, _remaining, true)) {
         // } else if (_balance > _remaining) {
         // input = parseFloat(_remaining);

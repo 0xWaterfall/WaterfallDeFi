@@ -173,7 +173,8 @@ const APYCard = styled.div`
       line-height: 26px;
       margin-bottom: 8px;
     }
-    span {
+    span,
+    div {
       font-size: 14px;
       line-height: 18px;
     }
@@ -508,10 +509,17 @@ const Stake = memo<TProps>(({ intl }) => {
       <BodyWrapper>
         <APYCard>
           <div>
-            <p>{intl.formatMessage({ defaultMessage: "Lock WTF to earn more" })}</p>
-            <span>
-              {intl.formatMessage({ defaultMessage: "Earn daily WTF rewards and weekly trade fee dividends. " })}
-            </span>
+            <p>{intl.formatMessage({ defaultMessage: '"Lock WTF"-to-earn' })}</p>
+            <div>
+              {intl.formatMessage({
+                defaultMessage: "Receive Vote Escrowed WTF (veWTF) that gets you daily WTF rewards,"
+              })}
+            </div>
+            <div>
+              {intl.formatMessage({
+                defaultMessage: "platform fees shares and more!"
+              })}
+            </div>
           </div>
           <span>up to APY {maxAPR}%</span>
         </APYCard>

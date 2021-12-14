@@ -120,7 +120,7 @@ type TProps = WrappedComponentProps & {
   stakingConfig: StakingConfig;
   fromMasterChef: boolean;
   wtfRewardsBalance?: string;
-  claimReward?: (duration: string) => Promise<void>;
+  claimReward?: (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => Promise<void>;
 };
 const MAX_LOCK_TIME = 63113904; //2 years
 const MIN_LOCK_TIME = 7889238; //3 months
@@ -131,7 +131,6 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
   const { account } = useWeb3React<Web3Provider>();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
-
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState("0");
   const { balance: wtfBalance, fetchBalance, actualBalance: actualWtfBalance } = useBalance(WTFAddress[NETWORK]);
@@ -239,12 +238,21 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
 
   const onConfirmLockWTFRewards = async () => {
     if (!fromMasterChef) return;
+    if (!claimReward) return;
+    if (!locked && !duration) return;
     console.log("A");
+    console.log(duration);
+    const _duration = duration ? duration.toString() : "0";
+    console.log(_duration);
     setLockWTFRewardsLoading(true);
     try {
       // await extendLockTime(Number(expiryTimestamp) + Number(duration));
       // await extendLockTime(Number(duration));
-      if (claimReward) await claimReward("0");
+      if (!locked) await claimReward(_duration, "0");
+      if (locked) {
+        //if expired , need to set new duration
+        await claimReward("0", _duration);
+      }
       // fetchBalance();
       successNotification("Lock Rewards Success", "");
     } catch (e) {
@@ -357,6 +365,11 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
       setResetSelect(true);
     }
   };
+  const resetLockTime = () => {
+    setDatePickerValue(undefined);
+    setResetSelect(true);
+    setSelectedValue(undefined);
+  };
   const handleMaxLockTime = () => {
     console.log("max", Number(MAX_LOCK_TIME) - (Number(expiryTimestamp) - Number(startTimestamp)));
     setDatePickerValue(dayjs.unix(Number(startTimestamp) + Number(MAX_LOCK_TIME)));
@@ -463,7 +476,12 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
               : dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss"))}
           {expiryTimestamp === "0" && newExpireDate?.format("YYYY-MM-DD")}
         </p>
-        <MAX onClick={handleMaxLockTime}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+        <div style={{ display: "flex" }}>
+          <MAX style={{ marginRight: 10 }} onClick={resetLockTime}>
+            {intl.formatMessage({ defaultMessage: "Reset" })}
+          </MAX>
+          <MAX onClick={handleMaxLockTime}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+        </div>
       </Label>
 
       <DatePickerWrapper

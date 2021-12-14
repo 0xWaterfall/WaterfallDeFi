@@ -14,7 +14,7 @@ type TProps = WrappedComponentProps & {
   onCancel?: (e: boolean) => void;
   data: Market;
   balance: string;
-  claimReward: (duration: string) => Promise<void>;
+  claimReward?: (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => Promise<void>;
 };
 
 const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance, claimReward }) => {

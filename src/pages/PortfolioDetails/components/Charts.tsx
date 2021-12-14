@@ -140,7 +140,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   //   account && dispatch(getPendingWTFReward({ account }));
   //   // account && dispatch(getTrancheBalance({ account }));
   // }, [account]);
-  const claimReward = async (duration: string) => {
+  const claimReward = async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
     setClaimRewardLoading(true);
 
     dispatch(
@@ -152,7 +152,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
       })
     );
     try {
-      await onClaimAll();
+      await onClaimAll(_lockDurationIfLockNotExists, _lockDurationIfLockExists);
       successNotification("Claim Success", "");
     } catch (e) {
       console.error(e);
@@ -203,6 +203,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   };
   const claimPopup = () => {
     if (totalPendingReward !== "0") setShowClaim(!showClaim);
+    setShowClaim(!showClaim);
   };
   console.log(totalPendingReward);
   return (

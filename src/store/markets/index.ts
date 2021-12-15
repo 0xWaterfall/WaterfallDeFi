@@ -136,14 +136,13 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           ...marketData,
           tranches,
           // duration: duration.toString(),
-          duration: marketId === 0 ? hackDuration : originalDuration,
+          duration: hackDuration,
           actualStartAt: actualStartAt.toString(),
           status,
           totalTranchesTarget: totalTranchesTarget.toString(),
           tvl: tvl.toString(),
           cycle: cycle.toString()
         };
-        console.log(marketData);
         const _masterchefAddress = marketData.masterChefAddress;
         const calls2 = [
           {

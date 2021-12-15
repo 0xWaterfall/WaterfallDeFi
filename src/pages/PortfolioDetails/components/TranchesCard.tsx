@@ -197,9 +197,9 @@ const TranchesCard = memo<TProps>(
     return (
       <Container data-selected={selected} data-disabled={isSoldout}>
         {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
-        {data?.portfolio === "BUSD Falls 2" ? (
+        {/* {data?.portfolio === "BUSD Falls 2" ? (
           <ComingSoon>{intl.formatMessage({ defaultMessage: "Coming Soon" })}</ComingSoon>
-        ) : null}
+        ) : null} */}
         <div>
           <TrancheName>
             <FlexRow>

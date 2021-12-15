@@ -63,39 +63,39 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod"
+  },
+  {
+    portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Falls 2",
+    assets: "BUSD",
+    listingDate: "2021/11/25",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: TranchesAddress2[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MasterChefAddress2[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
   }
-  // {
-  //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD Falls 2",
-  //   assets: "BUSD",
-  //   listingDate: "2021/11/25",
-  //   tranches: [],
-  //   tvl: "",
-  //   totalTranchesTarget: "",
-  //   status: "",
-  //   nextTime: "",
-  //   address: TranchesAddress2[NETWORK],
-  //   abi: TranchesAbi,
-  //   masterChefAbi: MasterChefAbi,
-  //   masterChefAddress: MasterChefAddress2[NETWORK],
-  //   pools: [],
-  //   depositAssetAddress: BUSDAddress[NETWORK],
-  //   depositAssetAbi: WTFAbi,
-  //   strategyFarms: [
-  //     {
-  //       farmName: "Alpaca BUSD",
-  //       shares: 0.6,
-  //       sAddress: sALPACAAddress[NETWORK],
-  //       apiKey: "alpaca"
-  //     },
-  //     {
-  //       farmName: "Venus BUSD",
-  //       shares: 0.4,
-  //       sAddress: sVENUSAddress[NETWORK],
-  //       apiKey: "venus"
-  //     }
-  //   ],
-  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
-  // }
   // {
   //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD TVault 2",
   //   assets: "BUSD",

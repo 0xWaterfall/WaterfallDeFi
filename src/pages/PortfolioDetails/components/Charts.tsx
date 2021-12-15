@@ -165,6 +165,8 @@ const Charts = memo<TProps>(({ intl, data }) => {
         })
       );
     } finally {
+      setShowClaim(false);
+
       setClaimRewardLoading(false);
     }
   };

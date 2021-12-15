@@ -35,6 +35,8 @@ import BigNumber from "bignumber.js";
 import { getMultiplier } from "utils/multiplier";
 import { from } from "@apollo/client";
 import { BIG_TEN } from "utils/bigNumber";
+import moment from "moment";
+import { totalmem } from "os";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -240,21 +242,17 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     if (!fromMasterChef) return;
     if (!claimReward) return;
     if (!locked && !duration) return;
-    console.log("A");
-    console.log(duration);
+    console.log("A", duration, locked);
     const _duration = duration ? duration.toString() : "0";
-    console.log(_duration);
     setLockWTFRewardsLoading(true);
     try {
-      // await extendLockTime(Number(expiryTimestamp) + Number(duration));
-      // await extendLockTime(Number(duration));
       if (!locked) await claimReward(_duration, "0");
       if (locked) {
         //if expired , need to set new duration
         await claimReward("0", _duration);
       }
       // fetchBalance();
-      successNotification("Lock Rewards Success", "");
+      // successNotification("Lock Rewards Success", "");
     } catch (e) {
       console.error(e);
     } finally {
@@ -275,11 +273,23 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
       }
       if (locked) {
         if (!expiryTimestamp) return "-";
+        let total = 0;
+
+        //calculate lockingWTF with extended duration
+        if (duration) {
+          const multiplier2 = getMultiplier(Number(duration || 0));
+          const _balanceInput2 = Number(lockingWTF);
+          total += (_balanceInput2 * duration * multiplier2) / 100 / MAX_LOCK_TIME;
+        }
         const timeNow = Math.floor(Date.now() / 1000);
-        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+        const _duration =
+          !duration || duration === 0
+            ? Number(expiryTimestamp) - Number(timeNow)
+            : Number(expiryTimestamp) - Number(timeNow) + duration;
         const multiplier = getMultiplier(Number(_duration || 0));
         const _balanceInput = Number(_wtfRewardsBalance);
-        return numeral((_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
+        total += (_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME;
+        return numeral(total).format("0,0.[0000]");
       }
     }
     if (!locked) {
@@ -318,11 +328,26 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
       }
       if (locked) {
         if (!expiryTimestamp) return "-";
+        let total = 0;
+
+        //calculate lockingWTF with extended duration
+        if (duration) {
+          const multiplier2 = getMultiplier(Number(duration || 0));
+          const _balanceInput2 = Number(lockingWTF);
+          console.log("lockingWTF,", lockingWTF, duration, multiplier2);
+          console.log((_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME);
+          total += (_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME;
+        }
         const timeNow = Math.floor(Date.now() / 1000);
-        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+        const _duration =
+          !duration || duration === 0
+            ? Number(expiryTimestamp) - Number(timeNow)
+            : Number(expiryTimestamp) - Number(timeNow) + duration;
         const multiplier = getMultiplier(Number(_duration || 0));
         const _balanceInput = Number(_wtfRewardsBalance);
-        return numeral((_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
+        console.log("_balanceInput,", _balanceInput, _duration, multiplier);
+        total += (_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME;
+        return numeral(total).format("0,0.[0000]");
       }
     }
     if (!locked) {
@@ -372,7 +397,10 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
   };
   const handleMaxLockTime = () => {
     console.log("max", Number(MAX_LOCK_TIME) - (Number(expiryTimestamp) - Number(startTimestamp)));
-    setDatePickerValue(dayjs.unix(Number(startTimestamp) + Number(MAX_LOCK_TIME)));
+    console.log(startTimestamp);
+    const timeNow = Math.floor(Date.now() / 1000);
+    const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
+    setDatePickerValue(dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)));
   };
   const handleMaxInput = () => {
     const _balance = actualWtfBalance.replace(/\,/g, "");
@@ -414,8 +442,13 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
 
     const totalLockTime =
       expiryTimestamp !== "0" ? Number(expiryTimestamp) - Number(startTimestamp) + _duration : _duration;
-    console.log("totalLockTime", totalLockTime, expiryTimestamp, duration);
-    if (totalLockTime > MAX_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Maximum Lock Time = 2 Year." });
+    console.log("totalLockTime", totalLockTime, startTimestamp, expiryTimestamp, duration);
+
+    const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
+    const maxLockDate = dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)).format("YYYY-MM-DD HH:mm:ss");
+    console.log(maxLockDate);
+    if (totalLockTime > MAX_LOCK_TIME)
+      return `Maximum lock expiry date = ${maxLockDate} (2 Years from your initial lock date)`;
 
     if (totalLockTime < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 3 Months" });
 
@@ -514,7 +547,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
           {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
         </ButtonWrapper>
       )}
-      {account && approved && !locked && (
+      {account && approved && !locked && !fromMasterChef && (
         <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
           {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
         </ButtonWrapper>
@@ -548,7 +581,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
         <p>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</p>
         <span>{!validateText && !validateTextLockTime && receivedVeWTF}</span>
       </Label>
-      {account && fromMasterChef && (
+      {account && approved && fromMasterChef && (
         <ButtonWrapper type="primary" onClick={onConfirmLockWTFRewards} loading={lockWTFRewardsLoading}>
           {intl.formatMessage({ defaultMessage: "Confirm" })}
         </ButtonWrapper>

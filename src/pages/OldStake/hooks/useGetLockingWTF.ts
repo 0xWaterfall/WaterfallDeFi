@@ -19,6 +19,7 @@ export const useGetLockingWTF = (account: string | null | undefined) => {
   const fetchLockingWTF = async () => {
     // const result = await contract.getLockedAmount(account);
     const result = await contract.getLockData(account);
+    console.log(result);
     setTotal(new BigNumber(result.amount._hex).dividedBy(BIG_TEN.pow(18)).toString());
 
     setStartTimestamp(new BigNumber(result.startTimestamp._hex).toString());

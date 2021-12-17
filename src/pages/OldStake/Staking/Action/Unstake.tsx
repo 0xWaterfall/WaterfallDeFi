@@ -102,7 +102,7 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
 
     setLoading(true);
     try {
-      await unstake(account, balanceInput);
+      await unstake(account);
       // fetchBalance();
 
       setBalanceInput("0");

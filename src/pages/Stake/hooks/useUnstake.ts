@@ -6,8 +6,8 @@ import { Contract } from "@ethersproject/contracts";
 import { utils } from "ethers";
 import { useVeWTFContract, useWTFRewardsContract } from "hooks/useContract";
 
-const unstake = async (contract: Contract, account: string, amount: string) => {
-  const _amount = utils.parseEther(amount.toString()).toString();
+const unstake = async (contract: Contract, account: string) => {
+  // const _amount = utils.parseEther(amount.toString()).toString();
   const tx = await contract.unlock();
   const receipt = await tx.wait();
   return receipt.status;
@@ -18,8 +18,8 @@ const useUnstake = () => {
   const { account } = useWeb3React();
   const contract = useVeWTFContract();
   const handleUnstake = useCallback(
-    async (account: string, amount: string) => {
-      const result = await unstake(contract, account, amount);
+    async (account: string) => {
+      const result = await unstake(contract, account);
       //   dispatch();
       return result;
     },

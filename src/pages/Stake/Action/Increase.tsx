@@ -37,6 +37,7 @@ import { from } from "@apollo/client";
 import { BIG_TEN } from "utils/bigNumber";
 import moment from "moment";
 import { totalmem } from "os";
+import { isPending } from "@reduxjs/toolkit";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -201,7 +202,12 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
       setIncreaseLockAmountLoading(false);
     }
   }, [balanceInput]);
-
+  const isExpired = useMemo(() => {
+    const timeNow = Math.floor(Date.now() / 1000);
+    if (expiryTimestamp === "0") return false;
+    return Number(expiryTimestamp) <= timeNow;
+  }, [expiryTimestamp]);
+  console.log("isExpired", isExpired);
   const newExpireDate = useMemo(() => {
     if (datePickerValue) {
       return datePickerValue;
@@ -413,10 +419,10 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     if (validateText !== undefined && validateText.length > 0) return;
     if (Number(balanceInput) <= 0) return;
     if (!duration) return;
-
     setLoading(true);
     try {
-      await lockAndStakeWTF(balanceInput, duration);
+      // await lockAndStakeWTF(balanceInput, duration);
+      await lockAndStakeWTF(balanceInput, 3600);
       fetchBalance();
       setLocked(true);
       setBalanceInput("0");
@@ -495,7 +501,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
       )}
       {validateText && <ValidateText>{validateText}</ValidateText>}
 
-      {account && approved && locked && !fromMasterChef && (
+      {account && approved && locked && !isExpired && !fromMasterChef && (
         <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
           {intl.formatMessage({ defaultMessage: "Increase Lock Amount" })}
         </ButtonWrapper>
@@ -542,12 +548,12 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
         reset={Boolean(datePickerValue) || resetSelect}
       />
       {validateTextLockTime && <ValidateText>{validateTextLockTime}</ValidateText>}
-      {account && approved && locked && !fromMasterChef && (
+      {account && approved && locked && !isExpired && !fromMasterChef && (
         <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
           {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
         </ButtonWrapper>
       )}
-      {account && approved && !locked && !fromMasterChef && (
+      {account && approved && (!locked || isExpired) && !fromMasterChef && (
         <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
           {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
         </ButtonWrapper>

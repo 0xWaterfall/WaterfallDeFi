@@ -271,7 +271,7 @@ const Increase = memo<TProps>(({ intl }) => {
     if (validateText !== undefined && validateText.length > 0) return;
     if (Number(balanceInput) <= 0) return;
     if (!duration) return;
-
+    console.log(duration);
     setLoading(true);
     try {
       await lockAndStakeWTF(balanceInput, duration);

@@ -160,6 +160,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();
+      console.log("approved", approved);
       setApproved(approved ? true : false);
     };
     if (account) checkApproved(account);

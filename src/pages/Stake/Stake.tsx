@@ -15,7 +15,7 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useStakingPool } from "hooks/useStaking";
 import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
-import { useBalance, useTotalSupply } from "hooks";
+import { useBalance, useBalanceOfOtherAddress, useTotalSupply } from "hooks";
 import numeral from "numeral";
 import dayjs from "dayjs";
 import Countdown from "react-countdown";
@@ -25,6 +25,7 @@ import useClaimRewards from "./hooks/useClaimRewards";
 import { successNotification } from "utils/notification";
 import useClaimFeeRewards from "./hooks/useClaimFeeRewards";
 import { Line } from "react-chartjs-2";
+import BigNumber from "bignumber.js";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,6 +37,9 @@ import {
   Legend
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
+import { BUSDAddress, MultiSigAddress } from "config/address";
+import { NETWORK } from "config";
+import { BIG_TEN } from "utils/bigNumber";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -447,11 +451,13 @@ const Stake = memo<TProps>(({ intl }) => {
   if (!stakingConfig) {
     history.push("/");
   }
-  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR, pendingBUSDReward } = useStakingPool(
+  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR } = useStakingPool(
     stakingConfig?.rewardTokenAddress || "",
     stakingConfig?.earningTokenAddress || "",
     account
   );
+  const { actualBalance: pendingBUSDReward } = useBalanceOfOtherAddress(BUSDAddress[NETWORK], MultiSigAddress[NETWORK]);
+  const _pendingBUSDReward = numeral(new BigNumber(pendingBUSDReward).times(0.8).toString()).format("0,0.[00]");
 
   const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
   const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
@@ -630,7 +636,7 @@ const Stake = memo<TProps>(({ intl }) => {
         </Actions>
 
         <Footer>
-          <LiquidfillChart share={VeWTFRatio} pendingBUSDReward={pendingBUSDReward} />
+          <LiquidfillChart share={VeWTFRatio} pendingBUSDReward={_pendingBUSDReward} />
 
           {/* <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your veWTF" })}</p>

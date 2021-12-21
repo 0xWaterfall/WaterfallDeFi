@@ -117,6 +117,12 @@ export const PancakeLPAddress_WBNBBUSD: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"
 };
 
+export const MultiSigAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x46D0C754463E3Bd07c1451CF4a683fEcD507d36B"
+};
+
 export const MulticallAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
   [NETWORKS.TESTNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",

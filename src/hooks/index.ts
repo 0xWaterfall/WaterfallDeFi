@@ -355,6 +355,26 @@ export const useTotalSupply = (address: string) => {
 
   return totalSupply;
 };
+export const useBalanceOfOtherAddress = (address: string, account: string) => {
+  const [balance, setBalance] = useState("0");
+  const [actualBalance, setActualBalance] = useState("0");
+  const { slowRefresh, fastRefresh } = useRefresh();
+
+  const fetchBalance = useCallback(async () => {
+    if (!account) return;
+    const contract = getContract(ERC20Abi, address);
+    const tokenBalance = await contract.balanceOf(account);
+    const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
+    setBalance(numeral(value.toString()).format("0,0.[0000]"));
+    setActualBalance(value.toString());
+  }, [account]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance, address, fastRefresh]);
+
+  return { balance, actualBalance, fetchBalance };
+};
 export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
   const [actualBalance, setActualBalance] = useState("0");

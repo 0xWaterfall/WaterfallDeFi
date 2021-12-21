@@ -110,6 +110,7 @@ const StakedCard = styled.div`
   display: grid;
   grid-template-columns: 1fr 240px;
   overflow: hidden;
+  margin-bottom: 40px;
 `;
 
 const MyStaked = styled.div`

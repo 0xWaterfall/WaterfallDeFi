@@ -22,6 +22,8 @@ export interface FarmInterface {
   userStakedLP: string;
   logo1: string;
   logo2: string;
+  lpButtonTitle: string;
+  lpURL: string;
 }
 export const useFarms = (farmIdx?: number) => {
   const [result, setResult] = useState<FarmInterface[]>([]);
@@ -33,7 +35,7 @@ export const useFarms = (farmIdx?: number) => {
       const farmsResult = await Promise.all(
         Farms.map(async (_farmConfig, _idx) => {
           if (farmIdx !== undefined && farmIdx !== _idx) return false;
-          const { name, lpTokenAddress, lpRewardAddress, logo1, logo2 } = _farmConfig;
+          const { name, lpTokenAddress, lpRewardAddress, logo1, logo2, lpButtonTitle, lpURL } = _farmConfig;
           const _account = account || "0x0000000000000000000000000000000000000000";
           const calls = [
             {
@@ -85,6 +87,8 @@ export const useFarms = (farmIdx?: number) => {
             name: name,
             logo1,
             logo2,
+            lpButtonTitle,
+            lpURL,
             isPoolActive: _isPoolActive?.[0],
             accRewardPerShare: new BigNumber(_accRewardPerShare?._hex).dividedBy(BIG_TEN.pow(18)).toString(),
             rewardPerBlock: new BigNumber(_rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18)).toString(),

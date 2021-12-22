@@ -135,6 +135,12 @@ export const TestLPTokenAddress: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "0xE5d7E2993BfC33d5212281d4E8EfCE6634534A62"
   [NETWORKS.MAINNET]: "0x9e1c5417ee9312e7bDb53B2A19460F80001B5C1e" //test 21Dec
 };
+export const TestLPTokenAddressApe: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x727B439108B1ECc4493cA637254D78a581f0CC28",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0xE5d7E2993BfC33d5212281d4E8EfCE6634534A62"
+  [NETWORKS.MAINNET]: "0x9e1c5417ee9312e7bDb53B2A19460F80001B5C1e" //test 21Dec
+};
 export const TestLPRewardAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x1F854aBA48720407C64e674952512CDbea5d3c9A",
   [NETWORKS.TESTNET]: "",

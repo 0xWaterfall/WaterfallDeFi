@@ -109,6 +109,18 @@ const ButtonWrapper = styled(Button)`
     background: transparent;
   }
 `;
+const ButtonWrapper2 = styled(Button)`
+  width: 100%;
+  margin-top: 40px;
+  height: 56px;
+  font-weight: 600;
+  font-size: 16px;
+  background: transparent;
+  :hover,
+  :focus {
+    background: transparent;
+  }
+`;
 const MAX = styled.div`
   font-size: 14px;
   line-height: 125%;
@@ -122,7 +134,8 @@ const StakeAction = memo<TProps>(({ intl, farm }) => {
   const { tags } = useTheme();
   const TABS = [
     { key: "STAKE", text: intl.formatMessage({ defaultMessage: "Stake" }) },
-    { key: "UNSTAKE", text: intl.formatMessage({ defaultMessage: "Unstake" }) }
+    { key: "UNSTAKE", text: intl.formatMessage({ defaultMessage: "Unstake" }) },
+    { key: "ADDLIQUIDITY", text: intl.formatMessage({ defaultMessage: "Add Liquidity" }) }
   ];
 
   const dispatch = useAppDispatch();
@@ -297,51 +310,85 @@ const StakeAction = memo<TProps>(({ intl, farm }) => {
         ))}
       </Tabs>
       <Container>
-        <Label>
-          <p>
-            {actived === "STAKE" ? "" : "Staked "}
-            {farm?.name} {intl.formatMessage({ defaultMessage: "balance" })}
-          </p>
-        </Label>
-        <Label2>
-          <p>
-            <Balance>{actived === "STAKE" ? lpTokenBalance : stakedBalance}</Balance>
-          </p>
-          <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
-        </Label2>
+        {actived !== "ADDLIQUIDITY" && (
+          <>
+            <Label>
+              <p>
+                {actived === "STAKE" ? "" : "Staked "}
+                {farm?.name} {intl.formatMessage({ defaultMessage: "balance" })}
+              </p>
+            </Label>
+            <Label2>
+              <p>
+                <Balance>{actived === "STAKE" ? lpTokenBalance : stakedBalance}</Balance>
+              </p>
+              <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+            </Label2>
 
-        <StakeInput
-          suffixText={farm?.name}
-          value={balanceInput}
-          onChange={handleInputChange}
-          disabled={!approved}
-          style={validateText ? { borderColor: tags.redText } : {}}
-        />
-        <ValidateText>{validateText && validateText}</ValidateText>
-        {!account && (
-          <ButtonWrapper
-            type="primaryLine"
-            onClick={() => {
-              dispatch(setConnectWalletModalShow(true));
-            }}
-          >
-            {intl.formatMessage({ defaultMessage: "Connect wallet" })}
-          </ButtonWrapper>
+            <StakeInput
+              suffixText={farm?.name}
+              value={balanceInput}
+              onChange={handleInputChange}
+              disabled={!approved}
+              style={validateText ? { borderColor: tags.redText } : {}}
+            />
+            <ValidateText>{validateText && validateText}</ValidateText>
+            {!account && (
+              <ButtonWrapper
+                type="primaryLine"
+                onClick={() => {
+                  dispatch(setConnectWalletModalShow(true));
+                }}
+              >
+                {intl.formatMessage({ defaultMessage: "Connect wallet" })}
+              </ButtonWrapper>
+            )}
+            {account && !approved && (
+              <ButtonWrapper type="primaryLine" onClick={handleApprove} loading={approveLoading}>
+                {intl.formatMessage({ defaultMessage: "Approve" })}
+              </ButtonWrapper>
+            )}
+            {account && approved && actived === "STAKE" && (
+              <ButtonWrapper type="primaryLine" onClick={handleDeposit} loading={depositLoading}>
+                {intl.formatMessage({ defaultMessage: "Deposit" })}
+              </ButtonWrapper>
+            )}
+            {account && approved && actived === "UNSTAKE" && (
+              <ButtonWrapper type="primaryLine" onClick={handleUnstake} loading={unstakeLoading}>
+                {intl.formatMessage({ defaultMessage: "Unstake" })}
+              </ButtonWrapper>
+            )}
+          </>
         )}
-        {account && !approved && (
-          <ButtonWrapper type="primaryLine" onClick={handleApprove} loading={approveLoading}>
-            {intl.formatMessage({ defaultMessage: "Approve" })}
-          </ButtonWrapper>
-        )}
-        {account && approved && actived === "STAKE" && (
-          <ButtonWrapper type="primaryLine" onClick={handleDeposit} loading={depositLoading}>
-            {intl.formatMessage({ defaultMessage: "Deposit" })}
-          </ButtonWrapper>
-        )}
-        {account && approved && actived === "UNSTAKE" && (
-          <ButtonWrapper type="primaryLine" onClick={handleUnstake} loading={unstakeLoading}>
-            {intl.formatMessage({ defaultMessage: "Unstake" })}
-          </ButtonWrapper>
+
+        {actived === "ADDLIQUIDITY" && (
+          <>
+            <Label>
+              <p>{intl.formatMessage({ defaultMessage: "Provide Liquidity and receive LP tokens for farming" })}</p>
+            </Label>
+            <ButtonWrapper2
+              type="primaryLine"
+              onClick={() => {
+                window.open(farm.lpURL, "_blank")?.focus();
+              }}
+            >
+              {farm.lpButtonTitle}
+            </ButtonWrapper2>
+
+            <ButtonWrapper2
+              type="primaryLine"
+              onClick={() => {
+                window
+                  .open(
+                    "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide/waterfall-farming",
+                    "_blank"
+                  )
+                  ?.focus();
+              }}
+            >
+              {intl.formatMessage({ defaultMessage: "What is LP and How to LP?" })}
+            </ButtonWrapper2>
+          </>
         )}
       </Container>
     </Wrapper>

@@ -66,7 +66,7 @@ const Farming = memo<TProps>(({ intl }) => {
     window.location.href = "/farms";
   }
   const farms = useFarms(Number(id));
-  const currentFarm = farms[Number(id)];
+  const currentFarm = farms[0];
 
   const { goBack } = useHistory();
   if (!currentFarm) return <></>;

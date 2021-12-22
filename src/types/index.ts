@@ -36,6 +36,8 @@ export interface FarmConfig {
   name: string;
   logo1: string;
   logo2: string;
+  lpButtonTitle: string;
+  lpURL: string;
 }
 
 export interface Market {

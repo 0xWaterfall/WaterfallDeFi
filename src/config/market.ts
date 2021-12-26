@@ -12,7 +12,9 @@ import {
   MasterChefAddressTest2,
   TranchesAddressTest2,
   MasterChefAddressTest,
-  TranchesAddressTest
+  TranchesAddressTest,
+  TranchesAddress3,
+  MasterChefAddress3
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
@@ -90,6 +92,39 @@ export const MarketList: Market[] = [
       {
         farmName: "Venus BUSD",
         shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
+  },
+
+  {
+    portfolio: "BUSD Falls 3",
+    assets: "BUSD",
+    listingDate: "2021/12/26",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: TranchesAddress3[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MasterChefAddress3[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.7,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.3,
         sAddress: sVENUSAddress[NETWORK],
         apiKey: "venus"
       }

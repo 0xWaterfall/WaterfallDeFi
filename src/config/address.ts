@@ -11,6 +11,11 @@ export const TranchesAddress2: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
   [NETWORKS.MAINNET]: "E4fF060EdC2423E624a21bDbbe5b2AF8f13243bD"
 };
+export const TranchesAddress3: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "17Dd4D94fCA4f26C23fBa591AD5418260950FD16"
+};
 export const TranchesAddressTest: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
@@ -59,6 +64,12 @@ export const MasterChefAddress2: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
   [NETWORKS.MAINNET]: "21595C9Ef17b9952376AF6866b8f0BEdF9c82Fdc"
 };
+
+export const MasterChefAddress3: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "28729FFEC04c1a5D14631E9b86bB8A06786cffe5"
+};
 export const MasterChefAddressTest: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
@@ -79,7 +90,8 @@ export const BUSDAddress: { [network: string]: string } = {
 export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
-  [NETWORKS.MAINNET]: "2fa0cac2c75efb50382b5091c6494194eacf65b0"
+  // [NETWORKS.MAINNET]: "2fa0cac2c75efb50382b5091c6494194eacf65b0"
+  [NETWORKS.MAINNET]: "d73F32833B6D5D9c8070c23e599e283a3039823C"
 };
 
 export const WTFRewardsAddress: { [network: string]: string } = {

@@ -159,9 +159,10 @@ export const useTrancheBalance = (trancheMasterAddress: string) => {
     const fetchBalance = async () => {
       try {
         const result = await trancheMasterContract.balanceOf(account);
+
         setResult({
           balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
-          invested: result.invested.toString()
+          invested: result.invested ? new BigNumber(result.invested?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0"
         });
       } catch (e) {
         console.error(e);

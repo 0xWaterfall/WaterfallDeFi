@@ -131,7 +131,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
   const fetchSubgraph = async () => {
     const _subgraphResult = await useHistoryQuery2(id?.toString(), account, markets);
-    // console.log("_subgraphResult", _subgraphResult);
     setSubgraphResult(_subgraphResult);
   };
   // const dispatch = useAppDispatch();
@@ -343,6 +342,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
             // console.log("trancheCycles", _investHistoryResult[__idx]);
             return userInvests.map((_userInvest: UserInvest, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
+
               const trancheCycle = trancheCycles[trancheCycleId];
               // console.log("trancheCycle", _userInvest);
               // console.log("trancheCycleId", trancheCycleId);

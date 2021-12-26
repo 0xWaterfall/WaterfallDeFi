@@ -32,6 +32,7 @@ import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useEstimateYield } from "hooks/useEstimateYield";
 import { usePendingWTFReward } from "hooks";
+import { STATUS_CODES } from "http";
 
 const Wrapper = styled.div``;
 
@@ -162,7 +163,6 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
     totalAmount = numeral(new BigNumber(userInvest.principal).plus(new BigNumber(estimateYield)).toString()).format(
       "0,0.[0000]"
     );
-
   const wtfAPY =
     market && isCurrentCycle
       ? getWTFApr(
@@ -274,7 +274,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           // redeemDirect={redeemDirect}
           // redeemLoading={redeemLoading}
           currentTranche={userInvest.tranche}
-          isPending={trancheCycle?.state === 0}
+          isPending={trancheCycle?.state === 0 || market.status === PORTFOLIO_STATUS.PENDING}
           isActive={trancheCycle?.state === 1}
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}

@@ -107,7 +107,8 @@ export const VeWTFAddress: { [network: string]: string } = {
 export const PancakeLPAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
   [NETWORKS.TESTNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
-  [NETWORKS.MAINNET]: "0xf4815cb363ff9c62b09585497d84a2b23d0868e1"
+  // [NETWORKS.MAINNET]: "0xf4815cb363ff9c62b09585497d84a2b23d0868e1"
+  [NETWORKS.MAINNET]: "0xd0645713e6605A24441bea3E1bEDE6b752da99c9"
 };
 export const PancakeLPAddress_WBNBBUSD: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",

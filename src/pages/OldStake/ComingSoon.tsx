@@ -149,7 +149,8 @@ const CommingSoon = memo<TProps>(({ intl }) => {
           </Description>
           <ButtonWrapper
             type="primary"
-            href="https://pancakeswap.finance/add/0x2fA0cac2c75Efb50382B5091C6494194eAcF65B0/BNB"
+            // href="https://pancakeswap.finance/add/0x2fA0cac2c75Efb50382B5091C6494194eAcF65B0/BNB"
+            href="https://pancakeswap.finance/add/0xd73f32833b6d5d9c8070c23e599e283a3039823c/BNB"
             target="_blank"
           >
             {/* <Pancake css={{ marginRight: 4 }} /> */}

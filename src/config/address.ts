@@ -79,7 +79,7 @@ export const BUSDAddress: { [network: string]: string } = {
 export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
-  [NETWORKS.MAINNET]: "74CAe157Cb65399D13f6B01e284C8ECc9eCDb2Ae"
+  [NETWORKS.MAINNET]: "d73F32833B6D5D9c8070c23e599e283a3039823C"
 
   //[NETWORKS.MAINNET]: "2fa0cac2c75efb50382b5091c6494194eacf65b0" // realWTF (16Dec)
 };
@@ -87,21 +87,21 @@ export const WTFAddress: { [network: string]: string } = {
 export const WTFRewardsAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x9be9bb36848CC9C2C447F9BEe078C4977C4FFd57",
   [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
-  [NETWORKS.MAINNET]: "0xEF0244A34B4Ee15e04c9Bd47582C318143f1c45C"
+  [NETWORKS.MAINNET]: "0x51CaA3657721cF9A1Fb068c3c01988A6387159ef"
 
   // [NETWORKS.MAINNET]: "0x10F95A2F4Eb95455b4736A98888E8Afa18a1896E" // realWTF (16Dec)
 };
 export const VeWTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xD9c58DEF9280847082144Cd6B72B45b8F16964Ac",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
-  [NETWORKS.MAINNET]: "0xc1C29B8E40fe1530CC11fFE8C47AaA29a5bF890B"
+  [NETWORKS.MAINNET]: "0x4df3Cc03FAfB2BCC139e23CD6fa6073a8F73E7c7"
 
   // [NETWORKS.MAINNET]: "0x89f47d54BBfF42fc7C9fE8Ff4E7b91079B3d87CA" // realWTF (16Dec)
 };
 export const FeeRewardsAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x14c4ec080ba871008797f9e6b20068de22756ad1",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xEabdA368d73024B88CD855b7a4BeFc14bBbe18fE"
+  [NETWORKS.MAINNET]: "0x8964aA741BA592090149B4C451897F0Dcf94a150"
 
   // [NETWORKS.MAINNET]: "0xed4694a5a3053f1f33bb083cA95fECB0D8A7A1ad" // realWTF (16Dec)
 };
@@ -109,7 +109,7 @@ export const FeeRewardsAddress: { [network: string]: string } = {
 export const PancakeLPAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
   [NETWORKS.TESTNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
-  [NETWORKS.MAINNET]: "0xf4815cb363ff9c62b09585497d84a2b23d0868e1"
+  [NETWORKS.MAINNET]: "0xd0645713e6605A24441bea3E1bEDE6b752da99c9"
 };
 export const PancakeLPAddress_WBNBBUSD: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",

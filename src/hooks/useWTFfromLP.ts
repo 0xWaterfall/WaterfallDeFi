@@ -26,7 +26,7 @@ export const useWTFPriceLP = () => {
       if (NETWORK === NETWORKS.MAINNET) {
         const contractLP_WBNBBUSD = getContract(PancakeLPAbi, PancakeLPAddress_WBNBBUSD[NETWORK]);
         const reserves2 = await contractLP_WBNBBUSD.getReserves();
-        const _price = new BigNumber(reserves[1]?._hex).dividedBy(new BigNumber(reserves[0]?._hex));
+        const _price = new BigNumber(reserves[0]?._hex).dividedBy(new BigNumber(reserves[1]?._hex));
         const _price_WBNBBUSD = new BigNumber(reserves2[1]?._hex).dividedBy(new BigNumber(reserves2[0]?._hex));
         price = _price.times(_price_WBNBBUSD).toFormat(2).toString();
       }

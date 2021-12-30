@@ -75,9 +75,10 @@ export const useStakingPool = (
       const [totalLocked] = await multicall(VotingEscrowAbi, calls2);
       const rewardPerBlock = new BigNumber(pool.rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18));
       const totalVeWTF = new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18));
+      const _totalVeWTF = new BigNumber(totalVeWTF).plus(2.4883);
       const maxAPR = numeral(
-        new BigNumber(1)
-          .dividedBy(totalVeWTF)
+        new BigNumber(2.4883)
+          .dividedBy(_totalVeWTF)
           .times(rewardPerBlock)
           .times(20 * 60 * 24 * 365 * 100)
           .toString()

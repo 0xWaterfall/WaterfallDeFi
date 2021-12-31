@@ -422,8 +422,8 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     if (!duration) return;
     setLoading(true);
     try {
-      // await lockAndStakeWTF(balanceInput, duration);
-      await lockAndStakeWTF(balanceInput, 3600 * 2);
+      await lockAndStakeWTF(balanceInput, duration);
+      // await lockAndStakeWTF(balanceInput, 3600 * 2);
       fetchBalance();
       setLocked(true);
       setBalanceInput("0");

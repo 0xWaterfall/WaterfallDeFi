@@ -21,11 +21,11 @@ export const getPrice = async () => {
   //   headers: { "x-auth-timestamp": dayjs().valueOf(), "x-auth-key": "1" }
   // });
 
-  // const pancake = await axios.get(
-  //   "https://api.pancakeswap.info/api/v2/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
-  // );
-  // return new BigNumber(pancake?.data?.data?.price).toFixed(2);
-  return new BigNumber(0).toString();
+  //BSC price
+  const pancake = await axios.get(
+    "https://api.pancakeswap.info/api/v2/tokens/0xd73f32833b6d5d9c8070c23e599e283a3039823c"
+  );
+  return new BigNumber(pancake?.data?.data?.price).toFixed(2);
 };
 
 export const getWTFSupply = async () => {

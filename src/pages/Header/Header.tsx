@@ -242,7 +242,7 @@ const Header = memo<TProps>(({ intl }) => {
     }
     return (
       <WalletWrapper>
-        <Network>{NETWORK === NETWORKS.MAINNET ? "BSC" : "BSC Testnet"}</Network>
+        <Network>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</Network>
         <Address>
           <span>{formatAccountAddress(account)}</span>
           <Wallet css={{ marginLeft: 10 }} />

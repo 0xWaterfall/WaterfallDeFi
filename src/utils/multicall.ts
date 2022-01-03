@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { getMulticallContract } from "hooks";
+import { getMulticallBSCContract, getMulticallContract } from "hooks";
 
 type MultiCallResponse<T> = T | null;
 export interface Call {
@@ -15,6 +15,20 @@ interface MulticallOptions {
 const multicall = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
   try {
     const multi = getMulticallContract();
+    const itf = new ethers.utils.Interface(abi);
+
+    const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
+    const { returnData } = await multi.aggregate(calldata);
+    const res = returnData.map((call: any, i: number) => itf.decodeFunctionResult(calls[i].name, call));
+
+    return res;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+export const multicallBSC = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
+  try {
+    const multi = getMulticallBSCContract();
     const itf = new ethers.utils.Interface(abi);
 
     const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);

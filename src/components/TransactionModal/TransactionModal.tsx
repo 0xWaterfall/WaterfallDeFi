@@ -91,7 +91,7 @@ const TransactionModal = memo<TProps>(({ intl }) => {
           <Block>
             <h1>{intl.formatMessage({ defaultMessage: "Transaction Submitted" })}</h1>
             <a href={`${BASE_BSC_SCAN_URL}/tx/${payload?.txn}`} target="_blank" rel="noreferrer">
-              {intl.formatMessage({ defaultMessage: "View on Bscscan" })}
+              {intl.formatMessage({ defaultMessage: "View on Snowtrace" })}
             </a>
             <Button type="primary" onClick={handle}>
               {intl.formatMessage({ defaultMessage: "Close" })}
@@ -106,7 +106,7 @@ const TransactionModal = memo<TProps>(({ intl }) => {
           <Block>
             <h1>{intl.formatMessage({ defaultMessage: "Transaction Completed" })}</h1>
             <a href={`${BASE_BSC_SCAN_URL}/tx/${payload?.txn}`} target="_blank" rel="noreferrer">
-              {intl.formatMessage({ defaultMessage: "View on Bscscan" })}
+              {intl.formatMessage({ defaultMessage: "View on Snowtrace" })}
             </a>
             <Button type="primary" onClick={handle}>
               {intl.formatMessage({ defaultMessage: "Close" })}

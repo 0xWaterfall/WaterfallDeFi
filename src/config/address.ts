@@ -10,11 +10,17 @@ export const TranchesAddressOracle2: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "466D5d69DB51c562A850227ed2081040b408a98D"
 };
+export const BSCTranches = [
+  "FDDA6514a13161a5a1724F8DD787d9d3faeC9557",
+  "E4fF060EdC2423E624a21bDbbe5b2AF8f13243bD",
+  "17Dd4D94fCA4f26C23fBa591AD5418260950FD16"
+];
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
-  [NETWORKS.MAINNET]: "FDDA6514a13161a5a1724F8DD787d9d3faeC9557"
+  // [NETWORKS.MAINNET]: "FDDA6514a13161a5a1724F8DD787d9d3faeC9557"
   // [NETWORKS.MAINNET]: "8060a28e41275a3181e8f96ab8dc65ebe8e119d7"
+  [NETWORKS.MAINNET]: "171EE011C2A7d7A1b372eEaf502bcB6072e7a906" //avax
 };
 export const TranchesAddress2: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
@@ -76,7 +82,8 @@ export const MasterChefAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "E6127428E7efBCC68d6C2e117C135386a7F11663",
   [NETWORKS.TESTNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
   // [NETWORKS.MAINNET]: "5BF7f7682400EeE44C853D375b056A732c3cBf02"
-  [NETWORKS.MAINNET]: "Ee0C679c7e1D676ED919F97290D62dcCD4f4F853"
+  // [NETWORKS.MAINNET]: "Ee0C679c7e1D676ED919F97290D62dcCD4f4F853"
+  [NETWORKS.MAINNET]: "2a201B39EB0C50fA3eFA5cD1c66d0351bEF8E492" //avax
 };
 export const MasterChefAddress2: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "bFf5837e8606c730a1D53D6BE41741557d1bC1a0",
@@ -111,7 +118,7 @@ export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
   // [NETWORKS.MAINNET]: "2fa0cac2c75efb50382b5091c6494194eacf65b0"
-  [NETWORKS.MAINNET]: "d73F32833B6D5D9c8070c23e599e283a3039823C"
+  [NETWORKS.MAINNET]: "57f31cC65CBAbe23b9819E0eF635413023855007"
 };
 
 export const WTFRewardsAddress: { [network: string]: string } = {
@@ -156,7 +163,8 @@ export const MultiSigAddress: { [network: string]: string } = {
 export const MulticallAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
   [NETWORKS.TESTNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
-  [NETWORKS.MAINNET]: "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c"
+  // [NETWORKS.MAINNET]: "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c"
+  [NETWORKS.MAINNET]: "0x0b78ad358dDa2887285eaD72e84b47242360b872" //avax
 };
 
 export const TestLPTokenAddress: { [network: string]: string } = {

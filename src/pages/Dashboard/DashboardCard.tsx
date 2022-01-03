@@ -122,7 +122,7 @@ const DashboardCard = memo<TProps>(({ intl }) => {
         return false;
       }
     } else {
-      console.error("Can't setup the BSC network on metamask because window.ethereum is undefined");
+      console.error("Can't setup the AVAX network on metamask because window.ethereum is undefined");
       return false;
     }
   }, []);

@@ -8,13 +8,14 @@ import {
   mBUSDAddress,
   sALPACAAddress,
   sCREAMAddress,
-  sVENUSAddress
+  sVENUSAddress,
+  BSCTranches
 } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { Market, PORTFOLIO_STATUS } from "types";
 import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
-import getRpcUrl from "utils/getRpcUrl";
+import getRpcUrl, { getBscRpcUrl } from "utils/getRpcUrl";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
@@ -31,13 +32,14 @@ import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.js
 import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
 import numeral from "numeral";
 import { useAVAXTrancheMasterContract, useTrancheMasterContract } from "./useContract";
 import { setPendingWTFReward } from "store/position";
 import markets from "store/markets";
 import { MarketList } from "config/market";
 import useActiveWeb3React from "./useActiveWeb3React";
+import { stringify } from "querystring";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -416,17 +418,58 @@ export const useWTF = () => {
 
   return { weekDistribution };
 };
+
+const getBSCTVL = async (address: string[]) => {
+  let _tvl = BIG_ZERO;
+  await Promise.all(
+    address.map(async (_address) => {
+      const _marketAddress = _address;
+      const calls = [
+        {
+          address: _marketAddress,
+          name: "tranches",
+          params: [0]
+        },
+        {
+          address: _marketAddress,
+          name: "tranches",
+          params: [1]
+        },
+        {
+          address: _marketAddress,
+          name: "tranches",
+          params: [2]
+        }
+      ];
+
+      const [t0, t1, t2] = await multicallBSC(TrancheMasterAbi, calls);
+      const _tranches = [t0, t1, t2];
+      console.log(_tranches);
+
+      _tranches.map((_t, _i) => {
+        const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+        _tvl = _tvl.plus(_principal);
+      });
+    })
+  );
+  return _tvl;
+};
 export const useTotalTvl = () => {
   const [totalTvl, setTotalTvl] = useState("0");
   const markets = useMarkets();
   let _totalTvl = new BigNumber(BIG_ZERO);
   const { fastRefresh } = useRefresh();
   useEffect(() => {
-    markets.forEach((m) => {
-      const _tvl = new BigNumber(m.tvl);
-      _totalTvl = _totalTvl.plus(_tvl);
-    });
-    setTotalTvl(_totalTvl.toFormat(0).toString());
+    const fetchBalance = async () => {
+      const bsc = await getBSCTVL(BSCTranches);
+
+      markets.forEach((m) => {
+        const _tvl = new BigNumber(m.tvl);
+        _totalTvl = _totalTvl.plus(_tvl);
+      });
+      setTotalTvl(_totalTvl.plus(bsc).toFormat(0).toString());
+    };
+    fetchBalance();
   }, [markets, fastRefresh]);
 
   return totalTvl;
@@ -455,6 +498,11 @@ export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.P
   return getContract(MultiCallAbi, MulticallAddress[NETWORK], signer);
 };
 
+export const getMulticallBSCContract = () => {
+  const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getBscRpcUrl());
+  return new ethers.Contract("0x41263cba59eb80dc200f3e2544eda4ed6a90e76c", MultiCallAbi, simpleRpcProvider);
+};
+
 export const getSigner = () => {
   const { library, account } = useWeb3React<Web3Provider>();
   const { library: library2 } = useActiveWeb3React();
@@ -462,6 +510,9 @@ export const getSigner = () => {
   // if (window?.ethereum) {
   //   const chainId = window.ethereum.chainId;
   //   if (chainId !== "0x61" && chainId !== "0x38" && chainId !== "0xa86a") return;
+  // if (window?.ethereum) {
+  //   const chainId = window.ethereum.chainId;
+  // if (chainId !== "0x61" && chainId !== "0x38") return;
 
   //   const provider = new ethers.providers.Web3Provider(window.ethereum);
   //   // console.log("signer", provider.getSigner(), library?.getSigner());

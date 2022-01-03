@@ -43,4 +43,4 @@ export type NETWORKS_TYPE = typeof NETWORKS[keyof typeof NETWORKS];
 export const NETWORK = process.env.REACT_APP_NETWORK as NETWORKS_TYPE;
 console.log("connected to", NETWORK);
 
-export const BASE_BSC_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://bscscan.com" : "https://testnet.bscscan.com/";
+export const BASE_BSC_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://snowtrace.io" : "https://snowtrace.io";

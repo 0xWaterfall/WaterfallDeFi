@@ -198,16 +198,16 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
                 <span>
                   {
                     //multi-farm
-                    // formatTimestamp(
-                    //   trancheCycle?.endAt > +trancheCycle?.startAt + +Number(market?.duration)
-                    //     ? trancheCycle?.endAt
-                    //     : +trancheCycle?.startAt + +Number(market?.duration)
-                    // )
                     formatTimestamp(
-                      trancheCycle?.endAt > +trancheCycle?.startAt
+                      trancheCycle?.endAt > +trancheCycle?.startAt + +Number(market?.duration)
                         ? trancheCycle?.endAt
                         : +trancheCycle?.startAt + +Number(market?.duration)
                     )
+                    // formatTimestamp(
+                    //   trancheCycle?.endAt > +trancheCycle?.startAt
+                    //     ? trancheCycle?.endAt
+                    //     : +trancheCycle?.startAt + +Number(market?.duration)
+                    // )
                   }
                 </span>
               </>

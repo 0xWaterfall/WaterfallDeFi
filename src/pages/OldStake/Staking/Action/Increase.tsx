@@ -386,7 +386,7 @@ const Increase = memo<TProps>(({ intl }) => {
       </Label>
 
       <Label>
-        <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
+        <div>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</div>
         <span>{receivedVeWTF}</span>
       </Label>
     </Wrapper>

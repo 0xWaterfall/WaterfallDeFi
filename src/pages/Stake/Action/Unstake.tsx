@@ -14,6 +14,7 @@ import { StakingConfig } from "types";
 import { compareNum } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 import { Web3Provider } from "@ethersproject/providers";
+import { useGetLockingWTF } from "../hooks/useGetLockingWTF";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -73,9 +74,17 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
   const { tags } = useTheme();
   const { account } = useWeb3React<Web3Provider>();
   const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
+  const { total: lockingWTF, expiryTimestamp } = useGetLockingWTF(account);
+
   const [balanceInput, setBalanceInput] = useState("0");
   const [loading, setLoading] = useState(false);
   const { unstake } = useUnstake();
+
+  const isExpired = useMemo(() => {
+    const timeNow = Math.floor(Date.now() / 1000);
+    if (expiryTimestamp === "0") return false;
+    return Number(expiryTimestamp) <= timeNow;
+  }, [expiryTimestamp]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
@@ -105,23 +114,23 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
     }
   }, [VeWTFBalance, balanceInput]);
   const handleUnlock = useCallback(async () => {
-    if (validateText !== undefined && validateText.length > 0) return;
+    // if (validateText !== undefined && validateText.length > 0) return;
     if (!account) return;
-    if (Number(balanceInput) <= 0) return;
+    // if (Number(balanceInput) <= 0) return;
 
     setLoading(true);
     try {
-      await unstake(account, balanceInput);
+      await unstake(account);
       // fetchBalance();
 
       setBalanceInput("0");
-      successNotification("Lock & Stake Success", "");
+      successNotification("Unstake Success", "");
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [balanceInput, account]);
+  }, [account]);
   return (
     <Wrapper>
       <div>
@@ -130,9 +139,9 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
             {intl.formatMessage({ defaultMessage: "Available unlock" })}:{" "}
             <span>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"}</span>
           </p>
-          <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX>
+          {/* <MAX onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</MAX> */}
         </Label>
-        <StakeInput
+        {/* <StakeInput
           suffixText="WTF"
           type="number"
           step={0.1}
@@ -141,17 +150,18 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
           onChange={handleInputChange}
           style={validateText ? { borderColor: tags.redText } : {}}
         />
-        {validateText && <ValidateText>{validateText}</ValidateText>}
+        {validateText && <ValidateText>{validateText}</ValidateText>} */}
+
         <Label css={{ marginTop: 24 }}>
-          <p>{intl.formatMessage({ defaultMessage: "Recevied  WTF" })}</p>
-          <span>0</span>
+          <p>{intl.formatMessage({ defaultMessage: "Burning veWTF" })}</p>
+          <span>{VeWTFBalance}</span>
         </Label>
         <Label>
-          <p>{intl.formatMessage({ defaultMessage: "Burn Ve- WTF" })}</p>
-          <span>0</span>
+          <p>{intl.formatMessage({ defaultMessage: "Receiving WTF" })}</p>
+          <span>{lockingWTF}</span>
         </Label>
       </div>
-      <ButtonWrapper type="primary" onClick={handleUnlock} loading={loading}>
+      <ButtonWrapper type="primary" onClick={handleUnlock} loading={loading} disabled={!isExpired}>
         {intl.formatMessage({ defaultMessage: "Unlock" })}
       </ButtonWrapper>
     </Wrapper>

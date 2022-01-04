@@ -23,7 +23,6 @@ import { useMarket, useWTF } from "hooks";
 import Coin from "components/Coin";
 import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
-import { useWTFPrice } from "hooks/useSelectors";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useDispatch } from "react-redux";
 import { setMarketKey } from "store/selectedKeys";

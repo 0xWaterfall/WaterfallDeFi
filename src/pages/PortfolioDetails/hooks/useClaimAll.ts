@@ -10,12 +10,18 @@ import { getPendingWTFReward, getTrancheBalance } from "store/position";
 import { Dispatch } from "redux";
 import { setConfirmModal } from "store/showStatus";
 import { MasterChefAddress } from "config/address";
+import { utils } from "ethers";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
 
-const claim = async (masterChefContract: Contract, dispatch: Dispatch<any>) => {
-  const tx = await masterChefContract.claimAll();
+const claim = async (
+  masterChefContract: Contract,
+  dispatch: Dispatch<any>,
+  _lockDurationIfLockNotExists: string,
+  _lockDurationIfLockExists: string
+) => {
+  const tx = await masterChefContract.claimAll(_lockDurationIfLockNotExists, _lockDurationIfLockExists);
   dispatch(
     setConfirmModal({
       isOpen: true,
@@ -54,11 +60,14 @@ const useClaimAll = (masterChefAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const masterChefContract = useMasterchefContract(masterChefAddress);
-  const handleClaimAll = useCallback(async () => {
-    await claim(masterChefContract, dispatch);
-    // account && dispatch(getPendingWTFReward({ account }));
-    //   dispatch(updateUserStakedBalance(sousId, account));
-  }, [account, dispatch, masterChefContract]);
+  const handleClaimAll = useCallback(
+    async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
+      await claim(masterChefContract, dispatch, _lockDurationIfLockNotExists, _lockDurationIfLockExists);
+      // account && dispatch(getPendingWTFReward({ account }));
+      //   dispatch(updateUserStakedBalance(sousId, account));
+    },
+    [account, dispatch, masterChefContract]
+  );
 
   return { onClaimAll: handleClaimAll };
 };

@@ -102,7 +102,7 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
 
     setLoading(true);
     try {
-      await unstake(account, balanceInput);
+      await unstake(account);
       // fetchBalance();
 
       setBalanceInput("0");
@@ -118,7 +118,7 @@ const Unstake = memo<TProps>(({ intl, stakingConfig }) => {
       <div>
         <Label>
           <p>{intl.formatMessage({ defaultMessage: "Available unlock" })}</p>
-          <span>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"} Ve-WTF</span>
+          <span>{VeWTFBalance ? numeral(VeWTFBalance).format("0,0.[0000]") : "-"} veWTF</span>
         </Label>
         <StakeInput
           suffixText="WTF"

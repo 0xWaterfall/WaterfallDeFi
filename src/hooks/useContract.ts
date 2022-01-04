@@ -1,11 +1,12 @@
 import { useWeb3React } from "@web3-react/core";
 import { getContract, getSigner } from "hooks";
-import { MasterChefAddress, TranchesAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
+import { FeeRewardsAddress, MasterChefAddress, TranchesAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as WTFRewardsAbi } from "config/abi/WTFRewards.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
+import { abi as LPRewardsAbi } from "config/abi/WTFLPRewards.json";
 import { useMemo } from "react";
 import { NETWORK } from "config";
 
@@ -32,4 +33,14 @@ export const useVeWTFContract = () => {
 export const useWTFRewardsContract = () => {
   const signer = getSigner();
   return useMemo(() => getContract(WTFRewardsAbi, WTFRewardsAddress[NETWORK], signer), [signer]);
+};
+
+export const useFeeRewardsContract = () => {
+  const signer = getSigner();
+  return useMemo(() => getContract(WTFRewardsAbi, FeeRewardsAddress[NETWORK], signer), [signer]);
+};
+
+export const useLPRewardsContract = (LPRewardsAddress: string) => {
+  const signer = getSigner();
+  return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
 };

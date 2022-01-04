@@ -97,17 +97,28 @@ export const WTFAddress: { [network: string]: string } = {
 export const WTFRewardsAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x9be9bb36848CC9C2C447F9BEe078C4977C4FFd57",
   [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0x51CaA3657721cF9A1Fb068c3c01988A6387159ef"
+
+  // [NETWORKS.MAINNET]: "0x10F95A2F4Eb95455b4736A98888E8Afa18a1896E" // realWTF (16Dec)
 };
 export const VeWTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xD9c58DEF9280847082144Cd6B72B45b8F16964Ac",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
-  [NETWORKS.MAINNET]: ""
+  [NETWORKS.MAINNET]: "0x4df3Cc03FAfB2BCC139e23CD6fa6073a8F73E7c7"
+
+  // [NETWORKS.MAINNET]: "0x89f47d54BBfF42fc7C9fE8Ff4E7b91079B3d87CA" // realWTF (16Dec)
 };
+export const FeeRewardsAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x14c4ec080ba871008797f9e6b20068de22756ad1",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x8964aA741BA592090149B4C451897F0Dcf94a150"
+
+  // [NETWORKS.MAINNET]: "0xed4694a5a3053f1f33bb083cA95fECB0D8A7A1ad" // realWTF (16Dec)
+};
+
 export const PancakeLPAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
   [NETWORKS.TESTNET]: "0x3c717a75b4aeed6a5206492ac524a2b3a1c905f9",
-  // [NETWORKS.MAINNET]: "0xf4815cb363ff9c62b09585497d84a2b23d0868e1"
   [NETWORKS.MAINNET]: "0xd0645713e6605A24441bea3E1bEDE6b752da99c9"
 };
 export const PancakeLPAddress_WBNBBUSD: { [network: string]: string } = {
@@ -116,8 +127,33 @@ export const PancakeLPAddress_WBNBBUSD: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16"
 };
 
+export const MultiSigAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x46D0C754463E3Bd07c1451CF4a683fEcD507d36B"
+};
+
 export const MulticallAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
   [NETWORKS.TESTNET]: "0xae11C5B5f29A6a25e955F0CB8ddCc416f522AF5C",
   [NETWORKS.MAINNET]: "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c"
+};
+
+export const TestLPTokenAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x727B439108B1ECc4493cA637254D78a581f0CC28",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0xE5d7E2993BfC33d5212281d4E8EfCE6634534A62"
+  [NETWORKS.MAINNET]: "0x9e1c5417ee9312e7bDb53B2A19460F80001B5C1e" //test 21Dec
+};
+export const TestLPTokenAddressApe: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x727B439108B1ECc4493cA637254D78a581f0CC28",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0xE5d7E2993BfC33d5212281d4E8EfCE6634534A62"
+  [NETWORKS.MAINNET]: "0x9e1c5417ee9312e7bDb53B2A19460F80001B5C1e" //test 21Dec
+};
+export const TestLPRewardAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "0x1F854aBA48720407C64e674952512CDbea5d3c9A",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
+  [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };

@@ -271,7 +271,7 @@ const Increase = memo<TProps>(({ intl }) => {
     if (validateText !== undefined && validateText.length > 0) return;
     if (Number(balanceInput) <= 0) return;
     if (!duration) return;
-
+    console.log(duration);
     setLoading(true);
     try {
       await lockAndStakeWTF(balanceInput, duration);
@@ -312,7 +312,7 @@ const Increase = memo<TProps>(({ intl }) => {
 
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onIncreaseLockAmount} loading={increaseLockAmountLoading}>
-          {intl.formatMessage({ defaultMessage: "Increase lock amount" })}
+          {intl.formatMessage({ defaultMessage: "Increase lock amount__" })}
         </ButtonWrapper>
       )}
       <Label css={{ margin: "15px 0 10px" }}>
@@ -351,7 +351,7 @@ const Increase = memo<TProps>(({ intl }) => {
 
       {account && approved && locked && (
         <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
-          {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
+          {intl.formatMessage({ defaultMessage: "Extend Lock Time__" })}
         </ButtonWrapper>
       )}
       {account && approved && !locked && (
@@ -386,7 +386,7 @@ const Increase = memo<TProps>(({ intl }) => {
       </Label>
 
       <Label>
-        <div>{intl.formatMessage({ defaultMessage: "Recevied Ve-WTF" })}</div>
+        <div>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</div>
         <span>{receivedVeWTF}</span>
       </Label>
     </Wrapper>

@@ -203,11 +203,6 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
                         ? trancheCycle?.endAt
                         : +trancheCycle?.startAt + +Number(market?.duration)
                     )
-                    // formatTimestamp(
-                    //   trancheCycle?.endAt > +trancheCycle?.startAt
-                    //     ? trancheCycle?.endAt
-                    //     : +trancheCycle?.startAt + +Number(market?.duration)
-                    // )
                   }
                 </span>
               </>

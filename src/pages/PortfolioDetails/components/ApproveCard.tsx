@@ -229,7 +229,7 @@ const ApproveCard = memo<TProps>(
       // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      if (compareNum(_balanceInput, _balance, true)) {
+      if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
       }
       if (compareNum(_balanceInput, _remaining, true)) {

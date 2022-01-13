@@ -37,6 +37,7 @@ import { useTrancheMasterContract } from "./useContract";
 import { setPendingWTFReward } from "store/position";
 import markets from "store/markets";
 import { MarketList } from "config/market";
+import useActiveWeb3React from "./useActiveWeb3React";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -438,13 +439,22 @@ export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.P
 };
 
 export const getSigner = () => {
-  if (window?.ethereum) {
-    const chainId = window.ethereum.chainId;
-    if (chainId !== "0x61" && chainId !== "0x38") return;
+  const { library, account } = useWeb3React<Web3Provider>();
+  const { library: library2 } = useActiveWeb3React();
+  console.log("library", library2);
+  if (library2) return library2.getSigner();
+  // if (window?.ethereum) {
+  //   const chainId = window.ethereum.chainId;
+  //   if (chainId !== "0x61" && chainId !== "0x38" && chainId !== "0xa86a") return;
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    if (signer) return signer;
-  }
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   // console.log("signer", provider.getSigner(), library?.getSigner());
+
+  //   // const signer = provider.getSigner() || library?.getSigner();
+  //   const signer = library?.getSigner();
+  //   console.log("signer", library?.getSigner());
+
+  //   if (signer) return signer;
+  // }
   return;
 };

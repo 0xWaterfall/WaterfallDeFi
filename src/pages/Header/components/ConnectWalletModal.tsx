@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { MetaMask } from "assets/images";
+import { MetaMask, WalletConnect } from "assets/images";
 import Modal from "components/Modal/Modal";
 import React, { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -21,7 +21,7 @@ const ConnectWalletModal = memo<TProps>(({ intl }) => {
   const { login } = useAuth();
   const onConnect = useCallback(async () => {
     if (window.ethereum?.isMetaMask && window.ethereum.request) {
-      login();
+      login("injected");
     } else {
       window.open(url.metamask);
     }
@@ -105,6 +105,34 @@ const ConnectWalletModal = memo<TProps>(({ intl }) => {
             <span>Metamask</span>
           </div>
           <MetaMask />
+        </div>
+        <div
+          css={{
+            padding: "0 16px",
+            height: 48,
+            borderRadius: 12,
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: "transparent",
+            backgroundColor: gray.normal08,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: 16,
+            cursor: "pointer",
+            fontWeight: 600,
+            fontSize: 16,
+            color: gray.normal85,
+            "&:hover": {
+              borderColor: primary.deep
+            }
+          }}
+          onClick={() => login("walletconnect")}
+        >
+          <div>
+            <span>WalletConnect</span>
+          </div>
+          <WalletConnect />
         </div>
       </section>
     </Modal>

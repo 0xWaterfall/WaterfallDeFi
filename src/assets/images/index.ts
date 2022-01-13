@@ -3,6 +3,7 @@ export { ReactComponent as WaterFallDark } from "./WaterFallDark.svg";
 export { ReactComponent as Intersect } from "./Intersect.svg";
 export { ReactComponent as Close } from "./Close.svg";
 export { ReactComponent as MetaMask } from "./MetaMask.svg";
+export { ReactComponent as WalletConnect } from "./walletconnect.svg";
 export { ReactComponent as I18n } from "./I18n.svg";
 export { ReactComponent as Forest } from "./Forest.svg";
 export { ReactComponent as Unicorn } from "./Unicorn.svg";

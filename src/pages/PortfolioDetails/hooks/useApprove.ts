@@ -50,6 +50,7 @@ const approve = async (contract: Contract, address: string, dispatch: Dispatch<a
 const useApprove = (approveTokenAddress: string, masterChefAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
+  console.log("onapprove", account);
   const contract = useERC20Contract(approveTokenAddress);
   const handleApprove = useCallback(async () => {
     if (account) await approve(contract, masterChefAddress, dispatch);

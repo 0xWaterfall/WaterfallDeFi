@@ -5,43 +5,66 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from "@web3-react/injected-connector";
+import {
+  WalletConnectConnector,
+  WalletConnectConnectorArguments,
+  UserRejectedRequestError as UserRejectedRequestErrorWalletConnect
+} from "@web3-react/walletconnect-connector";
+import { connectorsByName } from "utils/web3React";
+
 import { setupNetwork } from "utils/wallet";
-import { useAppDispatch } from "store";
 import { ConnectorNames } from "schemas/enum";
 
 const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
 
 const useAuth = () => {
-  const dispatch = useAppDispatch();
   const { activate, deactivate } = useWeb3React();
 
-  const login = useCallback(() => {
-    const connector = new InjectedConnector({ supportedChainIds: [chainId] });
-    if (connector) {
-      activate(connector, async (error: Error) => {
-        if (error instanceof UnsupportedChainIdError) {
-          const hasSetup = await setupNetwork();
-          if (hasSetup) {
-            activate(connector);
-          }
-        } else {
-          if (error instanceof NoEthereumProviderError) {
-            console.error(error);
-          } else if (error instanceof UserRejectedRequestErrorInjected) {
-            console.error(error);
+  const login = useCallback(
+    (connectorID: string) => {
+      const connector = connectorID === "injected" ? connectorsByName.injected : connectorsByName.walletconnect;
+      console.log("login", connectorsByName.walletconnect);
+      window.localStorage.setItem("connectorIdv2", connectorID);
+      // const connector = new InjectedConnector({ supportedChainIds: [chainId] });
+      if (connector) {
+        activate(connector, async (error: Error) => {
+          if (error instanceof UnsupportedChainIdError) {
+            const hasSetup = await setupNetwork();
+            if (hasSetup) {
+              activate(connector);
+            }
           } else {
-            console.error(error);
+            if (error instanceof NoEthereumProviderError) {
+              console.error(error);
+            } else if (
+              error instanceof UserRejectedRequestErrorInjected ||
+              error instanceof UserRejectedRequestErrorWalletConnect
+            ) {
+              if (connector instanceof WalletConnectConnector) {
+                const walletConnector = connector as WalletConnectConnector;
+                walletConnector.walletConnectProvider = null;
+              }
+            } else {
+              console.error(error);
+            }
           }
-        }
-      });
-    } else {
-      console.warn("Unable to find connector", "The connector config is wrong");
-    }
-  }, [activate]);
+        });
+      } else {
+        console.error("cannot connect");
+      }
+    },
+    [activate]
+  );
 
   const logout = useCallback(() => {
     deactivate();
-  }, [deactivate, dispatch]);
+    if (window.localStorage.getItem("walletconnect")) {
+      connectorsByName.walletconnect.close();
+      connectorsByName.walletconnect.walletConnectProvider = null;
+      window.localStorage.removeItem("walletconnect");
+    }
+    window.localStorage.removeItem("connectorIdv2");
+  }, [deactivate]);
 
   return { login, logout };
 };

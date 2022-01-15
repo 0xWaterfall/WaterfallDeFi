@@ -113,7 +113,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
   const getMarketStatusTag = () => {
-    if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
+    // if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
     if (marketData.status === PORTFOLIO_STATUS.PENDING) return <Tag color="yellow" value={"Pending"} />;
     if (marketData.status === PORTFOLIO_STATUS.ACTIVE) return <Tag color="green" value={"Active"} />;
   };

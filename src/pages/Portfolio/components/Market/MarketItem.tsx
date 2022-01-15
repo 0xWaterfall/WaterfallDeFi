@@ -153,7 +153,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
   };
 
   const getMarketStatusTag = () => {
-    if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
+    // if (marketData?.isRetired) return <Tag color="red" value={"Retired"} />;
     if (marketData.status === PORTFOLIO_STATUS.PENDING) return <Tag color="yellow" value={"Pending"} />;
     if (marketData.status === PORTFOLIO_STATUS.ACTIVE) return <Tag color="green" value={"Active"} />;
   };

@@ -207,77 +207,80 @@ const TrancheCard = memo<TProps>(({ intl }) => {
       </IconWrapper>
       <CarouselContainer dotPosition="bottom" autoplay={true}>
         {markets.map((_market: Market, index) => {
-          return (
-            <div key={index}>
-              <Title>{_market.portfolio}</Title>
-              {tranchesDisplayText.map((trancheText, _i) => {
-                const trancheApr = _market && _market.tranches ? _market.tranches[_i].apy : "-";
-                const wtfApr = _market
-                  ? getWTFApr(
-                      formatAllocPoint(_market?.pools[_i], _market?.totalAllocPoints),
-                      _market?.tranches[_i],
-                      _market?.duration,
-                      _market?.rewardPerBlock,
-                      wtfPrice
-                    )
-                  : "-";
+          if (!_market.isRetired)
+            return (
+              <div key={index}>
+                <Title>{_market.portfolio}</Title>
+                {tranchesDisplayText.map((trancheText, _i) => {
+                  const trancheApr = _market && _market.tranches ? _market.tranches[_i].apy : "-";
+                  const wtfApr = _market
+                    ? getWTFApr(
+                        formatAllocPoint(_market?.pools[_i], _market?.totalAllocPoints),
+                        _market?.tranches[_i],
+                        _market?.duration,
+                        _market?.rewardPerBlock,
+                        wtfPrice
+                      )
+                    : "-";
 
-                const netApr =
-                  trancheApr && wtfApr && wtfApr !== null ? Number(trancheApr) + Number(numeral(wtfApr).value()) : "-";
+                  const netApr =
+                    trancheApr && wtfApr && wtfApr !== null
+                      ? Number(trancheApr) + Number(numeral(wtfApr).value())
+                      : "-";
 
-                return (
-                  <Block key={trancheText}>
-                    <h1>{trancheText}</h1>
-                    <Section>
-                      <APRWrapper>
-                        <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
-                        <p>
-                          {netApr}
-                          {" %"}
-                        </p>
-                      </APRWrapper>
-                      <APRWrapper>
-                        <span>
-                          {_i !== 2 ? "Fixed " : "Variable "}
-                          {/* {trancheText} */}
-                          {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
-                        </span>
-                        <span>
-                          {trancheApr}
-                          {" %"}
-                        </span>
-                      </APRWrapper>
-                      <APRWrapper>
-                        <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
-                        <span>
-                          {wtfApr}
-                          {" %"}
-                        </span>
-                      </APRWrapper>
-                      <Line />
-                      <Fee>
-                        <Tooltip
-                          overlay={
-                            <React.Fragment>
-                              <p>
-                                {intl.formatMessage({
-                                  defaultMessage: `After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x `
-                                })}
-                                {_market?.tranches[_i].fee} %
-                              </p>
-                            </React.Fragment>
-                          }
-                        >
-                          <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
-                        </Tooltip>
-                        <span>{_market?.tranches[_i].fee} %</span>
-                      </Fee>
-                    </Section>
-                  </Block>
-                );
-              })}
-            </div>
-          );
+                  return (
+                    <Block key={trancheText}>
+                      <h1>{trancheText}</h1>
+                      <Section>
+                        <APRWrapper>
+                          <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
+                          <p>
+                            {netApr}
+                            {" %"}
+                          </p>
+                        </APRWrapper>
+                        <APRWrapper>
+                          <span>
+                            {_i !== 2 ? "Fixed " : "Variable "}
+                            {/* {trancheText} */}
+                            {intl.formatMessage({ defaultMessage: "APR" })}:{" "}
+                          </span>
+                          <span>
+                            {trancheApr}
+                            {" %"}
+                          </span>
+                        </APRWrapper>
+                        <APRWrapper>
+                          <span>{intl.formatMessage({ defaultMessage: "WTF APR" })}: </span>
+                          <span>
+                            {wtfApr}
+                            {" %"}
+                          </span>
+                        </APRWrapper>
+                        <Line />
+                        <Fee>
+                          <Tooltip
+                            overlay={
+                              <React.Fragment>
+                                <p>
+                                  {intl.formatMessage({
+                                    defaultMessage: `After maturity, you can choose to withdraw all the principal + Yield. The platform will charge a fee of (principal + all yield in the current period) x `
+                                  })}
+                                  {_market?.tranches[_i].fee} %
+                                </p>
+                              </React.Fragment>
+                            }
+                          >
+                            <u>{intl.formatMessage({ defaultMessage: "Withdraw Fee" })}:</u>
+                          </Tooltip>
+                          <span>{_market?.tranches[_i].fee} %</span>
+                        </Fee>
+                      </Section>
+                    </Block>
+                  );
+                })}
+              </div>
+            );
         })}
       </CarouselContainer>
 

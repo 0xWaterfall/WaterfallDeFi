@@ -98,7 +98,8 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
+    isRetired: true
   },
 
   {

@@ -136,7 +136,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           ...marketData,
           tranches,
           // duration: duration.toString(),
-          duration: marketId === 1 ? hackDuration : originalDuration,
+          duration: originalDuration,
           actualStartAt: actualStartAt.toString(),
           status,
           totalTranchesTarget: totalTranchesTarget.toString(),

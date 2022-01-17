@@ -5,6 +5,11 @@ export const TranchesAddressOracle1: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "22C6719A53cEAE150f93c225e6BDbF7722B67523"
 };
+export const TranchesAddressOracle2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "466D5d69DB51c562A850227ed2081040b408a98D"
+};
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",
@@ -61,6 +66,11 @@ export const MasterChefOracleAddress1: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "34F452F65574122238AC005AD9C97d335335C654"
+};
+export const MasterChefOracleAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "d20b62705B7800C84AFf646130e33b6BeD0D3d14"
 };
 export const MasterChefAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "E6127428E7efBCC68d6C2e117C135386a7F11663",

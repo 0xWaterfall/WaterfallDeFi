@@ -46,7 +46,6 @@ const TopBar = styled.div`
 `;
 
 const StepBar = styled.div`
-  padding-left: 150px;
   display: grid;
   gap: 10px;
   grid-auto-flow: column;
@@ -179,9 +178,10 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
           </div>
           {data.isMulticurrency ? (
             <Select
+              defaultValue={"BUSD"}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 setSelectedDepositAsset(e.toString());
-                setDeposited(selectedDepositAsset === "USDC" ? 50000 : 25000);
+                // setDeposited(selectedDepositAsset === "USDC" ? 50000 : 25000);
               }}
             >
               {marketData.assets.map((a, i) => (

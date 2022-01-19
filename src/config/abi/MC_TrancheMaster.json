@@ -1,0 +1,469 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "TrancheMaster",
+  "sourceName": "contracts/main/TrancheMaster.sol",
+  "abi": [
+    {
+      "inputs": [
+        { "internalType": "address", "name": "_core", "type": "address" },
+        { "internalType": "address", "name": "_staker", "type": "address" },
+        { "internalType": "address", "name": "_devAddress", "type": "address" },
+        { "internalType": "uint256", "name": "_duration", "type": "uint256" },
+        {
+          "components": [
+            { "internalType": "uint256", "name": "apy", "type": "uint256" },
+            { "internalType": "uint256", "name": "fee", "type": "uint256" },
+            { "internalType": "uint256", "name": "target", "type": "uint256" }
+          ],
+          "internalType": "struct TrancheMasterMultiToken.TrancheParams[]",
+          "name": "_params",
+          "type": "tuple[]"
+        },
+        {
+          "components": [
+            { "internalType": "address", "name": "addr", "type": "address" },
+            { "internalType": "address", "name": "strategy", "type": "address" },
+            { "internalType": "uint256", "name": "percent", "type": "uint256" }
+          ],
+          "internalType": "struct TrancheMasterMultiToken.Token[]",
+          "name": "_tokens",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{ "indexed": true, "internalType": "address", "name": "_core", "type": "address" }],
+      "name": "CoreUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      ],
+      "name": "Deposit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "capital", "type": "uint256" }
+      ],
+      "name": "Harvest",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      ],
+      "name": "Invest",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+      "name": "Paused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      ],
+      "name": "Redeem",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{ "indexed": false, "internalType": "address", "name": "dev", "type": "address" }],
+      "name": "SetDevAddress",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" }
+      ],
+      "name": "TrancheAdd",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "capital", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "rate", "type": "uint256" }
+      ],
+      "name": "TrancheSettle",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "principal", "type": "uint256" }
+      ],
+      "name": "TrancheStart",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" }
+      ],
+      "name": "TrancheUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
+      "name": "Unpaused",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      ],
+      "name": "Withdraw",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
+        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
+        { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      ],
+      "name": "WithdrawFee",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "PercentageParamScale",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "PercentageScale",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "TIMELOCK_ROLE",
+      "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "active",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "actualStartAt",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "internalType": "uint256", "name": "fee", "type": "uint256" }
+      ],
+      "name": "add",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    { "inputs": [], "name": "approveToken", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+    {
+      "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+      "name": "balanceOf",
+      "outputs": [
+        { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
+        { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "core",
+      "outputs": [{ "internalType": "contract ICore", "name": "", "type": "address" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "cycle",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" }],
+      "name": "deposit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "devAddress",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "duration",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" },
+        { "internalType": "bool", "name": "returnLeft", "type": "bool" }
+      ],
+      "name": "invest",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" },
+        { "internalType": "uint256[]", "name": "amountsInvest", "type": "uint256[]" }
+      ],
+      "name": "investDirect",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    { "inputs": [], "name": "pause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+    {
+      "inputs": [],
+      "name": "paused",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "name": "producedFee",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "tid", "type": "uint256" }],
+      "name": "redeem",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "tid", "type": "uint256" }],
+      "name": "redeemDirect",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "tid", "type": "uint256" },
+        { "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "internalType": "uint256", "name": "fee", "type": "uint256" }
+      ],
+      "name": "set",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "core_", "type": "address" }],
+      "name": "setCore",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "_devAddress", "type": "address" }],
+      "name": "setDevAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "_duration", "type": "uint256" }],
+      "name": "setDuration",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "staker",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    { "inputs": [], "name": "stop", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+    {
+      "inputs": [],
+      "name": "tokenCount",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "address", "name": "", "type": "address" }
+      ],
+      "name": "tokenSettles",
+      "outputs": [
+        { "internalType": "uint256", "name": "capital", "type": "uint256" },
+        { "internalType": "uint256", "name": "reward", "type": "uint256" },
+        { "internalType": "uint256", "name": "profit", "type": "uint256" },
+        { "internalType": "uint256", "name": "left", "type": "uint256" },
+        { "internalType": "bool", "name": "gain", "type": "bool" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "name": "tokens",
+      "outputs": [
+        { "internalType": "address", "name": "addr", "type": "address" },
+        { "internalType": "address", "name": "strategy", "type": "address" },
+        { "internalType": "uint256", "name": "percent", "type": "uint256" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "address", "name": "", "type": "address" }
+      ],
+      "name": "trancheInvest",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "uint256", "name": "", "type": "uint256" }
+      ],
+      "name": "trancheSnapshots",
+      "outputs": [
+        { "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "internalType": "uint256", "name": "rate", "type": "uint256" },
+        { "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "internalType": "uint256", "name": "fee", "type": "uint256" },
+        { "internalType": "uint256", "name": "startAt", "type": "uint256" },
+        { "internalType": "uint256", "name": "stopAt", "type": "uint256" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "name": "tranches",
+      "outputs": [
+        { "internalType": "uint256", "name": "target", "type": "uint256" },
+        { "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "internalType": "uint256", "name": "apy", "type": "uint256" },
+        { "internalType": "uint256", "name": "fee", "type": "uint256" }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    { "inputs": [], "name": "unpause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+    {
+      "inputs": [
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "address", "name": "", "type": "address" }
+      ],
+      "name": "userBalances",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "name": "userCycle",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "address", "name": "", "type": "address" }
+      ],
+      "name": "userInvest",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256[]", "name": "amountOuts", "type": "uint256[]" }],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    { "inputs": [], "name": "withdrawFee", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+  ],
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

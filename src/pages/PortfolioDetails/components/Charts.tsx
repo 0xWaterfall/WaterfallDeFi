@@ -204,7 +204,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
           <div>
-            {balance ? numeral(balance.toString()).format("0,0.[0000]") : "--"} {data.assets}
+            {balance ? numeral(balance.toString()).format("0,0.[0000]") : "--"} {selectedDepositAsset}
           </div>
           <div>
             <ButtonWrapper

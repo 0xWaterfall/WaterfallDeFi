@@ -27,6 +27,7 @@ import {
   MC_sALPACA_TUSDAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
+import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as StrategyAbi } from "./abi/Strategy.json";
@@ -90,7 +91,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: TranchesAddressOracle2[NETWORK],
-    abi: TranchesAbi,
+    abi: MC_TranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefOracleAddress2[NETWORK],
     pools: [],

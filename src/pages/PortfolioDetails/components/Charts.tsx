@@ -198,6 +198,8 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
     setShowClaim(!showClaim);
   };
   // console.log(totalPendingReward);
+  console.log(balance);
+  //UNSURE WHY I'M GETTING 6.4e-17 for balance on multicurrency tranche call, and 1.6e-16 for invested on multicurrency tranche call
   return (
     <Wrapper>
       <RecordCard>

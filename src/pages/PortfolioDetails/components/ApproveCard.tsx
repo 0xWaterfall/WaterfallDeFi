@@ -156,11 +156,7 @@ const ApproveCard = memo<TProps>(
     const { onInvestDirect } = useInvestDirect(data.address);
     const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
-    const {
-      balance: balanceWallet,
-      fetchBalance,
-      actualBalance: actualBalanceWallet
-    } = useBalance(data.depositAssetAddress);
+    const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
     const { balance: balanceRe } = useTrancheBalance(data.address);
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");

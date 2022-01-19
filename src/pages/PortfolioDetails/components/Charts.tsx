@@ -197,7 +197,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
     if (totalPendingReward !== "0") setShowClaim(!showClaim);
     setShowClaim(!showClaim);
   };
-  console.log(totalPendingReward);
+  // console.log(totalPendingReward);
   return (
     <Wrapper>
       <RecordCard>

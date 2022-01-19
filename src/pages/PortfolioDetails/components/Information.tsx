@@ -126,9 +126,7 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
               ":hover": { backgroundColor: "rgb(51,51,51,0.1)" }
             }}
             onClick={() => {
-              if (data.isMulticurrency) {
-                setSelectedDepositAsset(a);
-              }
+              setSelectedDepositAsset(a);
             }}
           >
             <div css={{ display: "flex" }}>
@@ -148,14 +146,16 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
         <Block>
           <Assets
             css={{
-              cursor: "pointer",
+              cursor: data.isMulticurrency ? "pointer" : "auto",
               padding: 3,
               borderRadius: 5,
               transform: "translateY(-3px)",
-              ":hover": { backgroundColor: "rgb(51,51,51,0.1)" }
+              ":hover": data.isMulticurrency ? { backgroundColor: "rgb(51,51,51,0.1)" } : {}
             }}
             onClick={() => {
-              setSelectDepositAssetModalVisible(true);
+              if (data.isMulticurrency) {
+                setSelectDepositAssetModalVisible(true);
+              }
             }}
           >
             <Coin assetName={selectedDepositAsset} size={24} />

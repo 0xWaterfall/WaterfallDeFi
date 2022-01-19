@@ -1,13 +1,16 @@
 /** @jsxImportSource @emotion/react */
 
 import { ArrowLeft } from "assets/images";
-import React, { memo } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
 import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
 import numeral from "numeral";
+import Coin from "components/Coin";
+import Modal from "components/Modal/Modal";
+import Input from "components/Input/Input";
 
 const Wrapper = styled.div`
   display: flex;
@@ -70,6 +73,7 @@ const PortfolioName = styled.span`
 `;
 
 const Assets = styled.span`
+  display: flex;
   font-size: 20px;
   height: 30px;
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
@@ -77,13 +81,64 @@ const Assets = styled.span`
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectedDepositAsset: string;
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Information = memo<TProps>(({ data }) => {
+const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepositAsset }) => {
   const { push } = useHistory();
+  const [selectDepositAssetModalVisible, setSelectDepositAssetModalVisible] = useState<boolean>(false);
+  const [depositableAssets, setDepositableAssets] = useState<string[]>(data.assets);
 
   return (
     <Wrapper>
+      <Modal
+        visible={selectDepositAssetModalVisible}
+        width={428}
+        style={{ top: "25%" }}
+        bodyStyle={{ padding: 20 }}
+        onCancel={() => {
+          setSelectDepositAssetModalVisible(false);
+        }}
+      >
+        <h1 css={{ width: "100%", textAlign: "center", fontWeight: 500, fontSize: 20 }}>Select a Token</h1>
+        <div css={{ display: "flex", justifyContent: "space-between", padding: "20px 0 20px 0" }}>
+          <span>Token Name</span>
+          <span>Remaining</span>
+        </div>
+        <Input
+          placeholder="Search Token Name"
+          style={{ backgroundColor: "rgba(39, 29, 23, 0.04)", borderRadius: 8, marginBottom: 20 }}
+          onChange={(e) => {
+            setDepositableAssets(data.assets.filter((a) => a.includes(e.target.value.toString())));
+          }}
+        />
+        {depositableAssets.map((a) => (
+          <div
+            key={a}
+            css={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: 12,
+              borderRadius: 5,
+              padding: 5,
+              cursor: "pointer",
+              ":hover": { backgroundColor: "rgb(51,51,51,0.1)" }
+            }}
+            onClick={() => {
+              if (data.isMulticurrency) {
+                setSelectedDepositAsset(a);
+              }
+            }}
+          >
+            <div css={{ display: "flex" }}>
+              <Coin assetName={a} size={32} />
+              <div css={{ padding: "5px 0 0 6px" }}>{a}</div>
+            </div>
+            <div css={{ paddingTop: 5 }}>100,000</div>
+          </div>
+        ))}
+      </Modal>
       <Arrow onClick={() => push({ pathname: "/portfolio/markets" })} />
       <InformationWrapper>
         <Block>
@@ -91,14 +146,25 @@ const Information = memo<TProps>(({ data }) => {
           <span>Listing date: {data?.listingDate}</span>
         </Block>
         <Block>
-          <Assets>{data?.assets}</Assets>
+          <Assets
+            css={{
+              cursor: "pointer",
+              padding: 3,
+              borderRadius: 5,
+              transform: "translateY(-3px)",
+              ":hover": { backgroundColor: "rgb(51,51,51,0.1)" }
+            }}
+            onClick={() => {
+              setSelectDepositAssetModalVisible(true);
+            }}
+          >
+            <Coin assetName={selectedDepositAsset} size={24} />
+            <div css={{ padding: "1px 0 0 5px" }}>{selectedDepositAsset}</div>
+          </Assets>
           <span>Lock-up period: {data?.duration ? getLockupPeriod(data?.duration) : "-"}</span>
         </Block>
-        <Block>
-          <div />
-          <span>
-            TVL: {numeral(data?.tvl).format("0,0.[0000]")} {data?.assets}
-          </span>
+        <Block css={{ paddingTop: 26 }}>
+          <span>TVL: {data?.tvl}$</span>
         </Block>
       </InformationWrapper>
     </Wrapper>

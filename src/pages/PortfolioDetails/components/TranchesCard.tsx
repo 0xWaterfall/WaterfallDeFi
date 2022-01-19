@@ -25,12 +25,13 @@ import { useWTF } from "hooks";
 
 type TProps = WrappedComponentProps & {
   color?: string;
+  selectedDepositAsset: string;
   type: "Senior" | "Mezzanine" | "Junior";
   tranche: Tranche;
   // pool: Pool;
   totalAllocPoint: string | undefined;
   trancheIndex: number;
-  assets: string;
+  assets: string[];
   selected: boolean;
   data: Market;
   allocPoint: string;
@@ -159,7 +160,18 @@ const ProgressBar = styled.div<ProgressBarProps>`
 `;
 
 const TranchesCard = memo<TProps>(
-  ({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint, trancheIndex }) => {
+  ({
+    selectedDepositAsset,
+    intl,
+    type,
+    tranche,
+    totalAllocPoint,
+    assets,
+    selected,
+    data,
+    allocPoint,
+    trancheIndex
+  }) => {
     const { tags, primary, gray } = useTheme();
     const Types = {
       Senior: {
@@ -215,10 +227,10 @@ const TranchesCard = memo<TProps>(
           <Separator margin={15} />
           <StatusDiv>
             <Text3>
-              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
+              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {selectedDepositAsset}
             </Text3>
             <Text4>
-              Remaining: {getRemaining(tranche?.target, tranche?.principal)} {assets}
+              Remaining: {getRemaining(tranche?.target, tranche?.principal)} {selectedDepositAsset}
             </Text4>
           </StatusDiv>
           <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />

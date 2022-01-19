@@ -1,22 +1,18 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Row, Col } from "antd";
 import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
 import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
-import { useEffect } from "react";
-import { useState } from "react";
-import { useSize } from "ahooks";
-import { compareNum, formatTVL, getRemaining, getRemaining2 } from "utils/formatNumbers";
+import { compareNum, getRemaining, getRemaining2 } from "utils/formatNumbers";
 import { useBalance, useTrancheBalance } from "hooks";
-import { useSelectedMarket } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectedDepositAsset: string;
   isRe?: boolean;
   redepositBalance?: string;
 };
@@ -30,14 +26,18 @@ const Box2 = styled.div`
   background: ${({ theme }) => theme.white.normal};
 `;
 
-const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
+const DepositItem = memo<TProps>(({ selectedDepositAsset, intl, isRe, data, redepositBalance }) => {
   const { primary } = useTheme();
   const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
-  const [marketData, setMarketData] = useState(data);
+  const [marketData] = useState(data);
 
   const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
   const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
-  const { balance } = useBalance(data.depositAssetAddress);
+  const { balance } = useBalance(
+    !data.isMulticurrency
+      ? data.depositAssetAddress
+      : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)]
+  );
   const { balance: balanceRe } = useTrancheBalance(data.address);
   return (
     <div
@@ -74,6 +74,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
             >
               <TranchesCard
                 key={_i}
+                selectedDepositAsset={selectedDepositAsset}
                 type={tranchesDisplayText[_i]}
                 allocPoint={data.pools?.[_i]}
                 tranche={data.tranches?.[_i]}
@@ -88,6 +89,7 @@ const DepositItem = memo<TProps>(({ intl, isRe, data, redepositBalance }) => {
         })}
       </div>
       <ApproveCard
+        selectedDepositAsset={selectedDepositAsset}
         isRe={isRe}
         assets={data.assets}
         remaining={

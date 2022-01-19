@@ -42,7 +42,8 @@ export interface FarmConfig {
 
 export interface Market {
   portfolio: string;
-  assets: string;
+  assets: string[];
+  tokens: Token[];
   listingDate: string;
   // lockupPeriod: string;
   duration?: string;
@@ -62,7 +63,9 @@ export interface Market {
   pools: string[];
   // pools: Pool[];
   totalAllocPoints?: string;
+  isMulticurrency: boolean;
   depositAssetAddress: string;
+  depositAssetAddresses: string[];
   depositAssetAbi: any;
   depositAssetContract?: Contract;
   // strategyAbi: any;
@@ -73,6 +76,11 @@ export interface Market {
   subgraphURL: string;
   isRetired?: boolean;
 }
+export type Token = {
+  addr: string;
+  strategy: string;
+  percent: number;
+};
 export type StrategyFarm = {
   farmName: string;
   shares: number;

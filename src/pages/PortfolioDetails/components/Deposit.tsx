@@ -13,8 +13,13 @@ import { formatTimestamp } from "utils/formatNumbers";
 import Countdown from "react-countdown";
 import Button from "components/Button/Button";
 import moment from "moment";
+import Coin from "components/Coin";
+import Select, { Option } from "components/Select/Select";
+
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectedDepositAsset: string;
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const NextCycle = styled.div`
@@ -33,6 +38,11 @@ const ActiveCycle = styled.div`
   font-size: 14px;
   color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
   margin-top: 13px;
+`;
+
+const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const StepBar = styled.div`
@@ -83,7 +93,29 @@ const ButtonWrapper = styled(Button)`
   }
 `;
 
-const Deposit = memo<TProps>(({ intl, data }) => {
+const SelectDepositAsset = styled.div`
+  display: flex;
+  height: 35px;
+`;
+
+const RemainingDepositableOuter = styled.div`
+  width: 160px;
+  height: 6px;
+  background-color: rgba(51, 51, 51, 0.1);
+  border-radius: 4px;
+  margin: 10px 20px 0 6px;
+`;
+
+const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDepositAsset }) => {
+  const [deposited, setDeposited] = useState<number>(0);
+  const maxDeposit = 100000; //mock
+
+  const RemainingDepositableInner = styled.div`
+    width: ${(deposited / maxDeposit) * 100 + "%;"}
+    height: 6px;
+    background-color: #0066FF;
+    border-radius: 4px;
+  `;
   const marketData = data;
   const handleReminder = (startTime: Number, endTime: Number) => {
     if (!window || !startTime || !endTime) return;
@@ -129,14 +161,42 @@ const Deposit = memo<TProps>(({ intl, data }) => {
         </NextCycleWrapper>
       ) : null}
 
-      <StepBar>
-        <Step>1</Step>
-        <StepName>{intl.formatMessage({ defaultMessage: "Choose Tranche" })}</StepName>
-        <Line />
-        <Step>2</Step>
-        <StepName>{intl.formatMessage({ defaultMessage: "Deposit" })}</StepName>
-      </StepBar>
-      {marketData && <DepositItem data={marketData} />}
+      <TopBar>
+        <StepBar>
+          <Step>1</Step>
+          <StepName>{intl.formatMessage({ defaultMessage: "Choose Tranche" })}</StepName>
+          <Line />
+          <Step>2</Step>
+          <StepName>{intl.formatMessage({ defaultMessage: "Deposit" })}</StepName>
+        </StepBar>
+        <SelectDepositAsset>
+          <div css={{ display: "flex", paddingTop: "3.5px" }}>
+            {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
+            <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
+            <RemainingDepositableOuter>
+              <RemainingDepositableInner />
+            </RemainingDepositableOuter>
+          </div>
+          {data.isMulticurrency ? (
+            <Select
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setSelectedDepositAsset(e.toString());
+                setDeposited(selectedDepositAsset === "USDC" ? 50000 : 25000);
+              }}
+            >
+              {marketData.assets.map((a, i) => (
+                <Option key={i} value={a}>
+                  <div css={{ display: "flex", alignItems: "center" }}>
+                    <Coin assetName={a} size={24} />
+                    <div css={{ paddingLeft: "5px" }}>{a}</div>
+                  </div>
+                </Option>
+              ))}
+            </Select>
+          ) : null}
+        </SelectDepositAsset>
+      </TopBar>
+      {marketData && <DepositItem data={marketData} selectedDepositAsset={selectedDepositAsset} />}
     </div>
   );
 });

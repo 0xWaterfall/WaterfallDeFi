@@ -3,26 +3,15 @@
 import styled from "@emotion/styled";
 import { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Form, notification } from "antd";
+import { Switch } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
-import {
-  compareNum,
-  formatAPY,
-  formatBalance,
-  formatNumberDisplay,
-  formatNumberSeparator,
-  formatRedemptionFee,
-  getRemaining
-} from "utils/formatNumbers";
+import { compareNum, formatNumberSeparator } from "utils/formatNumbers";
 import { useEffect } from "react";
-import Web3 from "web3";
-import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
-import { NotificationApi } from "antd/lib/notification";
 import useCheckApprove from "../hooks/useCheckApprove";
 import useApprove from "../hooks/useApprove";
 import { successNotification } from "utils/notification";
@@ -36,7 +25,6 @@ import Input from "components/Input/Input";
 import { useBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
-import { getTrancheBalance } from "store/position";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -126,7 +114,8 @@ const ImportantNotes = styled.div`
 `;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
-  assets: string;
+  selectedDepositAsset: string;
+  assets: string[];
   remaining: string;
   remainingExact: string;
   myBalance: string;
@@ -141,6 +130,7 @@ const ApproveCard = memo<TProps>(
   ({
     intl,
     isRe,
+    selectedDepositAsset,
     assets,
     remaining,
     remainingExact,
@@ -156,9 +146,13 @@ const ApproveCard = memo<TProps>(
     const [approved, setApproved] = useState(false);
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
+    const [autoRoll, setAutoRoll] = useState(false);
     const { account } = useWeb3React<Web3Provider>();
-    const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
-    const { onApprove } = useApprove(data.depositAssetAddress, data.address);
+    const depositAddress = !data.isMulticurrency
+      ? data.depositAssetAddress
+      : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
+    const { onCheckApprove } = useCheckApprove(depositAddress, data.address);
+    const { onApprove } = useApprove(depositAddress, data.address);
     const { onInvestDirect } = useInvestDirect(data.address);
     const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
@@ -237,7 +231,7 @@ const ApproveCard = memo<TProps>(
       }
     }, [balance, remaining, balanceInput]);
 
-    const handleDeposit = async () => {
+    const handleDeposit = async (autoRoll?: boolean) => {
       if (validateText !== undefined && validateText.length > 0) return;
       if (Number(balanceInput) <= 0) return;
       if (selectTrancheIdx === undefined) return;
@@ -248,7 +242,8 @@ const ApproveCard = memo<TProps>(
           isOpen: true,
           txn: undefined,
           status: "PENDING",
-          pendingMessage: intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + assets
+          pendingMessage:
+            intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + selectedDepositAsset
         })
       );
       const amount = balanceInput.toString();
@@ -332,18 +327,18 @@ const ApproveCard = memo<TProps>(
             :
           </div>
           <div>
-            {formatNumberSeparator(balance)} {assets}
+            {formatNumberSeparator(balance)} {selectedDepositAsset}
           </div>
         </RowDiv>
         <RowDiv>
           <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
           <div>
-            {formatNumberSeparator(remaining)} {assets}
+            {formatNumberSeparator(remaining)} {selectedDepositAsset}
           </div>
         </RowDiv>
         <Separator />
         <RowDiv>
-          <div>{assets}</div>
+          <div>{selectedDepositAsset}</div>
         </RowDiv>
 
         <div>
@@ -373,13 +368,22 @@ const ApproveCard = memo<TProps>(
           </ImportantNotes>
         )}
 
+        <div css={{ display: "flex", marginTop: 20 }}>
+          <span css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12 }}>
+            Auto Rolling
+          </span>
+          <div css={{ paddingTop: 2.5 }}>
+            <Switch checked={autoRoll} onChange={() => setAutoRoll(!autoRoll)} />
+          </div>
+        </div>
+
         {account ? (
           approved ? (
             <ButtonDiv>
               <Button
                 type="primary"
                 css={{ height: 56 }}
-                onClick={handleDeposit}
+                onClick={() => handleDeposit(autoRoll)}
                 loading={depositLoading}
                 disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
               >

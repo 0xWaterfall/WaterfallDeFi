@@ -102,7 +102,7 @@ const Prompt = styled.div`
 
 type TProps = WrappedComponentProps & {
   totalAmount: string;
-  assets: string;
+  assets: string[];
   // redeemLoading?: boolean;
   // redeemDirect: (i: number) => Promise<void>;
   isCurrentCycle: boolean;

@@ -1,36 +1,22 @@
 /** @jsxImportSource @emotion/react */
 
-import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Table/Table";
+import { TableColumn, TableRow } from "components/Table/Table";
 import styled from "@emotion/styled";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import React, { memo, useState, useEffect } from "react";
-import { Star, WTFToken } from "assets/images";
+import { memo, useState } from "react";
+import { WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import {
-  formatAllocPoint,
-  formatAPY,
-  formatDisplayTVL,
-  formatNumberSeparator,
-  formatTVL,
-  getJuniorAPY,
-  getLockupPeriod,
-  getPortfolioTvl,
-  getWTFApr
-} from "utils/formatNumbers";
+import { formatAllocPoint, formatNumberSeparator, getLockupPeriod, getWTFApr } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
 import { useHistory } from "react-router-dom";
-import Web3 from "web3";
-import { AbiItem } from "web3-utils";
-import { useMarket, useWTF } from "hooks";
+import { useWTF } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
 import _ from "lodash";
-import { useSelectedMarket, useWTFPrice } from "hooks/useSelectors";
 import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
-import Tooltip from "components/Tooltip/Tooltip";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 
 type TProps = WrappedComponentProps & {
@@ -96,6 +82,16 @@ const TableRowMarket = styled(TableRow)`
   background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
 `;
 
+const CoinRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  transform: translateX(-2.5px);
+  margin-bottom: 4px;
+  & div:not(:last-child) {
+    transform: translateX(2.5px);
+  }
+`;
+
 const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const [marketData, setMarketData] = useState(data);
   const { warn, green, primary, gray, useColorModeValue, white } = useTheme();
@@ -124,8 +120,20 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
       onClick={navigateMarketDetail}
     >
       <TableColumn>{marketData.portfolio}</TableColumn>
-      <TableColumn minWidth={120}>
-        <Coin assetName={marketData.assets} /> {marketData.assets}
+      <TableColumn
+        minWidth={120}
+        css={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "baseline" }}
+      >
+        <CoinRow>
+          {marketData.assets.map((coin, i) => (
+            <Coin key={i} size={18} assetName={coin} />
+          ))}
+        </CoinRow>
+        <div>
+          {marketData.assets.map((coin, i) => (
+            <span key={i}>{coin + (i === marketData.assets.length - 1 ? "" : " / ")}</span>
+          ))}
+        </div>
       </TableColumn>
       <TableColumn minWidth={140}>{marketData.duration ? getLockupPeriod(marketData.duration) : "-"}</TableColumn>
       <TableColumn minWidth={240} css={{ display: "flex" }}>
@@ -157,9 +165,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
           })}
         </div>
       </TableColumn>
-      <TableColumn minWidth={160}>
-        {formatNumberSeparator(marketData.tvl)} {marketData.assets}
-      </TableColumn>
+      <TableColumn minWidth={160}>{formatNumberSeparator(marketData.tvl)}$</TableColumn>
       <TableColumn minWidth={80}>
         {getMarketStatusTag()}
 

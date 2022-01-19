@@ -12,9 +12,10 @@ type TProps = WrappedComponentProps & {
   onCancel?: (e: boolean) => void;
   data: Market;
   balance: string;
+  selectedDepositAsset: string;
 };
 
-const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance }) => {
+const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance, selectedDepositAsset }) => {
   const { primary, fonts, white, gray } = useTheme();
 
   return (
@@ -22,7 +23,7 @@ const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance }) => {
       <title css={{ color: gray.normal, fontWeight: 600, fontSize: 20, marginBottom: 32, textAlign: "center" }}>
         {intl.formatMessage({ defaultMessage: "Roll-deposit" })}
       </title>
-      <DepositItem isRe={true} data={data} redepositBalance={balance} />
+      <DepositItem isRe={true} data={data} selectedDepositAsset={selectedDepositAsset} redepositBalance={balance} />
     </Modal>
   );
 });

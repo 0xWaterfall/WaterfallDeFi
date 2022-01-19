@@ -1,37 +1,26 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
-import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 // import { usePendingWTFReward, useTrancheBalance } from "hooks";
-import {
-  formatBalance,
-  formatBigNumber2HexString,
-  formatNumberDisplay,
-  formatNumberSeparator
-} from "utils/formatNumbers";
+import { formatBalance, formatBigNumber2HexString } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
-
-import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
 import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
 // import { usePendingWTFReward } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
-import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "store/position";
 import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { ArrowRight2, ToStakeImg } from "assets/images";
 import { setConfirmModal } from "store/showStatus";
 import { usePendingWTFReward, useTrancheBalance } from "hooks";
 import ClaimPopup from "./ClaimPopup";
@@ -116,9 +105,10 @@ const ButtonWrapper = styled(Button)`
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectedDepositAsset: string;
 };
 
-const Charts = memo<TProps>(({ intl, data }) => {
+const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
@@ -280,6 +270,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
       <ReDeposit
         visible={showRedeposit}
         data={data}
+        selectedDepositAsset={selectedDepositAsset}
         onCancel={rollDepositPopup}
         balance={formatBalance(balance.toString())}
       />

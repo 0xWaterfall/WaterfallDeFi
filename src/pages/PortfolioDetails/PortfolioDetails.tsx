@@ -21,13 +21,22 @@ type TProps = WrappedComponentProps;
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
   const market = useSelectedMarket();
+  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
   return (
     <PortfolioDetailsWrapper>
       {market && (
         <>
-          <Information data={market} />
-          <Charts data={market} />
-          <ContentCD data={market} />
+          <Information
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+          />
+          <Charts data={market} selectedDepositAsset={selectedDepositAsset} />
+          <ContentCD
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+          />
         </>
       )}
     </PortfolioDetailsWrapper>

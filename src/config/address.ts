@@ -177,3 +177,35 @@ export const TestLPRewardAddress: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
   [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };
+
+//multicurrency addresses
+export const MC_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x572b670a80D79E22Cb3fa112729bC2d17e642f4a"
+};
+export const MC_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
+};
+export const MC_BUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+};
+export const MC_TUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x14016E85a25aeb13065688cAFB43044C2ef86784"
+};
+export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x025AA421bcedbd67d9D467a379AD5B47F2b711f2"
+};
+export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x303892A3F5539904913F3C9aB594FB0E0C1b8b3F"
+};

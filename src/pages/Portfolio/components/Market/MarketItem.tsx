@@ -166,7 +166,12 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
         <div style={{ display: "flex" }}>
-          <Coin size={18} assetName={marketData.assets} /> {marketData.assets}
+          {marketData.assets.map((coin, i) => (
+            <div key={i} style={{ paddingRight: "5px" }}>
+              <Coin size={18} assetName={coin} />
+            </div>
+          ))}
+          {marketData.assets.map((coin, i) => (i === marketData.assets.length - 1 ? coin + "" : coin + " / "))}
         </div>
       </RowDiv>
       <RowDiv>

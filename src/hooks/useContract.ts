@@ -3,6 +3,7 @@ import { getContract, getSigner } from "hooks";
 import { FeeRewardsAddress, MasterChefAddress, TranchesAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
+import { abi as MulticurrencyTrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as WTFRewardsAbi } from "config/abi/WTFRewards.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
@@ -18,6 +19,11 @@ export const useMasterchefContract = (masterChefAddress: string) => {
 export const useTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContract(TrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+};
+
+export const useTrancheMulticurrencyMasterContract = (trancheMasterAddress: string) => {
+  const signer = getSigner();
+  return useMemo(() => getContract(MulticurrencyTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
 
 export const useERC20Contract = (address: string) => {

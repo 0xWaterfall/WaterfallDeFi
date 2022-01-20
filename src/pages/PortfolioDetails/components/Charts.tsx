@@ -22,7 +22,7 @@ import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
 import { setConfirmModal } from "store/showStatus";
-import { usePendingWTFReward, useTrancheBalance } from "hooks";
+import { useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance } from "hooks";
 import ClaimPopup from "./ClaimPopup";
 
 const Wrapper = styled.div`
@@ -120,7 +120,13 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
 
   const { onClaimAll } = useClaimAll(data.masterChefAddress);
 
-  const { balance, invested } = useTrancheBalance(data.address);
+  const { balance, invested } = !data.isMulticurrency
+    ? useTrancheBalance(data.address)
+    : useMulticurrencyTrancheBalance(
+        data.address,
+        data.assets.indexOf(selectedDepositAsset),
+        data.depositAssetAddresses.length
+      );
   const { account } = useWeb3React<Web3Provider>();
 
   // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
@@ -197,9 +203,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
     if (totalPendingReward !== "0") setShowClaim(!showClaim);
     setShowClaim(!showClaim);
   };
-  // console.log(totalPendingReward);
-  console.log(balance);
-  //UNSURE WHY I'M GETTING 6.4e-17 for balance on multicurrency tranche call, and 1.6e-16 for invested on multicurrency tranche call
+
   return (
     <Wrapper>
       <RecordCard>

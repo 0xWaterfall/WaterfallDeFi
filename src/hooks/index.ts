@@ -1,17 +1,6 @@
-import {
-  MasterChefAddress,
-  TranchesAddress,
-  WTFAddress,
-  BUSDAddress,
-  StrategyAddress,
-  MulticallAddress,
-  mBUSDAddress,
-  sALPACAAddress,
-  sCREAMAddress,
-  sVENUSAddress
-} from "config/address";
+import { MasterChefAddress, TranchesAddress, MulticallAddress } from "config/address";
 import { ethers } from "ethers";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Market, PORTFOLIO_STATUS } from "types";
 import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
 import getRpcUrl from "utils/getRpcUrl";
@@ -20,22 +9,17 @@ import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
-import { abi as StrategyAbi } from "config/abi/Strategy.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
-import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
 import { useMarkets } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
 import numeral from "numeral";
-import { useTrancheMasterContract } from "./useContract";
-import { setPendingWTFReward } from "store/position";
-import markets from "store/markets";
+import { useTrancheMasterContract, useTrancheMulticurrencyMasterContract } from "./useContract";
 import { MarketList } from "config/market";
 
 export const useMarket = async (marketData: Market) => {
@@ -185,6 +169,44 @@ export const useTrancheBalance = (trancheMasterAddress: string) => {
 
   return result;
 };
+
+export const useMulticurrencyTrancheBalance = (
+  trancheMasterAddress: string,
+  currencyIdx: number,
+  tokenCount: number
+) => {
+  const preloadedArray = [];
+  for (let index = 0; index < tokenCount; index++) {
+    preloadedArray.push("");
+  }
+  const [result, setResult] = useState<{ balance: string[]; invested: string[] }>({
+    balance: preloadedArray,
+    invested: preloadedArray
+  });
+  const { account } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
+        const balanceOf = await trancheMasterContract.balanceOf(account);
+        setResult({
+          balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
+          invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
+  return {
+    balance: result.balance[currencyIdx],
+    invested: result.invested[currencyIdx]
+  };
+};
+
 export const useTrancheSnapshot = (cycle: string | undefined) => {
   const [trancheSnapshot, setTrancheSnapshot] = useState([]);
 

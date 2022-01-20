@@ -12,6 +12,7 @@ import Button from "components/Button/Button";
 import moment from "moment";
 import Coin from "components/Coin";
 import Select, { Option } from "components/Select/Select";
+import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -103,11 +104,38 @@ const RemainingDepositableOuter = styled.div`
 `;
 
 const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDepositAsset }) => {
-  const [deposited, setDeposited] = useState<number>(0);
-  const maxDeposit = 100000; //mock
+  const deposited: any[] = [];
+
+  //TODO: make the code more robust by using this hook higher up the tree, and dynamically handle multicurrency instead of relying on markets.ts config object
+  const tokens: { addr: string; strategy: string; percent: any }[] = useMulticurrencyDepositableTokens(
+    data.address,
+    data.assets.length
+  );
+
+  const trancheInvest = useMulticurrencyTrancheInvest(
+    data.address,
+    data.cycle,
+    data.depositAssetAddresses,
+    data.tranches.length
+  );
+
+  //mock value test
+  // const trancheInvest: any[] = [
+  //   [1, 0.5],
+  //   [1, 0.5],
+  //   [1, 0.5]
+  // ];
+
+  data.assets.forEach((a, i) => deposited.push(trancheInvest.reduce((acc, next) => acc + Number(next[i]), 0)));
+
+  const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
 
   const RemainingDepositableInner = styled.div`
-    width: ${(deposited / maxDeposit) * 100 + "%;"}
+    width: ${
+      (deposited[data.assets.indexOf(selectedDepositAsset)] / maxDeposits[data.assets.indexOf(selectedDepositAsset)]) *
+        100 +
+      "%;"
+    }
     height: 6px;
     background-color: #0066FF;
     border-radius: 4px;

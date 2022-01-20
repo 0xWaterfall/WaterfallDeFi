@@ -103,6 +103,13 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
     data.tranches.length
   );
 
+  //mock value test
+  // const trancheInvest: any[] = [
+  //   [1, 0.5],
+  //   [1, 0.5],
+  //   [1, 0.5]
+  // ];
+
   return (
     <Wrapper>
       <Modal

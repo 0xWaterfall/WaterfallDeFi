@@ -3,7 +3,6 @@
 import styled from "@emotion/styled";
 import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory } from "react-router-dom";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
@@ -113,8 +112,6 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
   const [showClaim, setShowClaim] = useState(false);
-
-  const { push } = useHistory();
 
   const { onWithdraw } = useWithdraw(data.address);
 

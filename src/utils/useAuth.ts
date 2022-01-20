@@ -7,7 +7,6 @@ import {
 } from "@web3-react/injected-connector";
 import { setupNetwork } from "utils/wallet";
 import { useAppDispatch } from "store";
-import { ConnectorNames } from "schemas/enum";
 
 const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
 

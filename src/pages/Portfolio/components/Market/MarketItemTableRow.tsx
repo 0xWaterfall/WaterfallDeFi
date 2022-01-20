@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 import { useWTF } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
-import _ from "lodash";
+// import _ from "lodash";
 import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";

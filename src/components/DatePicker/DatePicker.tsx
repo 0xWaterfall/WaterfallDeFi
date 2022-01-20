@@ -3,9 +3,8 @@
 import styled from "@emotion/styled";
 import { DatePicker as AntdDatePicker, DatePickerProps } from "antd";
 import { PickerPanelDateProps } from "antd/lib/calendar/generateCalendar";
-import { PickerProps } from "antd/lib/date-picker/generatePicker";
 import { DateIcon } from "assets/images";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { memo } from "react";
 
 const DatePickerWrapper = styled(AntdDatePicker)`

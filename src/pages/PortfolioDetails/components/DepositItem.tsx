@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
-import styled from "@emotion/styled";
+// import styled from "@emotion/styled";
 import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
-import { useTheme } from "@emotion/react";
+// import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { compareNum, getRemaining, getRemaining2 } from "utils/formatNumbers";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
@@ -19,15 +19,15 @@ type TProps = WrappedComponentProps & {
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
 
-const Box2 = styled.div`
-  border: ${({ theme }) => theme.table.border};
-  box-sizing: border-box;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.white.normal};
-`;
+// const Box2 = styled.div`
+//   border: ${({ theme }) => theme.table.border};
+//   box-sizing: border-box;
+//   border-radius: 8px;
+//   background: ${({ theme }) => theme.white.normal};
+// `;
 
 const DepositItem = memo<TProps>(({ selectedDepositAsset, intl, isRe, data, redepositBalance }) => {
-  const { primary } = useTheme();
+  // const { primary } = useTheme();
   const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
   const [marketData] = useState(data);
 

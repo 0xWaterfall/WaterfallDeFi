@@ -217,7 +217,6 @@ const ApproveCard = memo<TProps>(
       }
     };
     const validateText = useMemo(() => {
-      const _balance = balance.replace(/\,/g, "");
       // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
@@ -277,7 +276,6 @@ const ApproveCard = memo<TProps>(
       const _balance = actualBalanceWallet.replace(/\,/g, "");
       // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
-      const _balanceInput = balanceInput;
       // let input = 0;
       if (compareNum(_remaining, _balance)) {
         // if (_balance <= _remaining) {

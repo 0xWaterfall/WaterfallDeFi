@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 
 import useRefresh from "hooks/useRefresh";

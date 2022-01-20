@@ -1,4 +1,3 @@
-import { AbiItem } from "web3-utils";
 import { Contract } from "web3-eth-contract";
 
 export const PORTFOLIO_STATUS = {

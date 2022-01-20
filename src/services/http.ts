@@ -1,8 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import axios from "axios";
 import { I18N } from "config";
-import dayjs from "dayjs";
-import { sVENUSAddress } from "config/address";
 
 export const getI18nLanguages = async () => {
   const response = await fetch(`${I18N}languages.json`);

@@ -1,6 +1,5 @@
-import { useWeb3React } from "@web3-react/core";
 import { getContract, getSigner } from "hooks";
-import { FeeRewardsAddress, MasterChefAddress, TranchesAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
+import { FeeRewardsAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as MulticurrencyTrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";

@@ -57,46 +57,53 @@ type TProps = React.HTMLAttributes<HTMLDivElement> &
   WrappedComponentProps & {
     onSelected?: (e: { value: number; unit?: OpUnitType }) => void;
     reset?: boolean;
-    suffixRender?: React.ReactNode;
+    // suffixRender?: React.ReactNode;
   };
 
-const SelectTimeLimit = memo<TProps>(({ intl, onSelected, reset, suffixRender, ...props }) => {
-  const [actived, setActived] = useState<string>();
+const SelectTimeLimit = memo<TProps>(
+  ({
+    intl,
+    onSelected,
+    reset,
+    //suffixRender,
+    ...props
+  }) => {
+    const [actived, setActived] = useState<string>();
 
-  const TIMES = [
-    // { key: "1 Month", text: intl.formatMessage({ defaultMessage: "1 Month" }), value: 30, unit: "d" },
-    { key: "3 Month", text: intl.formatMessage({ defaultMessage: "3 Months" }), value: 92, unit: "d" },
-    { key: "6 Month", text: intl.formatMessage({ defaultMessage: "6 Months" }), value: 6, unit: "M" },
-    { key: "1 Year", text: intl.formatMessage({ defaultMessage: "1 Year" }), value: 12, unit: "M" },
-    // { key: "18 Month", text: intl.formatMessage({ defaultMessage: "18 Months" }), value: 18, unit: "M" },
-    { key: "2 Year", text: intl.formatMessage({ defaultMessage: "2 Year" }), value: 730.485, unit: "d" }
-  ];
+    const TIMES = [
+      // { key: "1 Month", text: intl.formatMessage({ defaultMessage: "1 Month" }), value: 30, unit: "d" },
+      { key: "3 Month", text: intl.formatMessage({ defaultMessage: "3 Months" }), value: 92, unit: "d" },
+      { key: "6 Month", text: intl.formatMessage({ defaultMessage: "6 Months" }), value: 6, unit: "M" },
+      { key: "1 Year", text: intl.formatMessage({ defaultMessage: "1 Year" }), value: 12, unit: "M" },
+      // { key: "18 Month", text: intl.formatMessage({ defaultMessage: "18 Months" }), value: 18, unit: "M" },
+      { key: "2 Year", text: intl.formatMessage({ defaultMessage: "2 Year" }), value: 730.485, unit: "d" }
+    ];
 
-  useEffect(() => {
-    if (reset) {
-      setActived(undefined);
-    }
-  }, [reset]);
+    useEffect(() => {
+      if (reset) {
+        setActived(undefined);
+      }
+    }, [reset]);
 
-  return (
-    <Wrapper {...props}>
-      <Group
-        onChange={(e) => {
-          console.log(e);
-          setActived(e.target.value);
-          const selected = TIMES.find((p) => p.key === e.target.value);
-          selected && onSelected?.({ value: selected.value, unit: selected.unit as OpUnitType });
-        }}
-        value={actived}
-      >
-        {TIMES.map((p) => (
-          <Radio key={p.key} value={p.key}>
-            {p.text}
-          </Radio>
-        ))}
-      </Group>
-    </Wrapper>
-  );
-});
+    return (
+      <Wrapper {...props}>
+        <Group
+          onChange={(e) => {
+            setActived(e.target.value);
+            const selected = TIMES.find((p) => p.key === e.target.value);
+            selected && onSelected?.({ value: selected.value, unit: selected.unit as OpUnitType });
+          }}
+          value={actived}
+        >
+          {TIMES.map((p) => (
+            <Radio key={p.key} value={p.key}>
+              {p.text}
+            </Radio>
+          ))}
+        </Group>
+      </Wrapper>
+    );
+  }
+);
 
 export default injectIntl(SelectTimeLimit);

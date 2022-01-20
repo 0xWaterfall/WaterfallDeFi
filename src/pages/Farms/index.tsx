@@ -2,9 +2,8 @@
 
 import styled from "@emotion/styled";
 import Coin from "components/Coin";
-import useScrollTop from "hooks/useScrollTop";
 import numeral from "numeral";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { LinearGradientSubtract } from "styles";

@@ -1,12 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import Stakings from "config/staking";
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { StakingConfig } from "types";
 import Increase from "./Increase";
-import Stake from "./Stake";
 import Unstake from "./Unstake";
 
 const Wrapper = styled.div`

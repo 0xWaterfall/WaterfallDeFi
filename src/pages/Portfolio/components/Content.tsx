@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
 import Tabs, { TabPane } from "components/Tabs/Tabs";
-import React, { memo, useEffect, useState } from "react";
-import { FormattedMessage, injectIntl, WrappedComponentProps } from "react-intl";
+import { memo, useEffect, useState } from "react";
+import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import RouteProvider, { Routes } from "./RouteProvider/RouteProvider";
 

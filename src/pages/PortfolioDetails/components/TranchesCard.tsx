@@ -7,11 +7,9 @@ import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
 import { Market, Tranche } from "types";
 import {
-  formatAPY,
   formatAllocPoint,
   formatTVL,
   formatNumberSeparator,
-  getJuniorAPY,
   getRemaining,
   compareNum,
   getPercentage,
@@ -19,7 +17,6 @@ import {
 } from "utils/formatNumbers";
 import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
-import { useWTFPrice } from "hooks/useSelectors";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useWTF } from "hooks";
 
@@ -96,23 +93,23 @@ const SoldOut = styled.div`
   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   z-index: 11;
 `;
-const ComingSoon = styled.div`
-  font-size: 14px;
-  width: 100px;
-  height: 30px;
-  border: 2px solid ${({ theme }) => theme.tags.redText};
-  color: ${({ theme }) => theme.tags.redText};
-  box-sizing: border-box;
-  border-radius: 4px;
-  transform: rotate(-30deg);
-  position: absolute;
-  left: -20px;
-  top: -9px;
-  text-align: center;
-  line-height: 30px;
-  background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
-  z-index: 11;
-`;
+// const ComingSoon = styled.div`
+//   font-size: 14px;
+//   width: 100px;
+//   height: 30px;
+//   border: 2px solid ${({ theme }) => theme.tags.redText};
+//   color: ${({ theme }) => theme.tags.redText};
+//   box-sizing: border-box;
+//   border-radius: 4px;
+//   transform: rotate(-30deg);
+//   position: absolute;
+//   left: -20px;
+//   top: -9px;
+//   text-align: center;
+//   line-height: 30px;
+//   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
+//   z-index: 11;
+// `;
 const Container = styled.div`
   padding: 20px;
   height: 100%;

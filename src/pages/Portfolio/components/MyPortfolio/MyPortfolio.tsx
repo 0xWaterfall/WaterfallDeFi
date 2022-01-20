@@ -1,86 +1,82 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
-import styled from "@emotion/styled";
-import React, { memo } from "react";
+// import { useTheme } from "@emotion/react";
+// import styled from "@emotion/styled";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import TrancheChart from "./TrancheChart";
-import AssetChart from "./AssetChart";
-import Button from "components/Button/Button";
-import Positions from "./Positions";
 import SparePositions from "pages/SparePositions";
 
 type TProps = WrappedComponentProps;
-const TitleDiv = styled.div`
-  margin-bottom: 24px;
-  font-size: 20px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.gray.normal};
-`;
-const MainGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-column-gap: 20px;
-  @media screen and (max-width: 768px) {
-    display: block;
-  }
-`;
-const MainGridContainer2 = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-row-gap: 20px;
-  & > div {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    border-radius: 12px;
-    padding-inline: 24px;
-    border: 1px solid ${({ theme }) => theme.primary.deep2};
-  }
-  @media screen and (max-width: 768px) {
-    & > div {
-      align-items: flex-start;
-    }
-  }
-`;
+// const TitleDiv = styled.div`
+//   margin-bottom: 24px;
+//   font-size: 20px;
+//   font-weight: 600;
+//   color: ${({ theme }) => theme.gray.normal};
+// `;
+// const MainGridContainer = styled.div`
+//   display: grid;
+//   grid-template-columns: 2fr 1fr;
+//   grid-column-gap: 20px;
+//   @media screen and (max-width: 768px) {
+//     display: block;
+//   }
+// `;
+// const MainGridContainer2 = styled.div`
+//   display: grid;
+//   grid-template-rows: 1fr 1fr;
+//   grid-row-gap: 20px;
+//   & > div {
+//     display: flex;
+//     justify-content: space-between;
+//     flex-direction: column;
+//     border-radius: 12px;
+//     padding-inline: 24px;
+//     border: 1px solid ${({ theme }) => theme.primary.deep2};
+//   }
+//   @media screen and (max-width: 768px) {
+//     & > div {
+//       align-items: flex-start;
+//     }
+//   }
+// `;
 
-const GridItem1 = styled.div`
-  padding-inline: 24px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.primary.deep2};
-  & > div:nth-of-type(1) {
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid ${({ theme }) => theme.primary.deep2};
-  }
-  @media screen and (max-width: 768px) {
-    border: none;
-    padding-inline: 0;
-    & > div:nth-of-type(1) {
-      border-bottom: none;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-`;
-const ChartDiv = styled.div`
-  display: flex;
-  padding-block: 35px;
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-    & > div {
-      background-color: ${({ theme }) => theme.primary.lightBrown};
-      margin: 10px 0px;
-      border-radius: 12px;
-      padding: 20px;
-    }
-  }
-`;
+// const GridItem1 = styled.div`
+//   padding-inline: 24px;
+//   border-radius: 12px;
+//   border: 1px solid ${({ theme }) => theme.primary.deep2};
+//   & > div:nth-of-type(1) {
+//     height: 70px;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     border-bottom: 1px solid ${({ theme }) => theme.primary.deep2};
+//   }
+//   @media screen and (max-width: 768px) {
+//     border: none;
+//     padding-inline: 0;
+//     & > div:nth-of-type(1) {
+//       border-bottom: none;
+//       flex-direction: column;
+//       align-items: flex-start;
+//     }
+//   }
+// `;
+// const ChartDiv = styled.div`
+//   display: flex;
+//   padding-block: 35px;
+//   @media screen and (max-width: 768px) {
+//     flex-direction: column;
+//     & > div {
+//       background-color: ${({ theme }) => theme.primary.lightBrown};
+//       margin: 10px 0px;
+//       border-radius: 12px;
+//       padding: 20px;
+//     }
+//   }
+// `;
 
 const MyPortfolio = memo<TProps>(({ intl }) => {
-  const { gray, primary, fonts } = useTheme();
+  // const { gray, primary, fonts } = useTheme();
   return (
     <div>
       {/* overview */}

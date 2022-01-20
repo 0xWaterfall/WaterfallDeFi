@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";

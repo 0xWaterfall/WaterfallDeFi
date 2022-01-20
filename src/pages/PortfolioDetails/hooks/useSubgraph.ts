@@ -1,12 +1,9 @@
-import { gql, useQuery } from "@apollo/client";
 import { Market, TrancheCycle, UserInvest } from "types";
 import BigNumber from "bignumber.js";
-import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
+import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
 import { MarketList } from "config/market";
-import axios from "axios";
 import { getSubgraphQuery } from "services/http";
-import { useMarkets } from "hooks/useSelectors";
 // export const useHistoryQuery = (account: string | null | undefined) => {
 //   if (!account) account = "";
 //   return useQuery(gql`
@@ -134,11 +131,11 @@ export const useHistoryQuery2 = async (
   decimals = 18
 ) => {
   if (!account) return [];
-  const data = {
-    trancheCycles: [],
-    tranches: [],
-    userInvests: []
-  };
+  // const data = {
+  //   trancheCycles: [],
+  //   tranches: [],
+  //   userInvests: []
+  // };
   const historyQueryResult: any = [];
   const subgraphResult: any = [];
   for (let marketIdx = 0; marketIdx < MarketList.length; marketIdx++) {

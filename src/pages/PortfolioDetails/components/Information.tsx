@@ -5,7 +5,7 @@ import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Market, Token } from "types";
+import { Market } from "types";
 import { getLockupPeriod } from "utils/formatNumbers";
 import Coin from "components/Coin";
 import Modal from "components/Modal/Modal";

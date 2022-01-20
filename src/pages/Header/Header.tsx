@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import { Menu, Wallet, WaterFall, WaterFallDark } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
-import React, { memo, useEffect } from "react";
+import { memo, useEffect } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -19,7 +19,6 @@ import { setConnectWalletModalShow } from "store/showStatus";
 import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
 import { NETWORK, NETWORKS } from "config";
-import { NetworkStatus } from "@apollo/client";
 
 const Wrapper = styled.div`
   height: 64px;

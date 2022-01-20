@@ -4,9 +4,7 @@ import useRefresh from "./useRefresh";
 import { getContract } from "hooks";
 import PancakeLPAbi from "config/abi/PancakeLP.json";
 import { NETWORK, NETWORKS } from "config";
-import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD, WTFAddress } from "config/address";
-import { abi as WTFAbi } from "config/abi/WTF.json";
-import { BIG_TEN } from "utils/bigNumber";
+import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD } from "config/address";
 import { getWTFSupply } from "services/http";
 
 export const useWTFPriceLP = () => {

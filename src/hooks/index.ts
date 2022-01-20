@@ -1,4 +1,4 @@
-import { MasterChefAddress, TranchesAddress, MulticallAddress, MC_TrancheMasterAddress } from "config/address";
+import { MasterChefAddress, TranchesAddress, MulticallAddress } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
 import { Market, PORTFOLIO_STATUS, Token } from "types";
@@ -8,7 +8,6 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
-import { abi as MC_TrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
@@ -430,7 +429,7 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
 // };
 export const useTotalSupply = (address: string) => {
   const [totalSupply, setTotalSupply] = useState("0");
-  const { account, ...p } = useWeb3React<Web3Provider>();
+  const { account } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
 
   const fetchBalance = useCallback(async () => {
@@ -450,7 +449,7 @@ export const useTotalSupply = (address: string) => {
 export const useBalanceOfOtherAddress = (address: string, account: string) => {
   const [balance, setBalance] = useState("0");
   const [actualBalance, setActualBalance] = useState("0");
-  const { slowRefresh, fastRefresh } = useRefresh();
+  const { fastRefresh } = useRefresh();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
@@ -470,8 +469,8 @@ export const useBalanceOfOtherAddress = (address: string, account: string) => {
 export const useBalance = (address: string) => {
   const [balance, setBalance] = useState("0");
   const [actualBalance, setActualBalance] = useState("0");
-  const { account, ...p } = useWeb3React<Web3Provider>();
-  const { slowRefresh, fastRefresh } = useRefresh();
+  const { account } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;

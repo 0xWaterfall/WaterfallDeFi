@@ -7,8 +7,7 @@ import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 // import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
-import { useWTF } from "hooks";
-import { formatNumberSeparator } from "utils/formatNumbers";
+// import { useWTF } from "hooks";
 
 type TProps = WrappedComponentProps;
 
@@ -25,8 +24,8 @@ const Label = styled.span`
 
 const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white, useColorModeValue, dark } = useTheme();
-  const { weekDistribution } = useWTF();
-  const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
+  // const { weekDistribution } = useWTF();
+  // const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
 
   return (
     <div

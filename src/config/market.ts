@@ -30,7 +30,7 @@ import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
-import { abi as StrategyAbi } from "./abi/Strategy.json";
+// import { abi as StrategyAbi } from "./abi/Strategy.json";
 import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [

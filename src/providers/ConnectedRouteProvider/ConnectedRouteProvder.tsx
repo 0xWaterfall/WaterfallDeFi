@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Route, Switch } from "react-router-dom";
 import { RouteComponents } from "./data";
 import RedirectPathToDashboard from "./RedirectPathToDashboard";

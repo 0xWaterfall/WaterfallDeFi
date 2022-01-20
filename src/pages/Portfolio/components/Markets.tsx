@@ -1,14 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
-import React, { memo, useState, useEffect } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import MarketItem from "./Market/MarketItem";
 import MarketItemTableRow from "./Market/MarketItemTableRow";
 import { useSize } from "ahooks";
 import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
-import { Market } from "types";
-import { MarketList } from "config/market";
 import { useMarkets } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps;

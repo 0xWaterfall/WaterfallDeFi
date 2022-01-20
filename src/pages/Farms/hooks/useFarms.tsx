@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { abi as LPTokenAbi } from "config/abi/LPFake.json";
 import { abi as LPRewardsAbi } from "config/abi/WTFLPRewards.json";
 import { useWeb3React } from "@web3-react/core";
@@ -32,7 +32,7 @@ export const useFarms = (farmIdx?: number) => {
   useEffect(() => {
     const fetchBalance = async () => {
       const farmsResultAll: FarmInterface[] = [];
-      const farmsResult = await Promise.all(
+      await Promise.all(
         Farms.map(async (_farmConfig, _idx) => {
           if (farmIdx !== undefined && farmIdx !== _idx) return false;
           const { name, lpTokenAddress, lpRewardAddress, logo1, logo2, lpButtonTitle, lpURL } = _farmConfig;
@@ -81,7 +81,6 @@ export const useFarms = (farmIdx?: number) => {
               .times(20 * 60 * 24 * 365 * 100)
               .toString()
           ).format("0,0.[00]");
-          console.log(maxAPR);
 
           const _result = {
             name: name,

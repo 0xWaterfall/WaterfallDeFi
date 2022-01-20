@@ -26,18 +26,13 @@ import { setConnectWalletModalShow } from "store/showStatus";
 import useIncreaseLockAmount from "pages/OldStake/hooks/useIncreaseLockAmount";
 import useCheckLocked from "pages/OldStake/hooks/useCheckLocked";
 import numeral from "numeral";
-import { utils } from "ethers";
 import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
 import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
-import { start } from "repl";
 import { StakingConfig } from "types";
 import BigNumber from "bignumber.js";
 import { getMultiplier } from "utils/multiplier";
-import { from } from "@apollo/client";
 import { BIG_TEN } from "utils/bigNumber";
 import moment from "moment";
-import { totalmem } from "os";
-import { isPending } from "@reduxjs/toolkit";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -105,12 +100,12 @@ const ValidateText = styled.div`
   min-height: 15px;
 `;
 
-const Line = styled.div`
-  height: 1px;
-  width: 100%;
-  background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
-  margin-bottom: 24px;
-`;
+// const Line = styled.div`
+//   height: 1px;
+//   width: 100%;
+//   background: ${({ theme }) => theme.useColorModeValue(theme.gray.normal08, theme.white.normal08)};
+//   margin-bottom: 24px;
+// `;
 
 const MAX = styled.div`
   font-size: 14px;
@@ -160,7 +155,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();
-      console.log("approved", approved);
+      // console.log("approved", approved);
       setApproved(approved ? true : false);
     };
     if (account) checkApproved(account);
@@ -208,7 +203,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     if (expiryTimestamp === "0") return false;
     return Number(expiryTimestamp) <= timeNow;
   }, [expiryTimestamp]);
-  console.log("isExpired", isExpired);
+  // console.log("isExpired", isExpired);
   const newExpireDate = useMemo(() => {
     if (datePickerValue) {
       return datePickerValue;
@@ -249,7 +244,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     if (!fromMasterChef) return;
     if (!claimReward) return;
     if (!locked && !duration) return;
-    console.log("A", duration, locked);
+    // console.log("A", duration, locked);
     const _duration = duration ? duration.toString() : "0";
     setLockWTFRewardsLoading(true);
     try {
@@ -318,9 +313,9 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
   }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
 
   const convertRatio = useMemo(() => {
-    console.log(lockingWTF);
-    console.log(balanceInput);
-    console.log(duration);
+    // console.log(lockingWTF);
+    // console.log(balanceInput);
+    // console.log(duration);
     // const secondsInYear = 3600 * 24 * 365;
     if (fromMasterChef) {
       if (!wtfRewardsBalance || wtfRewardsBalance === "0") return "-";
@@ -341,8 +336,8 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
         if (duration) {
           const multiplier2 = getMultiplier(Number(duration || 0));
           const _balanceInput2 = Number(lockingWTF);
-          console.log("lockingWTF,", lockingWTF, duration, multiplier2);
-          console.log((_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME);
+          // console.log("lockingWTF,", lockingWTF, duration, multiplier2);
+          // console.log((_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME);
           total += (_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME;
         }
         const timeNow = Math.floor(Date.now() / 1000);
@@ -352,7 +347,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
             : Number(expiryTimestamp) - Number(timeNow) + duration;
         const multiplier = getMultiplier(Number(_duration || 0));
         const _balanceInput = Number(_wtfRewardsBalance);
-        console.log("_balanceInput,", _balanceInput, _duration, multiplier);
+        // console.log("_balanceInput,", _balanceInput, _duration, multiplier);
         total += (_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME;
         return numeral(total).format("0,0.[0000]");
       }
@@ -403,8 +398,8 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
     setSelectedValue(undefined);
   };
   const handleMaxLockTime = () => {
-    console.log("max", Number(MAX_LOCK_TIME) - (Number(expiryTimestamp) - Number(startTimestamp)));
-    console.log(startTimestamp);
+    // console.log("max", Number(MAX_LOCK_TIME) - (Number(expiryTimestamp) - Number(startTimestamp)));
+    // console.log(startTimestamp);
     const timeNow = Math.floor(Date.now() / 1000);
     const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
     setDatePickerValue(dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)));
@@ -449,11 +444,11 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
 
     const totalLockTime =
       expiryTimestamp !== "0" ? Number(expiryTimestamp) - Number(startTimestamp) + _duration : _duration;
-    console.log("totalLockTime", totalLockTime, startTimestamp, expiryTimestamp, duration);
+    // console.log("totalLockTime", totalLockTime, startTimestamp, expiryTimestamp, duration);
 
     const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
     const maxLockDate = dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)).format("YYYY-MM-DD HH:mm:ss");
-    console.log(maxLockDate);
+    // console.log(maxLockDate);
     if (totalLockTime > MAX_LOCK_TIME)
       return `Maximum lock expiry date = ${maxLockDate} (2 Years from your initial lock date)`;
 
@@ -537,7 +532,7 @@ const Increase = memo<TProps>(({ intl, stakingConfig, fromMasterChef, wtfRewards
 
       <SelectTimeLimitWrapper
         onSelected={(e) => {
-          console.log(e);
+          // console.log(e);
           setSelectedValue(e);
           setDatePickerValue(undefined);
           setResetSelect(false);

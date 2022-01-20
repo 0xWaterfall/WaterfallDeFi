@@ -1,14 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Mountain, AlarmImg } from "assets/images";
 import DepositItem from "./DepositItem";
-import { useHistory, useLocation } from "react-router-dom";
 import { Market, PORTFOLIO_STATUS } from "types";
-import { useMarket } from "hooks";
-import { useSelectedMarket } from "hooks/useSelectors";
 import { formatTimestamp } from "utils/formatNumbers";
 import Countdown from "react-countdown";
 import Button from "components/Button/Button";

@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useTheme } from "@emotion/react";
 import Modal from "components/Modal/Modal";

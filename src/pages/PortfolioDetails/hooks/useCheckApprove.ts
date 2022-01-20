@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useERC20Contract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
-import { DEFAULT_GAS_LIMIT } from "config";
+// import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
 import BigNumber from "bignumber.js";
-const options = {
-  gasLimit: DEFAULT_GAS_LIMIT
-};
+// const options = {
+//   gasLimit: DEFAULT_GAS_LIMIT
+// };
 
 const checkApprove = async (contract: Contract, trancheMasterAddress: string, account: string) => {
   const tx = await contract.allowance(account, trancheMasterAddress);

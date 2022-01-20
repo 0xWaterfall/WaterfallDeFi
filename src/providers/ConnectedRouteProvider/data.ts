@@ -1,16 +1,15 @@
 import loadable from "@loadable/component";
-import ComingSoon from "../../pages/OldStake/ComingSoon";
 
 const Dashboard = loadable(() => import("../../pages/Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
 const PortfolioDetails = loadable(() => import("../../pages/PortfolioDetails/PortfolioDetails"));
 const Stake = loadable(() => import("../../pages/Stake/Stake"));
-const OldStake = loadable(() => import("../../pages/OldStake/Stake"));
+// const OldStake = loadable(() => import("../../pages/OldStake/Stake"));
 // const Farms = loadable(() => import("../../pages/OldStake/FarmContainer"));
 // const Farm = loadable(() => import("../../pages/OldStake/Farming/Farming"));
-const Farms = loadable(() => import("../../pages/Farms"));
+// const Farms = loadable(() => import("../../pages/Farms"));
 const Farm = loadable(() => import("../../pages/Farms/Detail/Farm"));
-const CommingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
+// const CommingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
 export const RouteComponents = [
   // {
   //   key: "Dashboard",

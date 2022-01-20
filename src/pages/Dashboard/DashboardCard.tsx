@@ -1,13 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import { Coingecko, DashboardImage, MetaMask } from "assets/images";
-import { useSize } from "ahooks";
 import numeral from "numeral";
-import { BASE_BSC_SCAN_URL, NETWORK } from "config";
-import { nodes } from "utils/getRpcUrl";
+import { NETWORK } from "config";
 import { WTFAddress } from "config/address";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 

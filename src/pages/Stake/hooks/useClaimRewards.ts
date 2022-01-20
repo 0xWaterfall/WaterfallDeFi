@@ -3,7 +3,6 @@ import { useWeb3React } from "@web3-react/core";
 
 import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
 import { useWTFRewardsContract } from "hooks/useContract";
 
 const claimRewards = async (contract: Contract) => {

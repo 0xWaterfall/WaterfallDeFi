@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
+// import { useTheme } from "@emotion/react";
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useState } from "react";

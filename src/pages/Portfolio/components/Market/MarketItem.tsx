@@ -2,7 +2,7 @@
 
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import Button from "components/Button/Button";
@@ -10,18 +10,9 @@ import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import {
-  formatAllocPoint,
-  formatAPY,
-  formatDisplayTVL,
-  formatNumberSeparator,
-  getJuniorAPY,
-  getLockupPeriod,
-  getWTFApr
-} from "utils/formatNumbers";
-import { useMarket, useWTF } from "hooks";
+import { formatAllocPoint, formatNumberSeparator, getLockupPeriod, getWTFApr } from "utils/formatNumbers";
+import { useWTF } from "hooks";
 import Coin from "components/Coin";
-import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useDispatch } from "react-redux";
@@ -80,10 +71,10 @@ const RowDiv = styled.div`
     background-color: ${({ theme }) => theme.primary.lightBrown};
   }
 `;
-const APYStyled = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+// const APYStyled = styled.div`
+//   display: flex;
+//   flex-direction: column;
+// `;
 const APYStyled2 = styled.div`
   display: flex;
   font-size: 12px;

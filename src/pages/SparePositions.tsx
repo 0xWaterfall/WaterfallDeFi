@@ -1,36 +1,28 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useMemo } from "react";
+// import { useTheme } from "@emotion/react";
+import React, { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Button from "components/Button/Button";
 import { useState } from "react";
 import Select, { Option } from "components/Select/Select";
-import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Table/Table";
-import { CaretDown, Union } from "assets/images";
+import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
+import { Union } from "assets/images";
 import Tooltip from "components/Tooltip/Tooltip";
 import styled from "@emotion/styled";
-import { useSize } from "ahooks";
+// import { useSize } from "ahooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import { MarketList } from "config/market";
-import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
-import { PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
-import Tag from "components/Tag/Tag";
-import { useHistoryQuery, useHistoryQuery2 } from "pages/PortfolioDetails/hooks/useSubgraph";
+import { PORTFOLIO_STATUS, UserInvest } from "types";
+import { useHistoryQuery2 } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";
 import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionItem from "./SparePositionItem";
-import { getPosition } from "store/position";
-import { useMarkets, usePosition } from "hooks/useSelectors";
-import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
-import { successNotification } from "utils/notification";
-import { useAppDispatch } from "store";
+import { useMarkets } from "hooks/useSelectors";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { usePositions, useTrancheSnapshot } from "hooks";
-import { useHistory, useLocation } from "react-router";
+import { usePositions } from "hooks";
+import { useLocation } from "react-router";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -89,14 +81,14 @@ const NoDataWrapper = styled(NoData)`
 type TProps = WrappedComponentProps;
 
 const SparePositions = memo<TProps>(({ intl }) => {
-  const { gray, primary, shadow, linearGradient, white } = useTheme();
+  // const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [subgraphResult, setSubgraphResult] = useState<any[]>([]);
 
-  const { width } = useSize(document.body);
+  // const { width } = useSize(document.body);
   const { account } = useWeb3React<Web3Provider>();
 
   const [activedTab, setActivedTab] = useState<IType>("ALL");
-  const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
+  // const [isfolds, setFolds] = useState<{ [key: string]: boolean }>({});
   // const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
   // const { onRedeemDirect } = useRedeemDirect();
 
@@ -106,7 +98,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { state, pathname } = useLocation<{ id: number }>();
 
   const id = pathname === "/portfolio/my-portfolio" ? undefined : state?.id ?? 0;
-  const isAllMarket = id === undefined;
+  // const isAllMarket = id === undefined;
 
   //old
   // const position = usePosition();
@@ -120,11 +112,11 @@ const SparePositions = memo<TProps>(({ intl }) => {
 
   //array
   const markets = useMarkets();
-  const market = markets[0];
+  // const market = markets[0];
   // const trancheSnapshot = useTrancheSnapshot(market?.cycle);
   // const { userInvests: _userInvests, trancheCycles } = useHistoryQuery(account, market.duration);
 
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   useEffect(() => {
     if (account) fetchSubgraph();
   }, []);
@@ -189,7 +181,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
     { name: intl.formatMessage({ defaultMessage: "Active" }), value: "ACTIVE", status: 1 },
     { name: intl.formatMessage({ defaultMessage: "Matured" }), value: "EXPIRED", status: 2 }
   ];
-  const tranchesName = ["Senior", "Mezzanine", "Junior"];
+  // const tranchesName = ["Senior", "Mezzanine", "Junior"];
   const handleTranchesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTranche(Number(event));
   };

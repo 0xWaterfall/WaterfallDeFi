@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { ArrowLeft, ChevronLeft, FarmCardImage, Union } from "assets/images";
+import { FarmCardImage, Union } from "assets/images";
 import Button from "components/Button/Button";
 import numeral from "numeral";
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { FarmConfig } from "types";
 import { FarmInterface } from "../hooks/useFarms";
 import useLPStaked from "../hooks/useLPStaked";
 import BigNumber from "bignumber.js";

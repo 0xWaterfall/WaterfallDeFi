@@ -122,11 +122,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
 
   const { balance, invested } = !data.isMulticurrency
     ? useTrancheBalance(data.address)
-    : useMulticurrencyTrancheBalance(
-        data.address,
-        data.assets.indexOf(selectedDepositAsset),
-        data.depositAssetAddresses.length
-      );
+    : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
   const { account } = useWeb3React<Web3Provider>();
 
   // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();

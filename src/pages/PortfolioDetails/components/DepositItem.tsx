@@ -40,11 +40,7 @@ const DepositItem = memo<TProps>(({ selectedDepositAsset, intl, isRe, data, rede
   );
   const { balance: balanceRe } = !data.isMulticurrency
     ? useTrancheBalance(data.address)
-    : useMulticurrencyTrancheBalance(
-        data.address,
-        data.assets.indexOf(selectedDepositAsset),
-        data.depositAssetAddresses.length
-      );
+    : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
   return (
     <div
       css={{

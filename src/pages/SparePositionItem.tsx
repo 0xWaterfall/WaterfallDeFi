@@ -1,38 +1,23 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useMemo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Button from "components/Button/Button";
 import { useState } from "react";
-import Select, { Option } from "components/Select/Select";
-import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Table/Table";
-import { CaretDown, Union } from "assets/images";
-import Tooltip from "components/Tooltip/Tooltip";
+import { TableColumn, TableRow } from "components/Table/Table";
+import { CaretDown } from "assets/images";
 import styled from "@emotion/styled";
-import {
-  formatAllocPoint,
-  formatNumberDisplay,
-  formatNumberWithDecimalsDisplay,
-  formatTimestamp,
-  getWTFApr
-} from "utils/formatNumbers";
+import { formatAllocPoint, formatTimestamp, getWTFApr } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
 import { Market, PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
-import NoData from "components/NoData/NoData";
-import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
 // import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
 
 import numeral from "numeral";
-import { dataTool } from "echarts/core";
-import useInvest from "./PortfolioDetails/hooks/useInvest";
-import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useEstimateYield } from "hooks/useEstimateYield";
 import { usePendingWTFReward } from "hooks";
-import { STATUS_CODES } from "http";
 
 const Wrapper = styled.div``;
 
@@ -145,7 +130,7 @@ type TProps = WrappedComponentProps & {
 };
 
 const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle }) => {
-  const { gray, primary, shadow, linearGradient, white } = useTheme();
+  // const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   // const wtfPrice = useWTFPrice();
@@ -279,6 +264,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}
           trancheMasterAddress={market.address}
+          isMulticurrency={market.isMulticurrency}
         />
       )}
     </Wrapper>

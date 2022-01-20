@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useMemo } from "react";
+import { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import Button from "components/Button/Button";
 import { useState } from "react";
 import Tooltip from "components/Tooltip/Tooltip";
-import { IType } from "./Portfolio/components/MyPortfolio/type";
 import { Union } from "assets/images";
 import styled from "@emotion/styled";
 import numeral from "numeral";
@@ -15,7 +14,7 @@ import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
 import { successNotification } from "utils/notification";
 import useWithdraw from "./PortfolioDetails/hooks/useWithdraw";
 import { useAppDispatch } from "store";
-import { useTrancheBalance } from "hooks";
+import { useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 import { setConfirmModal } from "store/showStatus";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
@@ -112,6 +111,7 @@ type TProps = WrappedComponentProps & {
   tranchesPendingReward: any;
   fee: string;
   trancheMasterAddress: string;
+  isMulticurrency: boolean;
 };
 
 const SparePositionFold = memo<TProps>(
@@ -127,15 +127,19 @@ const SparePositionFold = memo<TProps>(
     isActive,
     tranchesPendingReward,
     fee,
-    trancheMasterAddress
+    trancheMasterAddress,
+    isMulticurrency
   }) => {
-    const { gray, primary, shadow, linearGradient, white, useColorModeValue } = useTheme();
+    const { gray, primary, white, useColorModeValue } = useTheme();
     const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
 
     const [redeemLoading, setRedeemLoading] = useState(false);
     const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
     const { onWithdraw } = useWithdraw(trancheMasterAddress);
     const { balance, invested } = useTrancheBalance(trancheMasterAddress);
+    //TODO: write a version of this hook that deals with ALL deposited balances
+    //currencyIdx = 0 is a mock param
+    // !isMulticurrency ? useTrancheBalance(trancheMasterAddress) : useMulticurrencyTrancheBalance(trancheMasterAddress, 0, assets.length);
     const dispatch = useAppDispatch();
 
     const withdrawAll = async () => {

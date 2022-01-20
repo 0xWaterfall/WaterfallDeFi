@@ -5,12 +5,12 @@ import { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
-import { Market } from "types";
-import { formatDisplayTVL, getLockupPeriod } from "utils/formatNumbers";
-import numeral from "numeral";
+import { Market, Token } from "types";
+import { getLockupPeriod } from "utils/formatNumbers";
 import Coin from "components/Coin";
 import Modal from "components/Modal/Modal";
 import Input from "components/Input/Input";
+import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -90,6 +90,19 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
   const [selectDepositAssetModalVisible, setSelectDepositAssetModalVisible] = useState<boolean>(false);
   const [depositableAssets, setDepositableAssets] = useState<string[]>(data.assets);
 
+  //TODO: make the code more robust by using this hook higher up the tree, and dynamically handle multicurrency instead of relying on markets.ts config object
+  const tokens: { addr: string; strategy: string; percent: any }[] = useMulticurrencyDepositableTokens(
+    data.address,
+    data.assets.length
+  );
+
+  const trancheInvest = useMulticurrencyTrancheInvest(
+    data.address,
+    data.cycle,
+    data.depositAssetAddresses,
+    data.tranches.length
+  );
+
   return (
     <Wrapper>
       <Modal
@@ -113,7 +126,7 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
             setDepositableAssets(data.assets.filter((a) => a.includes(e.target.value.toString())));
           }}
         />
-        {depositableAssets.map((a) => (
+        {depositableAssets.map((a, i) => (
           <div
             key={a}
             css={{
@@ -133,7 +146,14 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
               <Coin assetName={a} size={32} />
               <div css={{ padding: "5px 0 0 6px" }}>{a}</div>
             </div>
-            <div css={{ paddingTop: 5 }}>100,000</div>
+            {tokens.length > 0 && trancheInvest.length > 0 ? (
+              <div css={{ paddingTop: 5 }}>
+                {trancheInvest.reduce((acc, next) => acc + Number(next[i]), 0)}
+                {"/"}
+                {Number(data.totalTranchesTarget) * Number(tokens[i].percent)}
+              </div>
+            ) : null}
+            {/* TODO: ^ use trancheInvest contract calls to get how much of a certain coin has already been invested in fall */}
           </div>
         ))}
       </Modal>

@@ -1,13 +1,14 @@
-import { MasterChefAddress, TranchesAddress, MulticallAddress } from "config/address";
+import { MasterChefAddress, TranchesAddress, MulticallAddress, MC_TrancheMasterAddress } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
-import { Market, PORTFOLIO_STATUS } from "types";
+import { Market, PORTFOLIO_STATUS, Token } from "types";
 import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
 import getRpcUrl from "utils/getRpcUrl";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
+import { abi as MC_TrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
@@ -207,6 +208,39 @@ export const useMulticurrencyTrancheBalance = (
   };
 };
 
+export const useAllMulticurrencyTrancheBalance = (trancheMasterAddress: string, tokenCount: number) => {
+  const preloadedArray = [];
+  for (let index = 0; index < tokenCount; index++) {
+    preloadedArray.push("");
+  }
+  const [result, setResult] = useState<{ balance: string[]; invested: string[] }>({
+    balance: preloadedArray,
+    invested: preloadedArray
+  });
+  const { account } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
+        const balanceOf = await trancheMasterContract.balanceOf(account);
+        setResult({
+          balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
+          invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
+  return {
+    balance: result.balance,
+    invested: result.invested
+  };
+};
+
 export const useTrancheSnapshot = (cycle: string | undefined) => {
   const [trancheSnapshot, setTrancheSnapshot] = useState([]);
 
@@ -245,6 +279,41 @@ export const useTrancheSnapshot = (cycle: string | undefined) => {
 
   return trancheSnapshot;
 };
+
+export const useMulticurrencyTrancheInvest = (
+  trancheMasterAddress: string,
+  cycle: string | undefined,
+  tokenAddresses: string[],
+  tranchesCount: number //future proofing for DAO curated falls with more than 3 tranches
+) => {
+  const [trancheInvest, setTrancheInvest] = useState<any[]>([]);
+
+  const { fastRefresh } = useRefresh();
+
+  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+
+  useEffect(() => {
+    const fetchTrancheInvests = async () => {
+      try {
+        const trancheInvest = [];
+        for (let i = 0; i < tranchesCount; i++) {
+          const tokensInTranche = [];
+          for (let j = 0; j < tokenAddresses.length; j++) {
+            tokensInTranche.push(await trancheMasterContract.trancheInvest(cycle, i, tokenAddresses[j]));
+          }
+          trancheInvest.push(tokensInTranche);
+        }
+        setTrancheInvest(trancheInvest);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchTrancheInvests();
+  }, [fastRefresh]);
+
+  return trancheInvest;
+};
+
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
   const { slowRefresh } = useRefresh();
@@ -450,6 +519,35 @@ export const useTotalTvl = () => {
 
   return totalTvl;
 };
+
+export const useMulticurrencyDepositableTokens = (trancheMasterAddress: string, tokenCount: number) => {
+  const [result, setResult] = useState<Token[]>([]);
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  useEffect(() => {
+    const fetchDepositableTokens = async () => {
+      try {
+        const tokens = [];
+        for (let index = 0; index < tokenCount; index++) {
+          tokens.push(await trancheMasterContract.tokens(index));
+        }
+        setResult(tokens);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchDepositableTokens();
+  }, [fastRefresh]);
+
+  return result.map((t) => {
+    return {
+      addr: t.addr,
+      strategy: t.strategy,
+      percent: new BigNumber(t.percent._hex).dividedBy(BIG_TEN.pow(5)).toString()
+    };
+  });
+};
+
 export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
   const signerOrProvider = signer ?? simpleRpcProvider;

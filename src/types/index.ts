@@ -79,7 +79,7 @@ export interface Market {
 export type Token = {
   addr: string;
   strategy: string;
-  percent: number;
+  percent: { _hex: string; isBigNumber: boolean };
 };
 export type StrategyFarm = {
   farmName: string;

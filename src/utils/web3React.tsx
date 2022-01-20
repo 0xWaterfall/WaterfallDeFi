@@ -21,8 +21,8 @@ const walletconnect = new WalletConnectConnector({
 console.log("walletconnect", walletconnect);
 const injected = new InjectedConnector({ supportedChainIds: [chainId] });
 export const connectorsByName = {
-  injected: injected,
-  walletconnect: walletconnect
+  ["injected"]: injected,
+  ["walletconnect"]: walletconnect
 };
 export const getLibrary = (provider: any): ethers.providers.Web3Provider => {
   const library = new ethers.providers.Web3Provider(provider);

@@ -451,7 +451,7 @@ const Stake = memo<TProps>(({ intl }) => {
   if (!stakingConfig) {
     history.push("/");
   }
-  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR } = useStakingPool(
+  const { totalStaked, isPoolActive, totalLocked, userStaked, maxAPR, rewardPerBlock } = useStakingPool(
     stakingConfig?.rewardTokenAddress || "",
     stakingConfig?.earningTokenAddress || "",
     account
@@ -542,7 +542,11 @@ const Stake = memo<TProps>(({ intl }) => {
         </Total>
 
         <Actions>
-          <Action stakingConfig={stakingConfig} />
+          <Action
+            stakingConfig={stakingConfig}
+            totalVeWTF={_VeWTFTotalSupply.toString()}
+            rewardPerBlock={rewardPerBlock}
+          />
           <StakeInfo>
             <div>
               <VeWTF>

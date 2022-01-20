@@ -43,7 +43,8 @@ export const useStakingPool = (
     userStaked: "",
     totalLocked: "",
     maxAPR: "",
-    pendingBUSDReward: ""
+    pendingBUSDReward: "",
+    rewardPerBlock: ""
   });
   const { fastRefresh } = useRefresh();
 
@@ -102,7 +103,8 @@ export const useStakingPool = (
         userStaked: new BigNumber(user?.user.amount?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString(),
         totalLocked: new BigNumber(totalLocked[0]?._hex).dividedBy(BIG_TEN.pow(18)).toString(),
         maxAPR: maxAPR,
-        pendingBUSDReward
+        pendingBUSDReward,
+        rewardPerBlock: rewardPerBlock.toString()
       });
     };
     if (account) fetchBalance();

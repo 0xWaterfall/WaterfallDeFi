@@ -51,8 +51,10 @@ const Block = styled.div`
 
 type TProps = WrappedComponentProps & {
   stakingConfig: StakingConfig;
+  totalVeWTF: string;
+  rewardPerBlock: string;
 };
-const Action = memo<TProps>(({ intl, stakingConfig }) => {
+const Action = memo<TProps>(({ intl, stakingConfig, totalVeWTF, rewardPerBlock }) => {
   const [activedKey, setActivedKey] = useState("STAKE");
   const TABS = [
     { key: "STAKE", text: intl.formatMessage({ defaultMessage: "Stake" }) },
@@ -74,7 +76,14 @@ const Action = memo<TProps>(({ intl, stakingConfig }) => {
         ))}
       </Segement>
       {/* {activedKey === "STAKE" && <Stake />} */}
-      {activedKey === "STAKE" && <Increase stakingConfig={stakingConfig} fromMasterChef={false} />}
+      {activedKey === "STAKE" && (
+        <Increase
+          stakingConfig={stakingConfig}
+          fromMasterChef={false}
+          totalVeWTF={totalVeWTF}
+          rewardPerBlock={rewardPerBlock}
+        />
+      )}
       {activedKey === "UNSTAKE" && <Unstake stakingConfig={stakingConfig} />}
     </Wrapper>
   );

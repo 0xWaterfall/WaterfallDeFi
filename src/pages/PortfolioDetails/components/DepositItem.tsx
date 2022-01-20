@@ -8,7 +8,7 @@ import ApproveCard from "./ApproveCard";
 import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { compareNum, getRemaining, getRemaining2 } from "utils/formatNumbers";
-import { useBalance, useTrancheBalance } from "hooks";
+import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -38,7 +38,13 @@ const DepositItem = memo<TProps>(({ selectedDepositAsset, intl, isRe, data, rede
       ? data.depositAssetAddress
       : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)]
   );
-  const { balance: balanceRe } = useTrancheBalance(data.address);
+  const { balance: balanceRe } = !data.isMulticurrency
+    ? useTrancheBalance(data.address)
+    : useMulticurrencyTrancheBalance(
+        data.address,
+        data.assets.indexOf(selectedDepositAsset),
+        data.depositAssetAddresses.length
+      );
   return (
     <div
       css={{

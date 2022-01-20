@@ -22,7 +22,7 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance, useTrancheBalance } from "hooks";
+import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 const RowDiv = styled.div`
@@ -157,7 +157,13 @@ const ApproveCard = memo<TProps>(
     const { onInvest } = useInvest(data.address);
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
-    const { balance: balanceRe } = useTrancheBalance(data.address);
+    const { balance: balanceRe } = !data.isMulticurrency
+      ? useTrancheBalance(data.address)
+      : useMulticurrencyTrancheBalance(
+          data.address,
+          data.assets.indexOf(selectedDepositAsset),
+          data.depositAssetAddresses.length
+        );
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
     const notes = [

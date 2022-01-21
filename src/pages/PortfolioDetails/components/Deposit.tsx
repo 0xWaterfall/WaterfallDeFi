@@ -130,6 +130,9 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
 
   const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
 
+  const remainingDepositable =
+    maxDeposits[data.assets.indexOf(selectedDepositAsset)] - deposited[data.assets.indexOf(selectedDepositAsset)];
+
   const RemainingDepositableInner = styled.div`
     width: ${
       (deposited[data.assets.indexOf(selectedDepositAsset)] / maxDeposits[data.assets.indexOf(selectedDepositAsset)]) *
@@ -221,7 +224,13 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
           ) : null}
         </SelectDepositAsset>
       </TopBar>
-      {marketData && <DepositItem data={marketData} selectedDepositAsset={selectedDepositAsset} />}
+      {marketData && (
+        <DepositItem
+          data={marketData}
+          selectedDepositAsset={selectedDepositAsset}
+          remainingDepositable={remainingDepositable}
+        />
+      )}
     </div>
   );
 });

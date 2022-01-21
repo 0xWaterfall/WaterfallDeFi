@@ -118,6 +118,7 @@ type TProps = WrappedComponentProps & {
   assets: string[];
   remaining: string;
   remainingExact: string;
+  remainingExactMulticurrency: string;
   myBalance: string;
   enabled: boolean;
   data: Market;
@@ -134,6 +135,7 @@ const ApproveCard = memo<TProps>(
     assets,
     remaining,
     remainingExact,
+    remainingExactMulticurrency,
     myBalance,
     enabled,
     data,
@@ -274,19 +276,15 @@ const ApproveCard = memo<TProps>(
     };
     const handleMaxInput = () => {
       const _balance = actualBalanceWallet.replace(/\,/g, "");
-      // const _remaining = remaining.replace(/\,/g, "");
-      const _remaining = remainingExact.replace(/\,/g, "");
-      // let input = 0;
+      const _remaining = data.isMulticurrency
+        ? remainingExactMulticurrency.replace(/\,/g, "")
+        : remainingExact.replace(/\,/g, "");
+
       if (compareNum(_remaining, _balance)) {
-        // if (_balance <= _remaining) {
-        // input = parseFloat(_balance);
         if (_balance) setBalanceInput(actualBalanceWallet);
       } else if (compareNum(_balance, _remaining, true)) {
-        // } else if (_balance > _remaining) {
-        // input = parseFloat(_remaining);
         if (_remaining) setBalanceInput(_remaining);
       }
-      // if (input) setBalanceInput(input.toString());
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -347,7 +345,8 @@ const ApproveCard = memo<TProps>(
             value={balanceInput}
             onChange={handleInputChange}
             suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-            disabled={!enabled || isSoldOut}
+            // disabled={!enabled || isSoldOut}
+            disabled={false}
           />
         </div>
         <ValidateText>{!depositLoading && validateText}</ValidateText>

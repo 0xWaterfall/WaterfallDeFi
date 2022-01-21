@@ -124,12 +124,12 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         minWidth={120}
         css={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "baseline" }}
       >
-        <CoinRow>
+        <CoinRow css={{ paddingLeft: "45px" }}>
           {marketData.assets.map((coin, i) => (
             <Coin key={i} size={18} assetName={coin} />
           ))}
         </CoinRow>
-        <div>
+        <div css={{ paddingLeft: "45px" }}>
           {marketData.assets.map((coin, i) => (
             <span key={i}>{coin + (i === marketData.assets.length - 1 ? "" : " / ")}</span>
           ))}

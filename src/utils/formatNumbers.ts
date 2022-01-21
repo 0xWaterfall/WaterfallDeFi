@@ -194,6 +194,24 @@ export const getRemaining2 = (target: string | undefined, principal: string | un
   // return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
   // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
+export const getRemainingMulticurrency = (
+  target: string | undefined,
+  principal: string | undefined,
+  remainingDepositable: number,
+  decimals = 18
+) => {
+  if (target === undefined) return "";
+  if (principal === undefined) return "";
+
+  const _target = new BigNumber(target);
+  const _principal = new BigNumber(principal);
+  const _remainingDepositable = new BigNumber(remainingDepositable);
+
+  const remainingInTranche = _target.minus(_principal);
+  const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
+
+  return result.toFormat(decimals).toString();
+};
 export const compareNum = (num1: string | number | undefined, num2: string | undefined, largerOnly = false) => {
   if (num1 === undefined) return;
   if (num2 === undefined) return;

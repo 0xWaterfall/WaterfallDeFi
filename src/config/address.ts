@@ -107,6 +107,15 @@ export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "8fac0A9CD6489EB1AF0E633ADcc540d4357E69c8",
   [NETWORKS.MAINNET]: "e9e7cea3dedca5984780bafc599bd69add087d56"
 };
+//!!!
+//testing multicurrency with TUSD
+export const TUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x14016E85a25aeb13065688cAFB43044C2ef86784"
+};
+//^ testing multicurrency with TUSD
+
 export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
@@ -178,32 +187,25 @@ export const TestLPRewardAddress: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };
 
-//multicurrency addresses
+//multicurrency master tranche contract address
 export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x572b670a80D79E22Cb3fa112729bC2d17e642f4a"
 };
+//multicurrency "masterChef" WTF staking address
 export const MC_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
 };
-export const MC_BUSDAddress: { [network: string]: string } = {
-  [NETWORKS.DEVNET]: "",
-  [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
-};
-export const MC_TUSDAddress: { [network: string]: string } = {
-  [NETWORKS.DEVNET]: "",
-  [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x14016E85a25aeb13065688cAFB43044C2ef86784"
-};
+//multicurrency ALPACA strategy BUSD lending vault address
 export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x025AA421bcedbd67d9D467a379AD5B47F2b711f2"
 };
+//multicurrency ALPACA strategy TUSD lending vault address
 export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",

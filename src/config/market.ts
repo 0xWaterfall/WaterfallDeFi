@@ -21,10 +21,9 @@ import {
   TranchesAddressOracle2,
   MC_TrancheMasterAddress,
   MC_WTFMasterAddress,
-  MC_BUSDAddress,
-  MC_TUSDAddress,
   MC_sALPACA_BUSDAddress,
-  MC_sALPACA_TUSDAddress
+  MC_sALPACA_TUSDAddress,
+  TUSDAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
@@ -251,7 +250,7 @@ export const MarketList: Market[] = [
     pools: [],
     isMulticurrency: true,
     depositAssetAddress: "",
-    depositAssetAddresses: [MC_BUSDAddress[NETWORK], MC_TUSDAddress[NETWORK]],
+    depositAssetAddresses: [BUSDAddress[NETWORK], TUSDAddress[NETWORK]],
     depositAssetAbi: WTFAbi,
     // strategyAddress: StrategyAddress[NETWORK],
     // strategyAbi: StrategyAbi,

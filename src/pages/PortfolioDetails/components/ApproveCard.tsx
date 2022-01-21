@@ -155,8 +155,16 @@ const ApproveCard = memo<TProps>(
       : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
     const { onCheckApprove } = useCheckApprove(depositAddress, data.address);
     const { onApprove } = useApprove(depositAddress, data.address);
-    const { onInvestDirect } = useInvestDirect(data.address);
-    const { onInvest } = useInvest(data.address);
+    const { onInvestDirect } = useInvestDirect(
+      data.address,
+      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.assets.length
+    );
+    const { onInvest } = useInvest(
+      data.address,
+      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.assets.length
+    );
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
     const { balance: balanceRe } = !data.isMulticurrency

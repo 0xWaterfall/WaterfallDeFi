@@ -13,9 +13,28 @@ import { Dispatch } from "redux";
 //   gasLimit: DEFAULT_GAS_LIMIT
 // };
 
-const invest = async (contract: Contract, amount: string, selectTrancheIdx: string, dispatch: Dispatch<any>) => {
+//TODO: upgrade UI so that user can invest more than one token at once, then upgrade this function
+const invest = async (
+  contract: Contract,
+  amount: string,
+  selectTrancheIdx: string,
+  dispatch: Dispatch<any>,
+  multicurrencyIdx: number,
+  multicurrencyTokenCount: number
+) => {
   const _amount = utils.parseEther(amount).toString();
-  const tx = await contract.invest(selectTrancheIdx, _amount, false);
+  const _zero = utils.parseEther("0").toString();
+  let tx;
+  if (multicurrencyIdx === -1) {
+    tx = await contract.invest(selectTrancheIdx, _amount, false);
+  } else {
+    const _amountArray = [];
+    for (let index = 0; index < multicurrencyTokenCount; index++) {
+      _amountArray.push(_zero);
+    }
+    _amountArray[multicurrencyIdx] = _amount;
+    tx = await contract.invest(selectTrancheIdx, _amountArray, false);
+  }
   dispatch(
     setConfirmModal({
       isOpen: true,
@@ -49,13 +68,20 @@ const invest = async (contract: Contract, amount: string, selectTrancheIdx: stri
   return receipt.status;
 };
 
-const useInvest = (trancheMasterAddress: string) => {
+const useInvest = (trancheMasterAddress: string, multicurrencyIdx: number, multicurrencyTokenCount: number) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const contract = useTrancheMasterContract(trancheMasterAddress);
   const handleInvest = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
-      const result = await invest(contract, amount, selectTrancheIdx, dispatch);
+      const result = await invest(
+        contract,
+        amount,
+        selectTrancheIdx,
+        dispatch,
+        multicurrencyIdx,
+        multicurrencyTokenCount
+      );
       dispatch(getMarkets(MarketList));
       return result;
     },

@@ -4,7 +4,7 @@ import { useTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 // import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
 import { setConfirmModal } from "store/showStatus";
@@ -13,9 +13,28 @@ import { Dispatch } from "redux";
 //   gasLimit: DEFAULT_GAS_LIMIT
 // };
 
-const invest = async (contract: Contract, amount: string, selectTrancheIdx: string, dispatch: Dispatch<any>) => {
+//TODO: upgrade UI so that user can invest more than one token at once, then upgrade this function
+const invest = async (
+  contract: Contract,
+  amount: string,
+  selectTrancheIdx: string,
+  dispatch: Dispatch<any>,
+  multicurrencyIdx: number,
+  multicurrencyTokenCount: number
+) => {
   const _amount = utils.parseEther(amount).toString();
-  const tx = await contract.investDirect(_amount, selectTrancheIdx, _amount);
+  const _zero = utils.parseEther("0").toString();
+  let tx;
+  if (multicurrencyIdx === -1) {
+    tx = await contract.investDirect(_amount, selectTrancheIdx, _amount);
+  } else {
+    const _amountArray = [];
+    for (let index = 0; index < multicurrencyTokenCount; index++) {
+      _amountArray.push(_zero);
+    }
+    _amountArray[multicurrencyIdx] = _amount;
+    tx = await contract.investDirect(_amountArray, selectTrancheIdx, _amountArray);
+  }
 
   dispatch(
     setConfirmModal({
@@ -53,13 +72,20 @@ const invest = async (contract: Contract, amount: string, selectTrancheIdx: stri
   return receipt.status;
 };
 
-const useInvestDirect = (trancheMasterAddress: string) => {
+const useInvestDirect = (trancheMasterAddress: string, multicurrencyIdx: number, multicurrencyTokenCount: number) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const contract = useTrancheMasterContract(trancheMasterAddress);
   const handleInvestDirect = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
-      const result = await invest(contract, amount, selectTrancheIdx, dispatch);
+      const result = await invest(
+        contract,
+        amount,
+        selectTrancheIdx,
+        dispatch,
+        multicurrencyIdx,
+        multicurrencyTokenCount
+      );
       dispatch(getMarkets(MarketList));
       return result;
     },

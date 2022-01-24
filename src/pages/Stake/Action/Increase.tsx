@@ -318,10 +318,12 @@ const Increase = memo<TProps>(
         const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
         const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
         const multiplier = getMultiplier(Number(_duration || 0));
+        console.log("_balanceInput", _balanceInput, _duration, multiplier);
         return numeral((_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
       }
     }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
     const currentAPR = useMemo(() => {
+      console.log("lockingWTF", lockingWTF, balanceInput);
       if (!receivedVeWTF) return "";
       if (!totalVeWTF) return "";
       if (!rewardPerBlock) return "";
@@ -332,10 +334,11 @@ const Increase = memo<TProps>(
             .dividedBy(totalVeWTF)
             .times(rewardPerBlock)
             .times(20 * 60 * 24 * 365 * 100)
+            .dividedBy(balanceInput !== "0" ? balanceInput : lockingWTF)
             .toString()
         ).format("0,0.[00]") + "%"
       );
-    }, [receivedVeWTF, rewardPerBlock, totalVeWTF]);
+    }, [receivedVeWTF, rewardPerBlock, totalVeWTF, lockingWTF]);
     const convertRatio = useMemo(() => {
       console.log(lockingWTF);
       console.log(balanceInput);
@@ -427,6 +430,7 @@ const Increase = memo<TProps>(
       const timeNow = Math.floor(Date.now() / 1000);
       const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
       setDatePickerValue(dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)));
+      if (locked) setBalanceInput("0");
     };
     const handleMaxInput = () => {
       const _balance = actualWtfBalance.replace(/\,/g, "");
@@ -607,12 +611,12 @@ const Increase = memo<TProps>(
           <p>{intl.formatMessage({ defaultMessage: "Recevied veWTF" })}</p>
           <span>{!validateText && !validateTextLockTime && receivedVeWTF}</span>
         </Label>
-        {/* {totalVeWTF && rewardPerBlock && (
+        {totalVeWTF && rewardPerBlock && (
           <Label css={{ margin: 0 }}>
             <p>{intl.formatMessage({ defaultMessage: "APR" })}</p>
             <span>{!validateText && !validateTextLockTime && currentAPR}</span>
           </Label>
-        )} */}
+        )}
         {account && approved && fromMasterChef && (
           <ButtonWrapper type="primary" onClick={onConfirmLockWTFRewards} loading={lockWTFRewardsLoading}>
             {intl.formatMessage({ defaultMessage: "Confirm" })}

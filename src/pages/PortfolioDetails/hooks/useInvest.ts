@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useTrancheMasterContract } from "hooks/useContract";
+import { useTrancheMasterContract, useMulticurrencyTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 // import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
@@ -71,7 +71,12 @@ const invest = async (
 const useInvest = (trancheMasterAddress: string, multicurrencyIdx: number, multicurrencyTokenCount: number) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useTrancheMasterContract(trancheMasterAddress);
+  let contract: Contract;
+  if (multicurrencyIdx === -1) {
+    contract = useTrancheMasterContract(trancheMasterAddress);
+  } else {
+    contract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
+  }
   const handleInvest = useCallback(
     async (amount: string, selectTrancheIdx: string) => {
       const result = await invest(

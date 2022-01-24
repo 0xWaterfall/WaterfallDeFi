@@ -187,7 +187,7 @@ export const TestLPRewardAddress: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };
 
-//multicurrency master tranche contract address
+//*TEST* multicurrency master tranche contract address
 export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
@@ -199,7 +199,7 @@ export const MC_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
 };
-//multicurrency ALPACA strategy BUSD lending vault address
+//multistrategy (mALPACA) ALPACA strategy BUSD lending vault address
 export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
@@ -210,4 +210,11 @@ export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x303892A3F5539904913F3C9aB594FB0E0C1b8b3F"
+};
+
+//*TEST* autoroll master tranche contract address
+export const AR_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xc73f1080a8D448f556aC8233E32e02227202a071"
 };

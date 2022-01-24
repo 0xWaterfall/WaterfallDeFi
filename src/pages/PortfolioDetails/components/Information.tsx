@@ -91,17 +91,13 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
   const [depositableAssets, setDepositableAssets] = useState<string[]>(data.assets);
 
   //TODO: make the code more robust by using this hook higher up the tree, and dynamically handle multicurrency instead of relying on markets.ts config object
-  const tokens: { addr: string; strategy: string; percent: any }[] = useMulticurrencyDepositableTokens(
-    data.address,
-    data.assets.length
-  );
+  const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
+    ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
+    : [];
 
-  const trancheInvest = useMulticurrencyTrancheInvest(
-    data.address,
-    data.cycle,
-    data.depositAssetAddresses,
-    data.tranches.length
-  );
+  const trancheInvest = data.isMulticurrency
+    ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
+    : [];
 
   // mock value test
   // const trancheInvest: any[] = [

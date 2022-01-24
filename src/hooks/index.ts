@@ -19,7 +19,7 @@ import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
 import numeral from "numeral";
-import { useTrancheMasterContract, useTrancheMulticurrencyMasterContract } from "./useContract";
+import { useTrancheMasterContract, useMulticurrencyTrancheMasterContract } from "./useContract";
 import { MarketList } from "config/market";
 
 export const useMarket = async (marketData: Market) => {
@@ -185,7 +185,7 @@ export const useMulticurrencyTrancheBalance = (
   });
   const { account } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
-  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -218,7 +218,7 @@ export const useAllMulticurrencyTrancheBalance = (trancheMasterAddress: string, 
   });
   const { account } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
-  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -289,7 +289,7 @@ export const useMulticurrencyTrancheInvest = (
 
   const { fastRefresh } = useRefresh();
 
-  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
 
   useEffect(() => {
     const fetchTrancheInvests = async () => {
@@ -522,7 +522,7 @@ export const useTotalTvl = () => {
 export const useMulticurrencyDepositableTokens = (trancheMasterAddress: string, tokenCount: number) => {
   const [result, setResult] = useState<Token[]>([]);
   const { fastRefresh } = useRefresh();
-  const trancheMasterContract = useTrancheMulticurrencyMasterContract(trancheMasterAddress);
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
   useEffect(() => {
     const fetchDepositableTokens = async () => {
       try {

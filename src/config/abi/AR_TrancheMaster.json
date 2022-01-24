@@ -1,11 +1,13 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "TrancheMasterMultiToken",
-  "sourceName": "contracts/main/TrancheMasterMultiToken.sol",
+  "contractName": "TrancheMasterAuto",
+  "sourceName": "contracts/main/TrancheMasterAuto.sol",
   "abi": [
     {
       "inputs": [
         { "internalType": "address", "name": "_core", "type": "address" },
+        { "internalType": "address", "name": "_currency", "type": "address" },
+        { "internalType": "address", "name": "_strategy", "type": "address" },
         { "internalType": "address", "name": "_staker", "type": "address" },
         { "internalType": "address", "name": "_devAddress", "type": "address" },
         { "internalType": "uint256", "name": "_duration", "type": "uint256" },
@@ -15,18 +17,8 @@
             { "internalType": "uint256", "name": "fee", "type": "uint256" },
             { "internalType": "uint256", "name": "target", "type": "uint256" }
           ],
-          "internalType": "struct TrancheMasterMultiToken.TrancheParams[]",
+          "internalType": "struct TrancheMasterAuto.TrancheParams[]",
           "name": "_params",
-          "type": "tuple[]"
-        },
-        {
-          "components": [
-            { "internalType": "address", "name": "addr", "type": "address" },
-            { "internalType": "address", "name": "strategy", "type": "address" },
-            { "internalType": "uint256", "name": "percent", "type": "uint256" }
-          ],
-          "internalType": "struct TrancheMasterMultiToken.Token[]",
-          "name": "_tokens",
           "type": "tuple[]"
         }
       ],
@@ -43,7 +35,6 @@
       "anonymous": false,
       "inputs": [
         { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
-        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
       ],
       "name": "Deposit",
@@ -67,7 +58,6 @@
         { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
         { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
       ],
       "name": "Invest",
@@ -85,7 +75,6 @@
         { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "tid", "type": "uint256" },
         { "indexed": false, "internalType": "uint256", "name": "cycle", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
       ],
       "name": "Redeem",
@@ -151,7 +140,6 @@
       "anonymous": false,
       "inputs": [
         { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
-        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
       ],
       "name": "Withdraw",
@@ -161,7 +149,6 @@
       "anonymous": false,
       "inputs": [
         { "indexed": false, "internalType": "address", "name": "account", "type": "address" },
-        { "indexed": false, "internalType": "address", "name": "token", "type": "address" },
         { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
       ],
       "name": "WithdrawFee",
@@ -218,8 +205,8 @@
       "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
       "name": "balanceOf",
       "outputs": [
-        { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
-        { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+        { "internalType": "uint256", "name": "balance", "type": "uint256" },
+        { "internalType": "uint256", "name": "invested", "type": "uint256" }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -233,13 +220,20 @@
     },
     {
       "inputs": [],
+      "name": "currency",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "cycle",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" }],
+      "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
       "name": "deposit",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -262,7 +256,7 @@
     {
       "inputs": [
         { "internalType": "uint256", "name": "tid", "type": "uint256" },
-        { "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" },
+        { "internalType": "uint256", "name": "amount", "type": "uint256" },
         { "internalType": "bool", "name": "returnLeft", "type": "bool" }
       ],
       "name": "invest",
@@ -272,9 +266,9 @@
     },
     {
       "inputs": [
+        { "internalType": "uint256", "name": "amountIn", "type": "uint256" },
         { "internalType": "uint256", "name": "tid", "type": "uint256" },
-        { "internalType": "uint256[]", "name": "amountsIn", "type": "uint256[]" },
-        { "internalType": "uint256[]", "name": "amountsInvest", "type": "uint256[]" }
+        { "internalType": "uint256", "name": "amountInvest", "type": "uint256" }
       ],
       "name": "investDirect",
       "outputs": [],
@@ -290,7 +284,7 @@
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "inputs": [],
       "name": "producedFee",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "stateMutability": "view",
@@ -344,6 +338,20 @@
       "type": "function"
     },
     {
+      "inputs": [{ "internalType": "address", "name": "_staker", "type": "address" }],
+      "name": "setStaker",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "_strategy", "type": "address" }],
+      "name": "setStrategy",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "staker",
       "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -353,47 +361,16 @@
     { "inputs": [], "name": "stop", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
       "inputs": [],
-      "name": "tokenCount",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "name": "strategy",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "uint256", "name": "", "type": "uint256" },
-        { "internalType": "address", "name": "", "type": "address" }
-      ],
-      "name": "tokenSettles",
-      "outputs": [
-        { "internalType": "uint256", "name": "capital", "type": "uint256" },
-        { "internalType": "uint256", "name": "reward", "type": "uint256" },
-        { "internalType": "uint256", "name": "profit", "type": "uint256" },
-        { "internalType": "uint256", "name": "left", "type": "uint256" },
-        { "internalType": "bool", "name": "gain", "type": "bool" }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "name": "tokens",
-      "outputs": [
-        { "internalType": "address", "name": "addr", "type": "address" },
-        { "internalType": "address", "name": "strategy", "type": "address" },
-        { "internalType": "uint256", "name": "percent", "type": "uint256" }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "", "type": "uint256" },
-        { "internalType": "uint256", "name": "", "type": "uint256" },
-        { "internalType": "address", "name": "", "type": "address" }
-      ],
-      "name": "trancheInvest",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
+      "inputs": [{ "internalType": "bool", "name": "_auto", "type": "bool" }],
+      "name": "switchAuto",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -405,6 +382,7 @@
       "outputs": [
         { "internalType": "uint256", "name": "target", "type": "uint256" },
         { "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "internalType": "uint256", "name": "capital", "type": "uint256" },
         { "internalType": "uint256", "name": "rate", "type": "uint256" },
         { "internalType": "uint256", "name": "apy", "type": "uint256" },
         { "internalType": "uint256", "name": "fee", "type": "uint256" },
@@ -420,49 +398,61 @@
       "outputs": [
         { "internalType": "uint256", "name": "target", "type": "uint256" },
         { "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "internalType": "uint256", "name": "autoPrincipal", "type": "uint256" },
         { "internalType": "uint256", "name": "apy", "type": "uint256" },
         { "internalType": "uint256", "name": "fee", "type": "uint256" }
       ],
       "stateMutability": "view",
       "type": "function"
     },
+    {
+      "inputs": [
+        { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+        { "internalType": "address", "name": "_pool", "type": "address" }
+      ],
+      "name": "transferFeeToStaking",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
     { "inputs": [], "name": "unpause", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
-      "inputs": [
-        { "internalType": "address", "name": "", "type": "address" },
-        { "internalType": "address", "name": "", "type": "address" }
-      ],
-      "name": "userBalances",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-      "name": "userCycle",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "name": "userInfo",
+      "outputs": [
+        { "internalType": "uint256", "name": "balance", "type": "uint256" },
+        { "internalType": "bool", "name": "isAuto", "type": "bool" }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
         { "internalType": "address", "name": "", "type": "address" },
-        { "internalType": "uint256", "name": "", "type": "uint256" },
-        { "internalType": "address", "name": "", "type": "address" }
+        { "internalType": "uint256", "name": "", "type": "uint256" }
       ],
       "name": "userInvest",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "outputs": [
+        { "internalType": "uint256", "name": "cycle", "type": "uint256" },
+        { "internalType": "uint256", "name": "principal", "type": "uint256" }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256[]", "name": "amountOuts", "type": "uint256[]" }],
+      "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
       "name": "withdraw",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    { "inputs": [], "name": "withdrawFee", "outputs": [], "stateMutability": "nonpayable", "type": "function" }
+    {
+      "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
+      "name": "withdrawFee",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
   ],
   "linkReferences": {},
   "deployedLinkReferences": {}

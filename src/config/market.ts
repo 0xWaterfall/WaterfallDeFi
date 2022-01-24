@@ -23,10 +23,12 @@ import {
   MC_WTFMasterAddress,
   MC_sALPACA_BUSDAddress,
   MC_sALPACA_TUSDAddress,
-  TUSDAddress
+  TUSDAddress,
+  AR_TrancheMasterAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
+import { abi as AR_TranchesAbi } from "./abi/AR_TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 // import { abi as StrategyAbi } from "./abi/Strategy.json";
@@ -51,6 +53,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefOracleAddress1[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: false,
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAddresses: [],
@@ -94,6 +97,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefOracleAddress2[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: false,
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAddresses: [],
@@ -130,6 +134,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefAddress3[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: false,
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAddresses: [],
@@ -168,6 +173,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefAddress[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: false,
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAddresses: [],
@@ -212,6 +218,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefAddress2[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: false,
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAddresses: [],
@@ -248,6 +255,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MC_WTFMasterAddress[NETWORK],
     pools: [],
+    autorollImplemented: false,
     isMulticurrency: true,
     depositAssetAddress: "",
     depositAssetAddresses: [BUSDAddress[NETWORK], TUSDAddress[NETWORK]],
@@ -269,6 +277,44 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-multicurrency"
+  },
+  {
+    portfolio: "Autoroll Test",
+    assets: ["BUSD"], //changed to array for multicurrency
+    tokens: [],
+    listingDate: "2022/01/19",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: AR_TrancheMasterAddress[NETWORK],
+    abi: AR_TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MC_WTFMasterAddress[NETWORK],
+    pools: [],
+    autorollImplemented: true,
+    isMulticurrency: false,
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    // strategyAddress: StrategyAddress[NETWORK],
+    // strategyAbi: StrategyAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2"
   }
   // {
   //   portfolio: NETWORK === "TESTNET" ? "TBUSD Vault" : "BUSD TVault 2",

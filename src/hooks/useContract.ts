@@ -3,6 +3,7 @@ import { FeeRewardsAddress, VeWTFAddress, WTFRewardsAddress } from "config/addre
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as MulticurrencyTrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";
+import { abi as AutorollingTrancheMasterAbi } from "config/abi/AR_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as WTFRewardsAbi } from "config/abi/WTFRewards.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
@@ -20,9 +21,15 @@ export const useTrancheMasterContract = (trancheMasterAddress: string) => {
   return useMemo(() => getContract(TrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
 
-export const useTrancheMulticurrencyMasterContract = (trancheMasterAddress: string) => {
+export const useMulticurrencyTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContract(MulticurrencyTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+};
+
+//TODO: REMEMBER TO FOLD THIS INTO *useTrancheMasterContract*!!! AutorollingTrancheMasterAbi should REPLACE TrancheMasterAbi!!!
+export const useAutorollingTrancheMasterContract = (trancheMasterAddress: string) => {
+  const signer = getSigner();
+  return useMemo(() => getContract(AutorollingTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
 
 export const useERC20Contract = (address: string) => {

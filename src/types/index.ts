@@ -62,6 +62,7 @@ export interface Market {
   pools: string[];
   // pools: Pool[];
   totalAllocPoints?: string;
+  autorollImplemented: boolean;
   isMulticurrency: boolean;
   depositAssetAddress: string;
   depositAssetAddresses: string[];

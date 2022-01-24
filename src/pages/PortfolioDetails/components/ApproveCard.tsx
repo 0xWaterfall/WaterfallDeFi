@@ -14,6 +14,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
 import useCheckApprove from "../hooks/useCheckApprove";
 import useApprove from "../hooks/useApprove";
+import useAutoRoll from "../hooks/useAutoRoll";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
@@ -144,11 +145,14 @@ const ApproveCard = memo<TProps>(
     selectTranche
   }) => {
     const { tags } = useTheme();
+    //autoroll contract hook must come before autoroll state hook
+    const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
+
     const [balanceInput, setBalanceInput] = useState("0");
     const [approved, setApproved] = useState(false);
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
-    const [autoRoll, setAutoRoll] = useState(false);
+    const [autoRoll, setAutoRoll] = useState<boolean>(false);
     const { account } = useWeb3React<Web3Provider>();
     const depositAddress = !data.isMulticurrency
       ? data.depositAssetAddress
@@ -197,6 +201,12 @@ const ApproveCard = memo<TProps>(
     useEffect(() => {
       setBalanceInput("0");
     }, [enabled]);
+
+    // update contract-read state after update to frontend state
+    useEffect(() => {
+      getAutoRoll().then((res) => setAutoRoll(res));
+    }, [autoRoll]);
+
     const handleApprove = async () => {
       setApproveLoading(true);
       dispatch(
@@ -238,7 +248,7 @@ const ApproveCard = memo<TProps>(
       }
     }, [balance, remaining, balanceInput]);
 
-    const handleDeposit = async (autoRoll?: boolean) => {
+    const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
       if (Number(balanceInput) <= 0) return;
       if (selectTrancheIdx === undefined) return;
@@ -353,8 +363,7 @@ const ApproveCard = memo<TProps>(
             value={balanceInput}
             onChange={handleInputChange}
             suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-            // disabled={!enabled || isSoldOut}
-            disabled={false}
+            disabled={!enabled || isSoldOut}
           />
         </div>
         <ValidateText>{!depositLoading && validateText}</ValidateText>
@@ -371,14 +380,24 @@ const ApproveCard = memo<TProps>(
           </ImportantNotes>
         )}
 
-        <div css={{ display: "flex", marginTop: 20 }}>
-          <span css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12 }}>
-            Auto Rolling
-          </span>
-          <div css={{ paddingTop: 2.5 }}>
-            <Switch checked={autoRoll} onChange={() => setAutoRoll(!autoRoll)} />
+        {data.autorollImplemented ? (
+          <div css={{ display: "flex", marginTop: 20 }}>
+            <span css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12 }}>
+              Auto Rolling
+            </span>
+            <div css={{ paddingTop: 2.5 }}>
+              {autoRoll !== null ? (
+                <Switch
+                  checked={autoRoll}
+                  onChange={() => {
+                    changeAutoRoll(!autoRoll);
+                    setAutoRoll(!autoRoll);
+                  }}
+                />
+              ) : null}
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {account ? (
           approved ? (
@@ -386,7 +405,7 @@ const ApproveCard = memo<TProps>(
               <Button
                 type="primary"
                 css={{ height: 56 }}
-                onClick={() => handleDeposit(autoRoll)}
+                onClick={() => handleDeposit()}
                 loading={depositLoading}
                 disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
               >

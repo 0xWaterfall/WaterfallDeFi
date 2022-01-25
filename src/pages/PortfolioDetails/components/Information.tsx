@@ -11,6 +11,8 @@ import Coin from "components/Coin";
 import Modal from "components/Modal/Modal";
 import Input from "components/Input/Input";
 import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
+import { BIG_TEN } from "utils/bigNumber";
+import BigNumber from "bignumber.js";
 
 const Wrapper = styled.div`
   display: flex;
@@ -144,14 +146,11 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
             </div>
             {tokens.length > 0 && trancheInvest.length > 0 ? (
               <div css={{ paddingTop: 5 }}>
-                {(
-                  trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), BigInt(0)) / BigInt(1000000000000000000)
-                ).toString()}
+                {new BigNumber(trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), BigInt(0)))
+                  .dividedBy(BIG_TEN.pow(18))
+                  .toString()}
                 {"/"}
-                {(
-                  (BigInt(Number(data.totalTranchesTarget)) * BigInt(tokens[i].percent * 100)) /
-                  BigInt(100)
-                ).toString()}
+                {new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(tokens[i].percent)).toString()}
               </div>
             ) : null}
             {/* TODO: ^ use trancheInvest contract calls to get how much of a certain coin has already been invested in fall */}

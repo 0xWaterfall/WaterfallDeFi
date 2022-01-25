@@ -13,6 +13,8 @@ import moment from "moment";
 import Coin from "components/Coin";
 import Select, { Option } from "components/Select/Select";
 import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
+import BigNumber from "bignumber.js";
+import { BIG_TEN } from "utils/bigNumber";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -122,10 +124,9 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
   const remainingDepositable =
     maxDeposits[data.assets.indexOf(selectedDepositAsset)] - deposited[data.assets.indexOf(selectedDepositAsset)];
 
-  const width =
-    BigInt(deposited[data.assets.indexOf(selectedDepositAsset)]) /
-    BigInt(10000000000000000) /
-    BigInt(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)] : 1);
+  const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
+    .dividedBy(BIG_TEN.pow(16))
+    .dividedBy(new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)] : 1));
 
   const RemainingDepositableInner = styled.div`
     width: ${width + "%;"}

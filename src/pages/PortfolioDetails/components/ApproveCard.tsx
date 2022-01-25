@@ -120,7 +120,6 @@ type TProps = WrappedComponentProps & {
   remaining: string;
   remainingExact: string;
   remainingExactMulticurrency: string;
-  myBalance: string;
   enabled: boolean;
   data: Market;
   selectTrancheIdx?: number;
@@ -137,7 +136,6 @@ const ApproveCard = memo<TProps>(
     remaining,
     remainingExact,
     remainingExactMulticurrency,
-    myBalance,
     enabled,
     data,
     selectTrancheIdx,
@@ -171,11 +169,17 @@ const ApproveCard = memo<TProps>(
     );
     const dispatch = useAppDispatch();
     const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
-    const { balance: balanceRe } = !data.isMulticurrency
-      ? useTrancheBalance(data.address)
-      : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
+    const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
+    const { balance: balanceRe } = useTrancheBalance(data.address);
+    const multicurrencyBalanceRes = data.depositAssetAddresses.map((address, i) =>
+      useMulticurrencyTrancheBalance(data.address, i, data.assets.length)
+    );
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
+    const multicurrencyBalance =
+      isRe === undefined
+        ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
+        : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]");
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -248,7 +252,7 @@ const ApproveCard = memo<TProps>(
       if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
       }
-    }, [balance, remaining, balanceInput]);
+    }, [balance, multicurrencyBalance, remaining, balanceInput]);
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
@@ -277,7 +281,9 @@ const ApproveCard = memo<TProps>(
         }
         setDepositLoading(false);
         setBalanceInput("0");
-        fetchBalance();
+        !data.isMulticurrency
+          ? fetchBalance()
+          : multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
         // if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         dispatch(
@@ -341,7 +347,7 @@ const ApproveCard = memo<TProps>(
             :
           </div>
           <div>
-            {formatNumberSeparator(balance)} {selectedDepositAsset}
+            {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)} {selectedDepositAsset}
           </div>
         </RowDiv>
         <RowDiv>

@@ -35,14 +35,7 @@ const DepositItem = memo<TProps>(
 
     const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
     const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
-    const { balance } = useBalance(
-      !data.isMulticurrency
-        ? data.depositAssetAddress
-        : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)]
-    );
-    const { balance: balanceRe } = !data.isMulticurrency
-      ? useTrancheBalance(data.address)
-      : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
+
     return (
       <div
         css={{
@@ -117,7 +110,6 @@ const DepositItem = memo<TProps>(
           }
           enabled={selectTranche !== undefined}
           selectTrancheIdx={selectTrancheIdx}
-          myBalance={!isRe ? balance : balanceRe.toString() || ""}
           data={marketData}
           selectTranche={selectTranche}
           isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}

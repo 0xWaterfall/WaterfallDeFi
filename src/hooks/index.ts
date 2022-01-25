@@ -186,23 +186,24 @@ export const useMulticurrencyTrancheBalance = (
   const { account } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
   const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
+  const fetchBalance = async () => {
+    try {
+      //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
+      const balanceOf = await trancheMasterContract.balanceOf(account);
+      setResult({
+        balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
+        invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
   useEffect(() => {
-    const fetchBalance = async () => {
-      try {
-        //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
-        const balanceOf = await trancheMasterContract.balanceOf(account);
-        setResult({
-          balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
-          invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    };
     if (account) fetchBalance();
   }, [fastRefresh, account]);
   return {
     balance: result.balance[currencyIdx],
+    fetchBalance: fetchBalance,
     invested: result.invested[currencyIdx]
   };
 };

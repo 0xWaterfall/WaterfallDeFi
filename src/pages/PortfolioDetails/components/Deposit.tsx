@@ -122,13 +122,13 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
   const remainingDepositable =
     maxDeposits[data.assets.indexOf(selectedDepositAsset)] - deposited[data.assets.indexOf(selectedDepositAsset)];
 
+  const width =
+    BigInt(deposited[data.assets.indexOf(selectedDepositAsset)]) /
+    BigInt(10000000000000000) /
+    BigInt(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)] : 1);
+
   const RemainingDepositableInner = styled.div`
-    width: ${
-      deposited[data.assets.indexOf(selectedDepositAsset)] /
-        10000000000000000 /
-        maxDeposits[data.assets.indexOf(selectedDepositAsset)] +
-      "%;"
-    }
+    width: ${width + "%;"}
     height: 6px;
     background-color: #0066FF;
     border-radius: 4px;
@@ -191,9 +191,11 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
             <div css={{ display: "flex", paddingTop: "3.5px" }}>
               {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
               <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
-              <RemainingDepositableOuter>
-                <RemainingDepositableInner />
-              </RemainingDepositableOuter>
+              {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
+                <RemainingDepositableOuter>
+                  <RemainingDepositableInner />
+                </RemainingDepositableOuter>
+              ) : null}
             </div>
             <Select
               defaultValue={"BUSD"}

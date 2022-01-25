@@ -144,9 +144,14 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
             </div>
             {tokens.length > 0 && trancheInvest.length > 0 ? (
               <div css={{ paddingTop: 5 }}>
-                {trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), 0) / BigInt(1000000000000000000)}
+                {(
+                  trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), BigInt(0)) / BigInt(1000000000000000000)
+                ).toString()}
                 {"/"}
-                {Number(data.totalTranchesTarget) * Number(tokens[i].percent)}
+                {(
+                  (BigInt(Number(data.totalTranchesTarget)) * BigInt(tokens[i].percent * 100)) /
+                  BigInt(100)
+                ).toString()}
               </div>
             ) : null}
             {/* TODO: ^ use trancheInvest contract calls to get how much of a certain coin has already been invested in fall */}

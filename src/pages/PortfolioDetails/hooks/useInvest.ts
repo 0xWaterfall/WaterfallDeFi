@@ -4,7 +4,7 @@ import { useTrancheMasterContract, useMulticurrencyTrancheMasterContract } from 
 import { useDispatch } from "react-redux";
 // import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
+import { utils, BigNumber } from "ethers";
 import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
 import { setConfirmModal } from "store/showStatus";
@@ -22,18 +22,19 @@ const invest = async (
   multicurrencyIdx: number,
   multicurrencyTokenCount: number
 ) => {
-  const _amount = utils.parseEther(amount).toString();
-  const _zero = utils.parseEther("0").toString();
+  const _amount = utils.parseEther(amount);
+  const _zero = utils.parseEther("0");
   let tx;
   if (multicurrencyIdx === -1) {
-    tx = await contract.invest(selectTrancheIdx, _amount, false);
+    tx = await contract.invest(selectTrancheIdx, _amount.toString(), false);
   } else {
-    const _amountArray = [];
+    const _amountArray: BigNumber[] = [];
     for (let index = 0; index < multicurrencyTokenCount; index++) {
-      _amountArray.push(_zero);
+      _amountArray.push(BigNumber.from(_zero.toString()));
     }
-    _amountArray[multicurrencyIdx] = _amount;
-    tx = await contract.invest(selectTrancheIdx, _amountArray, false);
+    _amountArray[multicurrencyIdx] = BigNumber.from(_amount.toString());
+    console.log(Array.isArray([..._amountArray]));
+    tx = await contract.invest(selectTrancheIdx, [..._amountArray], false);
   }
   dispatch(
     setConfirmModal({

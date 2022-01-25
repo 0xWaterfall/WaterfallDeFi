@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Mountain, AlarmImg } from "assets/images";
 import DepositItem from "./DepositItem";
@@ -115,13 +115,6 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
     ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
     : [];
 
-  //mock value test
-  // const trancheInvest: any[] = [
-  //   [1, 0.5],
-  //   [1, 0.5],
-  //   [1, 0.5]
-  // ];
-
   data.assets.forEach((a, i) => deposited.push(trancheInvest.reduce((acc, next) => acc + Number(next[i]), 0)));
 
   const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
@@ -131,8 +124,9 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
 
   const RemainingDepositableInner = styled.div`
     width: ${
-      (deposited[data.assets.indexOf(selectedDepositAsset)] / maxDeposits[data.assets.indexOf(selectedDepositAsset)]) *
-        100 +
+      deposited[data.assets.indexOf(selectedDepositAsset)] /
+        10000000000000000 /
+        maxDeposits[data.assets.indexOf(selectedDepositAsset)] +
       "%;"
     }
     height: 6px;
@@ -192,20 +186,19 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
           <Step>2</Step>
           <StepName>{intl.formatMessage({ defaultMessage: "Deposit" })}</StepName>
         </StepBar>
-        <SelectDepositAsset>
-          <div css={{ display: "flex", paddingTop: "3.5px" }}>
-            {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
-            <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
-            <RemainingDepositableOuter>
-              <RemainingDepositableInner />
-            </RemainingDepositableOuter>
-          </div>
-          {data.isMulticurrency ? (
+        {data.isMulticurrency ? (
+          <SelectDepositAsset>
+            <div css={{ display: "flex", paddingTop: "3.5px" }}>
+              {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
+              <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
+              <RemainingDepositableOuter>
+                <RemainingDepositableInner />
+              </RemainingDepositableOuter>
+            </div>
             <Select
               defaultValue={"BUSD"}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 setSelectedDepositAsset(e.toString());
-                // setDeposited(selectedDepositAsset === "USDC" ? 50000 : 25000);
               }}
             >
               {marketData.assets.map((a, i) => (
@@ -217,8 +210,8 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
                 </Option>
               ))}
             </Select>
-          ) : null}
-        </SelectDepositAsset>
+          </SelectDepositAsset>
+        ) : null}
       </TopBar>
       {marketData && (
         <DepositItem

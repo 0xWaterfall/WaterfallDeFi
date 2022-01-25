@@ -99,13 +99,6 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
     ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
     : [];
 
-  // mock value test
-  // const trancheInvest: any[] = [
-  //   [1, 0.5],
-  //   [1, 0.5],
-  //   [1, 0.5]
-  // ];
-
   return (
     <Wrapper>
       <Modal
@@ -151,7 +144,7 @@ const Information = memo<TProps>(({ data, selectedDepositAsset, setSelectedDepos
             </div>
             {tokens.length > 0 && trancheInvest.length > 0 ? (
               <div css={{ paddingTop: 5 }}>
-                {trancheInvest.reduce((acc, next) => acc + Number(next[i]), 0)}
+                {trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), 0) / BigInt(1000000000000000000)}
                 {"/"}
                 {Number(data.totalTranchesTarget) * Number(tokens[i].percent)}
               </div>

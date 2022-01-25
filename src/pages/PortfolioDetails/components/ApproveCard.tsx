@@ -204,7 +204,9 @@ const ApproveCard = memo<TProps>(
 
     // update contract-read state after update to frontend state
     useEffect(() => {
-      getAutoRoll().then((res) => setAutoRoll(res));
+      if (data.autorollImplemented) {
+        getAutoRoll().then((res) => setAutoRoll(res));
+      }
     }, [autoRoll]);
 
     const handleApprove = async () => {
@@ -380,7 +382,7 @@ const ApproveCard = memo<TProps>(
           </ImportantNotes>
         )}
 
-        {data.autorollImplemented ? (
+        {account && data.autorollImplemented ? (
           <div css={{ display: "flex", marginTop: 20 }}>
             <span css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12 }}>
               Auto Rolling

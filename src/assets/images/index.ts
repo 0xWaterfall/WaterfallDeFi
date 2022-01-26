@@ -55,3 +55,4 @@ export { ReactComponent as SubmittedIcon } from "./SubmittedIcon.svg";
 export { ReactComponent as CoimpletedIcon } from "./CompletedIcon.svg";
 export { ReactComponent as AlarmImg } from "./alarm.svg";
 export { ReactComponent as Bulb } from "./Bulb.svg";
+export { ReactComponent as Logout } from "./logout.svg";

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import { Menu, Wallet, WaterFall, WaterFallDark } from "assets/images";
+import { Logout, Menu, Wallet, WaterFall, WaterFallDark } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import React, { memo, useEffect } from "react";
@@ -144,7 +144,20 @@ const DrawerWrapper = styled.div`
     width: fit-content;
   }
 `;
-
+const LogoutWrapper = styled.div`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 5px;
+  > svg {
+    width: 20px;
+    height: 20px;
+    color: #999999;
+  }
+`;
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
@@ -233,7 +246,9 @@ const Header = memo<TProps>(({ intl }) => {
           <span>{formatAccountAddress(account)}</span>
           <Wallet css={{ marginLeft: 10 }} />
         </Address>
-        <div onClick={logout}>logout</div>
+        <LogoutWrapper onClick={logout}>
+          <Logout />
+        </LogoutWrapper>
       </WalletWrapper>
     );
   }, [account, active, chainId]);

@@ -136,7 +136,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
     const _market = markets[marketIdx];
     const { userInvests: _userInvests, trancheCycles } = _subgraphResultMarket;
     const _position = positions[marketIdx];
-    // console.log(positions);
 
     let userInvests = _userInvests?.filter((_userInvest: UserInvest) => {
       if (_userInvest?.cycle === Number(_market?.cycle) && _market?.status === PORTFOLIO_STATUS.PENDING) return false;
@@ -145,10 +144,10 @@ const SparePositions = memo<TProps>(({ intl }) => {
     });
     if (_position)
       for (let i = 0; i < _position.length; i++) {
-        const _cycle = new BigNumber(_position[i][0]._hex).toString();
-        const _principal = numeral(new BigNumber(_position[i][1]._hex).dividedBy(BIG_TEN.pow(18)).toString()).format(
-          "0,0.[0000]"
-        );
+        const _cycle = new BigNumber(_position[i][0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
+        const _principal = numeral(
+          new BigNumber(_position[i][!_market.isMulticurrency ? 1 : 0]._hex).dividedBy(BIG_TEN.pow(18)).toString()
+        ).format("0,0.[0000]");
         if (
           _cycle == _market?.cycle &&
           (_market?.status === PORTFOLIO_STATUS.PENDING || _market?.status === PORTFOLIO_STATUS.ACTIVE)

@@ -105,7 +105,7 @@ export const MasterChefAddressTest2: { [network: string]: string } = {
 export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "9Ad6a4A86CAE27024F693C933488070a70b56f5E",
   [NETWORKS.TESTNET]: "8fac0A9CD6489EB1AF0E633ADcc540d4357E69c8",
-  [NETWORKS.MAINNET]: "e9e7cea3dedca5984780bafc599bd69add087d56"
+  [NETWORKS.MAINNET]: "0xe9e7cea3dedca5984780bafc599bd69add087d56"
 };
 //!!!
 //testing multicurrency with TUSD

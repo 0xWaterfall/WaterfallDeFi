@@ -119,7 +119,7 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
 
   data.assets.forEach((a, i) =>
     deposited.push(
-      trancheInvest.reduce((acc, next) => acc + new BigNumber(next[i]).dividedBy(BIG_TEN.pow(18)), new BigNumber(0))
+      trancheInvest.reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
     )
   );
 
@@ -131,7 +131,9 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
 
   const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
     .dividedBy(BIG_TEN.pow(16))
-    .dividedBy(new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)] : 1));
+    .dividedBy(
+      new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
+    );
 
   const RemainingDepositableInner = styled.div`
     width: ${width + "%;"}

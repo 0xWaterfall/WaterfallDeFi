@@ -20,6 +20,7 @@ import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
 import { NETWORK, NETWORKS } from "config";
 import { NetworkStatus } from "@apollo/client";
+import useEagerConnect from "hooks/useEagerConnect";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -155,10 +156,11 @@ const Header = memo<TProps>(({ intl }) => {
   const dispatch = useAppDispatch();
 
   const { active, account, chainId } = useWeb3React<Web3Provider>();
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
 
+  useEagerConnect();
   useEffect(() => {
-    login();
+    // login("injected");
   }, []);
 
   const MENU = [
@@ -231,6 +233,7 @@ const Header = memo<TProps>(({ intl }) => {
           <span>{formatAccountAddress(account)}</span>
           <Wallet css={{ marginLeft: 10 }} />
         </Address>
+        <div onClick={logout}>logout</div>
       </WalletWrapper>
     );
   }, [account, active, chainId]);

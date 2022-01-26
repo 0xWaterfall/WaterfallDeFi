@@ -5,7 +5,7 @@ import { Bulb, WaterFall, WTF, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
 import Stakings from "config/staking";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import { StakingConfig } from "types";
@@ -611,6 +611,30 @@ const Stake = memo<TProps>(({ intl }) => {
                   %
                 </span>
               </section>
+              {/* <section>
+                <span>{intl.formatMessage({ defaultMessage: "Current APR" })}:</span>
+                <span>
+                  {expiryTimestamp &&
+                    expiryTimestamp !== "0" &&
+                    dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
+                </span>
+                {expiryTimestamp && expiryTimestamp !== "0" && (
+                  <Countdown
+                    date={Number(expiryTimestamp) * 1000}
+                    renderer={({ days, hours, minutes, seconds, completed }) => {
+                      return (
+                        <span>
+                          {!completed && (
+                            <>
+                              {days}D {hours}H {minutes}M {seconds}S
+                            </>
+                          )}
+                        </span>
+                      );
+                    }}
+                  />
+                )}
+              </section> */}
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Expire date" })}:</span>
                 <span>

@@ -106,7 +106,7 @@ const RemainingDepositableOuter = styled.div`
 `;
 
 const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDepositAsset }) => {
-  const deposited: any[] = [];
+  const deposited: BigNumber[] = [];
 
   //TODO: make the code more robust by using this hook higher up the tree, and dynamically handle multicurrency instead of relying on markets.ts config object
   const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
@@ -117,12 +117,17 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
     ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
     : [];
 
-  data.assets.forEach((a, i) => deposited.push(trancheInvest.reduce((acc, next) => acc + Number(next[i]), 0)));
+  data.assets.forEach((a, i) =>
+    deposited.push(
+      trancheInvest.reduce((acc, next) => acc + new BigNumber(next[i]).dividedBy(BIG_TEN.pow(18)), new BigNumber(0))
+    )
+  );
 
   const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
 
-  const remainingDepositable =
-    maxDeposits[data.assets.indexOf(selectedDepositAsset)] - deposited[data.assets.indexOf(selectedDepositAsset)];
+  const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
+    deposited[data.assets.indexOf(selectedDepositAsset)]
+  );
 
   const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
     .dividedBy(BIG_TEN.pow(16))

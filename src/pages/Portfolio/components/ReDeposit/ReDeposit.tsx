@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useTheme } from "@emotion/react";
 import Modal from "components/Modal/Modal";
 import DepositItem from "pages/PortfolioDetails/components/DepositItem";
 import { Market } from "types";
+import BigNumber from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;
@@ -29,7 +30,7 @@ const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance, selectedDe
         selectedDepositAsset={selectedDepositAsset}
         redepositBalance={balance}
         //TODO: get the remaining depositable amount of selected token in multicurrency!
-        remainingDepositable={0}
+        remainingDepositable={new BigNumber(0)}
       />
     </Modal>
   );

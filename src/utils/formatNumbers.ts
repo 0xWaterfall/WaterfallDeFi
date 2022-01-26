@@ -197,7 +197,7 @@ export const getRemaining2 = (target: string | undefined, principal: string | un
 export const getRemainingMulticurrency = (
   target: string | undefined,
   principal: string | undefined,
-  remainingDepositable: number,
+  remainingDepositable: BigNumber,
   decimals = 18
 ) => {
   if (target === undefined) return "";
@@ -205,7 +205,7 @@ export const getRemainingMulticurrency = (
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
-  const _remainingDepositable = new BigNumber(remainingDepositable);
+  const _remainingDepositable = remainingDepositable.dividedBy(BIG_TEN.pow(18));
 
   const remainingInTranche = _target.minus(_principal);
   const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;

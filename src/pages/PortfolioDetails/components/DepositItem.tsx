@@ -8,14 +8,14 @@ import ApproveCard from "./ApproveCard";
 // import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
 import { compareNum, getRemaining, getRemaining2, getRemainingMulticurrency } from "utils/formatNumbers";
-import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
+import BigNumber from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   data: Market;
   selectedDepositAsset: string;
   isRe?: boolean;
   redepositBalance?: string;
-  remainingDepositable: number;
+  remainingDepositable: BigNumber;
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";

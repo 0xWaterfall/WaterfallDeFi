@@ -323,14 +323,13 @@ const Increase = memo<TProps>(
       }
     }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
     const currentAPR = useMemo(() => {
-      console.log("lockingWTF", lockingWTF, balanceInput);
       if (!receivedVeWTF) return "";
       if (!totalVeWTF) return "";
       if (!rewardPerBlock) return "";
       if (receivedVeWTF === "0") return "-";
       return (
         numeral(
-          new BigNumber(receivedVeWTF)
+          new BigNumber(receivedVeWTF.replace(/,/g, ""))
             .dividedBy(totalVeWTF)
             .times(rewardPerBlock)
             .times(20 * 60 * 24 * 365 * 100)
@@ -343,59 +342,73 @@ const Increase = memo<TProps>(
       console.log(lockingWTF);
       console.log(balanceInput);
       console.log(duration);
-      // const secondsInYear = 3600 * 24 * 365;
-      if (fromMasterChef) {
-        if (!wtfRewardsBalance || wtfRewardsBalance === "0") return "-";
-        const _wtfRewardsBalance = new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString();
-        if (!locked) {
-          if (!duration) return "-";
-          const multiplier = getMultiplier(Number(duration || 0));
-
-          return numeral((Number(_wtfRewardsBalance) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format(
-            "0,0.[0000]"
-          );
-        }
+      console.log("convertratio", receivedVeWTF);
+      if (!receivedVeWTF) return;
+      const _receivedVeWTF = receivedVeWTF.replace(/,/g, "");
+      if (balanceInput !== "0") {
+        console.log("convert ratio", balanceInput, Number(_receivedVeWTF) / Number(balanceInput));
+        return numeral(Number(_receivedVeWTF) / Number(balanceInput)).format("0,0.[0000]");
+      } else {
         if (locked) {
-          if (!expiryTimestamp) return "-";
-          let total = 0;
-
-          //calculate lockingWTF with extended duration
-          if (duration) {
-            const multiplier2 = getMultiplier(Number(duration || 0));
-            const _balanceInput2 = Number(lockingWTF);
-            console.log("lockingWTF,", lockingWTF, duration, multiplier2);
-            console.log((_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME);
-            total += (_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME;
-          }
-          const timeNow = Math.floor(Date.now() / 1000);
-          const _duration =
-            !duration || duration === 0
-              ? Number(expiryTimestamp) - Number(timeNow)
-              : Number(expiryTimestamp) - Number(timeNow) + duration;
-          const multiplier = getMultiplier(Number(_duration || 0));
-          const _balanceInput = Number(_wtfRewardsBalance);
-          console.log("_balanceInput,", _balanceInput, _duration, multiplier);
-          total += (_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME;
-          return numeral(total).format("0,0.[0000]");
+          console.log("convert ratio2", lockingWTF, Number(_receivedVeWTF) / Number(lockingWTF));
+          return numeral(Number(_receivedVeWTF) / Number(lockingWTF)).format("0,0.[0000]");
+        } else {
+          // return numeral(Number(receivedVeWTF) / Number(balanceInput)).format("0,0.[0000]");
         }
       }
-      if (!locked) {
-        if (balanceInput === "0") return "-";
-        if (!duration) return "-";
-        const multiplier = getMultiplier(Number(duration || 0));
+      // const secondsInYear = 3600 * 24 * 365;
+      // if (fromMasterChef) {
+      //   if (!wtfRewardsBalance || wtfRewardsBalance === "0") return "-";
+      //   const _wtfRewardsBalance = new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString();
+      //   if (!locked) {
+      //     if (!duration) return "-";
+      //     const multiplier = getMultiplier(Number(duration || 0));
 
-        return numeral((Number(balanceInput) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
-      }
-      if (locked) {
-        if (balanceInput === "0" && !duration) return "-";
-        const timeNow = Math.floor(Date.now() / 1000);
-        // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
-        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
-        const multiplier = getMultiplier(Number(_duration || 0));
-        const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
-        return numeral((_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
-      }
-    }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
+      //     return numeral((Number(_wtfRewardsBalance) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format(
+      //       "0,0.[0000]"
+      //     );
+      //   }
+      //   if (locked) {
+      //     if (!expiryTimestamp) return "-";
+      //     let total = 0;
+
+      //     //calculate lockingWTF with extended duration
+      //     if (duration) {
+      //       const multiplier2 = getMultiplier(Number(duration || 0));
+      //       const _balanceInput2 = Number(lockingWTF);
+      //       console.log("lockingWTF,", lockingWTF, duration, multiplier2);
+      //       console.log((_balanceInput2 * duration * multiplier2) / 10000 / MAX_LOCK_TIME);
+      //       total += (1 * duration * multiplier2) / 10000 / MAX_LOCK_TIME;
+      //     }
+      //     const timeNow = Math.floor(Date.now() / 1000);
+      //     const _duration =
+      //       !duration || duration === 0
+      //         ? Number(expiryTimestamp) - Number(timeNow)
+      //         : Number(expiryTimestamp) - Number(timeNow) + duration;
+      //     const multiplier = getMultiplier(Number(_duration || 0));
+      //     const _balanceInput = Number(_wtfRewardsBalance);
+      //     console.log("_balanceInput,", _balanceInput, _duration, multiplier);
+      //     total += (1 * _duration * multiplier) / 10000 / MAX_LOCK_TIME;
+      //     return numeral(total).format("0,0.[0000]");
+      //   }
+      // }
+      // if (!locked) {
+      //   if (balanceInput === "0") return "-";
+      //   if (!duration) return "-";
+      //   const multiplier = getMultiplier(Number(duration || 0));
+
+      //   return numeral((Number(balanceInput) * duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
+      // }
+      // if (locked) {
+      //   if (balanceInput === "0" && !duration) return "-";
+      //   const timeNow = Math.floor(Date.now() / 1000);
+      //   // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
+      //   const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+      //   const multiplier = getMultiplier(Number(_duration || 0));
+      //   const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
+      //   return numeral((_balanceInput * _duration * multiplier) / 10000 / MAX_LOCK_TIME).format("0,0.[0000]");
+      // }
+    }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked, receivedVeWTF]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;

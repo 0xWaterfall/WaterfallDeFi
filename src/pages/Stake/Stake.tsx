@@ -497,6 +497,21 @@ const Stake = memo<TProps>(({ intl }) => {
   const _VeWTFTotalSupply = numeral(VeWTFTotalSupply).value() || 0;
   const VeWTFRatio =
     VeWTFTotalSupply && VeWTFBalance ? numeral((_VeWTFBalance / _VeWTFTotalSupply) * 100).format("0,0.[0000]") : "-";
+  const VeWTFRatioPercentage = VeWTFTotalSupply && VeWTFBalance ? _VeWTFBalance / _VeWTFTotalSupply : 0;
+  console.log("VeWTFRatioPercentage", VeWTFRatioPercentage);
+
+  const currentAPR = useMemo(() => {
+    if (!rewardPerBlock) return "";
+    return (
+      numeral(
+        new BigNumber(VeWTFRatioPercentage)
+          .times(rewardPerBlock)
+          .times(20 * 60 * 24 * 365 * 100)
+          .dividedBy(lockingWTF)
+          .toString()
+      ).format("0,0.[00]") + "%"
+    );
+  }, [VeWTFRatioPercentage, rewardPerBlock]);
   // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
@@ -611,30 +626,10 @@ const Stake = memo<TProps>(({ intl }) => {
                   %
                 </span>
               </section>
-              {/* <section>
+              <section>
                 <span>{intl.formatMessage({ defaultMessage: "Current APR" })}:</span>
-                <span>
-                  {expiryTimestamp &&
-                    expiryTimestamp !== "0" &&
-                    dayjs.unix(Number(expiryTimestamp)).format("YYYY-MM-DD HH:mm:ss")}
-                </span>
-                {expiryTimestamp && expiryTimestamp !== "0" && (
-                  <Countdown
-                    date={Number(expiryTimestamp) * 1000}
-                    renderer={({ days, hours, minutes, seconds, completed }) => {
-                      return (
-                        <span>
-                          {!completed && (
-                            <>
-                              {days}D {hours}H {minutes}M {seconds}S
-                            </>
-                          )}
-                        </span>
-                      );
-                    }}
-                  />
-                )}
-              </section> */}
+                <span>{currentAPR && currentAPR}</span>
+              </section>
               <section>
                 <span>{intl.formatMessage({ defaultMessage: "Expire date" })}:</span>
                 <span>

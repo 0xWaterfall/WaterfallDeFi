@@ -104,7 +104,6 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const _investHistoryResult = subgraphResult && subgraphResult.length > 0 ? [...subgraphResult] : [];
   for (let marketIdx = 0; marketIdx < _investHistoryResult.length; marketIdx++) {
     const _subgraphResultMarket = subgraphResult[marketIdx];
-    console.log(_subgraphResultMarket);
     if (!_subgraphResultMarket) continue;
     const _market = markets[marketIdx];
     const { userInvests: _userInvests, trancheCycles } = _subgraphResultMarket;
@@ -116,77 +115,84 @@ const SparePositions = memo<TProps>(({ intl }) => {
       return true;
     });
 
+    let _cycle;
+    const _MCprincipals: string[][] = [];
+
     if (_position) {
-      for (let i = 0; i < _position.length; i++) {
-        //single currency and multicurrency cycle
-        const _cycle = new BigNumber(_position[i][0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
+      //single currency
+      if (!_market.isMulticurrency) {
+        for (let i = 0; i < _position.length; i++) {
+          //single currency cycle
+          _cycle = new BigNumber(_position[i][0]._hex).toString();
 
-        //single currency, i = individual tranche
-        const _principal = !_market?.isMulticurrency
-          ? numeral(new BigNumber(_position[i][1]._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[0000]")
-          : "";
+          //single currency, i = individual tranche
+          const _principal = !_market?.isMulticurrency
+            ? numeral(new BigNumber(_position[i][1]._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[0000]")
+            : "";
 
-        const _MCprincipals: string[][] = [];
+          if (
+            _cycle == _market?.cycle &&
+            (_market?.status === PORTFOLIO_STATUS.PENDING || _market?.status === PORTFOLIO_STATUS.ACTIVE)
+          ) {
+            userInvests = [
+              {
+                capital: "0",
+                cycle: Number(_market?.cycle),
+                harvestAt: 0,
+                id: "",
+                investAt: 0,
+                owner: "",
+                principal: _principal,
+                tranche: i,
+                interest: "0",
+                earningsAPY: "NaN"
+              },
+              ...userInvests
+            ];
+          }
+        }
+      } else {
+        //multicurrency
+        _cycle = new BigNumber(_position[0][0]._hex).toString();
+
         //multicurrency, j = individual tranche
         //assume three tranches for now
-        if (_market?.isMulticurrency) {
-          for (let j = 0; j < 3; j++) {
-            _MCprincipals.push(
-              _market.depositAssetAddresses.map((a, tokenIdx) =>
-                numeral(
-                  new BigNumber(_position[j + 1 + tokenIdx * 3][0]._hex).dividedBy(BIG_TEN.pow(18)).toString()
-                ).format("0,0.[0000]")
-              )
-            );
-          }
+        for (let j = 0; j < 3; j++) {
+          _MCprincipals.push(
+            _market.depositAssetAddresses.map((a, tokenIdx) =>
+              numeral(
+                new BigNumber(_position[j + 1 + tokenIdx * 3][0]._hex).dividedBy(BIG_TEN.pow(18)).toString()
+              ).format("0,0.[0000]")
+            )
+          );
         }
         if (
           _cycle == _market?.cycle &&
           (_market?.status === PORTFOLIO_STATUS.PENDING || _market?.status === PORTFOLIO_STATUS.ACTIVE)
         ) {
-          userInvests = !_market?.isMulticurrency
-            ? [
-                {
-                  capital: "0",
-                  cycle: Number(_market?.cycle),
-                  harvestAt: 0,
-                  id: "",
-                  investAt: 0,
-                  owner: "",
-                  principal: _principal,
-                  tranche: i,
-                  interest: "0",
-                  earningsAPY: "NaN"
-                },
-                ...userInvests
-              ]
-            : [
-                ..._MCprincipals.map((p, ti) => {
-                  return {
-                    capital: "0",
-                    cycle: Number(_market?.cycle),
-                    harvestAt: 0,
-                    id: "",
-                    investAt: 0,
-                    owner: "",
-                    principal: null,
-                    MCprincipal: p,
-                    tranche: ti,
-                    interest: "0",
-                    earningsAPY: "NaN"
-                  };
-                }),
-                ...userInvests
-              ];
-          console.log(userInvests);
+          userInvests = [
+            ..._MCprincipals.map((p, ti) => {
+              return {
+                capital: "0",
+                cycle: Number(_market?.cycle),
+                harvestAt: 0,
+                id: "",
+                investAt: 0,
+                owner: "",
+                principal: null,
+                MCprincipal: p,
+                tranche: ti,
+                interest: "0",
+                earningsAPY: "NaN"
+              };
+            }),
+            ...userInvests
+          ];
         }
-        _investHistoryResult[marketIdx].userInvests = userInvests;
       }
     }
+    _investHistoryResult[marketIdx].userInvests = userInvests;
   }
-
-  console.log("finished");
-  console.log(_investHistoryResult);
 
   const TYPES: { name: string; value: IType; status: number }[] = [
     { name: intl.formatMessage({ defaultMessage: "All" }), value: "ALL", status: -1 },
@@ -289,7 +295,9 @@ const SparePositions = memo<TProps>(({ intl }) => {
               <Union />
             </Tooltip>
           </TableHeaderColumn>
-          <TableHeaderColumn minWidth={130}>{intl.formatMessage({ defaultMessage: "Principal" })}</TableHeaderColumn>
+          <TableHeaderColumn minWidth={130}>
+            <div css={{ paddingLeft: 17 }}>{intl.formatMessage({ defaultMessage: "Principal" })}</div>
+          </TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
           <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Yield" })}</TableHeaderColumn>
           <TableHeaderColumn></TableHeaderColumn>

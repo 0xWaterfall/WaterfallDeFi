@@ -161,6 +161,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
 
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
   // console.log(+trancheCycle?.startAt + +Number(market?.duration));
+
   return (
     <Wrapper>
       <TableRowWrapper
@@ -173,7 +174,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           css={{ flexWrap: "wrap", alignContent: "center" }}
         >
           {market?.portfolio.split(" ").map((w, i) => (
-            <span key={i} css={{ marginBottom: 5 }}>
+            <span key={i} css={{ margin: "0 0 2px 5px" }}>
               {w}
             </span>
           ))}
@@ -233,20 +234,24 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             </div>
           </APRWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={130} content={intl.formatMessage({ defaultMessage: "Principal" })}>
-          {/* {market?.isMulticurrency ? ( */}
-          <span>
-            {userInvest.principal}
-            {market?.assets}
-          </span>
-          {/* ) : (
-            userInvest.MCprincipal?.map((p, i) => (
-              <span key={i}>
-                {p}
+        <TableColumnWrapper
+          minWidth={130}
+          content={intl.formatMessage({ defaultMessage: "Principal" })}
+          css={{ flexDirection: "column", alignContent: "center", justifyContent: "center" }}
+        >
+          {!market?.isMulticurrency ? (
+            <span>
+              {userInvest.principal + " "}
+              {market?.assets}
+            </span>
+          ) : userInvest.MCprincipal ? (
+            userInvest.MCprincipal.map((p, i) => (
+              <span key={i} css={{ marginBottom: 5 }}>
+                {p + " "}
                 {market?.assets[i]}
               </span>
             ))
-          )} */}
+          ) : null}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
           {trancheCycle?.state === 0 && <Tag color="yellow" value="Pending"></Tag>}

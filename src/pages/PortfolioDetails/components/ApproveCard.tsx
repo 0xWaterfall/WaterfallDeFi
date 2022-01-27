@@ -176,10 +176,11 @@ const ApproveCard = memo<TProps>(
     );
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
-    const multicurrencyBalance =
-      isRe === undefined
+    const multicurrencyBalance = data.isMulticurrency
+      ? isRe === undefined
         ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
-        : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]");
+        : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
+      : "";
     const notes = [
       intl.formatMessage({
         defaultMessage:

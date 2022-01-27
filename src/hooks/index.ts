@@ -341,24 +341,34 @@ export const usePositions = (marketId: string | undefined) => {
                 params: [account, 2]
               }
             ]
-          : [
+          : [];
+        if (MarketList[i].isMulticurrency) {
+          calls.push({
+            address: MarketList[i].address,
+            name: "userCycle",
+            params: [account]
+          });
+          MarketList[i].depositAssetAddresses.forEach((a) => {
+            calls.push(
               {
                 address: MarketList[i].address,
                 name: "userInvest",
-                params: [account, 0, MarketList[i].depositAssetAddresses[0]]
+                params: [account, 0, a]
               },
               {
                 address: MarketList[i].address,
                 name: "userInvest",
-                params: [account, 1, MarketList[i].depositAssetAddresses[0]]
+                params: [account, 1, a]
               },
               {
                 address: MarketList[i].address,
                 name: "userInvest",
-                params: [account, 2, MarketList[i].depositAssetAddresses[0]]
+                params: [account, 2, a]
               }
-            ];
-        console.log(calls);
+            );
+          });
+        }
+
         const userInvest = await multicall(MarketList[i].abi, calls);
         // _result.push(userInvest);
         _result[i] = userInvest;

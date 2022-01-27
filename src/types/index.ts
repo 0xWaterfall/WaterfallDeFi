@@ -110,4 +110,5 @@ export type UserInvest = {
   tranche: number;
   interest: string;
   earningsAPY: string;
+  MCprincipal?: string[];
 };

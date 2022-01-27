@@ -168,13 +168,27 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           setFold((fold) => !fold);
         }}
       >
-        <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}>
-          {market?.portfolio}
+        <TableColumnWrapper
+          content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}
+          css={{ flexWrap: "wrap", alignContent: "center" }}
+        >
+          {market?.portfolio.split(" ").map((w, i) => (
+            <span key={i} css={{ marginBottom: 5 }}>
+              {w}
+            </span>
+          ))}
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={60} content={intl.formatMessage({ defaultMessage: "Asset" })}>
-          {market?.assets}
+          <div>
+            {market?.assets.map((a) => (
+              <div key={a} css={{ marginBottom: 5 }}>
+                {a}
+                <br />
+              </div>
+            ))}
+          </div>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={200} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
+        <TableColumnWrapper minWidth={180} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
           <CycleWrapper>
             {trancheCycle && trancheCycle?.state !== 0 ? (
               <>
@@ -196,12 +210,12 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             )}
           </CycleWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={80} content={intl.formatMessage({ defaultMessage: "Tranche" })}>
+        <TableColumnWrapper minWidth={60} content={intl.formatMessage({ defaultMessage: "Tranche" })}>
           <div css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             {tranchesDisplayText[userInvest.tranche]}
           </div>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={160} content={intl.formatMessage({ defaultMessage: "APR" })}>
+        <TableColumnWrapper minWidth={140} content={intl.formatMessage({ defaultMessage: "APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             <div>
               <section>
@@ -219,8 +233,20 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             </div>
           </APRWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={150} content={intl.formatMessage({ defaultMessage: "Principal" })}>
-          {userInvest.principal} {market?.assets}
+        <TableColumnWrapper minWidth={130} content={intl.formatMessage({ defaultMessage: "Principal" })}>
+          {/* {market?.isMulticurrency ? ( */}
+          <span>
+            {userInvest.principal}
+            {market?.assets}
+          </span>
+          {/* ) : (
+            userInvest.MCprincipal?.map((p, i) => (
+              <span key={i}>
+                {p}
+                {market?.assets[i]}
+              </span>
+            ))
+          )} */}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
           {trancheCycle?.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
@@ -240,7 +266,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {/* {trancheCycle?.rate} */}
         </TableColumnWrapper>
         <TableColumnWrapper>
-          <CaretDownWrapper>
+          <CaretDownWrapper css={{ marginLeft: 50 }}>
             <CaretDown
               css={{
                 transition: "transform 0.3s",

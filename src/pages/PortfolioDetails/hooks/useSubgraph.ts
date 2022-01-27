@@ -150,7 +150,10 @@ export const useHistoryQuery2 = async (
     const _subgraphResult = subgraphResult[marketIdx];
     if (!_subgraphResult) continue;
     const _market = markets[marketIdx];
-    const _duration = _market.duration || "0";
+
+    //all markets appear to have duration 0
+    // const _duration = _market.duration || "0";
+    const _duration = "0";
 
     const _userInvests: UserInvest[] = [];
     const _trancheCycles: { [key: string]: TrancheCycle } = {};

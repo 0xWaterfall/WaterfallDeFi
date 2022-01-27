@@ -323,43 +323,42 @@ export const usePositions = (marketId: string | undefined) => {
       const _result = [];
       for (let i = 0; i < MarketList.length; i++) {
         if (marketId && parseInt(marketId) !== i) continue;
-        const _marketAddress = MarketList[i].address;
-        const calls =
-          MarketList[i].isMulticurrency === false //!MarketList[i].isMulticurrency won't work because can be undefined while hook retrieving market
-            ? [
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 0]
-                },
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 1]
-                },
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 2]
-                }
-              ]
-            : [
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 0, MarketList[i].depositAssetAddresses[0]]
-                },
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 1, MarketList[i].depositAssetAddresses[0]]
-                },
-                {
-                  address: _marketAddress,
-                  name: "userInvest",
-                  params: [account, 2, MarketList[i].depositAssetAddresses[0]]
-                }
-              ];
+        const calls = !MarketList[i].isMulticurrency
+          ? [
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 0]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 1]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 2]
+              }
+            ]
+          : [
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 0, MarketList[i].depositAssetAddresses[0]]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 1, MarketList[i].depositAssetAddresses[0]]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 2, MarketList[i].depositAssetAddresses[0]]
+              }
+            ];
+        console.log(calls);
         const userInvest = await multicall(MarketList[i].abi, calls);
         // _result.push(userInvest);
         _result[i] = userInvest;

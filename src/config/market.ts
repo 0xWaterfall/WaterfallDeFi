@@ -93,7 +93,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: TranchesAddressOracle2[NETWORK],
-    abi: MC_TranchesAbi,
+    abi: TranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MasterChefOracleAddress2[NETWORK],
     pools: [],

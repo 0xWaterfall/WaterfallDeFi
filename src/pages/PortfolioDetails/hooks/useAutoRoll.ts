@@ -29,7 +29,6 @@ const useAutoRoll = (trancheMasterAddress: string) => {
         const result = await autoRoll(contract, autoState);
         return result;
       } catch (e) {
-        //inside handleChangeAutoRoll
         console.log(e);
       }
     },

@@ -206,7 +206,7 @@ const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDep
               ) : null}
             </div>
             <Select
-              defaultValue={"BUSD"}
+              value={selectedDepositAsset}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                 setSelectedDepositAsset(e.toString());
               }}

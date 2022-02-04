@@ -135,7 +135,7 @@ const SparePositionFold = memo<TProps>(
 
     const [redeemLoading, setRedeemLoading] = useState(false);
     const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
-    const { onWithdraw } = useWithdraw(trancheMasterAddress);
+    const { onWithdraw } = useWithdraw(trancheMasterAddress, isMulticurrency);
     const { balance, invested } = useTrancheBalance(trancheMasterAddress);
     //TODO: handle tracking ALL multicurrency deposits for a specific held MC falls position
     // !isMulticurrency ? useTrancheBalance(trancheMasterAddress) : useAllMulticurrencyTrancheBalance(trancheMasterAddress, assets.length);

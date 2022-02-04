@@ -1,14 +1,13 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useEffect, useCallback } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Switch } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
 import { compareNum, formatNumberSeparator } from "utils/formatNumbers";
-import { useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
@@ -151,6 +150,7 @@ const ApproveCard = memo<TProps>(
     const [depositLoading, setDepositLoading] = useState(false);
     const [approveLoading, setApproveLoading] = useState(false);
     const [autoRoll, setAutoRoll] = useState<boolean>(false);
+    const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
     const { account } = useWeb3React<Web3Provider>();
     const depositAddress = !data.isMulticurrency
       ? data.depositAssetAddress
@@ -203,16 +203,19 @@ const ApproveCard = memo<TProps>(
       };
       if (account) checkApproved(account);
     }, [account]);
+
     useEffect(() => {
       setBalanceInput("0");
     }, [enabled]);
 
-    // update contract-read state after update to frontend state
     useEffect(() => {
       if (data.autorollImplemented) {
-        getAutoRoll().then((res) => setAutoRoll(res));
+        getAutoRoll().then((res) => {
+          setAutoRoll(res);
+          setAutoRollPending(false);
+        });
       }
-    }, [autoRoll]);
+    }, []);
 
     const handleApprove = async () => {
       setApproveLoading(true);
@@ -395,15 +398,22 @@ const ApproveCard = memo<TProps>(
               Auto Rolling
             </span>
             <div css={{ paddingTop: 2.5 }}>
-              {autoRoll !== null ? (
+              {!autoRollPending ? (
                 <Switch
                   checked={autoRoll}
                   onChange={() => {
-                    changeAutoRoll(!autoRoll);
-                    setAutoRoll(!autoRoll);
+                    setAutoRollPending(true);
+                    changeAutoRoll(!autoRoll).then((res) => {
+                      getAutoRoll().then((res2) => {
+                        setAutoRoll(res2);
+                        setAutoRollPending(false);
+                      });
+                    });
                   }}
                 />
-              ) : null}
+              ) : (
+                <div>Transaction Pending...</div>
+              )}
             </div>
           </div>
         ) : null}

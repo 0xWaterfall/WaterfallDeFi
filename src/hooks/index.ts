@@ -132,6 +132,7 @@ export const useTrancheBalance = (trancheMasterAddress: string) => {
   // const [invested, setInvested] = useState(BIG_ZERO);
   const [result, setResult] = useState({
     balance: "",
+    MCbalance: null,
     invested: ""
   });
   const { account } = useWeb3React<Web3Provider>();
@@ -146,6 +147,7 @@ export const useTrancheBalance = (trancheMasterAddress: string) => {
 
         setResult({
           balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
+          MCbalance: null,
           invested: result.invested ? new BigNumber(result.invested?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0"
         });
       } catch (e) {
@@ -175,12 +177,13 @@ export const useMulticurrencyTrancheBalance = (
   currencyIdx: number,
   tokenCount: number
 ) => {
-  const preloadedArray = [];
+  const preloadedArray: string[] = [];
   for (let index = 0; index < tokenCount; index++) {
     preloadedArray.push("");
   }
-  const [result, setResult] = useState<{ balance: string[]; invested: string[] }>({
-    balance: preloadedArray,
+  const [result, setResult] = useState<{ balance: string; MCbalance: string[]; invested: string[] }>({
+    balance: preloadedArray[0],
+    MCbalance: preloadedArray,
     invested: preloadedArray
   });
   const { account } = useWeb3React<Web3Provider>();
@@ -190,8 +193,10 @@ export const useMulticurrencyTrancheBalance = (
     try {
       //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
       const balanceOf = await trancheMasterContract.balanceOf(account);
+
       setResult({
-        balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
+        balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())[currencyIdx],
+        MCbalance: balanceOf[0].map((b: any) => b._hex),
         invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
       });
     } catch (e) {
@@ -201,8 +206,10 @@ export const useMulticurrencyTrancheBalance = (
   useEffect(() => {
     if (account) fetchBalance();
   }, [fastRefresh, account]);
+
   return {
-    balance: result.balance[currencyIdx],
+    balance: result.balance,
+    MCbalance: result.MCbalance,
     fetchBalance: fetchBalance,
     invested: result.invested[currencyIdx]
   };

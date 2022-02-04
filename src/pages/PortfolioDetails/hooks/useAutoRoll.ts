@@ -25,8 +25,13 @@ const useAutoRoll = (trancheMasterAddress: string) => {
 
   const handleChangeAutoRoll = useCallback(
     async (autoState: boolean) => {
-      const result = await autoRoll(contract, autoState);
-      return result;
+      try {
+        const result = await autoRoll(contract, autoState);
+        return result;
+      } catch (e) {
+        //inside handleChangeAutoRoll
+        console.log(e);
+      }
     },
     [account, contract]
   );

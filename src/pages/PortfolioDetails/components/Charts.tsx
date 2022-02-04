@@ -113,13 +113,14 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
   const [showRedeposit, setShowRedeposit] = useState(false);
   const [showClaim, setShowClaim] = useState(false);
 
-  const { onWithdraw } = useWithdraw(data.address);
+  const { onWithdraw } = useWithdraw(data.address, data.isMulticurrency);
 
   const { onClaimAll } = useClaimAll(data.masterChefAddress);
 
-  const { balance, invested } = !data.isMulticurrency
+  const { balance, MCbalance, invested } = !data.isMulticurrency
     ? useTrancheBalance(data.address)
     : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
+
   const { account } = useWeb3React<Web3Provider>();
 
   // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
@@ -172,7 +173,10 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
     );
     try {
       if (!balance) return;
-      await onWithdraw(formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))));
+      await onWithdraw(
+        formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))),
+        MCbalance ? MCbalance : []
+      );
       successNotification("Withdraw All Success", "");
     } catch (e) {
       console.error(e);
@@ -203,12 +207,23 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
           <div>
-            {balance ? numeral(balance.toString()).format("0,0.[0000]") : "--"} {selectedDepositAsset}
+            {!data.isMulticurrency
+              ? balance
+                ? numeral(balance).format("0,0.[0000]")
+                : "--"
+              : MCbalance
+              ? numeral(
+                  new BigNumber(MCbalance[data.assets.indexOf(selectedDepositAsset)]).dividedBy(BIG_TEN.pow(18))
+                ).format("0,0.[00000]")
+              : "--"}{" "}
+            {selectedDepositAsset}
           </div>
           <div>
             <ButtonWrapper
               type="default"
-              onClick={withdrawAll}
+              onClick={() => {
+                withdrawAll();
+              }}
               loading={withdrawAllLoading}
               disabled={!account || !+balance}
               css={{ marginRight: 17 }}

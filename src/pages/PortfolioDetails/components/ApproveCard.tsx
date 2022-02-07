@@ -118,12 +118,12 @@ type TProps = WrappedComponentProps & {
   assets: string[];
   remaining: string;
   remainingExact: string;
-  remainingExactMulticurrency: string;
   enabled: boolean;
   data: Market;
   selectTrancheIdx?: number;
   isSoldOut: boolean;
   selectTranche: Tranche | undefined;
+  depositMultipleSimultaneous: boolean;
 };
 
 const ApproveCard = memo<TProps>(
@@ -134,12 +134,12 @@ const ApproveCard = memo<TProps>(
     assets,
     remaining,
     remainingExact,
-    remainingExactMulticurrency,
     enabled,
     data,
     selectTrancheIdx,
     isSoldOut,
-    selectTranche
+    selectTranche,
+    depositMultipleSimultaneous
   }) => {
     const { tags } = useTheme();
     //autoroll contract hook must come before autoroll state hook
@@ -247,16 +247,16 @@ const ApproveCard = memo<TProps>(
       }
     };
     const validateText = useMemo(() => {
-      // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      if (compareNum(_balanceInput, _remaining, true)) {
+      const _balance = !data.isMulticurrency ? balance : multicurrencyBalance;
+      if (compareNum(_balanceInput, _balance, true)) {
         return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
       }
       if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
       }
-    }, [balance, multicurrencyBalance, remaining, balanceInput]);
+    }, [balance, multicurrencyBalance, remaining, remainingExact, balanceInput]);
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
@@ -305,13 +305,13 @@ const ApproveCard = memo<TProps>(
       }
     };
     const handleMaxInput = () => {
-      const _balance = actualBalanceWallet.replace(/\,/g, "");
-      const _remaining = data.isMulticurrency
-        ? remainingExactMulticurrency.replace(/\,/g, "")
-        : remainingExact.replace(/\,/g, "");
+      const _balance = !data.isMulticurrency
+        ? actualBalanceWallet.replace(/\,/g, "")
+        : multicurrencyBalance.replace(/\,/g, "");
+      const _remaining = remainingExact.replace(/\,/g, "");
 
       if (compareNum(_remaining, _balance)) {
-        if (_balance) setBalanceInput(actualBalanceWallet);
+        if (_balance) setBalanceInput(!data.isMulticurrency ? actualBalanceWallet : multicurrencyBalance);
       } else if (compareNum(_balance, _remaining, true)) {
         if (_remaining) setBalanceInput(_remaining);
       }
@@ -341,44 +341,81 @@ const ApproveCard = memo<TProps>(
     };
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
-        {/* {!enabled && <BlockDiv />} */}
-        {/* {isSoldOut && <BlockDiv />} */}
-        <RowDiv>
-          <div>
-            {isRe
-              ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
-              : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
-            :
-          </div>
-          <div>
-            {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)} {selectedDepositAsset}
-          </div>
-        </RowDiv>
-        <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
-          <div>
-            {formatNumberSeparator(remaining)} {selectedDepositAsset}
-          </div>
-        </RowDiv>
-        <Separator />
-        <RowDiv>
-          <div>{selectedDepositAsset}</div>
-        </RowDiv>
+        {!depositMultipleSimultaneous ? (
+          <>
+            <RowDiv>
+              <div>
+                {isRe
+                  ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+                  : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+                :
+              </div>
+              <div>
+                {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)} {selectedDepositAsset}
+              </div>
+            </RowDiv>
+            <RowDiv>
+              <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
+              <div>
+                {formatNumberSeparator(remaining)} {selectedDepositAsset}
+              </div>
+            </RowDiv>
+            <Separator />
+            <RowDiv>
+              <div>{selectedDepositAsset}</div>
+            </RowDiv>
+            <div>
+              <Input
+                // type="number"
+                style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
+                placeholder=""
+                // step={0.1}
+                // min={0}
+                value={balanceInput}
+                onChange={handleInputChange}
+                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
+                disabled={!enabled || isSoldOut}
+              />
+            </div>
+            <ValidateText>{!depositLoading && validateText}</ValidateText>
+          </>
+        ) : null}
 
-        <div>
-          <Input
-            // type="number"
-            style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
-            placeholder=""
-            // step={0.1}
-            // min={0}
-            value={balanceInput}
-            onChange={handleInputChange}
-            suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-            disabled={!enabled || isSoldOut}
-          />
-        </div>
-        <ValidateText>{!depositLoading && validateText}</ValidateText>
+        {data.isMulticurrency && depositMultipleSimultaneous
+          ? data.assets.map((asset, index) => (
+              <div key={asset}>
+                <RowDiv>
+                  <div>
+                    {isRe
+                      ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+                      : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+                    :
+                  </div>
+                  <div>
+                    {formatNumberSeparator(numeral(multicurrencyBalances[index].balance).format("0,0.[0000]"))} {asset}
+                  </div>
+                </RowDiv>
+                <RowDiv>
+                  <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
+                  <div>
+                    {/* xyzzy */}
+                    {formatNumberSeparator(remaining)} {selectedDepositAsset}
+                  </div>
+                </RowDiv>
+                <RowDiv>
+                  <div>{asset}</div>
+                </RowDiv>
+                <Input
+                  style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
+                  placeholder=""
+                  value={balanceInput}
+                  onChange={handleInputChange}
+                  suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
+                  disabled={!enabled || isSoldOut}
+                />
+              </div>
+            ))
+          : null}
 
         {selectTranche && (
           <ImportantNotes>

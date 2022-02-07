@@ -22,6 +22,7 @@ const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
   const market = useSelectedMarket();
   const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
+  const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
   return (
     <PortfolioDetailsWrapper>
       {market && (
@@ -30,12 +31,20 @@ const PortfolioDetails = memo<TProps>(() => {
             data={market}
             selectedDepositAsset={selectedDepositAsset}
             setSelectedDepositAsset={setSelectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
-          <Charts data={market} selectedDepositAsset={selectedDepositAsset} />
+          <Charts
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+          />
           <ContentCD
             data={market}
             selectedDepositAsset={selectedDepositAsset}
             setSelectedDepositAsset={setSelectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
         </>
       )}

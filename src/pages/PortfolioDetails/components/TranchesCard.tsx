@@ -32,6 +32,7 @@ type TProps = WrappedComponentProps & {
   selected: boolean;
   data: Market;
   allocPoint: string;
+  remaining: string;
 };
 
 type ProgressBarProps = {
@@ -167,7 +168,8 @@ const TranchesCard = memo<TProps>(
     selected,
     data,
     allocPoint,
-    trancheIndex
+    trancheIndex,
+    remaining
   }) => {
     const { tags, primary, gray } = useTheme();
     const Types = {
@@ -227,7 +229,7 @@ const TranchesCard = memo<TProps>(
               TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {selectedDepositAsset}
             </Text3>
             <Text4>
-              Remaining: {getRemaining(tranche?.target, tranche?.principal)} {selectedDepositAsset}
+              Remaining: {remaining} {selectedDepositAsset}
             </Text4>
           </StatusDiv>
           <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />

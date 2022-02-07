@@ -20,6 +20,8 @@ type TProps = WrappedComponentProps & {
   data: Market;
   selectedDepositAsset: string;
   setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  depositMultipleSimultaneous: boolean;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const NextCycle = styled.div`
@@ -105,133 +107,170 @@ const RemainingDepositableOuter = styled.div`
   margin: 10px 20px 0 6px;
 `;
 
-const Deposit = memo<TProps>(({ intl, data, selectedDepositAsset, setSelectedDepositAsset }) => {
-  const deposited: BigNumber[] = [];
+const CoinRow = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  transform: translateX(-2.5px);
+  & div:not(:last-child) {
+    transform: translateX(2.5px);
+  }
+`;
 
-  //TODO: make the code more robust by using this hook higher up the tree, and dynamically handle multicurrency instead of relying on markets.ts config object
-  const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
-    ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
-    : [];
+const Deposit = memo<TProps>(
+  ({
+    intl,
+    data,
+    selectedDepositAsset,
+    setSelectedDepositAsset,
+    depositMultipleSimultaneous,
+    setDepositMultipleSimultaneous
+  }) => {
+    const deposited: BigNumber[] = [];
 
-  const trancheInvest = data.isMulticurrency
-    ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
-    : [];
+    //TODO: make the code more robust by using this hook higher up the tree, possibly dynamically handle multicurrency instead of relying on markets.ts config object
+    const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
+      ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
+      : [];
 
-  data.assets.forEach((a, i) =>
-    deposited.push(
-      trancheInvest.reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
-    )
-  );
+    const trancheInvest = data.isMulticurrency
+      ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
+      : [];
 
-  const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
-
-  const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
-    deposited[data.assets.indexOf(selectedDepositAsset)]
-  );
-
-  const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
-    .dividedBy(BIG_TEN.pow(16))
-    .dividedBy(
-      new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
+    data.assets.forEach((a, i) =>
+      deposited.push(
+        trancheInvest.reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
+      )
     );
 
-  const RemainingDepositableInner = styled.div`
+    const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
+
+    const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
+      deposited[data.assets.indexOf(selectedDepositAsset)]
+    );
+
+    const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
+      .dividedBy(BIG_TEN.pow(16))
+      .dividedBy(
+        new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
+      );
+
+    const RemainingDepositableInner = styled.div`
     width: ${width + "%;"}
     height: 6px;
     background-color: #0066FF;
     border-radius: 4px;
   `;
-  const marketData = data;
-  const handleReminder = (startTime: Number, endTime: Number) => {
-    if (!window || !startTime || !endTime) return;
-    const start = moment.unix(Number(startTime)).format("YYYYMMDDTHHmm");
-    const end = moment.unix(Number(endTime)).format("YYYYMMDDTHHmm");
-    window?.open(`https://calendar.google.com/calendar/u/0/r/eventedit?dates=${start}/${end}&text=Waterfall`, "_blank");
-  };
-  return (
-    <div css={{ padding: "0 20px" }}>
-      {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
-        <NextCycleWrapper>
-          <Mountain />
-          <NextCycle>
-            {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
-            <Countdown
-              date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
-              renderer={({ days, hours, minutes, seconds, completed }) => {
-                return (
-                  <span>
-                    {!completed && (
-                      <>
-                        {days}D {hours}H {minutes}M {seconds}S
-                      </>
-                    )}
-                  </span>
-                );
-              }}
-            />
-          </NextCycle>
-          <ActiveCycle>
-            {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
-            {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
-          </ActiveCycle>
-          <ButtonWrapper
-            type="primary"
-            onClick={() =>
-              handleReminder(Number(data.actualStartAt), Number(data.actualStartAt) + Number(data.duration))
-            }
-          >
-            <AlarmImg />
-            {intl.formatMessage({ defaultMessage: "Remind me" })}
-          </ButtonWrapper>
-        </NextCycleWrapper>
-      ) : null}
-
-      <TopBar>
-        <StepBar>
-          <Step>1</Step>
-          <StepName>{intl.formatMessage({ defaultMessage: "Choose Tranche" })}</StepName>
-          <Line />
-          <Step>2</Step>
-          <StepName>{intl.formatMessage({ defaultMessage: "Deposit" })}</StepName>
-        </StepBar>
-        {data.isMulticurrency ? (
-          <SelectDepositAsset>
-            <div css={{ display: "flex", paddingTop: "3.5px" }}>
-              {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
-              <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
-              {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
-                <RemainingDepositableOuter>
-                  <RemainingDepositableInner />
-                </RemainingDepositableOuter>
-              ) : null}
-            </div>
-            <Select
-              value={selectedDepositAsset}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setSelectedDepositAsset(e.toString());
-              }}
+    const marketData = data;
+    const handleReminder = (startTime: Number, endTime: Number) => {
+      if (!window || !startTime || !endTime) return;
+      const start = moment.unix(Number(startTime)).format("YYYYMMDDTHHmm");
+      const end = moment.unix(Number(endTime)).format("YYYYMMDDTHHmm");
+      window?.open(
+        `https://calendar.google.com/calendar/u/0/r/eventedit?dates=${start}/${end}&text=Waterfall`,
+        "_blank"
+      );
+    };
+    return (
+      <div css={{ padding: "0 20px" }}>
+        {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
+          <NextCycleWrapper>
+            <Mountain />
+            <NextCycle>
+              {intl.formatMessage({ defaultMessage: "Next Cycle" })}:{" "}
+              <Countdown
+                date={(Number(data.duration) + Number(data.actualStartAt)) * 1000}
+                renderer={({ days, hours, minutes, seconds, completed }) => {
+                  return (
+                    <span>
+                      {!completed && (
+                        <>
+                          {days}D {hours}H {minutes}M {seconds}S
+                        </>
+                      )}
+                    </span>
+                  );
+                }}
+              />
+            </NextCycle>
+            <ActiveCycle>
+              {intl.formatMessage({ defaultMessage: "Active Cycle" })}: {formatTimestamp(data.actualStartAt)} -
+              {formatTimestamp(Number(data.actualStartAt) + Number(data.duration))}
+            </ActiveCycle>
+            <ButtonWrapper
+              type="primary"
+              onClick={() =>
+                handleReminder(Number(data.actualStartAt), Number(data.actualStartAt) + Number(data.duration))
+              }
             >
-              {marketData.assets.map((a, i) => (
-                <Option key={i} value={a}>
+              <AlarmImg />
+              {intl.formatMessage({ defaultMessage: "Remind me" })}
+            </ButtonWrapper>
+          </NextCycleWrapper>
+        ) : null}
+
+        <TopBar>
+          <StepBar>
+            <Step>1</Step>
+            <StepName>{intl.formatMessage({ defaultMessage: "Choose Tranche" })}</StepName>
+            <Line />
+            <Step>2</Step>
+            <StepName>{intl.formatMessage({ defaultMessage: "Deposit" })}</StepName>
+          </StepBar>
+          {data.isMulticurrency ? (
+            <SelectDepositAsset>
+              <div css={{ display: "flex", paddingTop: "3.5px" }}>
+                {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
+                <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
+                {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
+                  <RemainingDepositableOuter>
+                    <RemainingDepositableInner />
+                  </RemainingDepositableOuter>
+                ) : null}
+              </div>
+              <Select
+                value={depositMultipleSimultaneous ? "multi" : selectedDepositAsset}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  if (e.toString() !== "multi") {
+                    setDepositMultipleSimultaneous(false);
+                    setSelectedDepositAsset(e.toString());
+                  } else {
+                    setDepositMultipleSimultaneous(true);
+                  }
+                }}
+              >
+                {marketData.assets.map((a, i) => (
+                  <Option key={i} value={a}>
+                    <div css={{ display: "flex", alignItems: "center" }}>
+                      <Coin assetName={a} size={24} />
+                      <div css={{ paddingLeft: "5px" }}>{a}</div>
+                    </div>
+                  </Option>
+                ))}
+                <Option key="multi" value="multi">
                   <div css={{ display: "flex", alignItems: "center" }}>
-                    <Coin assetName={a} size={24} />
-                    <div css={{ paddingLeft: "5px" }}>{a}</div>
+                    <CoinRow>
+                      {marketData.assets.map((a, i) => (
+                        <Coin key={i} assetName={a} size={24} />
+                      ))}
+                    </CoinRow>
+                    <div css={{ paddingLeft: "5px" }}>Multiple</div>
                   </div>
                 </Option>
-              ))}
-            </Select>
-          </SelectDepositAsset>
-        ) : null}
-      </TopBar>
-      {marketData && (
-        <DepositItem
-          data={marketData}
-          selectedDepositAsset={selectedDepositAsset}
-          remainingDepositable={remainingDepositable}
-        />
-      )}
-    </div>
-  );
-});
+              </Select>
+            </SelectDepositAsset>
+          ) : null}
+        </TopBar>
+        {marketData && (
+          <DepositItem
+            data={marketData}
+            selectedDepositAsset={selectedDepositAsset}
+            remainingDepositable={remainingDepositable}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+          />
+        )}
+      </div>
+    );
+  }
+);
 
 export default injectIntl(Deposit);

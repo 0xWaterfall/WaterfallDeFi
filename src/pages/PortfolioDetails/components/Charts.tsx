@@ -105,9 +105,10 @@ const ButtonWrapper = styled(Button)`
 type TProps = WrappedComponentProps & {
   data: Market;
   selectedDepositAsset: string;
+  depositMultipleSimultaneous: boolean;
 };
 
-const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
+const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultipleSimultaneous }) => {
   const [claimRewardLoading, setClaimRewardLoading] = useState(false);
   const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
   const [showRedeposit, setShowRedeposit] = useState(false);
@@ -287,6 +288,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset }) => {
         selectedDepositAsset={selectedDepositAsset}
         onCancel={rollDepositPopup}
         balance={formatBalance(balance.toString())}
+        depositMultipleSimultaneous={depositMultipleSimultaneous}
       />
       <ClaimPopup
         visible={showClaim}

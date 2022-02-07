@@ -7,7 +7,13 @@ import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
 // import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
-import { compareNum, getRemaining, getRemaining2, getRemainingMulticurrency } from "utils/formatNumbers";
+import {
+  compareNum,
+  getRemaining,
+  getRemainingExact,
+  getRemainingExactMulticurrency,
+  getRemainingMulticurrency
+} from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
@@ -16,6 +22,7 @@ type TProps = WrappedComponentProps & {
   isRe?: boolean;
   redepositBalance?: string;
   remainingDepositable: BigNumber;
+  depositMultipleSimultaneous: boolean;
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
@@ -28,7 +35,7 @@ type Tranches = "Senior" | "Mezzanine" | "Junior";
 // `;
 
 const DepositItem = memo<TProps>(
-  ({ selectedDepositAsset, intl, isRe, data, redepositBalance, remainingDepositable }) => {
+  ({ selectedDepositAsset, intl, isRe, data, redepositBalance, remainingDepositable, depositMultipleSimultaneous }) => {
     // const { primary } = useTheme();
     const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
     const [marketData] = useState(data);
@@ -80,6 +87,15 @@ const DepositItem = memo<TProps>(
                   assets={data.assets}
                   selected={selectTrancheIdx === _i}
                   data={data}
+                  remaining={
+                    !data.isMulticurrency
+                      ? getRemaining(data.tranches[_i]?.target, data.tranches[_i]?.principal)
+                      : getRemainingMulticurrency(
+                          data.tranches[_i]?.target,
+                          data.tranches[_i]?.principal,
+                          remainingDepositable
+                        )
+                  }
                 />
               </div>
             );
@@ -91,28 +107,36 @@ const DepositItem = memo<TProps>(
           assets={data.assets}
           remaining={
             selectTrancheIdx !== undefined
-              ? getRemaining(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+              ? !data.isMulticurrency
+                ? getRemaining(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+                : getRemainingMulticurrency(
+                    data.tranches[selectTrancheIdx]?.target,
+                    data.tranches[selectTrancheIdx]?.principal,
+                    remainingDepositable
+                  )
               : "0"
           }
           remainingExact={
             selectTrancheIdx !== undefined
-              ? getRemaining2(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+              ? !data.isMulticurrency
+                ? getRemainingExact(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+                : getRemainingExactMulticurrency(
+                    data.tranches[selectTrancheIdx]?.target,
+                    data.tranches[selectTrancheIdx]?.principal,
+                    remainingDepositable
+                  )
               : "0"
           }
-          remainingExactMulticurrency={
-            selectTrancheIdx !== undefined && data.isMulticurrency
-              ? getRemainingMulticurrency(
-                  data.tranches[selectTrancheIdx]?.target,
-                  data.tranches[selectTrancheIdx]?.principal,
-                  remainingDepositable
-                )
-              : "0"
-          }
+          // remainingMultiSimultaneous={
+          //   selectTrancheIdx !== undefined && data.isMulticurrency ?
+          //    data.ass
+          // }
           enabled={selectTranche !== undefined}
           selectTrancheIdx={selectTrancheIdx}
           data={marketData}
           selectTranche={selectTranche}
           isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
+          depositMultipleSimultaneous={depositMultipleSimultaneous}
         />
       </div>
     );

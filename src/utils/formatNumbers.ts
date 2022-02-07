@@ -180,7 +180,25 @@ export const getRemaining = (target: string | undefined, principal: string | und
   return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
   // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
-export const getRemaining2 = (target: string | undefined, principal: string | undefined, decimals = 18) => {
+export const getRemainingMulticurrency = (
+  target: string | undefined,
+  principal: string | undefined,
+  remainingDepositable: BigNumber,
+  decimals = 18
+) => {
+  if (target === undefined) return "";
+  if (principal === undefined) return "";
+
+  const _target = new BigNumber(target);
+  const _principal = new BigNumber(principal);
+  const _remainingDepositable = remainingDepositable;
+
+  const remainingInTranche = _target.minus(_principal);
+  const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
+
+  return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
+};
+export const getRemainingExact = (target: string | undefined, principal: string | undefined, decimals = 18) => {
   if (target === undefined) return "";
   if (principal === undefined) return "";
 
@@ -194,7 +212,7 @@ export const getRemaining2 = (target: string | undefined, principal: string | un
   // return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
   // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
-export const getRemainingMulticurrency = (
+export const getRemainingExactMulticurrency = (
   target: string | undefined,
   principal: string | undefined,
   remainingDepositable: BigNumber,
@@ -205,7 +223,7 @@ export const getRemainingMulticurrency = (
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
-  const _remainingDepositable = remainingDepositable.dividedBy(BIG_TEN.pow(18));
+  const _remainingDepositable = remainingDepositable;
 
   const remainingInTranche = _target.minus(_principal);
   const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;

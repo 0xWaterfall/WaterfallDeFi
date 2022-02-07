@@ -137,21 +137,35 @@ const Deposit = memo<TProps>(
 
     data.assets.forEach((a, i) =>
       deposited.push(
-        trancheInvest.reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
+        trancheInvest
+          .reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
+          .dividedBy(BIG_TEN.pow(18))
       )
     );
 
-    const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
+    const maxDeposits = tokens.map((t) => Number(data.totalTranchesTarget) * Number(t.percent));
 
     const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
       deposited[data.assets.indexOf(selectedDepositAsset)]
     );
 
+    const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
+
+    // const returnWidth = (assetIndex: number) =>
+    //   new BigNumber(deposited[assetIndex])
+    //     .dividedBy(BIG_TEN.pow(16))
+    //     .dividedBy(
+    //       new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
+    //     );
+
+    // const width = returnWidth(data.assets.indexOf(selectedDepositAsset));
+
     const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
-      .dividedBy(BIG_TEN.pow(16))
       .dividedBy(
         new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
-      );
+      )
+      .multipliedBy(100)
+      .toString();
 
     const RemainingDepositableInner = styled.div`
     width: ${width + "%;"}
@@ -159,6 +173,7 @@ const Deposit = memo<TProps>(
     background-color: #0066FF;
     border-radius: 4px;
   `;
+
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {
       if (!window || !startTime || !endTime) return;
@@ -217,15 +232,29 @@ const Deposit = memo<TProps>(
           </StepBar>
           {data.isMulticurrency ? (
             <SelectDepositAsset>
-              <div css={{ display: "flex", paddingTop: "3.5px" }}>
-                {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
-                <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
-                {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
-                  <RemainingDepositableOuter>
-                    <RemainingDepositableInner />
-                  </RemainingDepositableOuter>
-                ) : null}
-              </div>
+              {!depositMultipleSimultaneous ? (
+                <div css={{ display: "flex", paddingTop: "3.5px" }}>
+                  {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
+                  <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
+                  {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
+                    <RemainingDepositableOuter>
+                      <RemainingDepositableInner />
+                    </RemainingDepositableOuter>
+                  ) : null}
+                </div>
+              ) : (
+                <div css={{ display: "flex", flexDirection: "column" }}>
+                  {data.assets.map((asset) => (
+                    <div key={asset} css={{ display: "flex", paddingTop: "3.5px" }}>
+                      <Coin assetName={asset} size={24} />
+                      <div css={{ padding: "2px 6px 0 6px" }}>{asset} Remaining</div>
+                      <RemainingDepositableOuter>
+                        <RemainingDepositableInner />
+                      </RemainingDepositableOuter>
+                    </div>
+                  ))}
+                </div>
+              )}
               <Select
                 value={depositMultipleSimultaneous ? "multi" : selectedDepositAsset}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -265,6 +294,7 @@ const Deposit = memo<TProps>(
             selectedDepositAsset={selectedDepositAsset}
             remainingDepositable={remainingDepositable}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
+            remainingDepositableSimul={remainingDepositableSimul}
           />
         )}
       </div>

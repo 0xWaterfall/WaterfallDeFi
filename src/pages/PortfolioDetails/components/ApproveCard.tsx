@@ -25,6 +25,8 @@ import Input from "components/Input/Input";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
+import BigNumber from "bignumber.js";
+
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -124,6 +126,7 @@ type TProps = WrappedComponentProps & {
   isSoldOut: boolean;
   selectTranche: Tranche | undefined;
   depositMultipleSimultaneous: boolean;
+  remainingSimul: { remaining: string; remainingExact: string }[];
 };
 
 const ApproveCard = memo<TProps>(
@@ -139,7 +142,8 @@ const ApproveCard = memo<TProps>(
     selectTrancheIdx,
     isSoldOut,
     selectTranche,
-    depositMultipleSimultaneous
+    depositMultipleSimultaneous,
+    remainingSimul
   }) => {
     const { tags } = useTheme();
     //autoroll contract hook must come before autoroll state hook
@@ -339,6 +343,7 @@ const ApproveCard = memo<TProps>(
       // if (isNaN(input)) input = 0;
       // setBalanceInput(input.toString());
     };
+
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
         {!depositMultipleSimultaneous ? (
@@ -383,7 +388,7 @@ const ApproveCard = memo<TProps>(
 
         {data.isMulticurrency && depositMultipleSimultaneous
           ? data.assets.map((asset, index) => (
-              <div key={asset} css={{ marginTop: 50 }}>
+              <div key={asset} css={{ marginTop: index !== 0 ? 50 : 0 }}>
                 <RowDiv>
                   <div>
                     {isRe
@@ -398,8 +403,7 @@ const ApproveCard = memo<TProps>(
                 <RowDiv>
                   <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
                   <div>
-                    {/* xyzzy */}
-                    {formatNumberSeparator(remaining)} {selectedDepositAsset}
+                    {formatNumberSeparator(remainingSimul[index].remaining)} {asset}
                   </div>
                 </RowDiv>
                 <RowDiv>
@@ -408,10 +412,10 @@ const ApproveCard = memo<TProps>(
                 <Input
                   style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
                   placeholder=""
-                  value={balanceInput}
-                  onChange={handleInputChange}
-                  suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-                  disabled={!enabled || isSoldOut}
+                  value={balanceInput} //xyzzy
+                  onChange={handleInputChange} //xyzzy
+                  suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>} //xyzzy
+                  disabled={!enabled || isSoldOut} //xyzzy
                 />
               </div>
             ))

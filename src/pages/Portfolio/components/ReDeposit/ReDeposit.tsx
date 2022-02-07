@@ -44,6 +44,8 @@ const Claim = memo<TProps>(
       deposited[data.assets.indexOf(selectedDepositAsset)]
     );
 
+    const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
+
     return (
       <Modal visible={visible} width={1000} onCancel={onCancel?.bind(null, false)} bodyStyle={{ padding: "20px 34px" }}>
         <title css={{ color: gray.normal, fontWeight: 600, fontSize: 20, marginBottom: 32, textAlign: "center" }}>
@@ -56,6 +58,7 @@ const Claim = memo<TProps>(
           redepositBalance={balance}
           remainingDepositable={remainingDepositable}
           depositMultipleSimultaneous={depositMultipleSimultaneous}
+          remainingDepositableSimul={remainingDepositableSimul}
         />
       </Modal>
     );

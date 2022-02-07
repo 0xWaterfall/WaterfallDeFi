@@ -23,6 +23,7 @@ type TProps = WrappedComponentProps & {
   redepositBalance?: string;
   remainingDepositable: BigNumber;
   depositMultipleSimultaneous: boolean;
+  remainingDepositableSimul: BigNumber[];
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
@@ -35,7 +36,16 @@ type Tranches = "Senior" | "Mezzanine" | "Junior";
 // `;
 
 const DepositItem = memo<TProps>(
-  ({ selectedDepositAsset, intl, isRe, data, redepositBalance, remainingDepositable, depositMultipleSimultaneous }) => {
+  ({
+    selectedDepositAsset,
+    intl,
+    isRe,
+    data,
+    redepositBalance,
+    remainingDepositable,
+    depositMultipleSimultaneous,
+    remainingDepositableSimul
+  }) => {
     // const { primary } = useTheme();
     const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
     const [marketData] = useState(data);
@@ -127,10 +137,26 @@ const DepositItem = memo<TProps>(
                   )
               : "0"
           }
-          // remainingMultiSimultaneous={
-          //   selectTrancheIdx !== undefined && data.isMulticurrency ?
-          //    data.ass
-          // }
+          remainingSimul={
+            selectTrancheIdx !== undefined && data.isMulticurrency
+              ? remainingDepositableSimul.map((remainingDepositable) => {
+                  return {
+                    remaining: getRemainingMulticurrency(
+                      data.tranches[selectTrancheIdx]?.target,
+                      data.tranches[selectTrancheIdx]?.principal,
+                      remainingDepositable
+                    ),
+                    remainingExact: getRemainingExactMulticurrency(
+                      data.tranches[selectTrancheIdx]?.target,
+                      data.tranches[selectTrancheIdx]?.principal,
+                      remainingDepositable
+                    )
+                  };
+                })
+              : remainingDepositableSimul.map(() => {
+                  return { remaining: "", remainingExact: "" };
+                })
+          }
           enabled={selectTranche !== undefined}
           selectTrancheIdx={selectTrancheIdx}
           data={marketData}

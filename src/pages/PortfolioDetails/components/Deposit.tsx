@@ -107,6 +107,12 @@ const RemainingDepositableOuter = styled.div`
   margin: 10px 20px 0 6px;
 `;
 
+const RemainingDepositableInner = styled.div`
+  height: 6px;
+  background-color: #0066ff;
+  border-radius: 4px;
+`;
+
 const CoinRow = styled.div`
   display: flex;
   justify-content: flex-start;
@@ -151,28 +157,15 @@ const Deposit = memo<TProps>(
 
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
 
-    // const returnWidth = (assetIndex: number) =>
-    //   new BigNumber(deposited[assetIndex])
-    //     .dividedBy(BIG_TEN.pow(16))
-    //     .dividedBy(
-    //       new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
-    //     );
+    const returnWidth = (assetIndex: number) =>
+      new BigNumber(deposited[assetIndex])
+        .dividedBy(
+          new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
+        )
+        .multipliedBy(100)
+        .toString();
 
-    // const width = returnWidth(data.assets.indexOf(selectedDepositAsset));
-
-    const width = new BigNumber(deposited[data.assets.indexOf(selectedDepositAsset)])
-      .dividedBy(
-        new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
-      )
-      .multipliedBy(100)
-      .toString();
-
-    const RemainingDepositableInner = styled.div`
-    width: ${width + "%;"}
-    height: 6px;
-    background-color: #0066FF;
-    border-radius: 4px;
-  `;
+    const width = returnWidth(data.assets.indexOf(selectedDepositAsset));
 
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {
@@ -238,18 +231,18 @@ const Deposit = memo<TProps>(
                   <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
                   {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
                     <RemainingDepositableOuter>
-                      <RemainingDepositableInner />
+                      <RemainingDepositableInner css={{ width: width + "%" }} />
                     </RemainingDepositableOuter>
                   ) : null}
                 </div>
               ) : (
                 <div css={{ display: "flex", flexDirection: "column" }}>
-                  {data.assets.map((asset) => (
+                  {data.assets.map((asset, index) => (
                     <div key={asset} css={{ display: "flex", paddingTop: "3.5px" }}>
                       <Coin assetName={asset} size={24} />
                       <div css={{ padding: "2px 6px 0 6px" }}>{asset} Remaining</div>
                       <RemainingDepositableOuter>
-                        <RemainingDepositableInner />
+                        <RemainingDepositableInner css={{ width: returnWidth(index) + "%" }} />
                       </RemainingDepositableOuter>
                     </div>
                   ))}

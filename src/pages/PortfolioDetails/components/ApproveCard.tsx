@@ -383,7 +383,7 @@ const ApproveCard = memo<TProps>(
 
         {data.isMulticurrency && depositMultipleSimultaneous
           ? data.assets.map((asset, index) => (
-              <div key={asset}>
+              <div key={asset} css={{ marginTop: 50 }}>
                 <RowDiv>
                   <div>
                     {isRe

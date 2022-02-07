@@ -127,7 +127,6 @@ const Deposit = memo<TProps>(
   }) => {
     const deposited: BigNumber[] = [];
 
-    //TODO: make the code more robust by using this hook higher up the tree, possibly dynamically handle multicurrency instead of relying on markets.ts config object
     const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
       ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
       : [];

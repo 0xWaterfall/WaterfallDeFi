@@ -153,7 +153,7 @@ const DepositItem = memo<TProps>(
                     )
                   };
                 })
-              : remainingDepositableSimul.map(() => {
+              : data.assets.map(() => {
                   return { remaining: "", remainingExact: "" };
                 })
           }

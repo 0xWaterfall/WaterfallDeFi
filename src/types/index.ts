@@ -49,6 +49,7 @@ export interface Market {
   actualStartAt?: string;
   cycle?: string;
   tranches: Tranche[];
+  trancheInvests?: { type: "BigNumber"; hex: string }[][];
   totalTranchesTarget: string;
   tvl: string;
   status: string;
@@ -79,7 +80,7 @@ export interface Market {
 export type Token = {
   addr: string;
   strategy: string;
-  percent: { _hex: string; isBigNumber: boolean };
+  percent: { type: "BigNumber"; hex: string };
 };
 export type StrategyFarm = {
   farmName: string;
@@ -111,4 +112,10 @@ export type UserInvest = {
   interest: string;
   earningsAPY: string;
   MCprincipal?: string[];
+};
+
+export type EthersCall = {
+  address: string;
+  name: string;
+  params: any[];
 };

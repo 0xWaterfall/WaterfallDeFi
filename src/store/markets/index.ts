@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Market, PORTFOLIO_STATUS, Tranche } from "types";
+import { EthersCall, Market, PORTFOLIO_STATUS, Token, Tranche } from "types";
 import BigNumber from "bignumber.js";
 import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import multicall from "utils/multicall";
@@ -30,7 +30,10 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
     const markets = await Promise.all(
       _payload.map(async (marketData, marketId) => {
         const _marketAddress = marketData.address;
-        const calls = [
+        const tokenCalls = !marketData.isMulticurrency
+          ? []
+          : marketData.assets.map((a, i) => ({ address: _marketAddress, name: "tokens", params: [i] }));
+        const callsBasic = [
           {
             address: _marketAddress,
             name: "tranches",
@@ -63,6 +66,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "cycle"
           }
         ];
+        const calls = [...callsBasic, ...tokenCalls];
         // const venusAPY = await getVenusAPY();
         // const creamAPY = await getCreamAPY();
         // const apacaAPY = 0.136;
@@ -84,9 +88,12 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
+        const [t0, t1, t2, active, duration, actualStartAt, cycle, ...tokens] = await multicall(marketData.abi, calls);
         // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
+        const tokenObjs = tokens.map((t: any) => {
+          return { addr: t[0], strategy: t[1], percent: t[2] };
+        });
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;
         let totalTarget = BIG_ZERO;
@@ -127,6 +134,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         marketData = {
           ...marketData,
           tranches,
+          tokens: tokenObjs,
           // duration: duration.toString(),
           duration: originalDuration,
           actualStartAt: actualStartAt.toString(),
@@ -169,6 +177,33 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         });
         // const totalAllocPoints = getTotalAllocPoints(pools);
         marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
+        if (marketData.isMulticurrency) {
+          const trancheInvestCalls = marketData.depositAssetAddresses.map((addr: string) => [
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 0, addr]
+            },
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 1, addr]
+            },
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 2, addr]
+            }
+          ]);
+          const calls3 = trancheInvestCalls.reduce((acc: EthersCall[], next: EthersCall[]) => [...acc, ...next], []);
+          const trancheInvestsRes = await multicall(marketData.abi, calls3);
+          const trancheInvestsResUnpacked = trancheInvestsRes.map((res: BigNumber[]) => res[0]);
+          const trancheCount = tranches.length;
+          const trancheInvests = tranches.map((t: Tranche, i: number) =>
+            tokenObjs.map((t: Token, j: number) => trancheInvestsResUnpacked[i + trancheCount * j])
+          );
+          marketData = { ...marketData, trancheInvests: trancheInvests };
+        }
         return marketData;
       })
     );

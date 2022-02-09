@@ -10,7 +10,6 @@ import { getLockupPeriod } from "utils/formatNumbers";
 import Coin from "components/Coin";
 import Modal from "components/Modal/Modal";
 import Input from "components/Input/Input";
-import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
 import { BIG_TEN } from "utils/bigNumber";
 import BigNumber from "bignumber.js";
 import { Checkbox } from "antd";
@@ -102,13 +101,9 @@ const Information = memo<TProps>(
     const [selectDepositAssetModalVisible, setSelectDepositAssetModalVisible] = useState<boolean>(false);
     const [depositableAssets, setDepositableAssets] = useState<string[]>(data.assets);
 
-    const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
-      ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
-      : [];
+    const tokens: { addr: string; strategy: string; percent: any }[] | undefined = data.tokens;
 
-    const trancheInvest = data.isMulticurrency
-      ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
-      : [];
+    const trancheInvest: { type: "BigNumber"; hex: string }[][] | undefined = data.trancheInvests;
 
     return (
       <Wrapper>
@@ -153,13 +148,17 @@ const Information = memo<TProps>(
                 <Coin assetName={a} size={32} />
                 <div css={{ padding: "5px 0 0 6px" }}>{a}</div>
               </div>
-              {tokens.length > 0 && trancheInvest.length > 0 ? (
+              {trancheInvest && tokens && tokens.length > 0 && trancheInvest.length > 0 ? (
                 <div css={{ paddingTop: 5 }}>
-                  {new BigNumber(trancheInvest.reduce((acc, next) => acc + BigInt(next[i]), BigInt(0)))
+                  {new BigNumber(
+                    trancheInvest.reduce((acc, next) => acc.plus(new BigNumber(next[i].hex)), new BigNumber(0))
+                  )
                     .dividedBy(BIG_TEN.pow(18))
                     .toString()}
                   {"/"}
-                  {new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(tokens[i].percent)).toString()}
+                  {new BigNumber(data.totalTranchesTarget)
+                    .multipliedBy(new BigNumber(tokens[i].percent.hex).dividedBy(BIG_TEN.pow(5)))
+                    .toString()}
                 </div>
               ) : null}
               {/* TODO: ^ use trancheInvest contract calls to get how much of a certain coin has already been invested in fall */}

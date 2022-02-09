@@ -12,7 +12,6 @@ import Button from "components/Button/Button";
 import moment from "moment";
 import Coin from "components/Coin";
 import Select, { Option } from "components/Select/Select";
-import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
 
@@ -133,23 +132,23 @@ const Deposit = memo<TProps>(
   }) => {
     const deposited: BigNumber[] = [];
 
-    const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
-      ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
-      : [];
+    const tokens = data.tokens;
 
-    const trancheInvest = data.isMulticurrency
-      ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
-      : [];
+    const trancheInvest: { type: "BigNumber"; hex: string }[][] | undefined = data.trancheInvests;
 
-    data.assets.forEach((a, i) =>
-      deposited.push(
-        trancheInvest
-          .reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
-          .dividedBy(BIG_TEN.pow(18))
-      )
+    if (trancheInvest) {
+      data.assets.forEach((a, i) =>
+        deposited.push(
+          trancheInvest
+            .reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].hex.toString())), new BigNumber(0))
+            .dividedBy(BIG_TEN.pow(18))
+        )
+      );
+    }
+
+    const maxDeposits = tokens.map((t) =>
+      new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(t.percent.hex).dividedBy(BIG_TEN.pow(5)))
     );
-
-    const maxDeposits = tokens.map((t) => Number(data.totalTranchesTarget) * Number(t.percent));
 
     const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
       deposited[data.assets.indexOf(selectedDepositAsset)]
@@ -158,14 +157,14 @@ const Deposit = memo<TProps>(
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
 
     const returnWidth = (assetIndex: number) =>
-      new BigNumber(deposited[assetIndex])
-        .dividedBy(
-          new BigNumber(tokens.length > 0 ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString() : 1)
-        )
+      deposited[assetIndex]
+        .dividedBy(tokens.length > 0 ? maxDeposits[assetIndex].toString() : new BigNumber(1))
         .multipliedBy(100)
         .toString();
 
     const width = returnWidth(data.assets.indexOf(selectedDepositAsset));
+
+    const widths = data.assets.map((a, i) => returnWidth(i));
 
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {
@@ -242,7 +241,7 @@ const Deposit = memo<TProps>(
                       <Coin assetName={asset} size={24} />
                       <div css={{ padding: "2px 6px 0 6px" }}>{asset} Remaining</div>
                       <RemainingDepositableOuter>
-                        <RemainingDepositableInner css={{ width: returnWidth(index) + "%" }} />
+                        <RemainingDepositableInner css={{ width: widths[index] + "%" }} />
                       </RemainingDepositableOuter>
                     </div>
                   ))}

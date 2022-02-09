@@ -7,7 +7,7 @@ import Modal from "components/Modal/Modal";
 import DepositItem from "pages/PortfolioDetails/components/DepositItem";
 import { Market } from "types";
 import BigNumber from "bignumber.js";
-import { useMulticurrencyDepositableTokens, useMulticurrencyTrancheInvest } from "hooks";
+import { BIG_TEN } from "utils/bigNumber";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;
@@ -24,21 +24,23 @@ const Claim = memo<TProps>(
 
     const deposited: BigNumber[] = [];
 
-    const tokens: { addr: string; strategy: string; percent: any }[] = data.isMulticurrency
-      ? useMulticurrencyDepositableTokens(data.address, data.assets.length)
-      : [];
+    const tokens = data.tokens;
 
-    const trancheInvest = data.isMulticurrency
-      ? useMulticurrencyTrancheInvest(data.address, data.cycle, data.depositAssetAddresses, data.tranches.length)
-      : [];
+    const trancheInvest: { type: "BigNumber"; hex: string }[][] | undefined = data.trancheInvests;
 
-    data.assets.forEach((a, i) =>
-      deposited.push(
-        trancheInvest.reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].toString())), new BigNumber(0))
-      )
+    if (trancheInvest) {
+      data.assets.forEach((a, i) =>
+        deposited.push(
+          trancheInvest
+            .reduce((acc: BigNumber, next) => acc.plus(new BigNumber(next[i].hex.toString())), new BigNumber(0))
+            .dividedBy(BIG_TEN.pow(18))
+        )
+      );
+    }
+
+    const maxDeposits = tokens.map((t) =>
+      new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(t.percent.hex).dividedBy(BIG_TEN.pow(5)))
     );
-
-    const maxDeposits = tokens.map((t, i) => Number(data.totalTranchesTarget) * Number(tokens[i].percent));
 
     const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
       deposited[data.assets.indexOf(selectedDepositAsset)]

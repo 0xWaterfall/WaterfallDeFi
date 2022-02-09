@@ -191,15 +191,19 @@ export const TestLPRewardAddress: { [network: string]: string } = {
 export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x572b670a80D79E22Cb3fa112729bC2d17e642f4a"
+  //before feb 8
+  // [NETWORKS.MAINNET]: "0x572b670a80D79E22Cb3fa112729bC2d17e642f4a"
+  [NETWORKS.MAINNET]: "0xF538E93F63e472e9FFDF0eFCf82621c5D98ccF93"
 };
 //multicurrency "masterChef" WTF staking address
 export const MC_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
+  //before feb 8
+  // [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
+  [NETWORKS.MAINNET]: "0x37A234Da3d133CE954BE833228e1efA49959b5A1"
 };
-//multistrategy (mALPACA) ALPACA strategy BUSD lending vault address
+//multicurrency ALPACA strategy BUSD lending vault address
 export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
@@ -216,5 +220,28 @@ export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
 export const AR_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xc73f1080a8D448f556aC8233E32e02227202a071"
+  //before feb 8
+  // [NETWORKS.MAINNET]: "0xc73f1080a8D448f556aC8233E32e02227202a071"
+  [NETWORKS.MAINNET]: "0x3d1c938351201267BAdf49Be50188F8F81F21A20"
+};
+
+//autoroll master WTF contract address
+export const AR_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  //before feb 8
+  // [NETWORKS.MAINNET]: "0xc73f1080a8D448f556aC8233E32e02227202a071"
+  [NETWORKS.MAINNET]: "0x3a8c5ee1f0Ff9Df1929b509bddc19CE7417208bf"
+};
+//autoroll ALPACA strategy BUSD lending vault address
+export const AR_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x121b92D6300cB2830C380dda04D5470E04F515AA"
+};
+//autoroll VENUS strategy TUSD lending vault address
+export const AR_sVENUS_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x3fdCA46Fbc38Ed44b2464134b0E91827deaAf64D"
 };

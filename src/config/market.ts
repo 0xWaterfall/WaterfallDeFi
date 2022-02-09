@@ -24,7 +24,10 @@ import {
   MC_sALPACA_BUSDAddress,
   MC_sALPACA_TUSDAddress,
   TUSDAddress,
-  AR_TrancheMasterAddress
+  AR_TrancheMasterAddress,
+  AR_WTFMasterAddress,
+  AR_sALPACA_Address,
+  AR_sVENUS_Address
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
@@ -265,13 +268,13 @@ export const MarketList: Market[] = [
     strategyFarms: [
       {
         farmName: "Alpaca BUSD",
-        shares: 0.5,
+        shares: 0.6,
         sAddress: MC_sALPACA_BUSDAddress[NETWORK],
         apiKey: "alpaca"
       },
       {
         farmName: "Alpaca TUSD",
-        shares: 0.5,
+        shares: 0.4,
         sAddress: MC_sALPACA_TUSDAddress[NETWORK],
         apiKey: "alpaca"
       }
@@ -291,7 +294,7 @@ export const MarketList: Market[] = [
     address: AR_TrancheMasterAddress[NETWORK],
     abi: AR_TranchesAbi,
     masterChefAbi: MasterChefAbi,
-    masterChefAddress: MC_WTFMasterAddress[NETWORK],
+    masterChefAddress: AR_WTFMasterAddress[NETWORK],
     pools: [],
     autorollImplemented: true,
     isMulticurrency: false,
@@ -304,13 +307,13 @@ export const MarketList: Market[] = [
       {
         farmName: "Alpaca BUSD",
         shares: 0.8,
-        sAddress: sALPACAAddress[NETWORK],
+        sAddress: AR_sALPACA_Address[NETWORK],
         apiKey: "alpaca"
       },
       {
         farmName: "Venus BUSD",
         shares: 0.2,
-        sAddress: sVENUSAddress[NETWORK],
+        sAddress: AR_sVENUS_Address[NETWORK],
         apiKey: "venus"
       }
     ],

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo, useMemo, useEffect, useCallback } from "react";
+import React, { memo, useMemo, useEffect, useCallback } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Switch } from "antd";
 import Button from "components/Button/Button";
@@ -25,7 +25,6 @@ import Input from "components/Input/Input";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
-import BigNumber from "bignumber.js";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -148,14 +147,19 @@ const ApproveCard = memo<TProps>(
     const { tags } = useTheme();
     //autoroll contract hook must come before autoroll state hook
     const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
-
-    const [balanceInput, setBalanceInput] = useState("0");
-    const [approved, setApproved] = useState(false);
-    const [depositLoading, setDepositLoading] = useState(false);
-    const [approveLoading, setApproveLoading] = useState(false);
+    //user inputs
+    const [balanceInput, setBalanceInput] = useState<string>("0");
+    const [balanceInputSimul, setBalanceInputSimul] = useState<string[]>([]);
+    //state flags
+    const [approved, setApproved] = useState<boolean>(false);
+    const [depositLoading, setDepositLoading] = useState<boolean>(false);
+    const [approveLoading, setApproveLoading] = useState<boolean>(false);
+    //autoroll hooks
     const [autoRoll, setAutoRoll] = useState<boolean>(false);
     const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
+    //web3
     const { account } = useWeb3React<Web3Provider>();
+    //deposit hooks
     const depositAddress = !data.isMulticurrency
       ? data.depositAssetAddress
       : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
@@ -172,6 +176,7 @@ const ApproveCard = memo<TProps>(
       data.assets.length
     );
     const dispatch = useAppDispatch();
+    //balance hooks
     const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
     const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
     const { balance: balanceRe } = useTrancheBalance(data.address);
@@ -185,6 +190,7 @@ const ApproveCard = memo<TProps>(
         ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
         : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
       : "";
+    //validation texts
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -199,7 +205,7 @@ const ApproveCard = memo<TProps>(
           "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APR of your portfolio, your effective APR may be lower. Make sure you fully understand the risks."
       })
     ];
-
+    //use effects
     useEffect(() => {
       const checkApproved = async (account: string) => {
         const approved = await onCheckApprove();
@@ -210,6 +216,7 @@ const ApproveCard = memo<TProps>(
 
     useEffect(() => {
       setBalanceInput("0");
+      setBalanceInputSimul(data.assets.map(() => "0"));
     }, [enabled]);
 
     useEffect(() => {
@@ -220,7 +227,7 @@ const ApproveCard = memo<TProps>(
         });
       }
     }, []);
-
+    //handlers
     const handleApprove = async () => {
       setApproveLoading(true);
       dispatch(
@@ -250,6 +257,7 @@ const ApproveCard = memo<TProps>(
         setApproveLoading(false);
       }
     };
+
     const validateText = useMemo(() => {
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
@@ -308,6 +316,7 @@ const ApproveCard = memo<TProps>(
         setDepositLoading(false);
       }
     };
+
     const handleMaxInput = () => {
       const _balance = !data.isMulticurrency
         ? actualBalanceWallet.replace(/\,/g, "")
@@ -321,27 +330,24 @@ const ApproveCard = memo<TProps>(
       }
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
       const { value } = e.target;
       if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
         const d = value.split(".");
         if (d.length === 2 && d[1].length > 18) {
           return;
         }
-
         const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];
         const _decimal = value.includes(".") ? "." : "";
         const _input2 = d[1]?.length > 0 ? d[1] : "";
-        setBalanceInput(_input1 + _decimal + _input2);
+        if (index !== undefined) {
+          const balanceInputSimulCopy = [...balanceInputSimul];
+          balanceInputSimulCopy[index] = _input1 + _decimal + _input2;
+          setBalanceInputSimul(balanceInputSimulCopy);
+        } else {
+          setBalanceInput(_input1 + _decimal + _input2);
+        }
       }
-      // const d = value.split(".");
-      // if (d.length === 2 && d[1].length === 18) {
-      //   return;
-      // }
-      // let input = Number(value);
-      // console.log(input);
-      // if (isNaN(input)) input = 0;
-      // setBalanceInput(input.toString());
     };
 
     return (
@@ -412,8 +418,10 @@ const ApproveCard = memo<TProps>(
                 <Input
                   style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
                   placeholder=""
-                  value={balanceInput} //xyzzy
-                  onChange={handleInputChange} //xyzzy
+                  value={balanceInputSimul[index]}
+                  onChange={(e) => {
+                    handleInputChange(e, index);
+                  }}
                   suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>} //xyzzy
                   disabled={!enabled || isSoldOut} //xyzzy
                 />

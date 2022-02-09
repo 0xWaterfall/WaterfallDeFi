@@ -287,40 +287,6 @@ export const useTrancheSnapshot = (cycle: string | undefined) => {
   return trancheSnapshot;
 };
 
-export const useMulticurrencyTrancheInvest = (
-  trancheMasterAddress: string,
-  cycle: string | undefined,
-  tokenAddresses: string[],
-  tranchesCount: number //future proofing for DAO curated falls with more than 3 tranches
-) => {
-  const [trancheInvest, setTrancheInvest] = useState<any[]>([]);
-
-  const { fastRefresh } = useRefresh();
-
-  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
-
-  useEffect(() => {
-    const fetchTrancheInvests = async () => {
-      try {
-        const trancheInvest = [];
-        for (let i = 0; i < tranchesCount; i++) {
-          const tokensInTranche = [];
-          for (let j = 0; j < tokenAddresses.length; j++) {
-            tokensInTranche.push(await trancheMasterContract.trancheInvest(cycle, i, tokenAddresses[j]));
-          }
-          trancheInvest.push(tokensInTranche);
-        }
-        setTrancheInvest(trancheInvest);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchTrancheInvests();
-  }, [fastRefresh]);
-
-  return trancheInvest;
-};
-
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
   const { slowRefresh } = useRefresh();
@@ -553,34 +519,6 @@ export const useTotalTvl = () => {
   }, [markets, fastRefresh]);
 
   return totalTvl;
-};
-
-export const useMulticurrencyDepositableTokens = (trancheMasterAddress: string, tokenCount: number) => {
-  const [result, setResult] = useState<Token[]>([]);
-  const { fastRefresh } = useRefresh();
-  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
-  useEffect(() => {
-    const fetchDepositableTokens = async () => {
-      try {
-        const tokens = [];
-        for (let index = 0; index < tokenCount; index++) {
-          tokens.push(await trancheMasterContract.tokens(index));
-        }
-        setResult(tokens);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    fetchDepositableTokens();
-  }, [fastRefresh]);
-
-  return result.map((t) => {
-    return {
-      addr: t.addr,
-      strategy: t.strategy,
-      percent: new BigNumber(t.percent._hex).dividedBy(BIG_TEN.pow(5)).toString()
-    };
-  });
 };
 
 export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {

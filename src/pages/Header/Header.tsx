@@ -11,6 +11,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useAppDispatch } from "store";
 import ConnectWalletModal from "./components/ConnectWalletModal";
+import useEagerConnect from "hooks/useEagerConnect";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import useAuth from "utils/useAuth";
@@ -20,7 +21,6 @@ import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
 import { NETWORK, NETWORKS } from "config";
 import { NetworkStatus } from "@apollo/client";
-import useEagerConnect from "hooks/useEagerConnect";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -172,6 +172,7 @@ const Header = memo<TProps>(({ intl }) => {
   const { login, logout } = useAuth();
 
   useEagerConnect();
+
   useEffect(() => {
     // login("injected");
   }, []);

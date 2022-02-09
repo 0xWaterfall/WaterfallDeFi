@@ -43,56 +43,11 @@ import { BIG_TEN } from "utils/bigNumber";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const data = {
-  labels: [
-    "1 Month",
-    "2 Months",
-    "3 Months",
-    "4 Months",
-    "5 Months",
-    "6 Months",
-    "7 Months",
-    "8 Months",
-    "9 Months",
-    "10 Months",
-    "11 Months",
-    "12 Months",
-    "13 Months",
-    "14 Months",
-    "15 Months",
-    "16 Months",
-    "17 Months",
-    "18 Months",
-    "19 Months",
-    "20 Months",
-    "21 Months",
-    "22 Months",
-    "23 Months",
-    "24 Months"
-  ],
-  datasets: [
-    {
-      label: "veWTF Multiplier",
-      fill: false,
-      backgroundColor: "#0066FF",
-      borderColor: "#0066FF",
-      pointBorderColor: "#0066FF",
-      pointBackgroundColor: "#fff",
-      pointBorderWidth: 1,
-      pointHoverRadius: 5,
-      pointHoverBackgroundColor: "#0066FF",
-      pointHoverBorderColor: "rgba(220,220,220,1)",
-      pointHoverBorderWidth: 2,
-      pointRadius: 1,
-      pointHitRadius: 10,
-      data: [
-        0.1, 0.12, 0.13, 0.15, 0.17, 0.2, 0.23, 0.27, 0.31, 0.35, 0.4, 0.47, 0.54, 0.62, 0.71, 0.81, 0.94, 1.08, 1.24,
-        1.42, 1.64, 1.88, 2.16, 2.49
-      ]
-    }
-  ]
-};
-
+const actualMultiplier = [
+  0.00416666666666667, 0.01, 0.01625, 0.0250000000000001, 0.0354166666666666, 0.05, 0.0670833333333334,
+  0.0899999999999999, 0.11625, 0.145833333333333, 0.183333333333333, 0.235, 0.2925, 0.361666666666666, 0.44375, 0.54,
+  0.665833333333333, 0.81, 0.981666666666667, 1.18333333333333, 1.435, 1.72333333333333, 2.07, 2.49
+];
 const Wrapper = styled.div`
   max-width: 1072px;
   padding: 86px 24px 160px;
@@ -512,6 +467,58 @@ const Stake = memo<TProps>(({ intl }) => {
       ).format("0,0.[00]") + "%"
     );
   }, [VeWTFRatioPercentage, rewardPerBlock]);
+
+  const data = useMemo(() => {
+    return {
+      labels: [
+        "1 Month",
+        "2 Months",
+        "3 Months",
+        "4 Months",
+        "5 Months",
+        "6 Months",
+        "7 Months",
+        "8 Months",
+        "9 Months",
+        "10 Months",
+        "11 Months",
+        "12 Months",
+        "13 Months",
+        "14 Months",
+        "15 Months",
+        "16 Months",
+        "17 Months",
+        "18 Months",
+        "19 Months",
+        "20 Months",
+        "21 Months",
+        "22 Months",
+        "23 Months",
+        "24 Months"
+      ],
+      datasets: [
+        {
+          label: "veWTF Predicted APR",
+          fill: false,
+          backgroundColor: "#0066FF",
+          borderColor: "#0066FF",
+          pointBorderColor: "#0066FF",
+          pointBackgroundColor: "#fff",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "#0066FF",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          pointHoverBorderWidth: 2,
+          pointRadius: 1,
+          pointHitRadius: 10,
+          data: actualMultiplier.map((e) => {
+            return numeral((e * Number(maxAPR)) / 2.49).format("0,0.[0])");
+          })
+        }
+      ]
+    };
+  }, [maxAPR]);
+
   // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
@@ -608,7 +615,7 @@ const Stake = memo<TProps>(({ intl }) => {
             </div>
             <div />
             <div>
-              <div>veWTF - Time Locked vs Multiplier</div>
+              <div>veWTF - Locking Period vs Predicted APR</div>
               <Line data={data} />
             </div>
             <div>

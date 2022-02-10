@@ -102,7 +102,8 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { push } = useHistory();
   const dispatch = useDispatch();
   const { weekDistribution } = useWTF();
-  const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
+  // const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
+  const isHide = data.rewardPerBlock !== "0" ? "visible" : "hidden";
 
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();

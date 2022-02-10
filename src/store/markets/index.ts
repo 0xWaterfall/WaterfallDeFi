@@ -122,7 +122,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           tvl = tvl.plus(_principal);
           const __t = {
             principal: _principal.toString(),
-            apy: _apy.toString(),
+            apy: marketId === 3 && _i < 2 ? "100" : _apy.toString(),
             fee: _fee.toString(),
             target: _target.toString()
           };
@@ -177,6 +177,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         });
         // const totalAllocPoints = getTotalAllocPoints(pools);
         marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
+        console.log(marketData);
         return marketData;
       })
     );

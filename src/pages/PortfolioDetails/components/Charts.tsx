@@ -243,12 +243,12 @@ const Charts = memo<TProps>(({ intl, data }) => {
               : "--"}{" "}
             WTF
           </div>
-          <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div>
-          {/* <div> */}
-          {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
+          {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
+          <div>
+            <ButtonWrapper type="default" onClick={() => claimPopup()}>
               {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
-            </ButtonWrapper> */}
-          {/* <ButtonWrapper
+            </ButtonWrapper>
+            {/* <ButtonWrapper
               type="default"
               onClick={() => claimReward()}
               loading={claimRewardLoading}
@@ -267,7 +267,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
               {intl.formatMessage({ defaultMessage: "To Stake" })}
               <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
             </ButtonWrapper> */}
-          {/* </div> */}
+          </div>
         </section>
       </RecordCard>
       <Block>

@@ -136,6 +136,38 @@ export const MarketList: Market[] = [
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3"
   },
   {
+    portfolio: "Autoroll Test",
+    assets: "BUSD",
+    listingDate: "2021/12/26",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: "3d1c938351201267BAdf49Be50188F8F81F21A20",
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: "3a8c5ee1f0Ff9Df1929b509bddc19CE7417208bf",
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3"
+  },
+  {
     portfolio: "BUSD Falls 1 (Expired)",
     assets: "BUSD",
     listingDate: "2021/11/16",

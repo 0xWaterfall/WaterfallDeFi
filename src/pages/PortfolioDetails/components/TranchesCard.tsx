@@ -183,7 +183,8 @@ const TranchesCard = memo<TProps>(
     // const wtfPrice = useWTFPrice();
     const { price: wtfPrice } = useWTFPriceLP();
     const { weekDistribution } = useWTF();
-    const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
+    // const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
+    const isHide = data.rewardPerBlock !== "0" ? "visible" : "hidden";
 
     const wtfApr = data
       ? getWTFApr(

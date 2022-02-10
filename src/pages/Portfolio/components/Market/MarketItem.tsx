@@ -134,7 +134,8 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
   const { price: wtfPrice } = useWTFPriceLP();
 
   const { weekDistribution } = useWTF();
-  const isHide = weekDistribution.toString() !== "0" ? false : true;
+  // const isHide = weekDistribution.toString() !== "0" ? false : true;
+  const isHide = data.rewardPerBlock !== "0" ? false : true;
   // useEffect(() => {
   //   const fetchData = async () => {
   //     const _md = await useMarket({ ...data });

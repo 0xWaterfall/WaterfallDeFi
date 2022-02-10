@@ -22,7 +22,6 @@ export const useTrancheMasterContract = (trancheMasterAddress: string) => {
 
 export const useERC20Contract = (address: string) => {
   const signer = getSigner();
-  console.log("onapprove", signer);
   return useMemo(() => getContract(ERC20Abi, address, signer), [signer]);
 };
 

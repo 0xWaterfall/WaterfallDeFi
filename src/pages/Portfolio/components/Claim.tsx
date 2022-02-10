@@ -91,7 +91,8 @@ const Claim = memo<TProps>(({ intl }) => {
           }
         }}
       >
-        👀
+        {/* 👀 */}
+        37,500
         {/*  {formatNumberSeparator(weekDistribution.toString())} WTF */}
       </div>
     </div>

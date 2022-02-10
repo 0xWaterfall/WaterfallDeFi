@@ -441,7 +441,6 @@ export const getMulticallContract = (signer?: ethers.Signer | ethers.providers.P
 export const getSigner = () => {
   const { library, account } = useWeb3React<Web3Provider>();
   const { library: library2 } = useActiveWeb3React();
-  console.log("library", library2);
   if (library2) return library2.getSigner();
   // if (window?.ethereum) {
   //   const chainId = window.ethereum.chainId;

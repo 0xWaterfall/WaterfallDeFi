@@ -10,8 +10,8 @@ import { setConfirmModal } from "store/showStatus";
 import { Dispatch } from "redux";
 
 const _invest = async (contract: Contract, amount: string[], selectTrancheIdx: string, dispatch: Dispatch<any>) => {
-  const _amount = amount.map((a) => BigNumber.from(utils.parseEther(a).toString()));
-  const tx = await contract.investDirect(_amount, selectTrancheIdx, _amount);
+  const _amount = amount.map((a) => BigNumber.from(utils.parseEther(a).toString()).toString());
+  const tx = await contract.investDirect(selectTrancheIdx, _amount, _amount);
 
   dispatch(
     setConfirmModal({

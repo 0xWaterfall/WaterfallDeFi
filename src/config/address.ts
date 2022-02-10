@@ -193,6 +193,7 @@ export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   //before feb 8
   // [NETWORKS.MAINNET]: "0x572b670a80D79E22Cb3fa112729bC2d17e642f4a"
+  //after feb 8
   [NETWORKS.MAINNET]: "0xF538E93F63e472e9FFDF0eFCf82621c5D98ccF93"
 };
 //multicurrency "masterChef" WTF staking address
@@ -201,6 +202,7 @@ export const MC_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   //before feb 8
   // [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
+  //after feb 8
   [NETWORKS.MAINNET]: "0x37A234Da3d133CE954BE833228e1efA49959b5A1"
 };
 //multicurrency ALPACA strategy BUSD lending vault address

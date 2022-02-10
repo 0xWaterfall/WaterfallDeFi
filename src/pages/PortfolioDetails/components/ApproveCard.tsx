@@ -273,21 +273,23 @@ const ApproveCard = memo<TProps>(
     }, [balance, multicurrencyBalance, remaining, remainingExact, balanceInput]);
 
     const validateTextSimul = useMemo(() => {
-      const _remainings = remainingSimul.map((r) => r.remainingExact.replace(/\,/g, ""));
-      const _balanceInputs = balanceInputSimul;
-      const _balances = multicurrencyBalances;
-      const validateTexts = _balanceInputs.map((b, i) => {
-        if (compareNum(b, _balances[i].balance, true)) {
-          return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
-        }
-        if (compareNum(b, _remainings[i], true)) {
-          return intl.formatMessage(
-            { defaultMessage: "Maximum deposit amount = {remaining}" },
-            { remaining: remaining }
-          );
-        }
-      });
-      return validateTexts;
+      if (depositMultipleSimultaneous) {
+        const _remainings = remainingSimul.map((r) => r.remainingExact.replace(/\,/g, ""));
+        const _balanceInputs = balanceInputSimul;
+        const _balances = multicurrencyBalances;
+        const validateTexts = _balanceInputs.map((b, i) => {
+          if (compareNum(b, _balances[i].balance, true)) {
+            return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+          }
+          if (compareNum(b, _remainings[i], true)) {
+            return intl.formatMessage(
+              { defaultMessage: "Maximum deposit amount = {remaining}" },
+              { remaining: remaining }
+            );
+          }
+        });
+        return validateTexts;
+      } else return [];
     }, [multicurrencyBalances, remainingSimul, balanceInputSimul]);
 
     const handleDeposit = async () => {
@@ -337,7 +339,53 @@ const ApproveCard = memo<TProps>(
       }
     };
 
-    const handleDepositSimul = () => {};
+    const handleDepositSimul = async () => {
+      const _invalids: boolean[] = validateTextSimul && validateTextSimul.map((v) => (v ? v.length > 0 : false));
+      if (_invalids.some((v) => v)) return;
+      const _invalids2: boolean[] = balanceInputSimul.map((b) => Number(b) <= 0);
+      if (_invalids2.some((v) => v)) return;
+      if (selectTrancheIdx === undefined) return;
+
+      setDepositLoading(true);
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage: balanceInputSimul
+            .map(
+              (b) => intl.formatMessage({ defaultMessage: "Depositing " }) + " " + b + " " + selectedDepositAsset + ", "
+            )
+            .join()
+        })
+      );
+      const _amount = balanceInputSimul; //feels like .toString() is unnecessary if it's already typed? - 0xA
+      try {
+        const success = !isRe
+          ? await onInvestDirectMCSimul(_amount, selectTrancheIdx.toString())
+          : await onInvestMCSimul(_amount, selectTrancheIdx.toString());
+        if (success) {
+          successNotification("Deposit Success", "");
+        } else {
+          successNotification("Deposit Fail", "");
+        }
+        setDepositLoading(false);
+        setBalanceInputSimul([]);
+        multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
+      } catch (e) {
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Deposit Fail " })
+          })
+        );
+        console.error(e);
+      } finally {
+        setDepositLoading(false);
+      }
+    };
 
     const handleMaxInput = () => {
       const _balance = !data.isMulticurrency

@@ -330,6 +330,23 @@ const ApproveCard = memo<TProps>(
       }
     };
 
+    const handleMaxInputSimul = (index: number) => {
+      const _balance = multicurrencyBalances[index].balance.replace(/\,/g, "");
+      const _remaining = remainingSimul[index].remaining.replace(/\,/g, "");
+      const balanceInputSimulCopy = [...balanceInputSimul];
+      if (compareNum(_remaining, _balance)) {
+        if (_balance) {
+          balanceInputSimulCopy[index] = _balance;
+          setBalanceInputSimul(balanceInputSimulCopy);
+        }
+      } else if (compareNum(_balance, _remaining, true)) {
+        if (_remaining) {
+          balanceInputSimulCopy[index] = _remaining;
+          setBalanceInputSimul(balanceInputSimulCopy);
+        }
+      }
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
       const { value } = e.target;
       if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
@@ -422,7 +439,11 @@ const ApproveCard = memo<TProps>(
                   onChange={(e) => {
                     handleInputChange(e, index);
                   }}
-                  suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>} //xyzzy
+                  suffix={
+                    <Max onClick={() => handleMaxInputSimul(index)}>
+                      {intl.formatMessage({ defaultMessage: "MAX" })}
+                    </Max>
+                  } //xyzzy
                   disabled={!enabled || isSoldOut} //xyzzy
                 />
               </div>

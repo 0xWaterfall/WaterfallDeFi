@@ -13,7 +13,6 @@ import { Dispatch } from "redux";
 //   gasLimit: DEFAULT_GAS_LIMIT
 // };
 
-//TODO: upgrade UI so that user can invest more than one token at once, then upgrade this function
 const invest = async (
   contract: Contract,
   amount: string,

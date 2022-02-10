@@ -114,7 +114,6 @@ const DepositItem = memo<TProps>(
         <ApproveCard
           selectedDepositAsset={selectedDepositAsset}
           isRe={isRe}
-          assets={data.assets}
           remaining={
             selectTrancheIdx !== undefined
               ? !data.isMulticurrency

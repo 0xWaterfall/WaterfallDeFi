@@ -162,9 +162,9 @@ const Deposit = memo<TProps>(
         .multipliedBy(100)
         .toString();
 
-    const width = returnWidth(data.assets.indexOf(selectedDepositAsset));
+    const width = data.isMulticurrency ? returnWidth(data.assets.indexOf(selectedDepositAsset)) : 1;
 
-    const widths = data.assets.map((a, i) => returnWidth(i));
+    const widths = data.isMulticurrency ? data.assets.map((a, i) => returnWidth(i)) : [];
 
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {

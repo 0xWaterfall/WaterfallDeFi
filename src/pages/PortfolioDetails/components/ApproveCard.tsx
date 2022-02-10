@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import React, { memo, useMemo, useEffect, useCallback } from "react";
+import React, { memo, useMemo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Switch } from "antd";
 import Button from "components/Button/Button";
@@ -17,6 +17,8 @@ import useAutoRoll from "../hooks/useAutoRoll";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
+import useInvestDirectMCSimul from "../hooks/useInvestDirectMCSimul";
+import useInvestMCSimul from "../hooks/useInvestMCSimul";
 import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 import { useAppDispatch } from "store";
@@ -116,7 +118,6 @@ const ImportantNotes = styled.div`
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
   selectedDepositAsset: string;
-  assets: string[];
   remaining: string;
   remainingExact: string;
   enabled: boolean;
@@ -133,7 +134,6 @@ const ApproveCard = memo<TProps>(
     intl,
     isRe,
     selectedDepositAsset,
-    assets,
     remaining,
     remainingExact,
     enabled,
@@ -175,6 +175,8 @@ const ApproveCard = memo<TProps>(
       data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
       data.assets.length
     );
+    const { onInvestDirectMCSimul } = useInvestDirectMCSimul(data.address);
+    const { onInvestMCSimul } = useInvestMCSimul(data.address);
     const dispatch = useAppDispatch();
     //balance hooks
     const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
@@ -270,6 +272,8 @@ const ApproveCard = memo<TProps>(
       }
     }, [balance, multicurrencyBalance, remaining, remainingExact, balanceInput]);
 
+    const validateTextSimul = useMemo(() => {}, []);
+
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
       if (Number(balanceInput) <= 0) return;
@@ -316,6 +320,8 @@ const ApproveCard = memo<TProps>(
         setDepositLoading(false);
       }
     };
+
+    const handleDepositSimul = () => {};
 
     const handleMaxInput = () => {
       const _balance = !data.isMulticurrency
@@ -443,10 +449,11 @@ const ApproveCard = memo<TProps>(
                     <Max onClick={() => handleMaxInputSimul(index)}>
                       {intl.formatMessage({ defaultMessage: "MAX" })}
                     </Max>
-                  } //xyzzy
+                  }
                   disabled={!enabled || isSoldOut} //xyzzy
                 />
               </div>
+              //XYZZY: need to create validateTexts for simultaneous deposit
             ))
           : null}
 
@@ -494,7 +501,7 @@ const ApproveCard = memo<TProps>(
               <Button
                 type="primary"
                 css={{ height: 56 }}
-                onClick={() => handleDeposit()}
+                onClick={() => (!depositMultipleSimultaneous ? handleDeposit() : handleDepositSimul())}
                 loading={depositLoading}
                 disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
               >

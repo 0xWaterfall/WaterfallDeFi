@@ -272,7 +272,23 @@ const ApproveCard = memo<TProps>(
       }
     }, [balance, multicurrencyBalance, remaining, remainingExact, balanceInput]);
 
-    const validateTextSimul = useMemo(() => {}, []);
+    const validateTextSimul = useMemo(() => {
+      const _remainings = remainingSimul.map((r) => r.remainingExact.replace(/\,/g, ""));
+      const _balanceInputs = balanceInputSimul;
+      const _balances = multicurrencyBalances;
+      const validateTexts = _balanceInputs.map((b, i) => {
+        if (compareNum(b, _balances[i].balance, true)) {
+          return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+        }
+        if (compareNum(b, _remainings[i], true)) {
+          return intl.formatMessage(
+            { defaultMessage: "Maximum deposit amount = {remaining}" },
+            { remaining: remaining }
+          );
+        }
+      });
+      return validateTexts;
+    }, [multicurrencyBalances, remainingSimul, balanceInputSimul]);
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
@@ -417,43 +433,46 @@ const ApproveCard = memo<TProps>(
 
         {data.isMulticurrency && depositMultipleSimultaneous
           ? data.assets.map((asset, index) => (
-              <div key={asset} css={{ marginTop: index !== 0 ? 50 : 0 }}>
-                <RowDiv>
-                  <div>
-                    {isRe
-                      ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
-                      : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
-                    :
-                  </div>
-                  <div>
-                    {formatNumberSeparator(numeral(multicurrencyBalances[index].balance).format("0,0.[0000]"))} {asset}
-                  </div>
-                </RowDiv>
-                <RowDiv>
-                  <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
-                  <div>
-                    {formatNumberSeparator(remainingSimul[index].remaining)} {asset}
-                  </div>
-                </RowDiv>
-                <RowDiv>
-                  <div>{asset}</div>
-                </RowDiv>
-                <Input
-                  style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
-                  placeholder=""
-                  value={balanceInputSimul[index]}
-                  onChange={(e) => {
-                    handleInputChange(e, index);
-                  }}
-                  suffix={
-                    <Max onClick={() => handleMaxInputSimul(index)}>
-                      {intl.formatMessage({ defaultMessage: "MAX" })}
-                    </Max>
-                  }
-                  disabled={!enabled || isSoldOut} //xyzzy
-                />
-              </div>
-              //XYZZY: need to create validateTexts for simultaneous deposit
+              <>
+                <div key={asset} css={{ marginTop: index !== 0 ? 50 : 0 }}>
+                  <RowDiv>
+                    <div>
+                      {isRe
+                        ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+                        : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+                      :
+                    </div>
+                    <div>
+                      {formatNumberSeparator(numeral(multicurrencyBalances[index].balance).format("0,0.[0000]"))}{" "}
+                      {asset}
+                    </div>
+                  </RowDiv>
+                  <RowDiv>
+                    <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
+                    <div>
+                      {formatNumberSeparator(remainingSimul[index].remaining)} {asset}
+                    </div>
+                  </RowDiv>
+                  <RowDiv>
+                    <div>{asset}</div>
+                  </RowDiv>
+                  <Input
+                    style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
+                    placeholder=""
+                    value={balanceInputSimul[index]}
+                    onChange={(e) => {
+                      handleInputChange(e, index);
+                    }}
+                    suffix={
+                      <Max onClick={() => handleMaxInputSimul(index)}>
+                        {intl.formatMessage({ defaultMessage: "MAX" })}
+                      </Max>
+                    }
+                    disabled={!enabled || isSoldOut} //xyzzy
+                  />
+                </div>
+                <ValidateText>{!depositLoading && validateTextSimul[index]}</ValidateText>
+              </>
             ))
           : null}
 

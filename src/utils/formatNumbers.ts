@@ -229,7 +229,7 @@ export const getWTFApr = (
   // (100 * 1) / 100000 * (365 * 86400) / 60018:27
 
   const wtfReward = new BigNumber(wtfAPY)
-    .dividedBy(new BigNumber(100))
+    // .dividedBy(new BigNumber(100))
     .times(tokensInDuration)
     .times(new BigNumber(wtfPrice))
     .dividedBy(target)
@@ -237,6 +237,31 @@ export const getWTFApr = (
     .dividedBy(duration)
     .toFormat(0)
     .toString();
+
+  // if (tokensInDuration.toString() !== "0")
+  //   console.log(
+  //     "wtfapr",
+  //     // wtfAPY.toString(),
+  //     // tokensInDuration.toString(),
+  //     // wtfPrice,
+  //     // target.toString(),
+  //     // 86400 * 365,
+  //     // duration,
+  //     // duration,
+  //     // rewardPerBlock.toString(),
+  //     // blocksInDuration.toString(),
+  //     tokensInDuration.toString(),
+
+  //     new BigNumber(wtfAPY)
+  //       .dividedBy(new BigNumber(100))
+  //       .times(tokensInDuration)
+  //       .times(new BigNumber(wtfPrice))
+  //       .dividedBy(target)
+  //       .times(new BigNumber(86400 * 365))
+  //       .dividedBy(duration)
+  //       .toString()
+  //     // wtfReward
+  //   );
   return wtfReward;
 };
 export const getNetApr = (

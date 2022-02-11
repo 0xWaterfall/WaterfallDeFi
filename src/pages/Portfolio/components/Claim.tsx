@@ -7,8 +7,9 @@ import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 // import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
-import { useWTF } from "hooks";
+import { useWeeklyReward, useWTF } from "hooks";
 import { formatNumberSeparator } from "utils/formatNumbers";
+import numeral from "numeral";
 
 type TProps = WrappedComponentProps;
 
@@ -27,7 +28,8 @@ const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white, useColorModeValue, dark } = useTheme();
   const { weekDistribution } = useWTF();
   const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
-
+  const weeklyReward = useWeeklyReward();
+  console.log("weeklyReward", weeklyReward);
   return (
     <div
       css={{
@@ -92,7 +94,8 @@ const Claim = memo<TProps>(({ intl }) => {
         }}
       >
         {/* 👀 */}
-        37,500
+        {weeklyReward !== "0" ? numeral(weeklyReward).format("0,0.[0]") : ""}
+
         {/*  {formatNumberSeparator(weekDistribution.toString())} WTF */}
       </div>
     </div>

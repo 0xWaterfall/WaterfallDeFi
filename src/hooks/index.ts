@@ -429,6 +429,21 @@ export const useTotalTvl = () => {
 
   return totalTvl;
 };
+export const useWeeklyReward = () => {
+  const [weeklyReward, setWeeklyReward] = useState("0");
+  const markets = useMarkets();
+  let _rewardPerBlock = new BigNumber(BIG_ZERO);
+  const { slowRefresh } = useRefresh();
+  useEffect(() => {
+    markets.forEach((m) => {
+      const _rpb = new BigNumber(m.rewardPerBlock || 0);
+      _rewardPerBlock = _rewardPerBlock.plus(_rpb);
+    });
+    setWeeklyReward(_rewardPerBlock.times((86400 / 3) * 7).toString());
+  }, [markets, slowRefresh]);
+
+  return weeklyReward;
+};
 export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
   const signerOrProvider = signer ?? simpleRpcProvider;

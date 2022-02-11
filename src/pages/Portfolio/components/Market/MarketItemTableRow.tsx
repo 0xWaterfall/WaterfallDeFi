@@ -4,7 +4,7 @@ import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Tabl
 import styled from "@emotion/styled";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import React, { memo, useState, useEffect } from "react";
-import { Star, WTFToken } from "assets/images";
+import { Star, Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
 import {
   formatAllocPoint,
@@ -32,6 +32,7 @@ import { setMarketKey } from "store/selectedKeys";
 import { useDispatch } from "react-redux";
 import Tooltip from "components/Tooltip/Tooltip";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import numeral from "numeral";
 
 type TProps = WrappedComponentProps & {
   data: Market;
@@ -84,8 +85,12 @@ const APYStyled2 = styled.div`
       align-items: center;
     }
   }
+  & > div > div {
+    display: flex;
+    align-items: center;
+  }
   & svg {
-    margin-left: 0;
+    margin-left: 5px;
   }
 `;
 
@@ -132,25 +137,54 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
       <TableColumn minWidth={240} css={{ display: "flex" }}>
         <div css={{ display: "flex", flexDirection: "column" }}>
           {marketData?.tranches.map((_t, _i) => {
+            const wtfAPR = getWTFApr(
+              formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
+              marketData?.tranches[_i],
+              marketData.duration,
+              marketData.rewardPerBlock,
+              wtfPrice
+            );
+            const trancheAPR = _t.apy;
+            const totalAPR = wtfAPR !== "0.00" ? Number(trancheAPR) + Number(numeral(wtfAPR).value()) : trancheAPR;
             return (
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>
                 <span>{tranchesDisplayText[_i]}</span>
-                <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
-
-                <span css={{ visibility: isHide }}>
-                  <div>
-                    <WTFToken />
-                  </div>
-                  {getWTFApr(
-                    formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
-                    marketData?.tranches[_i],
-                    marketData.duration,
-                    marketData.rewardPerBlock,
-                    wtfPrice
-                  )}
-                  {" %"}
-                </span>
+                <div css={{ color: tranchesDisplayColor[_i] }}>
+                  <Tooltip
+                    overlay={
+                      <React.Fragment>
+                        <span style={{ display: "flex" }}>
+                          <div style={{ width: 100 }}>Total APR:</div>
+                          <div css={{ color: tranchesDisplayColor[_i] }}>{numeral(totalAPR).format("0,0.[00]")} %</div>
+                        </span>
+                        <span style={{ display: "flex" }}>
+                          <div style={{ width: 100 }}>{tranchesDisplayText[_i]} APR:</div>
+                          {_t.apy} %
+                        </span>
+                        <span style={{ display: "flex", visibility: isHide }}>
+                          <div style={{ width: 100 }}>
+                            {/* <WTFToken /> */}
+                            WTF APR:
+                          </div>
+                          {getWTFApr(
+                            formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
+                            marketData?.tranches[_i],
+                            marketData.duration,
+                            marketData.rewardPerBlock,
+                            wtfPrice
+                          )}
+                          {" %"}
+                        </span>
+                      </React.Fragment>
+                    }
+                  >
+                    <div>
+                      {numeral(totalAPR).format("0,0.[00]")} %
+                      <Union />
+                    </div>
+                  </Tooltip>
+                </div>
               </APYStyled2>
               /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */
               // </div>

@@ -19,12 +19,23 @@ import {
   MasterChefOracleAddress1,
   MasterChefOracleAddress2,
   TranchesAddressOracle2,
-  TestAutorollAddressAsPlaceholder
+  DAIFallsTrancheMasterAddress,
+  DAIFallsMasterWTFAddress,
+  DAI_E_DepositAddress,
+  DAITraderJoeStrategyAddress,
+  DAIMaximiserStrategyAddress,
+  WAVAXFallsTrancheMasterAddress,
+  WAVAXFallsMasterWTFAddress,
+  WAVAXDepositAddress,
+  WAVAXTraderJoeStrategyAddress,
+  WAVAXBenqiStrategyAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as StrategyAbi } from "./abi/Strategy.json";
+import { abi as DAIFallsAbi } from "./abi/DAIFalls.json";
+import { abi as WAVAXFallsAbi } from "./abi/WAVAXFalls.json";
 import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
@@ -214,33 +225,66 @@ export const MarketList: Market[] = [
     isRetired: true
   },
   {
-    portfolio: "AVAX Falls",
-    assets: "wAVAX",
+    portfolio: "DAI Falls (Test)",
+    assets: "DAI.e",
     listingDate: "2021/2/11",
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",
     status: "",
     nextTime: "",
-    address: TestAutorollAddressAsPlaceholder[NETWORK],
-    abi: TranchesAbi,
+    address: DAIFallsTrancheMasterAddress[NETWORK],
+    abi: DAIFallsAbi,
     masterChefAbi: MasterChefAbi,
-    masterChefAddress: MasterChefAddress2[NETWORK],
+    masterChefAddress: DAIFallsMasterWTFAddress[NETWORK],
     pools: [],
-    depositAssetAddress: BUSDAddress[NETWORK], //PLACEHOLDER FOR NOW, DO NOT DEPOSIT
-    depositAssetAbi: WTFAbi, //PLACEHOLDER FOR NOW, DO NOT USE
+    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Alpaca BUSD",
+        farmName: "Trader Joe",
         shares: 0.8,
-        sAddress: sALPACAAddress[NETWORK],
-        apiKey: "alpaca"
+        sAddress: DAITraderJoeStrategyAddress[NETWORK],
+        apiKey: "traderJoe" //double check
       },
       {
-        farmName: "Venus BUSD",
+        farmName: "Maximiser",
         shares: 0.2,
-        sAddress: sVENUSAddress[NETWORK],
-        apiKey: "venus"
+        sAddress: DAIMaximiserStrategyAddress[NETWORK],
+        apiKey: "maximiser" //double check
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
+    isRetired: true
+  },
+  {
+    portfolio: "WAVAX Falls (Test)",
+    assets: "WAVAX",
+    listingDate: "2021/2/11",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: WAVAXFallsTrancheMasterAddress[NETWORK],
+    abi: WAVAXFallsAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: WAVAXFallsMasterWTFAddress[NETWORK],
+    pools: [],
+    depositAssetAddress: WAVAXDepositAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Trader Joe",
+        shares: 0.5,
+        sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
+        apiKey: "traderJoe" //double check
+      },
+      {
+        farmName: "Benqi",
+        shares: 0.5,
+        sAddress: WAVAXBenqiStrategyAddress[NETWORK],
+        apiKey: "maximiser" //double check
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",

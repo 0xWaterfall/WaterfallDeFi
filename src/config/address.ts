@@ -178,10 +178,54 @@ export const TestLPRewardAddress: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };
 
-//using new test autoroll contract for now to represent AVAX contract (replicate autoroll merge)
-export const TestAutorollAddressAsPlaceholder: { [network: string]: string } = {
+export const DAIFallsTrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  // [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
-  [NETWORKS.MAINNET]: "0x3d1c938351201267BAdf49Be50188F8F81F21A20"
+  [NETWORKS.MAINNET]: "0x9c59d895A660F30C8B335AF3a26a371b17192382"
+};
+export const DAIFallsMasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x11f21b204D224Bd955a9aEd302f68F0f87962c1B"
+};
+export const DAI_E_DepositAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70"
+};
+export const DAITraderJoeStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x6d4123fA5De696d459155B5978b9f33e87d1e5a2"
+};
+export const DAIMaximiserStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1633309d9460ee5D6E66c5E7e7f773BBe1dfED0b"
+};
+
+export const WAVAXFallsTrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xA88C319D2947f54D728C9E95122A61E512cEF64e"
+};
+export const WAVAXFallsMasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x7424F32E9B038555086d11cff17930e56AdE6979"
+};
+export const WAVAXDepositAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+};
+export const WAVAXTraderJoeStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xC986263a124fb36359B7b99F35E5E7bEEcD65579"
+};
+export const WAVAXBenqiStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x57c5a9808022aD244E1487F204A01349c90726f9"
 };

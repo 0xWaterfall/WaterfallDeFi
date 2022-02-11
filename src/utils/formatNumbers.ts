@@ -235,7 +235,7 @@ export const getWTFApr = (
     .dividedBy(target)
     .times(new BigNumber(86400 * 365))
     .dividedBy(duration)
-    .toFormat(0)
+    .toFormat(2)
     .toString();
 
   // if (tokensInDuration.toString() !== "0")

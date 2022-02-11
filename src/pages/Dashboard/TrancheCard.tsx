@@ -235,7 +235,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
                         <APRWrapper>
                           <span>{intl.formatMessage({ defaultMessage: "Total APR" })}: </span>
                           <p>
-                            {netApr}
+                            {numeral(netApr).format("0,0.[00]")}
                             {" %"}
                           </p>
                         </APRWrapper>

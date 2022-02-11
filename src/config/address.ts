@@ -177,3 +177,11 @@ export const TestLPRewardAddress: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
   [NETWORKS.MAINNET]: "0x969632553ff84fcae9b44Fd2C1bac572e0C916e1" //test 21Dec
 };
+
+//using new test autoroll contract for now to represent AVAX contract (replicate autoroll merge)
+export const TestAutorollAddressAsPlaceholder: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0x72adfcD18b21797696C499d6d964B2263e125223"
+  [NETWORKS.MAINNET]: "0x3d1c938351201267BAdf49Be50188F8F81F21A20"
+};

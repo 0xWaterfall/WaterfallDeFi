@@ -18,7 +18,8 @@ import {
   TranchesAddressOracle1,
   MasterChefOracleAddress1,
   MasterChefOracleAddress2,
-  TranchesAddressOracle2
+  TranchesAddressOracle2,
+  TestAutorollAddressAsPlaceholder
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
@@ -195,6 +196,39 @@ export const MarketList: Market[] = [
     pools: [],
     depositAssetAddress: BUSDAddress[NETWORK],
     depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
+    isRetired: true
+  },
+  {
+    portfolio: "AVAX Falls",
+    assets: "wAVAX",
+    listingDate: "2021/2/11",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: TestAutorollAddressAsPlaceholder[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MasterChefAddress2[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK], //PLACEHOLDER FOR NOW, DO NOT DEPOSIT
+    depositAssetAbi: WTFAbi, //PLACEHOLDER FOR NOW, DO NOT USE
     strategyFarms: [
       {
         farmName: "Alpaca BUSD",

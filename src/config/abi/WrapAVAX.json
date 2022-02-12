@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
-  "contractName": "DAIFalls",
-  "sourceName": "contracts/main/DAIFalls.sol",
+  "contractName": "WrapAVAX",
+  "sourceName": "contracts/main/WrapAVAX.sol",
   "abi": [
     {
       "anonymous": false,

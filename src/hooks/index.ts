@@ -33,7 +33,7 @@ import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall from "utils/multicall";
 import numeral from "numeral";
-import { useTrancheMasterContract } from "./useContract";
+import { useAVAXTrancheMasterContract, useTrancheMasterContract } from "./useContract";
 import { setPendingWTFReward } from "store/position";
 import markets from "store/markets";
 import { MarketList } from "config/market";
@@ -144,7 +144,7 @@ export const useMarket = async (marketData: Market) => {
 
 //   return result;
 // };
-export const useTrancheBalance = (trancheMasterAddress: string) => {
+export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean) => {
   // const [balance, setBalance] = useState(BIG_ZERO);
   // const [invested, setInvested] = useState(BIG_ZERO);
   const [result, setResult] = useState({
@@ -154,7 +154,9 @@ export const useTrancheBalance = (trancheMasterAddress: string) => {
   const { account } = useWeb3React<Web3Provider>();
 
   const { fastRefresh } = useRefresh();
-  const trancheMasterContract = useTrancheMasterContract(trancheMasterAddress);
+  const trancheMasterContract = !isAvax
+    ? useTrancheMasterContract(trancheMasterAddress)
+    : useAVAXTrancheMasterContract(trancheMasterAddress);
 
   useEffect(() => {
     const fetchBalance = async () => {

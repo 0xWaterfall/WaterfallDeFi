@@ -279,6 +279,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           tranchesPendingReward={tranchesPendingReward[userInvest.tranche]}
           fee={market.tranches[userInvest.tranche].fee}
           trancheMasterAddress={market.address}
+          isAvax={market.isAvax}
         />
       )}
     </Wrapper>

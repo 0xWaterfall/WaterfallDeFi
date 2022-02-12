@@ -1,7 +1,7 @@
 import { useSelectedMarket } from "./../../../hooks/useSelectors";
 import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useTrancheMasterContract } from "hooks/useContract";
+import { useAVAXTrancheMasterContract, useTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 import { DEFAULT_GAS_LIMIT } from "config";
 import BigNumber from "bignumber.js";
@@ -53,10 +53,12 @@ const withdraw = async (trancheContract: Contract, amount: string, dispatch: Dis
   return receipt.status;
 };
 
-const useWithdraw = (trancheMasterAddress: string) => {
+const useWithdraw = (trancheMasterAddress: string, isAvax: boolean) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const trancheContract = useTrancheMasterContract(trancheMasterAddress);
+  const trancheContract = isAvax!
+    ? useTrancheMasterContract(trancheMasterAddress)
+    : useAVAXTrancheMasterContract(trancheMasterAddress);
   const market = useSelectedMarket();
   const handleWithdraw = useCallback(
     async (amount: string) => {

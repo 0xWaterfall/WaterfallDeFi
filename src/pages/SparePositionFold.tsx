@@ -112,6 +112,7 @@ type TProps = WrappedComponentProps & {
   tranchesPendingReward: any;
   fee: string;
   trancheMasterAddress: string;
+  isAvax: boolean;
 };
 
 const SparePositionFold = memo<TProps>(
@@ -127,15 +128,16 @@ const SparePositionFold = memo<TProps>(
     isActive,
     tranchesPendingReward,
     fee,
-    trancheMasterAddress
+    trancheMasterAddress,
+    isAvax
   }) => {
     const { gray, primary, shadow, linearGradient, white, useColorModeValue } = useTheme();
     const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
 
     const [redeemLoading, setRedeemLoading] = useState(false);
-    const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
-    const { onWithdraw } = useWithdraw(trancheMasterAddress);
-    const { balance, invested } = useTrancheBalance(trancheMasterAddress);
+    const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress, isAvax);
+    const { onWithdraw } = useWithdraw(trancheMasterAddress, isAvax);
+    const { balance, invested } = useTrancheBalance(trancheMasterAddress, isAvax);
     const dispatch = useAppDispatch();
 
     const withdrawAll = async () => {

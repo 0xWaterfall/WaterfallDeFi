@@ -126,11 +126,11 @@ const Charts = memo<TProps>(({ intl, data }) => {
 
   const { push } = useHistory();
 
-  const { onWithdraw } = useWithdraw(data.address);
+  const { onWithdraw } = useWithdraw(data.address, data.isAvax);
 
   const { onClaimAll } = useClaimAll(data.masterChefAddress);
 
-  const { balance, invested } = useTrancheBalance(data.address);
+  const { balance, invested } = useTrancheBalance(data.address, data.isAvax);
   const { account } = useWeb3React<Web3Provider>();
 
   // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();

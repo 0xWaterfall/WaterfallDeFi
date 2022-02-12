@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useMasterchefContract, useTrancheMasterContract } from "hooks/useContract";
+import { useAVAXTrancheMasterContract, useMasterchefContract, useTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 import { DEFAULT_GAS_LIMIT } from "config";
 import BigNumber from "bignumber.js";
@@ -22,10 +22,12 @@ const redeem = async (contract: Contract, i: number) => {
   return receipt.status;
 };
 
-const useRedeemDirect = (trancheMasterAddress: string) => {
+const useRedeemDirect = (trancheMasterAddress: string, isAvax: boolean) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useTrancheMasterContract(trancheMasterAddress);
+  const contract = !isAvax
+    ? useTrancheMasterContract(trancheMasterAddress)
+    : useAVAXTrancheMasterContract(trancheMasterAddress);
   // const market = useSelectedMarket();
   const handleRedeemDirect = useCallback(
     async (i: number) => {

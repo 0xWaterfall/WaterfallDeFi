@@ -34,14 +34,14 @@ import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as StrategyAbi } from "./abi/Strategy.json";
-import { abi as DAIFallsAbi } from "./abi/DAIFalls.json";
-import { abi as WAVAXFallsAbi } from "./abi/WAVAXFalls.json";
+import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
 import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls 1",
     assets: "BUSD",
+    isAvax: false,
     listingDate: "2022/01/16",
     // lockupPeriod: "7 Days",
     // duration: 0,
@@ -85,6 +85,7 @@ export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls 2",
     assets: "BUSD",
+    isAvax: false,
     listingDate: "2021/01/17",
     tranches: [],
     tvl: "",
@@ -118,6 +119,7 @@ export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls 3",
     assets: "BUSD",
+    isAvax: false,
     listingDate: "2021/12/26",
     tranches: [],
     tvl: "",
@@ -150,6 +152,7 @@ export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls 1 (Expired)",
     assets: "BUSD",
+    isAvax: false,
     listingDate: "2021/11/16",
     // lockupPeriod: "7 Days",
     // duration: 0,
@@ -194,6 +197,7 @@ export const MarketList: Market[] = [
   {
     portfolio: "BUSD Falls 2 (Expired)",
     assets: "BUSD",
+    isAvax: false,
     listingDate: "2021/11/25",
     tranches: [],
     tvl: "",
@@ -226,7 +230,9 @@ export const MarketList: Market[] = [
   },
   {
     portfolio: "DAI Falls (Test)",
-    assets: "DAI.e",
+    assets: "DAIE",
+    isAvax: true,
+    wrapAvax: false,
     listingDate: "2021/2/11",
     tranches: [],
     tvl: "",
@@ -234,7 +240,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: DAIFallsTrancheMasterAddress[NETWORK],
-    abi: DAIFallsAbi,
+    abi: AVAXTranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: DAIFallsMasterWTFAddress[NETWORK],
     pools: [],
@@ -260,6 +266,8 @@ export const MarketList: Market[] = [
   {
     portfolio: "WAVAX Falls (Test)",
     assets: "WAVAX",
+    isAvax: true,
+    wrapAvax: true,
     listingDate: "2021/2/11",
     tranches: [],
     tvl: "",
@@ -267,7 +275,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: WAVAXFallsTrancheMasterAddress[NETWORK],
-    abi: WAVAXFallsAbi,
+    abi: AVAXTranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: WAVAXFallsMasterWTFAddress[NETWORK],
     pools: [],

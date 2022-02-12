@@ -43,6 +43,8 @@ export interface FarmConfig {
 export interface Market {
   portfolio: string;
   assets: string;
+  isAvax: boolean;
+  wrapAvax?: boolean;
   listingDate: string;
   // lockupPeriod: string;
   duration?: string;

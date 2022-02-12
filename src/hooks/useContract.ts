@@ -1,12 +1,21 @@
 import { useWeb3React } from "@web3-react/core";
 import { getContract, getSigner } from "hooks";
-import { FeeRewardsAddress, MasterChefAddress, TranchesAddress, VeWTFAddress, WTFRewardsAddress } from "config/address";
+import {
+  FeeRewardsAddress,
+  MasterChefAddress,
+  TranchesAddress,
+  VeWTFAddress,
+  WrapAVAXAddress,
+  WTFRewardsAddress
+} from "config/address";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as WTFRewardsAbi } from "config/abi/WTFRewards.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
 import { abi as LPRewardsAbi } from "config/abi/WTFLPRewards.json";
+import { abi as AVAXTrancheMasterAbi } from "config/abi/AVAXTrancheMaster.json";
+import { abi as WrapAVAXFallsAbi } from "config/abi/WrapAVAX.json";
 import { useMemo } from "react";
 import { NETWORK } from "config";
 
@@ -43,4 +52,14 @@ export const useFeeRewardsContract = () => {
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
+};
+
+export const useAVAXTrancheMasterContract = (trancheMasterAddress: string) => {
+  const signer = getSigner();
+  return useMemo(() => getContract(AVAXTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+};
+
+export const useWrapAVAXContract = () => {
+  const signer = getSigner();
+  return useMemo(() => getContract(WrapAVAXFallsAbi, WrapAVAXAddress[NETWORK], signer), [signer]);
 };

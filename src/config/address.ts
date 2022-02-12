@@ -204,6 +204,11 @@ export const DAIMaximiserStrategyAddress: { [network: string]: string } = {
   [NETWORKS.MAINNET]: "0x1633309d9460ee5D6E66c5E7e7f773BBe1dfED0b"
 };
 
+export const WrapAVAXAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"
+};
 export const WAVAXFallsTrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",

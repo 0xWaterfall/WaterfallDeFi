@@ -28,6 +28,10 @@ export const useTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContract(TrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
+export const useAVAXTrancheMasterContract = (trancheMasterAddress: string) => {
+  const signer = getSigner();
+  return useMemo(() => getContract(AVAXTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+};
 
 export const useERC20Contract = (address: string) => {
   const signer = getSigner();
@@ -52,11 +56,6 @@ export const useFeeRewardsContract = () => {
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
-};
-
-export const useAVAXTrancheMasterContract = (trancheMasterAddress: string) => {
-  const signer = getSigner();
-  return useMemo(() => getContract(AVAXTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
 };
 
 export const useWrapAVAXContract = () => {

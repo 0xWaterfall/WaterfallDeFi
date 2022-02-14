@@ -218,9 +218,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
-        <div>
-          {formatNumberSeparator(marketData.tvl)} {marketData.assets}
-        </div>
+        <div>${formatNumberSeparator(marketData.tvl)}</div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>

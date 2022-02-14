@@ -165,7 +165,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
           })}
         </div>
       </TableColumn>
-      <TableColumn minWidth={160}>{formatNumberSeparator(marketData.tvl)}$</TableColumn>
+      <TableColumn minWidth={160}>${formatNumberSeparator(marketData.tvl)}</TableColumn>
       <TableColumn minWidth={80}>
         {getMarketStatusTag()}
 

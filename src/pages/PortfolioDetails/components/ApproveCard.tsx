@@ -27,6 +27,8 @@ import Input from "components/Input/Input";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
+import BigNumber from "bignumber.js";
+import { BIG_TEN } from "utils/bigNumber";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -604,7 +606,7 @@ const ApproveCard = memo<TProps>(
         {enabled && (
           <RedemptionFee>
             Withdrawal fee: ( Principal + all yield of the current cycle ) x{" "}
-            <span>{selectTranche && selectTranche.fee + "%"}</span>
+            <span>{selectTranche && new BigNumber(selectTranche.fee).dividedBy(BIG_TEN.pow(18)).toString() + "%"}</span>
           </RedemptionFee>
         )}
       </Container>

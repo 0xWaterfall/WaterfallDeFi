@@ -103,7 +103,7 @@ const RemainingDepositableOuter = styled.div`
   height: 6px;
   background-color: rgba(51, 51, 51, 0.1);
   border-radius: 4px;
-  margin: 10px 20px 0 6px;
+  margin: 0 20px 0 6px;
 `;
 
 const RemainingDepositableInner = styled.div`
@@ -231,17 +231,24 @@ const Deposit = memo<TProps>(
                   {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
                     <RemainingDepositableOuter>
                       <RemainingDepositableInner css={{ width: width + "%" }} />
+                      <span>
+                        {deposited[data.assets.indexOf(selectedDepositAsset)].toString()} /{" "}
+                        {maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()}
+                      </span>
                     </RemainingDepositableOuter>
                   ) : null}
                 </div>
               ) : (
                 <div css={{ display: "flex", flexDirection: "column" }}>
                   {data.assets.map((asset, index) => (
-                    <div key={asset} css={{ display: "flex", paddingTop: "3.5px" }}>
+                    <div key={asset} css={{ display: "flex", padding: "3.5px 0" }}>
                       <Coin assetName={asset} size={24} />
                       <div css={{ padding: "2px 6px 0 6px" }}>{asset} Remaining</div>
                       <RemainingDepositableOuter>
                         <RemainingDepositableInner css={{ width: widths[index] + "%" }} />
+                        <span>
+                          {deposited[index].toString()} / {maxDeposits[index].toString()}
+                        </span>
                       </RemainingDepositableOuter>
                     </div>
                   ))}

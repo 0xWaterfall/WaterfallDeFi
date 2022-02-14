@@ -226,7 +226,8 @@ const TrancheCard = memo<TProps>(({ intl }) => {
                   const netApr =
                     trancheApr && wtfApr && wtfApr !== null
                       ? Number(trancheApr) + Number(numeral(wtfApr).value())
-                      : "-";
+                      : // ? Number(numeral(trancheApr).value()) + Number(numeral(wtfApr).value())
+                        "-";
 
                   return (
                     <Block key={trancheText}>

@@ -505,6 +505,7 @@ export const getMulticallBSCContract = () => {
 
 export const getSigner = () => {
   if (window?.ethereum) {
+    const chainId = window.ethereum.chainId;
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     if (signer) return signer;

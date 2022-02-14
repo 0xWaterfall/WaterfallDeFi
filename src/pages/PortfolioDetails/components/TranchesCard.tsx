@@ -193,7 +193,7 @@ const TranchesCard = memo<TProps>(
       () =>
         !data.autorollImplemented
           ? compareNum(tranche.principal, tranche.target)
-          : compareNum(tranche.validPercent, "1"),
+          : compareNum(Number(tranche.autoPrincipal) + Number(tranche.principal), tranche.target),
       [tranche.principal, tranche.target]
     );
     const trancheApr = tranche.apy;
@@ -249,7 +249,7 @@ const TranchesCard = memo<TProps>(
             percentage={
               !data.autorollImplemented
                 ? getPercentage(tranche.principal, tranche.target)
-                : getPercentage(tranche.validPercent, "1")
+                : getPercentage((Number(tranche.principal) + Number(tranche.autoPrincipal)).toString(), tranche.target)
             }
           />
         </div>

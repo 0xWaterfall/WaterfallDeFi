@@ -164,7 +164,10 @@ const DepositItem = memo<TProps>(
             (
               !marketData.autorollImplemented
                 ? compareNum(selectTranche?.principal, selectTranche?.target)
-                : compareNum(selectTranche?.validPercent, "1")
+                : compareNum(
+                    Number(selectTranche?.autoPrincipal) + Number(selectTranche?.principal),
+                    selectTranche?.target
+                  )
             )
               ? true
               : false

@@ -160,7 +160,15 @@ const DepositItem = memo<TProps>(
           selectTrancheIdx={selectTrancheIdx}
           data={marketData}
           selectTranche={selectTranche}
-          isSoldOut={compareNum(selectTranche?.principal, selectTranche?.target) ? true : false}
+          isSoldOut={
+            (
+              !marketData.autorollImplemented
+                ? compareNum(selectTranche?.principal, selectTranche?.target)
+                : compareNum(selectTranche?.validPercent, "1")
+            )
+              ? true
+              : false
+          }
           depositMultipleSimultaneous={depositMultipleSimultaneous}
         />
       </div>

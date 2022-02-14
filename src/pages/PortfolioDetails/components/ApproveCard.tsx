@@ -606,7 +606,7 @@ const ApproveCard = memo<TProps>(
         {enabled && (
           <RedemptionFee>
             Withdrawal fee: ( Principal + all yield of the current cycle ) x{" "}
-            <span>{selectTranche && new BigNumber(selectTranche.fee).dividedBy(BIG_TEN.pow(18)).toString() + "%"}</span>
+            <span>{selectTranche && selectTranche.fee + "%"}</span>
           </RedemptionFee>
         )}
       </Container>

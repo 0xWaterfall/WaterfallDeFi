@@ -109,6 +109,8 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         totalTarget = totalTarget.times(expectedAPY);
         _tranches.map((_t, _i) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
@@ -118,9 +120,11 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
               : calculateJuniorAPY(tranches, totalTarget, _target);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
-          tvl = tvl.plus(_principal);
+          tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);
           const __t = {
             principal: _principal.toString(),
+            autoPrincipal: _autoPrincipal.toString(),
+            validPercent: _validPercent.toString(),
             apy: _apy.toString(),
             fee: _fee.toString(),
             target: _target.toString()

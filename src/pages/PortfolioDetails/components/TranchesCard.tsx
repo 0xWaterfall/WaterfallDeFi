@@ -189,7 +189,13 @@ const TranchesCard = memo<TProps>(
         riskText: "Multiple Leverage ; Variable"
       }
     };
-    const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
+    const isSoldout = useMemo(
+      () =>
+        !data.autorollImplemented
+          ? compareNum(tranche.principal, tranche.target)
+          : compareNum(tranche.validPercent, "1"),
+      [tranche.principal, tranche.target]
+    );
     const trancheApr = tranche.apy;
     // const wtfPrice = useWTFPrice();
     const { price: wtfPrice } = useWTFPriceLP();
@@ -205,6 +211,7 @@ const TranchesCard = memo<TProps>(
           wtfPrice
         )
       : "-";
+
     return (
       <Container data-selected={selected} data-disabled={isSoldout}>
         {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
@@ -232,7 +239,14 @@ const TranchesCard = memo<TProps>(
               Remaining: {remaining} {selectedDepositAsset}
             </Text4>
           </StatusDiv>
-          <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />
+          <ProgressBar
+            color={Types[type].color}
+            percentage={
+              !data.autorollImplemented
+                ? getPercentage(tranche.principal, tranche.target)
+                : getPercentage(tranche.validPercent, "1")
+            }
+          />
         </div>
       </Container>
     );

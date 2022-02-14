@@ -383,6 +383,7 @@
         { "internalType": "uint256", "name": "target", "type": "uint256" },
         { "internalType": "uint256", "name": "principal", "type": "uint256" },
         { "internalType": "uint256", "name": "capital", "type": "uint256" },
+        { "internalType": "uint256", "name": "validPercent", "type": "uint256" },
         { "internalType": "uint256", "name": "rate", "type": "uint256" },
         { "internalType": "uint256", "name": "apy", "type": "uint256" },
         { "internalType": "uint256", "name": "fee", "type": "uint256" },
@@ -399,7 +400,7 @@
         { "internalType": "uint256", "name": "target", "type": "uint256" },
         { "internalType": "uint256", "name": "principal", "type": "uint256" },
         { "internalType": "uint256", "name": "autoPrincipal", "type": "uint256" },
-        { "internaltype": "uint256", "name": "validPercent", "type": "uint256" },
+        { "internalType": "uint256", "name": "validPercent", "type": "uint256" },
         { "internalType": "uint256", "name": "apy", "type": "uint256" },
         { "internalType": "uint256", "name": "fee", "type": "uint256" }
       ],
@@ -435,7 +436,8 @@
       "name": "userInvest",
       "outputs": [
         { "internalType": "uint256", "name": "cycle", "type": "uint256" },
-        { "internalType": "uint256", "name": "principal", "type": "uint256" }
+        { "internalType": "uint256", "name": "principal", "type": "uint256" },
+        { "internalType": "bool", "name": "rebalanced", "type": "bool" }
       ],
       "stateMutability": "view",
       "type": "function"

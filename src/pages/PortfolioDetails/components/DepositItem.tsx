@@ -99,7 +99,14 @@ const DepositItem = memo<TProps>(
                   data={data}
                   remaining={
                     !data.isMulticurrency
-                      ? getRemaining(data.tranches[_i]?.target, data.tranches[_i]?.principal)
+                      ? getRemaining(
+                          data.tranches[_i]?.target,
+                          !data.autorollImplemented
+                            ? data.tranches[_i]?.principal
+                            : (
+                                Number(data.tranches[_i]?.principal) + Number(data.tranches[_i]?.autoPrincipal)
+                              ).toString()
+                        )
                       : getRemainingMulticurrency(
                           data.tranches[_i]?.target,
                           data.tranches[_i]?.principal,
@@ -117,7 +124,15 @@ const DepositItem = memo<TProps>(
           remaining={
             selectTrancheIdx !== undefined
               ? !data.isMulticurrency
-                ? getRemaining(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+                ? getRemaining(
+                    data.tranches[selectTrancheIdx]?.target,
+                    !data.autorollImplemented
+                      ? data.tranches[selectTrancheIdx]?.principal
+                      : (
+                          Number(data.tranches[selectTrancheIdx]?.principal) +
+                          Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
+                        ).toString()
+                  )
                 : getRemainingMulticurrency(
                     data.tranches[selectTrancheIdx]?.target,
                     data.tranches[selectTrancheIdx]?.principal,
@@ -128,7 +143,15 @@ const DepositItem = memo<TProps>(
           remainingExact={
             selectTrancheIdx !== undefined
               ? !data.isMulticurrency
-                ? getRemainingExact(data.tranches[selectTrancheIdx]?.target, data.tranches[selectTrancheIdx]?.principal)
+                ? getRemainingExact(
+                    data.tranches[selectTrancheIdx]?.target,
+                    !data.autorollImplemented
+                      ? data.tranches[selectTrancheIdx]?.principal
+                      : (
+                          Number(data.tranches[selectTrancheIdx]?.principal) +
+                          Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
+                        ).toString()
+                  )
                 : getRemainingExactMulticurrency(
                     data.tranches[selectTrancheIdx]?.target,
                     data.tranches[selectTrancheIdx]?.principal,

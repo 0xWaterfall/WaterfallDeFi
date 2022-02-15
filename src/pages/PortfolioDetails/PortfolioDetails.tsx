@@ -20,6 +20,7 @@ type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
+
   const market = useSelectedMarket();
   const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
   const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);

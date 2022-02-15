@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
@@ -23,6 +23,8 @@ import { BIG_TEN } from "utils/bigNumber";
 import { setConfirmModal } from "store/showStatus";
 import { useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance } from "hooks";
 import ClaimPopup from "./ClaimPopup";
+import useAutoRoll from "../hooks/useAutoRoll";
+import { Switch } from "antd";
 
 const Wrapper = styled.div`
   display: grid;
@@ -114,6 +116,11 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
   const [showRedeposit, setShowRedeposit] = useState(false);
   const [showClaim, setShowClaim] = useState(false);
 
+  const [autoRoll, setAutoRoll] = useState(false);
+  const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
+
+  const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
+
   const { onWithdraw } = useWithdraw(data.address, data.isMulticurrency);
 
   const { onClaimAll } = useClaimAll(data.masterChefAddress);
@@ -131,6 +138,16 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
   //   account && dispatch(getPendingWTFReward({ account }));
   //   // account && dispatch(getTrancheBalance({ account }));
   // }, [account]);
+
+  useEffect(() => {
+    if (data.autorollImplemented) {
+      getAutoRoll().then((res) => {
+        setAutoRoll(res);
+        setAutoRollPending(false);
+      });
+    }
+  }, []);
+
   const claimReward = async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
     setClaimRewardLoading(true);
 
@@ -207,7 +224,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
       <RecordCard>
         <section>
           <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
-          <div>
+          <div css={{ padding: "10px 0" }}>
             {!data.isMulticurrency
               ? balance
                 ? numeral(balance).format("0,0.[0000]")
@@ -226,7 +243,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
                 withdrawAll();
               }}
               loading={withdrawAllLoading}
-              disabled={!account || !+balance}
+              disabled={!account || !+balance || autoRoll}
               css={{ marginRight: 17 }}
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}
@@ -239,6 +256,38 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </ButtonWrapper>
           </div>
+          {autoRoll ? (
+            <div css={{ marginTop: "10px" }}>
+              {intl.formatMessage({ defaultMessage: "Funds Locked: Automatically Rolling" })}
+            </div>
+          ) : null}
+          {account && data.autorollImplemented ? (
+            <div css={{ display: "flex", marginTop: 20 }}>
+              <span
+                css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12, paddingTop: "4px" }}
+              >
+                Auto Rolling
+              </span>
+              <div css={{ paddingTop: 2.5 }}>
+                {!autoRollPending ? (
+                  <Switch
+                    checked={autoRoll}
+                    onChange={() => {
+                      setAutoRollPending(true);
+                      changeAutoRoll(!autoRoll).then((res) => {
+                        getAutoRoll().then((res2) => {
+                          setAutoRoll(res2);
+                          setAutoRollPending(false);
+                        });
+                      });
+                    }}
+                  />
+                ) : (
+                  <div>Transaction Pending...</div>
+                )}
+              </div>
+            </div>
+          ) : null}
         </section>
         <section>
           <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>

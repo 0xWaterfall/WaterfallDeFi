@@ -3,7 +3,6 @@
 import styled from "@emotion/styled";
 import React, { memo, useMemo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Switch } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
@@ -13,7 +12,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
 import useCheckApprove from "../hooks/useCheckApprove";
 import useApprove from "../hooks/useApprove";
-import useAutoRoll from "../hooks/useAutoRoll";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
@@ -27,8 +25,6 @@ import Input from "components/Input/Input";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
-import BigNumber from "bignumber.js";
-import { BIG_TEN } from "utils/bigNumber";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -147,8 +143,6 @@ const ApproveCard = memo<TProps>(
     remainingSimul
   }) => {
     const { tags } = useTheme();
-    //autoroll contract hook must come before autoroll state hook
-    const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
     //user inputs
     const [balanceInput, setBalanceInput] = useState<string>("0");
     const [balanceInputSimul, setBalanceInputSimul] = useState<string[]>([]);
@@ -156,9 +150,6 @@ const ApproveCard = memo<TProps>(
     const [approved, setApproved] = useState<boolean>(false);
     const [depositLoading, setDepositLoading] = useState<boolean>(false);
     const [approveLoading, setApproveLoading] = useState<boolean>(false);
-    //autoroll hooks
-    const [autoRoll, setAutoRoll] = useState<boolean>(false);
-    const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
     //web3
     const { account } = useWeb3React<Web3Provider>();
     //deposit hooks
@@ -223,14 +214,6 @@ const ApproveCard = memo<TProps>(
       setBalanceInputSimul(data.assets.map(() => "0"));
     }, [enabled]);
 
-    useEffect(() => {
-      if (data.autorollImplemented) {
-        getAutoRoll().then((res) => {
-          setAutoRoll(res);
-          setAutoRollPending(false);
-        });
-      }
-    }, []);
     //handlers
     const handleApprove = async () => {
       setApproveLoading(true);
@@ -537,32 +520,6 @@ const ApproveCard = memo<TProps>(
             </div>
           </ImportantNotes>
         )}
-
-        {account && data.autorollImplemented ? (
-          <div css={{ display: "flex", marginTop: 20 }}>
-            <span css={{ fontSize: 18, fontWeight: 400, color: "rgba(51,51,51,0.7)", marginRight: 12 }}>
-              Auto Rolling
-            </span>
-            <div css={{ paddingTop: 2.5 }}>
-              {!autoRollPending ? (
-                <Switch
-                  checked={autoRoll}
-                  onChange={() => {
-                    setAutoRollPending(true);
-                    changeAutoRoll(!autoRoll).then((res) => {
-                      getAutoRoll().then((res2) => {
-                        setAutoRoll(res2);
-                        setAutoRollPending(false);
-                      });
-                    });
-                  }}
-                />
-              ) : (
-                <div>Transaction Pending...</div>
-              )}
-            </div>
-          </div>
-        ) : null}
 
         {account ? (
           approved ? (

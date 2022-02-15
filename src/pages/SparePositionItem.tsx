@@ -297,6 +297,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           fee={market.tranches[userInvest.tranche].fee}
           trancheMasterAddress={market.address}
           isMulticurrency={market.isMulticurrency}
+          autorollImplemented={market.autorollImplemented}
         />
       )}
     </Wrapper>

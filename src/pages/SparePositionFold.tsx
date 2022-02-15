@@ -18,6 +18,8 @@ import { useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 import { setConfirmModal } from "store/showStatus";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
+import useAutoRoll from "./PortfolioDetails/hooks/useAutoRoll";
+import { Switch } from "antd";
 
 const Wrapper = styled.div`
   padding: 24px 32px;
@@ -112,6 +114,7 @@ type TProps = WrappedComponentProps & {
   fee: string;
   trancheMasterAddress: string;
   isMulticurrency: boolean;
+  autorollImplemented: boolean;
 };
 
 const SparePositionFold = memo<TProps>(
@@ -128,7 +131,8 @@ const SparePositionFold = memo<TProps>(
     tranchesPendingReward,
     fee,
     trancheMasterAddress,
-    isMulticurrency
+    isMulticurrency,
+    autorollImplemented
   }) => {
     const { gray, primary, white, useColorModeValue } = useTheme();
     const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
@@ -137,6 +141,10 @@ const SparePositionFold = memo<TProps>(
     const { onRedeemDirect } = useRedeemDirect(trancheMasterAddress);
     const { onWithdraw } = useWithdraw(trancheMasterAddress, isMulticurrency);
     const { balance, invested } = useTrancheBalance(trancheMasterAddress);
+
+    const [autoRoll, setAutoRoll] = useState(false);
+    const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
+    const { getAutoRoll, changeAutoRoll } = useAutoRoll(trancheMasterAddress);
     //TODO: handle tracking ALL multicurrency deposits for a specific held MC falls position
     // !isMulticurrency ? useTrancheBalance(trancheMasterAddress) : useAllMulticurrencyTrancheBalance(trancheMasterAddress, assets.length);
     const dispatch = useAppDispatch();
@@ -187,11 +195,16 @@ const SparePositionFold = memo<TProps>(
         setRedeemLoading(false);
       }
     };
+
     useEffect(() => {
-      return () => {
-        // console.log("clean");
-      };
+      if (autorollImplemented) {
+        getAutoRoll().then((res) => {
+          setAutoRoll(res);
+          setAutoRollPending(false);
+        });
+      }
     }, []);
+
     return (
       <Wrapper>
         <LinearGradientWrapper />
@@ -232,12 +245,22 @@ const SparePositionFold = memo<TProps>(
             </CardValue>
             <CardAction>
               {isCurrentCycle && isPending && (
-                <ButtonWrapper type="primary" onClick={() => redeemDirect(currentTranche)} loading={redeemLoading}>
+                <ButtonWrapper
+                  type="primary"
+                  onClick={() => redeemDirect(currentTranche)}
+                  disabled={autoRoll}
+                  loading={redeemLoading}
+                >
                   {intl.formatMessage({ defaultMessage: "Redeem" })}
                 </ButtonWrapper>
               )}
               {!isPending && !isActive && (
-                <ButtonWrapper type="primary" onClick={withdrawAll} loading={withdrawAllLoading} disabled={!+balance}>
+                <ButtonWrapper
+                  type="primary"
+                  onClick={withdrawAll}
+                  loading={withdrawAllLoading}
+                  disabled={!+balance || autoRoll}
+                >
                   {intl.formatMessage({ defaultMessage: "Withdraw All Tranches" })}
                 </ButtonWrapper>
               )}
@@ -245,6 +268,44 @@ const SparePositionFold = memo<TProps>(
                 {intl.formatMessage({ defaultMessage: "Re-deposit" })}
               </ButtonWrapper>
             </CardAction>
+            {autoRoll ? (
+              <div css={{ marginTop: "10px" }}>
+                {intl.formatMessage({ defaultMessage: "Funds Locked: Automatically Rolling" })}
+              </div>
+            ) : null}
+            {autorollImplemented ? (
+              <div css={{ display: "flex", marginTop: 20 }}>
+                <span
+                  css={{
+                    fontSize: 18,
+                    fontWeight: 400,
+                    color: "rgba(51,51,51,0.7)",
+                    marginRight: 12,
+                    paddingTop: "4px"
+                  }}
+                >
+                  Auto Rolling
+                </span>
+                <div css={{ paddingTop: 2.5 }}>
+                  {!autoRollPending ? (
+                    <Switch
+                      checked={autoRoll}
+                      onChange={() => {
+                        setAutoRollPending(true);
+                        changeAutoRoll(!autoRoll).then((res) => {
+                          getAutoRoll().then((res2) => {
+                            setAutoRoll(res2);
+                            setAutoRollPending(false);
+                          });
+                        });
+                      }}
+                    />
+                  ) : (
+                    <div>Transaction Pending...</div>
+                  )}
+                </div>
+              </div>
+            ) : null}
           </Card>
           <Card>
             <CardTitle>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</CardTitle>

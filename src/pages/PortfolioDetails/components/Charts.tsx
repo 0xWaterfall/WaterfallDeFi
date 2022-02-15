@@ -118,7 +118,6 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
 
   const [autoRoll, setAutoRoll] = useState(false);
   const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
-
   const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
 
   const { onWithdraw } = useWithdraw(data.address, data.isMulticurrency);

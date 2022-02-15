@@ -144,7 +144,13 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
   const isActiveCycle = market && Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
   //write a new useEstimateYield hook for multicurrency
-  const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
+  const estimateYield = !market.isMulticurrency
+    ? useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle)
+    : "";
+  const multicurrencyEsimateYield =
+    market.isMulticurrency && userInvest.MCprincipal
+      ? userInvest.MCprincipal.map((p) => useEstimateYield(p, trancheAPY, trancheCycle?.startAt, isActiveCycle))
+      : [];
   if (isActiveCycle && isCurrentCycle)
     totalAmount = numeral(new BigNumber(userInvest.principal).plus(new BigNumber(estimateYield)).toString()).format(
       "0,0.[0000]"
@@ -267,8 +273,26 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {trancheCycle?.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
-          {trancheCycle?.state !== 2 && estimateYield}
-          {trancheCycle?.state === 2 && userInvest.interest} {market?.assets}
+          {trancheCycle?.state !== 2 && !market.isMulticurrency ? estimateYield : null}
+          {trancheCycle?.state !== 2 && market.isMulticurrency ? (
+            <div css={{ display: "flex", flexDirection: "column" }}>
+              {multicurrencyEsimateYield.map((y, i) => (
+                <div key={i}>
+                  {y} {market.assets[i]}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {trancheCycle?.state === 2 ? (
+            <div css={{ display: "flex", flexDirection: "column" }}>
+              {market?.assets.map((a) => (
+                <div key={a} css={{ marginBottom: 5 }}>
+                  {userInvest.interest} {a}
+                  <br />
+                </div>
+              ))}
+            </div>
+          ) : null}
           {/* {trancheCycle?.rate} */}
         </TableColumnWrapper>
         <TableColumnWrapper>

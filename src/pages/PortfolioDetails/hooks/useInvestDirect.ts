@@ -9,11 +9,18 @@ import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
 import { setConfirmModal } from "store/showStatus";
 import { Dispatch } from "redux";
+import { useWrapAVAXContract } from "hooks/useContract";
 const options = {
   gasLimit: DEFAULT_GAS_LIMIT
 };
 
-const invest = async (contract: Contract, amount: string, selectTrancheIdx: string, dispatch: Dispatch<any>) => {
+const invest = async (
+  contract: Contract,
+  amount: string,
+  selectTrancheIdx: string,
+  dispatch: Dispatch<any>,
+  needsWrap?: boolean
+) => {
   const _amount = utils.parseEther(amount).toString();
   const tx = await contract.investDirect(_amount, selectTrancheIdx, _amount);
 

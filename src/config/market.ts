@@ -24,7 +24,7 @@ import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
     portfolio: "DAI Falls (Test)",
-    assets: "DAIE",
+    assets: "DAI.e",
     isAvax: true,
     wrapAvax: false,
     listingDate: "2021/2/11",
@@ -55,7 +55,7 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
-    isRetired: true
+    isRetired: false
   },
   {
     portfolio: "WAVAX Falls (Test)",
@@ -90,6 +90,6 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
-    isRetired: true
+    isRetired: false
   }
 ];

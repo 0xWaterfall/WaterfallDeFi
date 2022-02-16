@@ -37,8 +37,7 @@ import { useBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
-import useInvestDirectAVAX from "../hooks/useInvestDirectAVAX";
-import useInvestAVAX from "../hooks/useInvestAVAX";
+import { useWrapAVAXContract } from "hooks/useContract";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -163,9 +162,6 @@ const ApproveCard = memo<TProps>(
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect(data.address);
     const { onInvest } = useInvest(data.address);
-    //separating eth invest and AVAX invest hooks to prevent merge conflicts, properly combine later
-    const { onInvestDirectAVAX } = useInvestDirectAVAX(data.address);
-    const { onInvestAVAX } = useInvestAVAX(data.address);
     const dispatch = useAppDispatch();
     const {
       balance: balanceWallet,
@@ -258,56 +254,13 @@ const ApproveCard = memo<TProps>(
       );
       const amount = balanceInput.toString();
       try {
+        if (data.wrapAvax) {
+          const wrapAvaxContract = useWrapAVAXContract();
+          wrapAvaxContract.deposit(amount);
+        }
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
           : await onInvest(amount, selectTrancheIdx.toString());
-        if (success) {
-          successNotification("Deposit Success", "");
-        } else {
-          successNotification("Deposit Fail", "");
-        }
-        setDepositLoading(false);
-        setBalanceInput("0");
-        fetchBalance();
-        // if (account) dispatch(getTrancheBalance({ account }));
-      } catch (e) {
-        dispatch(
-          setConfirmModal({
-            isOpen: true,
-            txn: undefined,
-            status: "REJECTED",
-            pendingMessage: intl.formatMessage({ defaultMessage: "Deposit Fail " })
-          })
-        );
-        // successNotification("Deposit Fail", "");
-        console.error(e);
-      } finally {
-        setDepositLoading(false);
-      }
-    };
-
-    //this function is redundant
-    //but due to the potential for merge conflict between avax code and multicurrency code
-    //i am separating the
-    const handleDepositAVAX = async () => {
-      if (validateText !== undefined && validateText.length > 0) return;
-      if (Number(balanceInput) <= 0) return;
-      if (selectTrancheIdx === undefined) return;
-
-      setDepositLoading(true);
-      dispatch(
-        setConfirmModal({
-          isOpen: true,
-          txn: undefined,
-          status: "PENDING",
-          pendingMessage: intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + assets
-        })
-      );
-      const amount = balanceInput.toString();
-      try {
-        const success = !isRe
-          ? await onInvestDirectAVAX(amount, selectTrancheIdx.toString())
-          : await onInvestAVAX(amount, selectTrancheIdx.toString());
         if (success) {
           successNotification("Deposit Success", "");
         } else {
@@ -426,54 +379,13 @@ const ApproveCard = memo<TProps>(
           </ImportantNotes>
         )}
 
-        {!data.isAvax && account ? (
+        {account ? (
           approved ? (
             <ButtonDiv>
               <Button
                 type="primary"
                 css={{ height: 56 }}
                 onClick={handleDeposit}
-                loading={depositLoading}
-                disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
-              >
-                {intl.formatMessage({ defaultMessage: "Deposit" })}
-              </Button>
-            </ButtonDiv>
-          ) : (
-            <ButtonDiv>
-              <Button
-                type="primary"
-                css={{ height: 56 }}
-                onClick={handleApprove}
-                loading={approveLoading}
-                disabled={data?.isRetired}
-              >
-                {intl.formatMessage({ defaultMessage: "Approve" })}
-              </Button>
-            </ButtonDiv>
-          )
-        ) : (
-          <ButtonDiv>
-            <Button
-              type="primary"
-              css={{ height: 56 }}
-              onClick={() => {
-                dispatch(setConnectWalletModalShow(true));
-              }}
-            >
-              {intl.formatMessage({ defaultMessage: "Connect wallet" })}
-            </Button>
-          </ButtonDiv>
-        )}
-
-        {/* breaking AVAX ButtonDiv into separate block to prevent merge conflict */}
-        {data.isAvax && account ? (
-          approved ? (
-            <ButtonDiv>
-              <Button
-                type="primary"
-                css={{ height: 56 }}
-                onClick={handleDepositAVAX}
                 loading={depositLoading}
                 disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
               >

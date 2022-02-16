@@ -134,7 +134,7 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const { account } = useWeb3React<Web3Provider>();
 
   // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
-  const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
+  // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
   const dispatch = useAppDispatch();
   // useEffect(() => {
   //   account && dispatch(getPendingWTFReward({ account }));
@@ -203,10 +203,10 @@ const Charts = memo<TProps>(({ intl, data }) => {
   const rollDepositPopup = () => {
     setShowRedeposit(!showRedeposit);
   };
-  const claimPopup = () => {
-    if (totalPendingReward !== "0") setShowClaim(!showClaim);
-    setShowClaim(!showClaim);
-  };
+  // const claimPopup = () => {
+  //   if (totalPendingReward !== "0") setShowClaim(!showClaim);
+  //   setShowClaim(!showClaim);
+  // };
   return (
     <Wrapper>
       <RecordCard>
@@ -237,16 +237,16 @@ const Charts = memo<TProps>(({ intl, data }) => {
         <section>
           <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
           <div>
-            {totalPendingReward
+            {/* {totalPendingReward
               ? numeral(new BigNumber(totalPendingReward.toString()).dividedBy(BIG_TEN.pow(18))).format("0,0.[0000]")
-              : "--"}{" "}
+              : "--"}{" "} */}
             WTF
           </div>
           {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
           <div>
-            <ButtonWrapper type="default" onClick={() => claimPopup()}>
+            {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
               {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
-            </ButtonWrapper>
+            </ButtonWrapper> */}
             {/* <ButtonWrapper
               type="default"
               onClick={() => claimReward()}
@@ -282,13 +282,13 @@ const Charts = memo<TProps>(({ intl, data }) => {
         onCancel={rollDepositPopup}
         balance={formatBalance(balance.toString())}
       />
-      <ClaimPopup
+      {/* <ClaimPopup
         visible={showClaim}
         data={data}
         onCancel={claimPopup}
         balance={totalPendingReward}
         claimReward={claimReward}
-      />
+      /> */}
     </Wrapper>
   );
 });

@@ -7,6 +7,7 @@ import { utils } from "ethers";
 import useRefresh from "hooks/useRefresh";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
+import { getSigner } from "hooks";
 
 export const useVeWTFBalance = (account: string | null | undefined) => {
   const [balance, setBalance] = useState("");

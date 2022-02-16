@@ -6,7 +6,7 @@ import BigNumber from "bignumber.js";
 import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
 import { formatAPY } from "utils/formatNumbers";
 import { useWTFPrice } from "hooks/useSelectors";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
@@ -92,7 +92,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        const [t0, t1, t2, active, duration, actualStartAt, cycle] = await multicall(marketData.abi, calls);
+        const [t0, t1, t2, active, duration, actualStartAt, cycle] = !marketData.isAvax
+          ? await multicallBSC(marketData.abi, calls)
+          : await multicall(marketData.abi, calls);
         // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
         let totalTranchesTarget = BIG_ZERO;
@@ -165,7 +167,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "rewardPerBlock"
           }
         ];
-        const [p0, p1, p2, _rewardPerBlock] = await multicall(marketData.masterChefAbi, calls2);
+        const [p0, p1, p2, _rewardPerBlock] = !marketData.isAvax
+          ? await multicallBSC(marketData.masterChefAbi, calls2)
+          : await multicall(marketData.masterChefAbi, calls2);
         const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
         const pools: string[] = [];
         let totalAllocPoints = BIG_ZERO;

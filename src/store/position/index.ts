@@ -24,7 +24,8 @@ export const getTrancheBalance = createAsyncThunk<
 >("position/getTrancheBalance", async ({ account }) => {
   try {
     if (!account) return;
-    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
+    const signer = getSigner();
+    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK], signer);
     const result = await contractMasterChef.balanceOf(account);
     return {
       balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",

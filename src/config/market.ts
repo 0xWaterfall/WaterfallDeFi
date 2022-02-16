@@ -8,11 +8,17 @@ import {
   WAVAXFallsMasterWTFAddress,
   WAVAXDepositAddress,
   WAVAXTraderJoeStrategyAddress,
-  WAVAXBenqiStrategyAddress
+  WAVAXBenqiStrategyAddress,
+  TranchesAddress3,
+  MasterChefAddress3,
+  BUSDAddress,
+  sALPACAAddress,
+  sVENUSAddress
 } from "./address";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
+import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [

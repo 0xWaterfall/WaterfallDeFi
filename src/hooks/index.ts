@@ -349,7 +349,8 @@ export const useTotalSupply = (address: string) => {
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
-    const contract = getContract(ERC20Abi, address);
+    const signer = getSigner();
+    const contract = getContract(ERC20Abi, address, signer);
     const tokenBalance = await contract.totalSupply();
     const value = formatBalance(tokenBalance.toString());
     setTotalSupply(numeral(value).format("0,0.[0000]"));
@@ -368,7 +369,8 @@ export const useBalanceOfOtherAddress = (address: string, account: string) => {
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
-    const contract = getContract(ERC20Abi, address);
+    const signer = getSigner();
+    const contract = getContract(ERC20Abi, address, signer);
     const tokenBalance = await contract.balanceOf(account);
     const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
     setBalance(numeral(value.toString()).format("0,0.[0000]"));
@@ -389,7 +391,8 @@ export const useBalance = (address: string) => {
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
-    const contract = getContract(ERC20Abi, address);
+    const signer = getSigner();
+    const contract = getContract(ERC20Abi, address, signer);
     const tokenBalance = await contract.balanceOf(account);
     const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
     setBalance(numeral(value.toString()).format("0,0.[0000]"));

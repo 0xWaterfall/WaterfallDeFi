@@ -103,6 +103,7 @@ const Prompt = styled.div`
 
 type TProps = WrappedComponentProps & {
   totalAmount: string;
+  totalAmounts: string[];
   assets: string[];
   // redeemLoading?: boolean;
   // redeemDirect: (i: number) => Promise<void>;
@@ -121,6 +122,7 @@ const SparePositionFold = memo<TProps>(
   ({
     intl,
     totalAmount,
+    totalAmounts,
     assets,
     // redeemLoading,
     // redeemDirect,
@@ -240,9 +242,17 @@ const SparePositionFold = memo<TProps>(
                 <Union css={{ color: useColorModeValue(gray.normal3, white.normal7) }} />
               </Tooltip>
             </CardTitle>
-            <CardValue>
-              {numeral(totalAmount).format("0,0.[0000]")} {assets}
-            </CardValue>
+            {!isMulticurrency ? (
+              <CardValue>
+                {numeral(totalAmount).format("0,0.[0000]")} {assets}
+              </CardValue>
+            ) : (
+              totalAmounts.map((a, i) => (
+                <CardValue key={i}>
+                  {numeral(a).format("0,0.[0000]")} {assets[i]}
+                </CardValue>
+              ))
+            )}
             <CardAction>
               {isCurrentCycle && isPending && (
                 <ButtonWrapper

@@ -137,7 +137,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const { price: wtfPrice } = useWTFPriceLP();
   const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress);
   let totalAmount = userInvest.principal;
-  if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
+  const totalAmounts = userInvest.MCprincipal ? userInvest.MCprincipal : [];
+
+  if (userInvest.capital !== "0") {
+    totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
+  }
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
@@ -147,10 +151,11 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const estimateYield = !market.isMulticurrency
     ? useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle)
     : "";
-  const multicurrencyEsimateYield =
+  const multicurrencyEstimateYield =
     market.isMulticurrency && userInvest.MCprincipal
       ? userInvest.MCprincipal.map((p) => useEstimateYield(p, trancheAPY, trancheCycle?.startAt, isActiveCycle))
       : [];
+
   if (isActiveCycle && isCurrentCycle)
     totalAmount = numeral(new BigNumber(userInvest.principal).plus(new BigNumber(estimateYield)).toString()).format(
       "0,0.[0000]"
@@ -276,7 +281,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {trancheCycle?.state !== 2 && !market.isMulticurrency ? estimateYield : null}
           {trancheCycle?.state !== 2 && market.isMulticurrency ? (
             <div css={{ display: "flex", flexDirection: "column" }}>
-              {multicurrencyEsimateYield.map((y, i) => (
+              {multicurrencyEstimateYield.map((y, i) => (
                 <div key={i}>
                   {y} {market.assets[i]}
                 </div>
@@ -310,6 +315,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
       {isfold && (
         <SparePositionFold
           totalAmount={totalAmount}
+          totalAmounts={totalAmounts}
           assets={market?.assets}
           isCurrentCycle={isCurrentCycle}
           // redeemDirect={redeemDirect}

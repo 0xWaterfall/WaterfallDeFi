@@ -43,7 +43,7 @@ const Network = styled.div`
   align-items: center;
   justify-content: center;
   background: ${({ theme }) => theme.useColorModeValue(theme.gray.light, theme.dark.block)};
-  color: ${({ theme }) => theme.warn.normal};
+  color: #e84142;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   transform: translateX(10px);

@@ -8,17 +8,11 @@ import {
   WAVAXFallsMasterWTFAddress,
   WAVAXDepositAddress,
   WAVAXTraderJoeStrategyAddress,
-  WAVAXBenqiStrategyAddress,
-  TranchesAddress3,
-  MasterChefAddress3,
-  BUSDAddress,
-  sALPACAAddress,
-  sVENUSAddress
+  WAVAXBenqiStrategyAddress
 } from "./address";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
-import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
@@ -48,7 +42,7 @@ export const MarketList: Market[] = [
         apiKey: "joe"
       },
       {
-        farmName: "Maximiser",
+        farmName: "Maximizer",
         shares: 0.2,
         sAddress: DAIMaximiserStrategyAddress[NETWORK],
         apiKey: "maximiser" //double check

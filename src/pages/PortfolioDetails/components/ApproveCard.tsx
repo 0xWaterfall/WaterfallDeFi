@@ -243,6 +243,16 @@ const ApproveCard = memo<TProps>(
       }
     }, [balance, remaining, balanceInput]);
 
+    const handleWrapAvax = async () => {
+      setDepositLoading(true);
+      const amount = balanceInput.toString();
+      if (data.wrapAvax && Number(balance) < Number(amount)) {
+        //^ breaking this case will never happen but just for safety
+        await wrapAvaxContract.deposit({ value: parseEther((Number(amount) - Number(balance)).toString()) });
+        setDepositLoading(false);
+      }
+    };
+
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
       if (Number(balanceInput) <= 0) return;
@@ -259,9 +269,6 @@ const ApproveCard = memo<TProps>(
       );
       const amount = balanceInput.toString();
       try {
-        if (data.wrapAvax && Number(balance) < Number(amount)) {
-          await wrapAvaxContract.deposit({ value: parseEther((Number(amount) - Number(balance)).toString()) });
-        }
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
           : await onInvest(amount, selectTrancheIdx.toString());
@@ -334,6 +341,21 @@ const ApproveCard = memo<TProps>(
       // if (isNaN(input)) input = 0;
       // setBalanceInput(input.toString());
     };
+
+    const HandleDepositButton = () => (
+      <ButtonDiv>
+        <Button
+          type="primary"
+          css={{ height: 56 }}
+          onClick={handleDeposit}
+          loading={depositLoading}
+          disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
+        >
+          {intl.formatMessage({ defaultMessage: "Deposit" })}
+        </Button>
+      </ButtonDiv>
+    );
+
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
         {/* {!enabled && <BlockDiv />} */}
@@ -403,17 +425,23 @@ const ApproveCard = memo<TProps>(
 
         {account ? (
           approved ? (
-            <ButtonDiv>
-              <Button
-                type="primary"
-                css={{ height: 56 }}
-                onClick={handleDeposit}
-                loading={depositLoading}
-                disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
-              >
-                {intl.formatMessage({ defaultMessage: "Deposit" })}
-              </Button>
-            </ButtonDiv>
+            !data.wrapAvax ? (
+              <HandleDepositButton />
+            ) : !(Number(balanceInput.toString()) - Number(balance) > 0) ? (
+              <HandleDepositButton />
+            ) : (
+              <ButtonDiv>
+                <Button
+                  type="primary"
+                  css={{ height: 56 }}
+                  onClick={handleWrapAvax}
+                  loading={depositLoading} //reusing this flag
+                  disabled={data?.isRetired}
+                >
+                  {intl.formatMessage({ defaultMessage: "Wrap AVAX" })}
+                </Button>
+              </ButtonDiv>
+            )
           ) : (
             <ButtonDiv>
               <Button

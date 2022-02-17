@@ -405,6 +405,7 @@ export const useBalance = (address: string) => {
 
   return { balance, fetchBalance, actualBalance };
 };
+
 export const useWTF = () => {
   const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);
 

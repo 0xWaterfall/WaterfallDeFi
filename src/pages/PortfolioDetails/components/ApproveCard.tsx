@@ -38,6 +38,9 @@ import { useBalance, useTrancheBalance } from "hooks";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
 import { useWrapAVAXContract } from "hooks/useContract";
+import { parseEther } from "ethers/lib/utils";
+import { ethers } from "ethers";
+import getRpcUrl from "utils/getRpcUrl";
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -162,6 +165,7 @@ const ApproveCard = memo<TProps>(
     const { onApprove } = useApprove(data.depositAssetAddress, data.address);
     const { onInvestDirect } = useInvestDirect(data.address);
     const { onInvest } = useInvest(data.address);
+    const wrapAvaxContract = useWrapAVAXContract();
     const dispatch = useAppDispatch();
     const {
       balance: balanceWallet,
@@ -231,7 +235,8 @@ const ApproveCard = memo<TProps>(
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
       if (compareNum(_balanceInput, _remaining, true)) {
-        return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+        if (!data.wrapAvax) return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+        else return;
       }
       if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
@@ -254,9 +259,8 @@ const ApproveCard = memo<TProps>(
       );
       const amount = balanceInput.toString();
       try {
-        if (data.wrapAvax) {
-          const wrapAvaxContract = useWrapAVAXContract();
-          wrapAvaxContract.deposit(amount);
+        if (data.wrapAvax && Number(balance) < Number(amount)) {
+          await wrapAvaxContract.deposit({ value: parseEther((Number(amount) - Number(balance)).toString()) });
         }
         const success = !isRe
           ? await onInvestDirect(amount, selectTrancheIdx.toString())
@@ -291,15 +295,19 @@ const ApproveCard = memo<TProps>(
       // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      // let input = 0;
-      if (compareNum(_remaining, _balance)) {
-        // if (_balance <= _remaining) {
-        // input = parseFloat(_balance);
-        if (_balance) setBalanceInput(actualBalanceWallet);
-      } else if (compareNum(_balance, _remaining, true)) {
-        // } else if (_balance > _remaining) {
-        // input = parseFloat(_remaining);
+      if (data.wrapAvax) {
         if (_remaining) setBalanceInput(_remaining);
+      } else {
+        // let input = 0;
+        if (compareNum(_remaining, _balance)) {
+          // if (_balance <= _remaining) {
+          // input = parseFloat(_balance);
+          if (_balance) setBalanceInput(actualBalanceWallet);
+        } else if (compareNum(_balance, _remaining, true)) {
+          // } else if (_balance > _remaining) {
+          // input = parseFloat(_remaining);
+          if (_remaining) setBalanceInput(_remaining);
+        }
       }
       // if (input) setBalanceInput(input.toString());
     };
@@ -347,6 +355,17 @@ const ApproveCard = memo<TProps>(
             {formatNumberSeparator(remaining)} {assets}
           </div>
         </RowDiv>
+        {data.wrapAvax &&
+        balanceInput &&
+        Number(balanceInput) > 0 &&
+        Number(balanceInput.toString()) - Number(balance) > 0 ? (
+          <RowDiv>
+            <div>{intl.formatMessage({ defaultMessage: "AVAX Wrapped On Deposit:" })}</div>
+            <div>
+              {formatNumberSeparator((Number(balanceInput.toString()) - Number(balance)).toString())} AVAX to WAVAX
+            </div>
+          </RowDiv>
+        ) : null}
         <Separator />
         <RowDiv>
           <div>{assets}</div>
@@ -366,6 +385,9 @@ const ApproveCard = memo<TProps>(
           />
         </div>
         <ValidateText>{!depositLoading && validateText}</ValidateText>
+        {Number(balanceInput.toString()) - Number(balance) > 0 ? (
+          <ValidateText>Please make sure you have enough AVAX to wrap, or else the transaction will fail!</ValidateText>
+        ) : null}
 
         {selectTranche && (
           <ImportantNotes>

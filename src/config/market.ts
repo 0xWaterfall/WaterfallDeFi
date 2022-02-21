@@ -45,7 +45,7 @@ export const MarketList: Market[] = [
         farmName: "Maximizer",
         shares: 0.2,
         sAddress: DAIMaximiserStrategyAddress[NETWORK],
-        apiKey: "maximiser" //double check
+        apiKey: "maximizer" //double check
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",

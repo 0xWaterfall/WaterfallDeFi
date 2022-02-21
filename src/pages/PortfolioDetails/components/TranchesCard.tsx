@@ -195,6 +195,7 @@ const TranchesCard = memo<TProps>(
           wtfPrice
         )
       : "-";
+
     return (
       <Container data-selected={selected} data-disabled={isSoldout}>
         {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}

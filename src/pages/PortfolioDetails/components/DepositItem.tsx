@@ -184,6 +184,7 @@ const DepositItem = memo<TProps>(
           data={marketData}
           selectTranche={selectTranche}
           isSoldOut={
+            //redundant ternary wrap is to eliminate undefined case
             (
               !marketData.autorollImplemented
                 ? compareNum(selectTranche?.principal, selectTranche?.target)

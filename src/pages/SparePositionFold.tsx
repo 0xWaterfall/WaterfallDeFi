@@ -14,7 +14,7 @@ import useRedeemDirect from "./PortfolioDetails/hooks/useRedeemDirect";
 import { successNotification } from "utils/notification";
 import useWithdraw from "./PortfolioDetails/hooks/useWithdraw";
 import { useAppDispatch } from "store";
-import { useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
+import { useTrancheBalance } from "hooks";
 import { setConfirmModal } from "store/showStatus";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";

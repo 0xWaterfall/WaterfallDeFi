@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
 import { getMulticallBSCContract, getMulticallContract } from "hooks";
+import { sample } from "lodash";
+import MultiCallAbi from "config/abi/Multicall.json";
 
 type MultiCallResponse<T> = T | null;
 export interface Call {
@@ -33,6 +35,44 @@ export const multicallBSC = async <T = any>(abi: any[], calls: Call[]): Promise<
 
     const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
     const { returnData } = await multi.aggregate(calldata);
+    const res = returnData.map((call: any, i: number) => itf.decodeFunctionResult(calls[i].name, call));
+
+    return res;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const multicallNetwork = async <T = any>(network: string, abi: any[], calls: Call[]): Promise<T> => {
+  try {
+    let multicallContract;
+    if (network === "BSC") {
+      const simpleRpcProvider = new ethers.providers.JsonRpcProvider(
+        sample([process.env.REACT_APP_BSC_NODE_1, process.env.REACT_APP_BSC_NODE_2, process.env.REACT_APP_BSC_NODE_3])
+      );
+      multicallContract = new ethers.Contract(
+        "0x41263cba59eb80dc200f3e2544eda4ed6a90e76c",
+        MultiCallAbi,
+        simpleRpcProvider
+      );
+    } else if (network === "AVAX") {
+      const simpleRpcProvider = new ethers.providers.JsonRpcProvider(
+        sample([
+          process.env.REACT_APP_AVAX_NODE_1,
+          process.env.REACT_APP_AVAX_NODE_2,
+          process.env.REACT_APP_AVAX_NODE_3
+        ])
+      );
+      multicallContract = new ethers.Contract(
+        "0x0b78ad358dDa2887285eaD72e84b47242360b872",
+        MultiCallAbi,
+        simpleRpcProvider
+      );
+    }
+    const itf = new ethers.utils.Interface(abi);
+
+    const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)]);
+    const { returnData } = await multicallContract?.aggregate(calldata);
     const res = returnData.map((call: any, i: number) => itf.decodeFunctionResult(calls[i].name, call));
 
     return res;

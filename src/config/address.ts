@@ -10,10 +10,27 @@ export const TranchesAddressOracle2: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "466D5d69DB51c562A850227ed2081040b408a98D"
 };
-export const BSCTranches = [
-  "FDDA6514a13161a5a1724F8DD787d9d3faeC9557",
-  "E4fF060EdC2423E624a21bDbbe5b2AF8f13243bD",
-  "17Dd4D94fCA4f26C23fBa591AD5418260950FD16"
+export const AllTranches = [
+  {
+    address: "0x22C6719A53cEAE150f93c225e6BDbF7722B67523",
+    network: "BSC"
+  },
+  {
+    address: "0x466D5d69DB51c562A850227ed2081040b408a98D",
+    network: "BSC"
+  },
+  {
+    address: "0x17Dd4D94fCA4f26C23fBa591AD5418260950FD16",
+    network: "BSC"
+  },
+  {
+    address: "0x9c59d895A660F30C8B335AF3a26a371b17192382",
+    network: "AVAX"
+  },
+  {
+    address: "0xA88C319D2947f54D728C9E95122A61E512cEF64e",
+    network: "AVAX"
+  }
 ];
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",

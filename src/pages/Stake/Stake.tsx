@@ -38,7 +38,7 @@ import {
 } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import { BUSDAddress, MultiSigAddress } from "config/address";
-import { NETWORK } from "config";
+import { BLOCK_TIME, NETWORK } from "config";
 import { BIG_TEN } from "utils/bigNumber";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -457,11 +457,12 @@ const Stake = memo<TProps>(({ intl }) => {
 
   const currentAPR = useMemo(() => {
     if (!rewardPerBlock) return "";
+    const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
     return (
       numeral(
         new BigNumber(VeWTFRatioPercentage)
           .times(rewardPerBlock)
-          .times(20 * 60 * 24 * 365 * 100)
+          .times((60 / blockTime) * 60 * 24 * 365 * 100)
           .dividedBy(lockingWTF)
           .toString()
       ).format("0,0.[00]") + "%"
@@ -512,7 +513,7 @@ const Stake = memo<TProps>(({ intl }) => {
           pointRadius: 1,
           pointHitRadius: 10,
           data: actualMultiplier.map((e) => {
-            return numeral((e * Number(maxAPR)) / 2.49).format("0,0.[0])");
+            return numeral((e * (numeral(maxAPR).value() || 0)) / 2.49).value();
           })
         }
       ]

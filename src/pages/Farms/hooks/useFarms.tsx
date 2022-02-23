@@ -9,6 +9,7 @@ import { BIG_TEN } from "utils/bigNumber";
 import multicall from "utils/multicall";
 import numeral from "numeral";
 import Farms from "config/farms";
+import { BLOCK_TIME } from "config";
 export interface FarmInterface {
   name: string;
   isPoolActive: boolean;
@@ -74,11 +75,12 @@ export const useFarms = (farmIdx?: number) => {
           const [_totalStaked] = await multicall(LPTokenAbi, calls2);
 
           const lpValueInTermsOfWTF = 1;
+          const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
           const maxAPR = numeral(
             new BigNumber(lpValueInTermsOfWTF)
               .dividedBy(new BigNumber(_totalStaked).dividedBy(BIG_TEN.pow(18)))
               .times(new BigNumber(_rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18)))
-              .times(20 * 60 * 24 * 365 * 100)
+              .times((60 / blockTime) * 60 * 24 * 365 * 100)
               .toString()
           ).format("0,0.[00]");
           console.log(maxAPR);

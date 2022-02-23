@@ -43,4 +43,17 @@ export type NETWORKS_TYPE = typeof NETWORKS[keyof typeof NETWORKS];
 export const NETWORK = process.env.REACT_APP_NETWORK as NETWORKS_TYPE;
 console.log("connected to", NETWORK);
 
+export const BLOCK_TIME = (chainId: string) => {
+  switch (chainId) {
+    case "43114":
+      return 1.98833333;
+    case "97":
+      return 3;
+    case "56":
+      return 3;
+    default:
+      return 3;
+  }
+};
+
 export const BASE_BSC_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://snowtrace.io" : "https://snowtrace.io";

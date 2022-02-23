@@ -10,7 +10,7 @@ import useRefresh from "./useRefresh";
 import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
 import { FeeRewardsAddress } from "config/address";
-import { NETWORK } from "config";
+import { BLOCK_TIME, NETWORK } from "config";
 
 export const useEarningTokenTotalSupply = (tokenAddress: string) => {
   const [totalSupply, setTotalSupply] = useState("");
@@ -77,25 +77,32 @@ export const useStakingPool = (
       const rewardPerBlock = new BigNumber(pool.rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18));
       const totalVeWTF = new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18));
       const _totalVeWTF = new BigNumber(totalVeWTF).plus(2.4883);
+      const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
+
       const maxAPR = numeral(
         new BigNumber(2.4883)
           .dividedBy(_totalVeWTF)
           .times(rewardPerBlock)
-          .times(20 * 60 * 24 * 365 * 100)
+          .times((60 / blockTime) * 60 * 24 * 365 * 100)
           .toString()
       ).format("0,0.[00]");
 
-      const calls3 = [
-        {
-          address: FeeRewardsAddress[NETWORK],
-          name: "pendingRewardOf",
-          params: [account]
-        }
-      ];
-      const [pending] = await multicall(FeeRewardsAbi, calls3);
-      const pendingBUSDReward = pending
-        ? numeral(new BigNumber(pending.reward?._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[00]")
-        : "";
+      let pendingBUSDReward = "";
+      try {
+        const calls3 = [
+          {
+            address: FeeRewardsAddress[NETWORK],
+            name: "pendingRewardOf",
+            params: [account]
+          }
+        ];
+        const [pending] = await multicall(FeeRewardsAbi, calls3);
+        pendingBUSDReward = pending
+          ? numeral(new BigNumber(pending.reward?._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[00]")
+          : "";
+      } catch (e) {
+        console.error(e);
+      }
 
       setResult({
         isPoolActive,

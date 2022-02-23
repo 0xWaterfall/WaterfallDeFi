@@ -6,7 +6,7 @@ import Button from "components/Button/Button";
 import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
 import SelectTimeLimit from "components/SelectTimeLimit/SelectTimeLimit";
-import { NETWORK } from "config";
+import { BLOCK_TIME, NETWORK } from "config";
 import { VeWTFAddress, WTFAddress } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import { useBalance } from "hooks";
@@ -327,12 +327,13 @@ const Increase = memo<TProps>(
       if (!totalVeWTF) return "";
       if (!rewardPerBlock) return "";
       if (receivedVeWTF === "0") return "-";
+      const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
       return (
         numeral(
           new BigNumber(receivedVeWTF.replace(/,/g, ""))
             .dividedBy(totalVeWTF)
             .times(rewardPerBlock)
-            .times(20 * 60 * 24 * 365 * 100)
+            .times((60 / blockTime) * 60 * 24 * 365 * 100)
             .dividedBy(balanceInput !== "0" ? balanceInput : lockingWTF)
             .toString()
         ).format("0,0.[00]") + "%"

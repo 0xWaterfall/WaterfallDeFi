@@ -6,6 +6,7 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { compose } from "redux";
 import numeral from "numeral";
+import { BLOCK_TIME } from "config";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
@@ -224,7 +225,9 @@ export const getWTFApr = (
   const target = new BigNumber(tranche.target);
 
   //
-  const blocksInDuration = new BigNumber(duration).dividedBy(3);
+  const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
+
+  const blocksInDuration = new BigNumber(duration).dividedBy(blockTime);
   const tokensInDuration = new BigNumber(blocksInDuration).times(rewardPerBlock);
   // (100 * 1) / 100000 * (365 * 86400) / 60018:27
 

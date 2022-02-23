@@ -39,7 +39,7 @@ export const MarketList: Market[] = [
         farmName: "Trader Joe",
         shares: 0.8,
         sAddress: DAITraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe"
+        apiKey: "joe_dai"
       },
       {
         farmName: "Maximizer",
@@ -74,13 +74,13 @@ export const MarketList: Market[] = [
         farmName: "Trader Joe",
         shares: 0.5,
         sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe"
+        apiKey: "joe_avax"
       },
       {
         farmName: "Benqi",
         shares: 0.5,
         sAddress: WAVAXBenqiStrategyAddress[NETWORK],
-        apiKey: "benqi"
+        apiKey: "qi_avax"
       }
     ],
     subgraphURL: "http://18.118.169.63:8000/subgraphs/name/waterfall/benqi-joe-avaxfall/graphql",

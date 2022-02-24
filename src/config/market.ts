@@ -83,7 +83,7 @@ export const MarketList: Market[] = [
         apiKey: "qi_avax"
       }
     ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/benqi-joe-avaxfall/graphql",
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/benqi-joe-avaxfall",
     isRetired: false
   }
 ];

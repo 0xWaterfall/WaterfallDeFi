@@ -242,7 +242,7 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
                 withdrawAll();
               }}
               loading={withdrawAllLoading}
-              disabled={!account || !+balance || autoRoll}
+              disabled={!account || !+balance}
               css={{ marginRight: 17 }}
             >
               {intl.formatMessage({ defaultMessage: "Withdraw All" })}

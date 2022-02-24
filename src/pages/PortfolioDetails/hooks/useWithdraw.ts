@@ -69,8 +69,8 @@ const useWithdraw = (trancheMasterAddress: string, isMulticurrency: boolean) => 
     async (amount: string, multicurrencyAmount?: string[]) => {
       await withdraw(
         trancheContract,
-        multicurrencyAmount ? "" : amount,
-        multicurrencyAmount ? multicurrencyAmount : [],
+        isMulticurrency ? "" : amount,
+        isMulticurrency && multicurrencyAmount ? multicurrencyAmount : [],
         dispatch
       );
       dispatch(getMarkets(MarketList));

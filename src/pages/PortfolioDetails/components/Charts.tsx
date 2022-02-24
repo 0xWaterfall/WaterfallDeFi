@@ -250,16 +250,11 @@ const Charts = memo<TProps>(({ intl, data, selectedDepositAsset, depositMultiple
             <ButtonWrapper
               type="default"
               onClick={rollDepositPopup}
-              disabled={!account || !+balance || data?.isRetired}
+              disabled={!account || !+balance || data?.isRetired || autoRoll}
             >
               {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
             </ButtonWrapper>
           </div>
-          {autoRoll ? (
-            <div css={{ marginTop: "10px" }}>
-              {intl.formatMessage({ defaultMessage: "Funds Locked: Automatically Rolling" })}
-            </div>
-          ) : null}
           {account && data.autorollImplemented ? (
             <div css={{ display: "flex", marginTop: 20 }}>
               <span

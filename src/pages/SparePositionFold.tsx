@@ -278,11 +278,6 @@ const SparePositionFold = memo<TProps>(
                 {intl.formatMessage({ defaultMessage: "Re-deposit" })}
               </ButtonWrapper>
             </CardAction>
-            {autoRoll ? (
-              <div css={{ marginTop: "10px" }}>
-                {intl.formatMessage({ defaultMessage: "Funds Locked: Automatically Rolling" })}
-              </div>
-            ) : null}
             {autorollImplemented ? (
               <div css={{ display: "flex", marginTop: 20 }}>
                 <span

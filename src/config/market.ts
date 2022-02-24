@@ -48,7 +48,7 @@ export const MarketList: Market[] = [
         apiKey: "maximizer" //double check
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2",
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxi-joe-avaxfall",
     isRetired: false
   },
   {

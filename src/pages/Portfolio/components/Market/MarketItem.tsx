@@ -24,8 +24,8 @@ type TProps = WrappedComponentProps & {
 };
 
 const Container = styled.div`
-  background: ${({ theme }) => theme.white.normal};
-  border: 1px solid ${({ theme }) => theme.primary.lightBrown};
+  background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.header)};
+  border: 3px solid ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, "#13132C")};
   box-sizing: border-box;
   box-shadow: 0px 0px 10px ${({ theme }) => theme.shadow.marketItem};
   border-radius: 12px;
@@ -52,7 +52,7 @@ const RowDiv = styled.div`
   padding: 5px 20px;
   font-size: 12px;
   line-height: 16px;
-  color: ${({ theme }) => theme.gray.normal7};
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
   display: flex;
   margin-bottom: 10px;
   justify-content: space-between;
@@ -60,7 +60,7 @@ const RowDiv = styled.div`
     font-size: 14px;
     line-height: 19px;
     text-align: right;
-    color: ${({ theme }) => theme.gray.normal85};
+    color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
   }
   & svg {
     margin-left: 10px;
@@ -68,7 +68,7 @@ const RowDiv = styled.div`
     height: 13px;
   }
   :nth-of-type(4) {
-    background-color: ${({ theme }) => theme.primary.lightBrown};
+    background-color: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, "#13132C")};
   }
 `;
 // const APYStyled = styled.div`

@@ -36,6 +36,7 @@ export { ReactComponent as NoData } from "./NoData.svg";
 export { ReactComponent as DashboardImage } from "./DashboardImage.svg";
 export { ReactComponent as Coingecko } from "./Coingecko.svg";
 export { ReactComponent as BUSD } from "./BUSD.svg";
+export { ReactComponent as WAVAX } from "./WAVAX.svg";
 export { ReactComponent as Sticker } from "./sticker.svg";
 export { ReactComponent as WTFCoin } from "./wtfcoin.svg";
 export { ReactComponent as Pancake } from "./pancake.svg";

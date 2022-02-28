@@ -3,7 +3,7 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { BUSD, WTFToken } from "assets/images";
+import { WAVAX, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
 import { useMarkets, useWTFPrice } from "hooks/useSelectors";
@@ -203,7 +203,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
       <IconWrapper>
-        <BUSD />
+        <WAVAX />
       </IconWrapper>
       <CarouselContainer dotPosition="bottom" autoplay={true}>
         {markets.map((_market: Market, index) => {

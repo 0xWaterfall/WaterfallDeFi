@@ -6,7 +6,6 @@
 <rect width="88" height="44" fill="url(#wtflogo1)"/>
 </mask>
 <g mask="url(#wtflogodark0)">
-<rect x="16.5" y="-4.125" width="78.375" height="50.875" fill="white"/>
 </g>
 <defs>
 <pattern id="wtflogo1" patternContentUnits="objectBoundingBox" width="1" height="1">

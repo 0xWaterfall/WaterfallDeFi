@@ -112,7 +112,7 @@ export const MarketList: Market[] = [
     strategyFarms: [
       {
         farmName: "Benqi",
-        shares: 0.75,
+        shares: 0.7,
         sAddress: MAXIBenqiStrategyAddress[NETWORK],
         apiKey: "qi_avax"
       },

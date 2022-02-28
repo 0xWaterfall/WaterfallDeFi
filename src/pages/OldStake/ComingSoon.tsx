@@ -137,37 +137,8 @@ const CommingSoon = memo<TProps>(({ intl }) => {
         <ComingSoonTopBgWrapper />
         <ComingSoonRightBgWrapper />
         <IndexWrapper>
-          <Title>{intl.formatMessage({ defaultMessage: "WTF farm will be opened soon!" })}</Title>
-          <PancakeDirection>
-            <WTFCoin css={{ marginRight: 34 }} />
-            <ArrowRight css={{ marginRight: 16 }} />
-            <Pancake css={{ marginRight: 4 }} />
-            <span>pancakeswap</span>
-          </PancakeDirection>
-          <Description>
-            {intl.formatMessage({ defaultMessage: "Please try to put WTF on pancakeswap to earn liquidity income!" })}
-          </Description>
-          <ButtonWrapper
-            type="primary"
-            // href="https://pancakeswap.finance/add/0x2fA0cac2c75Efb50382B5091C6494194eAcF65B0/BNB"
-            href="https://pancakeswap.finance/add/0xd73f32833b6d5d9c8070c23e599e283a3039823c/BNB"
-            target="_blank"
-          >
-            {/* <Pancake css={{ marginRight: 4 }} /> */}
-
-            {/* <span css={{ marginRight: 6 }}>pancakeswap</span>
-            <ArrowRight /> */}
-            <div
-              style={{
-                backgroundImage: `url(/coins/PANCAKE.png)`,
-                width: "150px",
-                height: "60px",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center"
-              }}
-            />
-          </ButtonWrapper>
+          <Title>{intl.formatMessage({ defaultMessage: "WTF farm for AVAX will be opened soon!" })}</Title>
+          <PancakeDirection></PancakeDirection>
         </IndexWrapper>
       </CardWrapper>
     </Wrapper>

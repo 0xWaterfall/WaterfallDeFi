@@ -204,6 +204,12 @@ const Header = memo<TProps>(({ intl }) => {
       text: intl.formatMessage({ defaultMessage: "User Guide" }),
       target: "_blank"
       // checked: ""
+    },
+    {
+      pathname: "https://bnb.waterfalldefi.org",
+      text: intl.formatMessage({ defaultMessage: "BNB Falls" }),
+      target: "_blank"
+      // checked: ""
     }
   ];
 

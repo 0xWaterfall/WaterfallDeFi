@@ -72,8 +72,8 @@ const ColWrapper = styled(Col)`
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
     grid-auto-rows: minmax(30px, auto);
-    background: ${({ theme }) => theme.white.normal};
-    border: 1px solid ${({ theme }) => theme.primary.lightBrown};
+    background: ${({ theme }) => theme.useColorModeValue(theme.white.normal, "#13132C")};
+    border: 1px solid ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, "#13132C")};
     padding: 10px;
     margin: 10px 0;
     box-sizing: border-box;

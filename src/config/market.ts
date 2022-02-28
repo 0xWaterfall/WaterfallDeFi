@@ -41,13 +41,13 @@ export const MarketList: Market[] = [
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Benqi",
+        farmName: "Benqi DAI.e",
         shares: 0.7,
         sAddress: DAIBenqiStrategyAddress[NETWORK],
         apiKey: "qi_dai"
       },
       {
-        farmName: "Trader Joe",
+        farmName: "Trader Joe DAI.e",
         shares: 0.3,
         sAddress: DAITraderJoeStrategyAddress[NETWORK],
         apiKey: "joe_dai_e"
@@ -76,13 +76,13 @@ export const MarketList: Market[] = [
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Benqi",
+        farmName: "Benqi AVAX",
         shares: 0.5,
         sAddress: WAVAXBenqiStrategyAddress[NETWORK],
         apiKey: "qi_avax"
       },
       {
-        farmName: "Trader Joe",
+        farmName: "Trader Joe AVAX",
         shares: 0.5,
         sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
         apiKey: "joe_avax"
@@ -111,13 +111,13 @@ export const MarketList: Market[] = [
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Benqi",
+        farmName: "Benqi DAI.e",
         shares: 0.7,
         sAddress: MAXIBenqiStrategyAddress[NETWORK],
         apiKey: "qi_avax"
       },
       {
-        farmName: "Trader Joe",
+        farmName: "Trader Joe DAI.e",
         shares: 0.25,
         sAddress: MAXITraderJoeStrategyAddress[NETWORK],
         apiKey: "joe_avax"

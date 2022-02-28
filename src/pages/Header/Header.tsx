@@ -208,7 +208,8 @@ const Header = memo<TProps>(({ intl }) => {
     {
       pathname: "https://bnb.waterfalldefi.org",
       text: intl.formatMessage({ defaultMessage: "BNB Falls" }),
-      target: "_blank"
+      target: "_blank",
+      color: "#F0B90B"
       // checked: ""
     }
   ];
@@ -260,10 +261,15 @@ const Header = memo<TProps>(({ intl }) => {
     );
   }, [account, active, chainId]);
 
-  const MenuLink = MENU.map(({ pathname, text, target }) =>
+  const MenuLink = MENU.map(({ pathname, text, target, color }) =>
     target ? (
       <MenuBlockWrapper key={pathname}>
-        <LinkWrapper to={{ pathname }} data-selected={location.pathname === pathname} target="_blank">
+        <LinkWrapper
+          to={{ pathname }}
+          data-selected={location.pathname === pathname}
+          target="_blank"
+          style={color ? { color: color } : undefined}
+        >
           {text}
         </LinkWrapper>
       </MenuBlockWrapper>

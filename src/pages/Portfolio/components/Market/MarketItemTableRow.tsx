@@ -131,7 +131,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
     >
       <TableColumn>{marketData.portfolio}</TableColumn>
       <TableColumn minWidth={120}>
-        <Coin assetName={marketData.assets} /> {marketData.assets}
+        <Coin assetName={marketData.assets} /> <div css={{ paddingLeft: 10 }}>{marketData.assets}</div>
       </TableColumn>
       <TableColumn minWidth={140}>{marketData.duration ? getLockupPeriod(marketData.duration) : "-"}</TableColumn>
       <TableColumn minWidth={240} css={{ display: "flex" }}>

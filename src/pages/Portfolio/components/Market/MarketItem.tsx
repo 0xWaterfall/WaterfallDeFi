@@ -167,7 +167,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
         <div style={{ display: "flex" }}>
-          <Coin size={18} assetName={marketData.assets} /> {marketData.assets}
+          <Coin size={18} assetName={marketData.assets} /> <div css={{ paddingLeft: 10 }}>{marketData.assets}</div>
         </div>
       </RowDiv>
       <RowDiv>

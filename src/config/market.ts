@@ -3,12 +3,17 @@ import {
   DAIFallsMasterWTFAddress,
   DAI_E_DepositAddress,
   DAITraderJoeStrategyAddress,
-  DAIMaximiserStrategyAddress,
   WAVAXFallsTrancheMasterAddress,
   WAVAXFallsMasterWTFAddress,
   WAVAXDepositAddress,
   WAVAXTraderJoeStrategyAddress,
-  WAVAXBenqiStrategyAddress
+  WAVAXBenqiStrategyAddress,
+  DAIBenqiStrategyAddress,
+  MAXIFallsTrancheMasterAddress,
+  MAXIFallsMasterWTFAddress,
+  MAXITraderJoeStrategyAddress,
+  MAXIBenqiStrategyAddress,
+  MAXIMaximizerStrategyAddress
 } from "./address";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
@@ -17,11 +22,11 @@ import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: "DAI Falls (Test)",
+    portfolio: "DAI Falls",
     assets: "DAI.e",
     isAvax: true,
     wrapAvax: false,
-    listingDate: "2021/2/11",
+    listingDate: "2021/2/28",
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",
@@ -36,27 +41,27 @@ export const MarketList: Market[] = [
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Trader Joe",
-        shares: 0.8,
-        sAddress: DAITraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_dai"
+        farmName: "Benqi",
+        shares: 0.7,
+        sAddress: DAIBenqiStrategyAddress[NETWORK],
+        apiKey: "qi_dai"
       },
       {
-        farmName: "Maximizer",
-        shares: 0.2,
-        sAddress: DAIMaximiserStrategyAddress[NETWORK],
-        apiKey: "maximizer" //double check
+        farmName: "Trader Joe",
+        shares: 0.3,
+        sAddress: DAITraderJoeStrategyAddress[NETWORK],
+        apiKey: "joe_dai_e"
       }
     ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxi-joe-avaxfall",
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_dai",
     isRetired: false
   },
   {
-    portfolio: "WAVAX Falls (Test)",
+    portfolio: "AVAX Falls",
     assets: "WAVAX",
     isAvax: true,
     wrapAvax: true,
-    listingDate: "2021/2/11",
+    listingDate: "2021/2/28",
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",
@@ -71,19 +76,60 @@ export const MarketList: Market[] = [
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {
-        farmName: "Trader Joe",
-        shares: 0.5,
-        sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_avax"
-      },
-      {
         farmName: "Benqi",
         shares: 0.5,
         sAddress: WAVAXBenqiStrategyAddress[NETWORK],
         apiKey: "qi_avax"
+      },
+      {
+        farmName: "Trader Joe",
+        shares: 0.5,
+        sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
+        apiKey: "joe_avax"
       }
     ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/benqi-joe-avaxfall",
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
+    isRetired: false
+  },
+  {
+    portfolio: "MAXI Falls",
+    assets: "WAVAX",
+    isAvax: true,
+    wrapAvax: true,
+    listingDate: "2021/2/28",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: MAXIFallsTrancheMasterAddress[NETWORK],
+    abi: AVAXTranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MAXIFallsMasterWTFAddress[NETWORK],
+    pools: [],
+    depositAssetAddress: WAVAXDepositAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Benqi",
+        shares: 0.75,
+        sAddress: MAXIBenqiStrategyAddress[NETWORK],
+        apiKey: "qi_avax"
+      },
+      {
+        farmName: "Trader Joe",
+        shares: 0.25,
+        sAddress: MAXITraderJoeStrategyAddress[NETWORK],
+        apiKey: "joe_avax"
+      },
+      {
+        farmName: "Maximizer",
+        shares: 0.05,
+        sAddress: MAXIMaximizerStrategyAddress[NETWORK],
+        apiKey: "maximizer"
+      }
+    ],
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxiQiJoe_dai",
     isRetired: false
   }
 ];

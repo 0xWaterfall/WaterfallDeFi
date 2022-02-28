@@ -40,6 +40,7 @@ import markets from "store/markets";
 import { MarketList } from "config/market";
 import useActiveWeb3React from "./useActiveWeb3React";
 import { stringify } from "querystring";
+import axios from "axios";
 
 export const useMarket = async (marketData: Market) => {
   if (!Web3.givenProvider) return;
@@ -425,6 +426,15 @@ export const useWTF = () => {
 
 const getTotalTVL = async () => {
   let _tvl = BIG_ZERO;
+  const result = await axios.get(
+    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax"
+  );
+  let avaxPrice = 1;
+  if (result.status === 200) {
+    avaxPrice = result.data["wrapped-avax"]?.usd;
+  }
+  console.log("avaxPrice", avaxPrice);
+  //
   await Promise.all(
     AllTranches.map(async (_tranche) => {
       const _marketAddress = _tranche?.address;
@@ -451,7 +461,12 @@ const getTotalTVL = async () => {
 
       _tranches.map((_t, _i) => {
         const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
-        _tvl = _tvl.plus(_principal);
+        let rate = 1;
+        if (_tranche?.coin === "wavax") {
+          rate = avaxPrice;
+        }
+        const _principalInUSD = _principal.times(rate);
+        _tvl = _tvl.plus(_principalInUSD);
       });
     })
   );
@@ -460,14 +475,14 @@ const getTotalTVL = async () => {
 export const useTotalTvl = () => {
   const [totalTvl, setTotalTvl] = useState("0");
   const markets = useMarkets();
-  const { fastRefresh } = useRefresh();
+  const { slowRefresh } = useRefresh();
   useEffect(() => {
     const fetchBalance = async () => {
       const _totalTvl = await getTotalTVL();
       setTotalTvl(_totalTvl.toFormat(0).toString());
     };
     fetchBalance();
-  }, [markets, fastRefresh]);
+  }, [markets, slowRefresh]);
 
   return totalTvl;
 };

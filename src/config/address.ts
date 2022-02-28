@@ -24,11 +24,16 @@ export const AllTranches = [
     network: "BSC"
   },
   {
-    address: "0x9c59d895A660F30C8B335AF3a26a371b17192382",
+    address: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1",
     network: "AVAX"
   },
   {
-    address: "0xA88C319D2947f54D728C9E95122A61E512cEF64e",
+    address: "0x12D7D07F9A1A659Be4E1E2945c8229B387840D2B",
+    network: "AVAX",
+    coin: "wavax"
+  },
+  {
+    address: "0x17896D84af7af66bdFB3BB1e529596FCd0bf8CE1",
     network: "AVAX"
   }
 ];

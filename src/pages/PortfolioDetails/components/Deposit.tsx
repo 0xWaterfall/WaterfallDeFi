@@ -101,9 +101,9 @@ const SelectDepositAsset = styled.div`
 const RemainingDepositableOuter = styled.div`
   width: 160px;
   height: 6px;
-  background-color: rgba(51, 51, 51, 0.1);
+  background-color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal2, theme.white.normal3)};
   border-radius: 4px;
-  margin: 0 20px 0 6px;
+  margin: 9px 20px 0 6px;
 `;
 
 const RemainingDepositableInner = styled.div`
@@ -131,11 +131,8 @@ const Deposit = memo<TProps>(
     setDepositMultipleSimultaneous
   }) => {
     const deposited: BigNumber[] = [];
-
     const tokens = data.tokens;
-
     const trancheInvest: { type: "BigNumber"; hex: string }[][] | undefined = data.trancheInvests;
-
     if (trancheInvest) {
       data.assets.forEach((a, i) =>
         deposited.push(
@@ -145,27 +142,20 @@ const Deposit = memo<TProps>(
         )
       );
     }
-
     const maxDeposits = tokens.map((t) =>
       new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(t.percent.hex).dividedBy(BIG_TEN.pow(5)))
     );
-
     const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
       deposited[data.assets.indexOf(selectedDepositAsset)]
     );
-
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
-
     const returnWidth = (assetIndex: number) =>
       deposited[assetIndex]
         .dividedBy(tokens.length > 0 ? maxDeposits[assetIndex].toString() : new BigNumber(1))
         .multipliedBy(100)
         .toString();
-
     const width = data.isMulticurrency ? returnWidth(data.assets.indexOf(selectedDepositAsset)) : 1;
-
     const widths = data.isMulticurrency ? data.assets.map((a, i) => returnWidth(i)) : [];
-
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {
       if (!window || !startTime || !endTime) return;
@@ -176,6 +166,7 @@ const Deposit = memo<TProps>(
         "_blank"
       );
     };
+
     return (
       <div css={{ padding: "0 20px" }}>
         {data.status === PORTFOLIO_STATUS.ACTIVE && data.actualStartAt && data.duration ? (
@@ -227,14 +218,16 @@ const Deposit = memo<TProps>(
               {!depositMultipleSimultaneous ? (
                 <div css={{ display: "flex", paddingTop: "3.5px" }}>
                   {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
-                  <div css={{ padding: "2px 6px 0 6px" }}>{selectedDepositAsset} Remaining</div>
+                  <StepName css={{ padding: "1px 6px 0 6px" }}>
+                    <span css={{ fontWeight: 900, marginRight: 10 }}>
+                      {deposited[data.assets.indexOf(selectedDepositAsset)].toString()} /{" "}
+                      {maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()}
+                    </span>
+                    {selectedDepositAsset} Remaining
+                  </StepName>
                   {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
                     <RemainingDepositableOuter>
                       <RemainingDepositableInner css={{ width: width + "%" }} />
-                      <span>
-                        {deposited[data.assets.indexOf(selectedDepositAsset)].toString()} /{" "}
-                        {maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()}
-                      </span>
                     </RemainingDepositableOuter>
                   ) : null}
                 </div>
@@ -243,12 +236,14 @@ const Deposit = memo<TProps>(
                   {data.assets.map((asset, index) => (
                     <div key={asset} css={{ display: "flex", padding: "3.5px 0" }}>
                       <Coin assetName={asset} size={24} />
-                      <div css={{ padding: "2px 6px 0 6px" }}>{asset} Remaining</div>
-                      <RemainingDepositableOuter>
-                        <RemainingDepositableInner css={{ width: widths[index] + "%" }} />
-                        <span>
+                      <StepName css={{ padding: "1px 6px 0 6px" }}>
+                        <span css={{ fontWeight: 900, marginRight: 10 }}>
                           {deposited[index].toString()} / {maxDeposits[index].toString()}
                         </span>
+                        {asset} Remaining
+                      </StepName>
+                      <RemainingDepositableOuter>
+                        <RemainingDepositableInner css={{ width: widths[index] + "%" }} />
                       </RemainingDepositableOuter>
                     </div>
                   ))}

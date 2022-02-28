@@ -161,7 +161,6 @@ const Information = memo<TProps>(
                     .toString()}
                 </div>
               ) : null}
-              {/* TODO: ^ use trancheInvest contract calls to get how much of a certain coin has already been invested in fall */}
             </div>
           ))}
           <div css={{ display: "flex", justifyContent: "flex-end" }}>

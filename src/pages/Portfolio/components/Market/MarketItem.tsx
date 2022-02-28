@@ -172,7 +172,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       </RowDiv>
       <RowDiv>
         <div>
-          {intl.formatMessage({ defaultMessage: "Deposit APY" })}
+          {intl.formatMessage({ defaultMessage: "Deposit APR" })}
           <Tooltip
             overlay={
               <React.Fragment>

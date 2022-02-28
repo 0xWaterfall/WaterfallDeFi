@@ -93,9 +93,9 @@ export const MarketList: Market[] = [
   },
   {
     portfolio: "MAXI Falls",
-    assets: "WAVAX",
+    assets: "DAI.e",
     isAvax: true,
-    wrapAvax: true,
+    wrapAvax: false,
     listingDate: "2021/2/28",
     tranches: [],
     tvl: "",
@@ -107,7 +107,7 @@ export const MarketList: Market[] = [
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MAXIFallsMasterWTFAddress[NETWORK],
     pools: [],
-    depositAssetAddress: WAVAXDepositAddress[NETWORK],
+    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
     depositAssetAbi: WTFAbi,
     strategyFarms: [
       {

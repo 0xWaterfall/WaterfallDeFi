@@ -159,6 +159,7 @@ const LogoutWrapper = styled.div`
     color: #999999;
   }
 `;
+
 type TProps = WrappedComponentProps;
 
 const Header = memo<TProps>(({ intl }) => {
@@ -173,10 +174,6 @@ const Header = memo<TProps>(({ intl }) => {
   const { login, logout } = useAuth();
 
   useEagerConnect();
-
-  useEffect(() => {
-    // login("injected");
-  }, []);
 
   const MENU = [
     { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: undefined },
@@ -232,17 +229,17 @@ const Header = memo<TProps>(({ intl }) => {
       />
     );
 
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-          1st menu item
-        </a>
-      </Menu.Item>
-    </Menu>
-  );
-
   const WalletElement = useMemo(() => {
+    const menu = (
+      <Menu css={{ backgroundColor: colorMode === "dark" ? "#13132C" : "#FAFAFA" }}>
+        <Menu.Item key={"bnb"} css={{ color: "rgb(240, 185, 11);" }}>
+          <a target="_blank" rel="noopener noreferrer" href="https://bnb.waterfalldefi.org" css={{ fontWeight: 600 }}>
+            BNB
+          </a>
+        </Menu.Item>
+      </Menu>
+    );
+
     if (!active) {
       return (
         <Button
@@ -261,7 +258,9 @@ const Header = memo<TProps>(({ intl }) => {
     return (
       <WalletWrapper>
         <Network>
-          <Dropdown overlay={menu}>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</Dropdown>
+          <Dropdown overlay={menu}>
+            <span>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</span>
+          </Dropdown>
         </Network>
         <Address>
           <span>{formatAccountAddress(account)}</span>
@@ -272,7 +271,7 @@ const Header = memo<TProps>(({ intl }) => {
         </LogoutWrapper>
       </WalletWrapper>
     );
-  }, [account, active, chainId]);
+  }, [account, active, chainId, colorMode]);
 
   const MenuLink = MENU.map(({ pathname, text, target, color }) =>
     target ? (

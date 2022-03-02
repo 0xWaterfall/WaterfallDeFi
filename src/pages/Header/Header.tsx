@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import { Logout, Burger, Wallet, WaterFall, WaterFallDark } from "assets/images";
+import { Logout, Burger, Wallet, WaterFall, WaterFallDark, CaretDown } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import React, { memo, useEffect } from "react";
@@ -38,7 +38,7 @@ const WalletWrapper = styled.div`
 `;
 
 const Network = styled.div`
-  padding: 0 16px;
+  padding: 0 16px 0 0;
   height: 34px;
   display: flex;
   align-items: center;
@@ -233,7 +233,12 @@ const Header = memo<TProps>(({ intl }) => {
     const menu = (
       <Menu css={{ backgroundColor: colorMode === "dark" ? "#13132C" : "#FAFAFA" }}>
         <Menu.Item key={"bnb"} css={{ color: "rgb(240, 185, 11);" }}>
-          <a target="_blank" rel="noopener noreferrer" href="https://bnb.waterfalldefi.org" css={{ fontWeight: 600 }}>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://bnb.waterfalldefi.org"
+            css={{ fontWeight: 600, paddingLeft: 16 }}
+          >
             BNB
           </a>
         </Menu.Item>
@@ -259,7 +264,10 @@ const Header = memo<TProps>(({ intl }) => {
       <WalletWrapper>
         <Network>
           <Dropdown overlay={menu}>
-            <span>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</span>
+            <div css={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+              <CaretDown />
+              {NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}
+            </div>
           </Dropdown>
         </Network>
         <Address>

@@ -10,7 +10,7 @@ export { ReactComponent as Unicorn } from "./Unicorn.svg";
 export { ReactComponent as Star } from "./Star.svg";
 export { default as Wave } from "./Wave.svg";
 export { ReactComponent as Union } from "./Union.svg";
-export { ReactComponent as Menu } from "./Menu.svg";
+export { ReactComponent as Burger } from "./Burger.svg";
 export { ReactComponent as Discord } from "./Discord.svg";
 export { ReactComponent as Telegram } from "./Telegram.svg";
 export { ReactComponent as Medium } from "./Medium.svg";

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import { Logout, Menu, Wallet, WaterFall, WaterFallDark } from "assets/images";
+import { Logout, Burger, Wallet, WaterFall, WaterFallDark } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
 import React, { memo, useEffect } from "react";
@@ -21,6 +21,7 @@ import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
 import { NETWORK, NETWORKS } from "config";
 import { NetworkStatus } from "@apollo/client";
+import { Menu, Dropdown } from "antd";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -231,6 +232,16 @@ const Header = memo<TProps>(({ intl }) => {
       />
     );
 
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+          1st menu item
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
+
   const WalletElement = useMemo(() => {
     if (!active) {
       return (
@@ -249,7 +260,9 @@ const Header = memo<TProps>(({ intl }) => {
     }
     return (
       <WalletWrapper>
-        <Network>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</Network>
+        <Network>
+          <Dropdown overlay={menu}>{NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}</Dropdown>
+        </Network>
         <Address>
           <span>{formatAccountAddress(account)}</span>
           <Wallet css={{ marginLeft: 10 }} />
@@ -289,7 +302,7 @@ const Header = memo<TProps>(({ intl }) => {
         {MenuLink}
       </PCLeft>
       <MobileLeft>
-        <Menu
+        <Burger
           css={{ marginRight: 16, fill: colorMode === "dark" ? white.normal7 : gray.normal5 }}
           onClick={setDrawerShow.bind(null, true)}
         />
@@ -304,7 +317,7 @@ const Header = memo<TProps>(({ intl }) => {
         <DrawerWrapper>
           <div>
             <header>
-              <Menu
+              <Burger
                 css={{ fill: colorMode === "dark" ? white.normal7 : gray.normal5 }}
                 onClick={setDrawerShow.bind(null, false)}
               />

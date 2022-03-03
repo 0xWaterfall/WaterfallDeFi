@@ -19,6 +19,7 @@ import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useWTF } from "hooks";
+import { BigNumber } from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   color?: string;
@@ -193,8 +194,13 @@ const TranchesCard = memo<TProps>(
       () =>
         !data.autorollImplemented
           ? compareNum(tranche.principal, tranche.target)
-          : compareNum(Number(tranche.autoPrincipal) + Number(tranche.principal), tranche.target),
-      [tranche.principal, tranche.target]
+          : compareNum(
+              new BigNumber(tranche.autoPrincipal ? tranche.autoPrincipal : "0")
+                .plus(new BigNumber(tranche.principal))
+                .toString(),
+              tranche.target
+            ),
+      [tranche.principal, tranche.target, tranche.autoPrincipal]
     );
     const trancheApr = tranche.apy;
     // const wtfPrice = useWTFPrice();

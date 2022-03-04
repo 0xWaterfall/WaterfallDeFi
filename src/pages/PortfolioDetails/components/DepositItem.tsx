@@ -201,6 +201,8 @@ const DepositItem = memo<TProps>(
               : false
           }
           depositMultipleSimultaneous={depositMultipleSimultaneous}
+          setSelectedDepositAsset={setSelectedDepositAsset}
+          setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
         />
       </div>
     );

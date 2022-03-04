@@ -125,6 +125,8 @@ type TProps = WrappedComponentProps & {
   selectTranche: Tranche | undefined;
   depositMultipleSimultaneous: boolean;
   remainingSimul: { remaining: string; remainingExact: string }[];
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ApproveCard = memo<TProps>(
@@ -140,7 +142,9 @@ const ApproveCard = memo<TProps>(
     isSoldOut,
     selectTranche,
     depositMultipleSimultaneous,
-    remainingSimul
+    remainingSimul,
+    setSelectedDepositAsset,
+    setDepositMultipleSimultaneous
   }) => {
     const { tags } = useTheme();
     //user inputs
@@ -185,6 +189,21 @@ const ApproveCard = memo<TProps>(
         ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
         : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
       : "";
+    const tokenButtonColors = useMemo(
+      () =>
+        data.assets.map((a) => {
+          switch (a) {
+            case "BUSD":
+              return "#F0B90B";
+            case "WAVAX":
+              return "#E84142";
+            default:
+              return "#1579FF";
+          }
+        }),
+      []
+    );
+
     //validation texts
     const notes = [
       intl.formatMessage({
@@ -445,7 +464,28 @@ const ApproveCard = memo<TProps>(
             </RowDiv>
             <Separator />
             <RowDiv>
-              <div>{selectedDepositAsset}</div>
+              <div css={{ display: "flex" }}>
+                {data.assets.map((a, i) => (
+                  <Button
+                    key={a}
+                    css={{
+                      color: tokenButtonColors[i],
+                      fontWeight: 400,
+                      marginRight: 15
+                    }}
+                    disabled={selectedDepositAsset === a}
+                    onClick={() => setSelectedDepositAsset(a)}
+                  >
+                    {a}
+                  </Button>
+                ))}
+                <Button css={{ color: "#1579FF" }} onClick={() => setDepositMultipleSimultaneous(true)}>
+                  Multi
+                </Button>
+              </div>
+              <div css={{ color: tokenButtonColors[data.assets.indexOf(selectedDepositAsset)] }}>
+                {selectedDepositAsset}
+              </div>
             </RowDiv>
             <div>
               <Input

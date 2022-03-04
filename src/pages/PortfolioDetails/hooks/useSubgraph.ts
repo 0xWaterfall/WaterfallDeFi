@@ -138,6 +138,7 @@ export const useHistoryQuery2 = async (
   // };
   const historyQueryResult: any = [];
   const subgraphResult: any = [];
+  console.log(subgraphResult);
   for (let marketIdx = 0; marketIdx < MarketList.length; marketIdx++) {
     const p = MarketList[marketIdx];
     if (marketId === undefined || (marketId !== undefined && marketId === marketIdx.toString())) {

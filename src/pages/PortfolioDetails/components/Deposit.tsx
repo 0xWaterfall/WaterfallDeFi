@@ -289,6 +289,8 @@ const Deposit = memo<TProps>(
             remainingDepositable={remainingDepositable}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
             remainingDepositableSimul={remainingDepositableSimul}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
         )}
       </div>

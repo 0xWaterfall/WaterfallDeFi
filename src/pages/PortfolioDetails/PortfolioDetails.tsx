@@ -39,6 +39,8 @@ const PortfolioDetails = memo<TProps>(() => {
             data={market}
             selectedDepositAsset={selectedDepositAsset}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
           <ContentCD
             data={market}

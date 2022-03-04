@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 // import styled from "@emotion/styled";
-import { memo, useState } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
@@ -24,6 +24,8 @@ type TProps = WrappedComponentProps & {
   remainingDepositable: BigNumber;
   depositMultipleSimultaneous: boolean;
   remainingDepositableSimul: BigNumber[];
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
@@ -44,7 +46,9 @@ const DepositItem = memo<TProps>(
     redepositBalance,
     remainingDepositable,
     depositMultipleSimultaneous,
-    remainingDepositableSimul
+    remainingDepositableSimul,
+    setSelectedDepositAsset,
+    setDepositMultipleSimultaneous
   }) => {
     // const { primary } = useTheme();
     const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];

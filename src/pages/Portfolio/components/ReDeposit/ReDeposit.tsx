@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { memo } from "react";
+import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useTheme } from "@emotion/react";
 import Modal from "components/Modal/Modal";
@@ -16,10 +16,22 @@ type TProps = WrappedComponentProps & {
   balance: string;
   selectedDepositAsset: string;
   depositMultipleSimultaneous: boolean;
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Claim = memo<TProps>(
-  ({ intl, visible, onCancel, data, balance, selectedDepositAsset, depositMultipleSimultaneous }) => {
+  ({
+    intl,
+    visible,
+    onCancel,
+    data,
+    balance,
+    selectedDepositAsset,
+    depositMultipleSimultaneous,
+    setSelectedDepositAsset,
+    setDepositMultipleSimultaneous
+  }) => {
     const { primary, fonts, white, gray } = useTheme();
 
     const deposited: BigNumber[] = [];
@@ -61,6 +73,8 @@ const Claim = memo<TProps>(
           remainingDepositable={remainingDepositable}
           depositMultipleSimultaneous={depositMultipleSimultaneous}
           remainingDepositableSimul={remainingDepositableSimul}
+          setSelectedDepositAsset={setSelectedDepositAsset}
+          setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
         />
       </Modal>
     );

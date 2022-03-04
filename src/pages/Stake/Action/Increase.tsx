@@ -151,6 +151,8 @@ const Increase = memo<TProps>(
     const [extendLockTimeLoading, setExtendLockTimeLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const { total: lockingWTF, expiryTimestamp, startTimestamp, fetchLockingWTF } = useGetLockingWTF(account);
+    const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
+
     const { lockAndStakeWTF } = useLockAndStakeWTF();
     const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
     const { onCheckLocked } = useCheckLocked();
@@ -200,6 +202,10 @@ const Increase = memo<TProps>(
         setBalanceInput("0");
         fetchLockingWTF();
         successNotification("Increase Amount Success", "");
+
+        setSelectedValue({ value: 0, unit: "M" });
+        setDatePickerValue(undefined);
+        setResetSelect(true);
       } catch (e) {
         console.error(e);
       } finally {
@@ -241,6 +247,10 @@ const Increase = memo<TProps>(
         await extendLockTime(Number(duration));
         fetchBalance();
         successNotification("Extend Lock Time Success", "");
+
+        setSelectedValue({ value: 0, unit: "M" });
+        setDatePickerValue(undefined);
+        setResetSelect(true);
       } catch (e) {
         console.error(e);
       } finally {
@@ -289,9 +299,13 @@ const Increase = memo<TProps>(
 
           //calculate lockingWTF with extended duration
           if (duration) {
-            const multiplier2 = getMultiplier(Number(duration || 0));
+            const _duration = Number(expiryTimestamp) - Number(startTimestamp) + duration;
+            const multiplier2 = getMultiplier(Number(_duration || 0));
             const _balanceInput2 = Number(lockingWTF);
-            total += (_balanceInput2 * duration * multiplier2) / 100 / MAX_LOCK_TIME;
+
+            let _receivedVeWTF = (_balanceInput2 * _duration * multiplier2) / 100 / MAX_LOCK_TIME;
+            _receivedVeWTF -= Number(VeWTFBalance);
+            total += _receivedVeWTF;
           }
           const timeNow = Math.floor(Date.now() / 1000);
           const _duration =
@@ -315,13 +329,22 @@ const Increase = memo<TProps>(
         if (balanceInput === "0" && !duration) return "-";
         const timeNow = Math.floor(Date.now() / 1000);
         // const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(startTimestamp) : duration;
-        const _duration = !duration || duration === 0 ? Number(expiryTimestamp) - Number(timeNow) : duration;
+        const _duration =
+          !duration || duration === 0
+            ? Number(expiryTimestamp) - Number(timeNow)
+            : Number(expiryTimestamp) - Number(startTimestamp) + duration;
         const _balanceInput = balanceInput === "0" ? Number(lockingWTF) : Number(balanceInput);
         const multiplier = getMultiplier(Number(_duration || 0));
         console.log("_balanceInput", _balanceInput, _duration, multiplier);
-        return numeral((_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME).format("0,0.[0000]");
+        let _receivedVeWTF = (_balanceInput * _duration * multiplier) / 100 / MAX_LOCK_TIME;
+        console.log("_receivedVeWTF", _receivedVeWTF);
+        if (!(!duration || duration === 0)) {
+          //extend duration
+          _receivedVeWTF -= Number(VeWTFBalance);
+        }
+        return numeral(_receivedVeWTF).format("0,0.[0000]");
       }
-    }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked]);
+    }, [duration, balanceInput, wtfRewardsBalance, expiryTimestamp, locked, startTimestamp]);
     const currentAPR = useMemo(() => {
       if (!receivedVeWTF) return "";
       if (!totalVeWTF) return "";
@@ -460,6 +483,9 @@ const Increase = memo<TProps>(
         setLocked(true);
         setBalanceInput("0");
         successNotification("Lock & Stake Success", "");
+        setSelectedValue({ value: 0, unit: "M" });
+        setDatePickerValue(undefined);
+        setResetSelect(true);
       } catch (e) {
         console.error(e);
       } finally {
@@ -485,10 +511,10 @@ const Increase = memo<TProps>(
 
       const _startTimestamp = startTimestamp !== "0" ? startTimestamp : timeNow;
       const maxLockDate = dayjs.unix(Number(_startTimestamp) + Number(MAX_LOCK_TIME)).format("YYYY-MM-DD HH:mm:ss");
-      console.log(maxLockDate);
       if (totalLockTime > MAX_LOCK_TIME)
         return `Maximum lock expiry date = ${maxLockDate} (2 Years from your initial lock date)`;
 
+      if (duration < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 3 Months" });
       if (totalLockTime < MIN_LOCK_TIME) return intl.formatMessage({ defaultMessage: "Minimum Lock Time = 3 Months" });
 
       if (newExpireDate && expiryTimestamp !== "0" && newExpireDate?.unix() < Number(expiryTimestamp))

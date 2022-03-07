@@ -46,7 +46,9 @@ const Claim = memo<TProps>(({ intl }) => {
       }}
     >
       <ClaimBlockName>
-        <Label css={{ marginRight: 4 }}>{intl.formatMessage({ defaultMessage: "Weekly reward" })}</Label>
+        <Label css={{ marginRight: 4 }}>
+          {intl.formatMessage({ defaultMessage: "Weekly rewards for AVAX coming soon!" })}
+        </Label>
         <Tooltip
           overlay={
             <React.Fragment>

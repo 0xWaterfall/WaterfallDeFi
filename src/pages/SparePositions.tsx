@@ -100,6 +100,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   // const [redeemLoading, setRedeemLoading] = useState<{ [key: number]: boolean }>({});
   // const { onRedeemDirect } = useRedeemDirect();
 
+  const [selectedAsset, setSelectedAsset] = useState<string>("ALL");
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
@@ -190,6 +191,9 @@ const SparePositions = memo<TProps>(({ intl }) => {
     { name: intl.formatMessage({ defaultMessage: "Matured" }), value: "EXPIRED", status: 2 }
   ];
   const tranchesName = ["Senior", "Mezzanine", "Junior"];
+  const handleAssetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAsset(event.toString());
+  };
   const handleTranchesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTranche(Number(event));
   };
@@ -235,6 +239,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+      if (selectedAsset !== "ALL" && selectedAsset !== markets[marketIdx].assets) return false;
       if (
         selectedStatus > -1 &&
         trancheCycles[trancheCycleId] &&
@@ -282,9 +287,10 @@ const SparePositions = memo<TProps>(({ intl }) => {
         <SelectGroup>
           <div>
             <title>{intl.formatMessage({ defaultMessage: "Assets" })}</title>
-            <Select>
+            <Select onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleAssetChange(e)}>
               <Option value="ALL">All</Option>
-              <Option value="BUSD">BUSD</Option>
+              <Option value="DAI.e">DAI.e</Option>
+              <Option value="WAVAX">WAVAX</Option>
             </Select>
           </div>
           <div>

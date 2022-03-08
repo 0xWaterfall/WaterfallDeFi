@@ -6,7 +6,7 @@ import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Market } from "types";
-import { getLockupPeriod } from "utils/formatNumbers";
+import { formatNumberSeparator, getLockupPeriod } from "utils/formatNumbers";
 import Coin from "components/Coin";
 import Modal from "components/Modal/Modal";
 import Input from "components/Input/Input";
@@ -217,7 +217,7 @@ const Information = memo<TProps>(
             <span>Lock-up period: {data?.duration ? getLockupPeriod(data?.duration) : "-"}</span>
           </Block>
           <Block css={{ paddingTop: 26 }}>
-            <span>TVL: ${data?.tvl}</span>
+            <span>TVL: ${formatNumberSeparator(data?.tvl)}</span>
           </Block>
         </InformationWrapper>
       </Wrapper>

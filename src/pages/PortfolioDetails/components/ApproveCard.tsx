@@ -464,25 +464,29 @@ const ApproveCard = memo<TProps>(
             </RowDiv>
             <Separator />
             <RowDiv>
-              <div css={{ display: "flex" }}>
-                {data.assets.map((a, i) => (
-                  <Button
-                    key={a}
-                    css={{
-                      color: tokenButtonColors[i],
-                      fontWeight: 400,
-                      marginRight: 15
-                    }}
-                    disabled={selectedDepositAsset === a}
-                    onClick={() => setSelectedDepositAsset(a)}
-                  >
-                    {a}
+              {data.isMulticurrency ? (
+                <div css={{ display: "flex" }}>
+                  {data.assets.map((a, i) => (
+                    <Button
+                      key={a}
+                      css={{
+                        color: tokenButtonColors[i],
+                        fontWeight: 400,
+                        marginRight: 15
+                      }}
+                      disabled={selectedDepositAsset === a}
+                      onClick={() => setSelectedDepositAsset(a)}
+                    >
+                      {a}
+                    </Button>
+                  ))}
+                  <Button css={{ color: "#1579FF" }} onClick={() => setDepositMultipleSimultaneous(true)}>
+                    Multi
                   </Button>
-                ))}
-                <Button css={{ color: "#1579FF" }} onClick={() => setDepositMultipleSimultaneous(true)}>
-                  Multi
-                </Button>
-              </div>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <div css={{ color: tokenButtonColors[data.assets.indexOf(selectedDepositAsset)] }}>
                 {selectedDepositAsset}
               </div>

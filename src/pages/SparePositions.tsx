@@ -83,6 +83,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
   const { account } = useWeb3React<Web3Provider>();
 
   const [activedTab, setActivedTab] = useState<IType>("ALL");
+  const [selectedAsset, setSelectedAsset] = useState<string>("ALL");
   const [selectedTranche, setSelectedTranche] = useState(-1);
   const [selectedStatus, setSelectedStatus] = useState(-1);
 
@@ -200,7 +201,9 @@ const SparePositions = memo<TProps>(({ intl }) => {
     { name: intl.formatMessage({ defaultMessage: "Active" }), value: "ACTIVE", status: 1 },
     { name: intl.formatMessage({ defaultMessage: "Matured" }), value: "EXPIRED", status: 2 }
   ];
-
+  const handleAssetChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedAsset(event.toString());
+  };
   const handleTranchesChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedTranche(Number(event));
   };
@@ -219,6 +222,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
       const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
       if (_userInvest.principal == "0") return false;
       if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return false;
+      if (selectedAsset !== "ALL" && !markets[marketIdx].assets.includes(selectedAsset)) return false;
       if (
         selectedStatus > -1 &&
         trancheCycles[trancheCycleId] &&
@@ -249,9 +253,10 @@ const SparePositions = memo<TProps>(({ intl }) => {
         <SelectGroup>
           <div>
             <title>{intl.formatMessage({ defaultMessage: "Assets" })}</title>
-            <Select>
+            <Select onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleAssetChange(e)}>
               <Option value="ALL">All</Option>
               <Option value="BUSD">BUSD</Option>
+              <Option value="TUSD">TUSD</Option>
             </Select>
           </div>
           <div>

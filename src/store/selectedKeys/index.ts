@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ISelected {
   marketKey: string | null;
   theme: ITheme;
+  network: Network;
   cookieModal: boolean;
 }
 
 const initialState: ISelected = {
   marketKey: null,
   theme: "light",
+  network: Network.Avax,
   cookieModal: true
 };
 
@@ -22,6 +24,9 @@ export const selectedKeysSlice = createSlice({
     setTheme: (state, action: PayloadAction<ITheme>) => {
       state.theme = action.payload;
     },
+    setNetwork: (state, action: PayloadAction<Network>) => {
+      state.network = action.payload;
+    },
     setCookieModal: (state, action: PayloadAction<boolean>) => {
       state.cookieModal = action.payload;
     }
@@ -30,6 +35,6 @@ export const selectedKeysSlice = createSlice({
 
 // All here will be synchronized with localStorage
 
-export const { setMarketKey, setTheme, setCookieModal } = selectedKeysSlice.actions;
+export const { setMarketKey, setTheme, setNetwork, setCookieModal } = selectedKeysSlice.actions;
 
 export default selectedKeysSlice.reducer;

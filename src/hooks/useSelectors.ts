@@ -57,3 +57,5 @@ export const useTransactionModal = () => {
 };
 
 export const useCookieModal = () => useAppSelector((state) => state.selectedKeys.cookieModal);
+
+export const useNetwork = () => useAppSelector((state) => state.selectedKeys.network);

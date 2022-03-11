@@ -21,8 +21,3 @@ interface IPosition {
 }
 
 type ITheme = "light" | "dark";
-
-enum Network {
-  Avax,
-  BNB
-}

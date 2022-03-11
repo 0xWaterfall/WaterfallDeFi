@@ -6,10 +6,11 @@ import { useWeb3React } from "@web3-react/core";
 import useRefresh from "hooks/useRefresh";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
 import numeral from "numeral";
 import Farms from "config/farms";
 import { BLOCK_TIME } from "config";
+import { useNetwork } from "hooks/useSelectors";
 export interface FarmInterface {
   name: string;
   isPoolActive: boolean;
@@ -30,6 +31,7 @@ export const useFarms = (farmIdx?: number) => {
   const [result, setResult] = useState<FarmInterface[]>([]);
   const { fastRefresh } = useRefresh();
   const { account } = useWeb3React();
+  const network = useNetwork();
   useEffect(() => {
     const fetchBalance = async () => {
       const farmsResultAll: FarmInterface[] = [];
@@ -62,7 +64,7 @@ export const useFarms = (farmIdx?: number) => {
             [_accRewardPerShare, _startRewardBlock, _endRewardBlock, _lastRewardBlock, _rewardPerBlock],
             _rewardPerShare,
             [_userStakedLP]
-          ] = await multicall(LPRewardsAbi, calls);
+          ] = network === "avax" ? await multicall(LPRewardsAbi, calls) : await multicallBSC(LPRewardsAbi, calls);
           //users(account)
 
           const calls2 = [
@@ -72,7 +74,8 @@ export const useFarms = (farmIdx?: number) => {
               params: [lpRewardAddress]
             }
           ];
-          const [_totalStaked] = await multicall(LPTokenAbi, calls2);
+          const [_totalStaked] =
+            network === "avax" ? await multicall(LPTokenAbi, calls2) : await multicallBSC(LPTokenAbi, calls2);
 
           const lpValueInTermsOfWTF = 1;
           const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
@@ -107,7 +110,7 @@ export const useFarms = (farmIdx?: number) => {
       setResult(farmsResultAll);
     };
     fetchBalance();
-  }, [fastRefresh]);
+  }, [fastRefresh, network]);
 
   return result;
 };

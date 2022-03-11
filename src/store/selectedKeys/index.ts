@@ -3,14 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface ISelected {
   marketKey: string | null;
   theme: ITheme;
-  network: Network;
+  network: string;
   cookieModal: boolean;
 }
 
 const initialState: ISelected = {
   marketKey: null,
   theme: "light",
-  network: Network.Avax,
+  network: "avax",
   cookieModal: true
 };
 
@@ -24,7 +24,7 @@ export const selectedKeysSlice = createSlice({
     setTheme: (state, action: PayloadAction<ITheme>) => {
       state.theme = action.payload;
     },
-    setNetwork: (state, action: PayloadAction<Network>) => {
+    setNetwork: (state, action: PayloadAction<string>) => {
       state.network = action.payload;
     },
     setCookieModal: (state, action: PayloadAction<boolean>) => {

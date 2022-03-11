@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { getContract, getSigner } from "hooks";
+import { getContract, getContract2, getSigner } from "hooks";
 import {
   FeeRewardsAddress,
   MasterChefAddress,
@@ -18,47 +18,57 @@ import { abi as AVAXTrancheMasterAbi } from "config/abi/AVAXTrancheMaster.json";
 import { abi as WrapAVAXFallsAbi } from "config/abi/WrapAVAX.json";
 import { useMemo } from "react";
 import { NETWORK } from "config";
+import { useNetwork } from "./useSelectors";
 
 export const useMasterchefContract = (masterChefAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(MasterChefAbi, masterChefAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(MasterChefAbi, masterChefAddress, network, signer), [network, signer]);
 };
 
 export const useTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(TrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(TrancheMasterAbi, trancheMasterAddress, network, signer), [network, signer]);
 };
 export const useAVAXTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(AVAXTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(AVAXTrancheMasterAbi, trancheMasterAddress, network, signer), [network, signer]);
 };
 
 export const useERC20Contract = (address: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(ERC20Abi, address, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(ERC20Abi, address, network, signer), [network, signer]);
 };
 
 export const useVeWTFContract = () => {
   const signer = getSigner();
-  return useMemo(() => getContract(VotingEscrowAbi, VeWTFAddress[NETWORK], signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(VotingEscrowAbi, VeWTFAddress[NETWORK], network, signer), [network, signer]);
 };
 
 export const useWTFRewardsContract = () => {
   const signer = getSigner();
-  return useMemo(() => getContract(WTFRewardsAbi, WTFRewardsAddress[NETWORK], signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(WTFRewardsAbi, WTFRewardsAddress[NETWORK], network, signer), [network, signer]);
 };
 
 export const useFeeRewardsContract = () => {
   const signer = getSigner();
-  return useMemo(() => getContract(WTFRewardsAbi, FeeRewardsAddress[NETWORK], signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(WTFRewardsAbi, FeeRewardsAddress[NETWORK], network, signer), [network, signer]);
 };
 
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(LPRewardsAbi, LPRewardsAddress, network, signer), [network, signer]);
 };
 
 export const useWrapAVAXContract = () => {
   const signer = getSigner();
-  return useMemo(() => getContract(WrapAVAXFallsAbi, WrapAVAXAddress[NETWORK], signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(WrapAVAXFallsAbi, WrapAVAXAddress[NETWORK], network, signer), [network, signer]);
 };

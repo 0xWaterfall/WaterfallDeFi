@@ -13,8 +13,16 @@ import {
   MAXIFallsMasterWTFAddress,
   MAXITraderJoeStrategyAddress,
   MAXIBenqiStrategyAddress,
-  MAXIMaximizerStrategyAddress
+  MAXIMaximizerStrategyAddress,
+  TranchesAddressOracle1,
+  MasterChefOracleAddress1,
+  BUSDAddress,
+  sALPACAAddress,
+  sVENUSAddress,
+  TranchesAddressOracle2,
+  MasterChefOracleAddress2
 } from "./address";
+import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
@@ -131,5 +139,82 @@ export const MarketList: Market[] = [
     ],
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxiQiJoe_dai",
     isRetired: false
+  },
+  {
+    portfolio: "BUSD Falls 1",
+    isAvax: false,
+    assets: "BUSD",
+    listingDate: "2022/01/16",
+    // lockupPeriod: "7 Days",
+    // duration: 0,
+    // actualStartAt:
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: TranchesAddressOracle1[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MasterChefOracleAddress1[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    // strategyAddress: StrategyAddress[NETWORK],
+    // strategyAbi: StrategyAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      // {
+      //   farmName: "Cream BUSD",
+      //   shares: 0.2,
+      //   sAddress: sCREAMAddress[NETWORK],
+      //   apiKey: "cream"
+      // },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls1new"
+  },
+  {
+    portfolio: "BUSD Falls 2",
+    isAvax: false,
+    assets: "BUSD",
+    listingDate: "2021/01/17",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: TranchesAddressOracle2[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MasterChefOracleAddress2[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.8,
+        sAddress: sALPACAAddress[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.2,
+        sAddress: sVENUSAddress[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2new"
   }
 ];

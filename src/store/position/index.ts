@@ -1,4 +1,4 @@
-import { getContract, getSigner } from "hooks";
+import { getContract, getContract2, getSigner } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market } from "types";
 import { AbiItem } from "web3-utils";
@@ -8,7 +8,8 @@ import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { MasterChefAddress, TranchesAddress } from "config/address";
 import { BIG_TEN } from "utils/bigNumber";
 import { NETWORK } from "config";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
+import { useNetwork } from "hooks/useSelectors";
 
 const initialState: IPosition = {
   positions: [],
@@ -25,7 +26,8 @@ export const getTrancheBalance = createAsyncThunk<
   try {
     if (!account) return;
     const signer = getSigner();
-    const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK], signer);
+    const network = useNetwork();
+    const contractMasterChef = getContract2(TrancheMasterAbi, TranchesAddress[NETWORK], network, signer);
     const result = await contractMasterChef.balanceOf(account);
     return {
       balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
@@ -43,7 +45,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
       if (!account) return;
       const signer = getSigner();
       if (!signer) return [];
-      const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
+      const network: string = useNetwork();
 
       const _marketAddress = market.address;
       const calls = [
@@ -63,7 +65,8 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
           params: [account, 2]
         }
       ];
-      const userInvest = await multicall(market.abi, calls);
+      const userInvest =
+        network === "avax" ? await multicall(market.abi, calls) : await multicallBSC(market.abi, calls);
       // const userInvest = await Promise.all([
       //   contractTrancheMaster.userInvest(account, 0),
       //   contractTrancheMaster.userInvest(account, 1),
@@ -83,7 +86,8 @@ export const getPendingWTFReward = createAsyncThunk<
   try {
     // const allPool = poolId == undefined ? true : false;
     if (!account) return;
-    const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
+    const network = useNetwork();
+    const contractMasterChef = getContract2(MasterChefAbi, MasterChefAddress[NETWORK], network);
     let _pendingReward = new BigNumber(0);
     const _tranchesPendingReward = [];
 

@@ -4,17 +4,19 @@ import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
 import { abi as FeeRewardsAbi } from "config/abi/FeeRewards.json";
 
 import { useEffect, useMemo, useState } from "react";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
 import BigNumber from "bignumber.js";
 import useRefresh from "./useRefresh";
 import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
 import { FeeRewardsAddress } from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
+import { useNetwork } from "./useSelectors";
 
 export const useEarningTokenTotalSupply = (tokenAddress: string) => {
   const [totalSupply, setTotalSupply] = useState("");
   const { slowRefresh } = useRefresh();
+  const network = useNetwork();
   useEffect(() => {
     const fetchBalance = async () => {
       const calls = [
@@ -23,7 +25,8 @@ export const useEarningTokenTotalSupply = (tokenAddress: string) => {
           name: "totalSupply"
         }
       ];
-      const [_totalSupply] = await multicall(VEWTFAbi, calls);
+      const [_totalSupply] =
+        network === "avax" ? await multicall(VEWTFAbi, calls) : await multicallBSC(VEWTFAbi, calls);
       setTotalSupply(new BigNumber(_totalSupply[0]?._hex).dividedBy(BIG_TEN.pow(18)).toFormat(4).toString());
     };
 
@@ -47,6 +50,7 @@ export const useStakingPool = (
     rewardPerBlock: ""
   });
   const { fastRefresh } = useRefresh();
+  const network = useNetwork();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -65,7 +69,8 @@ export const useStakingPool = (
           params: [account]
         }
       ];
-      const [isPoolActive, pool, user] = await multicall(WTFRewardsABI, calls);
+      const [isPoolActive, pool, user] =
+        network === "avax" ? await multicall(WTFRewardsABI, calls) : await multicallBSC(WTFRewardsABI, calls);
 
       const calls2 = [
         {
@@ -73,7 +78,8 @@ export const useStakingPool = (
           name: "totalLocked"
         }
       ];
-      const [totalLocked] = await multicall(VotingEscrowAbi, calls2);
+      const [totalLocked] =
+        network === "avax" ? await multicall(VotingEscrowAbi, calls2) : await multicallBSC(VotingEscrowAbi, calls2);
       const rewardPerBlock = new BigNumber(pool.rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18));
       const totalVeWTF = new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18));
       const _totalVeWTF = new BigNumber(totalVeWTF).plus(2.4883);
@@ -96,7 +102,8 @@ export const useStakingPool = (
             params: [account]
           }
         ];
-        const [pending] = await multicall(FeeRewardsAbi, calls3);
+        const [pending] =
+          network === "avax" ? await multicall(FeeRewardsAbi, calls3) : await multicallBSC(FeeRewardsAbi, calls3);
         pendingBUSDReward = pending
           ? numeral(new BigNumber(pending.reward?._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[00]")
           : "";
@@ -115,7 +122,7 @@ export const useStakingPool = (
       });
     };
     if (account) fetchBalance();
-  }, [tokenAddress, fastRefresh, account]);
+  }, [tokenAddress, fastRefresh, account, network]);
 
   return result;
 };

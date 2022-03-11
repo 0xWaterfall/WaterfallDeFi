@@ -4,12 +4,14 @@ import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 import useRefresh from "hooks/useRefresh";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
-import multicall from "utils/multicall";
+import multicall, { multicallBSC } from "utils/multicall";
 import numeral from "numeral";
+import { useNetwork } from "hooks/useSelectors";
 
 export const usePendingReward = (rewardTokenAddress: string, account: string | null | undefined) => {
   const [result, setResult] = useState("");
   const { fastRefresh } = useRefresh();
+  const network = useNetwork();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -20,13 +22,14 @@ export const usePendingReward = (rewardTokenAddress: string, account: string | n
           params: [account]
         }
       ];
-      const [pendingReward] = await multicall(WTFRewardsABI, calls);
+      const [pendingReward] =
+        network === "avax" ? await multicall(WTFRewardsABI, calls) : await multicallBSC(WTFRewardsABI, calls);
       setResult(
         numeral(new BigNumber(pendingReward.reward._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[0000]")
       );
     };
     if (account) fetchBalance();
-  }, [rewardTokenAddress, fastRefresh, account]);
+  }, [rewardTokenAddress, fastRefresh, account, network]);
 
   return result;
 };

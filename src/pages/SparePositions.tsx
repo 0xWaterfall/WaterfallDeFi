@@ -29,7 +29,7 @@ import { successNotification } from "utils/notification";
 import { useAppDispatch } from "store";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { usePositions, useTrancheSnapshot } from "hooks";
+import { usePositions } from "hooks";
 import { useHistory, useLocation } from "react-router";
 
 const FilterWrapper = styled.div`

@@ -29,7 +29,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
 import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
-import { useMarkets } from "./useSelectors";
+import { useMarkets, useNetwork } from "./useSelectors";
 import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall, { multicallBSC, multicallNetwork } from "utils/multicall";
@@ -191,44 +191,46 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
 
   return result;
 };
-export const useTrancheSnapshot = (cycle: string | undefined) => {
-  const [trancheSnapshot, setTrancheSnapshot] = useState([]);
 
-  useEffect(() => {
-    const getTrancheSnapshot = async () => {
-      if (!cycle || cycle === "0") return;
-      cycle = (Number(cycle) - 1).toString();
-      // const contractTrancheMaster = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
-      // console.log(contractTrancheMaster);
-      // const result = await contractTrancheMaster.trancheSnapshots(cycle, 1);
+//UNUSED
+// export const useTrancheSnapshot = (cycle: string | undefined, network: Network) => {
+//   const [trancheSnapshot, setTrancheSnapshot] = useState([]);
 
-      const _address = TranchesAddress[NETWORK];
-      const calls = [
-        {
-          address: _address,
-          name: "trancheSnapshots",
-          params: [cycle, 0]
-        },
-        {
-          address: _address,
-          name: "trancheSnapshots",
-          params: [cycle, 1]
-        },
-        {
-          address: _address,
-          name: "trancheSnapshots",
-          params: [cycle, 2]
-        }
-      ];
-      const result = await multicall(TrancheMasterAbi, calls);
-      setTrancheSnapshot(result);
-    };
+//   useEffect(() => {
+//     const getTrancheSnapshot = async () => {
+//       if (!cycle || cycle === "0") return;
+//       cycle = (Number(cycle) - 1).toString();
+//       // const contractTrancheMaster = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
+//       // console.log(contractTrancheMaster);
+//       // const result = await contractTrancheMaster.trancheSnapshots(cycle, 1);
 
-    getTrancheSnapshot();
-  }, [cycle]);
+//       const _address = TranchesAddress[NETWORK];
+//       const calls = [
+//         {
+//           address: _address,
+//           name: "trancheSnapshots",
+//           params: [cycle, 0]
+//         },
+//         {
+//           address: _address,
+//           name: "trancheSnapshots",
+//           params: [cycle, 1]
+//         },
+//         {
+//           address: _address,
+//           name: "trancheSnapshots",
+//           params: [cycle, 2]
+//         }
+//       ];
+//       const result = await multicall(TrancheMasterAbi, calls);
+//       setTrancheSnapshot(result);
+//     };
 
-  return trancheSnapshot;
-};
+//     getTrancheSnapshot();
+//   }, [cycle]);
+
+//   return trancheSnapshot;
+// };
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
   const { slowRefresh } = useRefresh();
@@ -256,7 +258,9 @@ export const usePositions = (marketId: string | undefined) => {
             params: [account, 2]
           }
         ];
-        const userInvest = await multicall(MarketList[i].abi, calls);
+        const userInvest = MarketList[i].isAvax
+          ? await multicall(MarketList[i].abi, calls)
+          : await multicallBSC(MarketList[i].abi, calls);
         // _result.push(userInvest);
         _result[i] = userInvest;
       }
@@ -273,6 +277,7 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
   const [totalPendingReward, setTotalPendingReward] = useState("0");
   const [tranchesPendingReward, setTranchesPendingReward] = useState<string[]>([]);
   const { slowRefresh } = useRefresh();
+  const network = useNetwork();
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -293,7 +298,8 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
           params: [account, 2]
         }
       ];
-      const result = await multicall(MasterChefAbi, calls);
+      const result =
+        network === "avax" ? await multicall(MasterChefAbi, calls) : await multicallBSC(MasterChefAbi, calls);
       let _pendingReward = new BigNumber(0);
       const _tranchesPendingReward = [];
       for (let i = 0; i < result.length; i++) {
@@ -304,7 +310,7 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
       setTranchesPendingReward(_tranchesPendingReward);
     };
     if (account) fetchBalance();
-  }, [masterChefAddress, slowRefresh, account]);
+  }, [masterChefAddress, slowRefresh, account, network]);
 
   return { totalPendingReward, tranchesPendingReward };
 };
@@ -347,11 +353,12 @@ export const useTotalSupply = (address: string) => {
   const [totalSupply, setTotalSupply] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
+  const network = useNetwork();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
     const signer = getSigner();
-    const contract = getContract(ERC20Abi, address, signer);
+    const contract = getContract2(ERC20Abi, address, network, signer);
     const tokenBalance = await contract.totalSupply();
     const value = formatBalance(tokenBalance.toString());
     setTotalSupply(numeral(value).format("0,0.[0000]"));
@@ -367,11 +374,12 @@ export const useBalanceOfOtherAddress = (address: string, account: string) => {
   const [balance, setBalance] = useState("0");
   const [actualBalance, setActualBalance] = useState("0");
   const { slowRefresh, fastRefresh } = useRefresh();
+  const network = useNetwork();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
     const signer = getSigner();
-    const contract = getContract(ERC20Abi, address, signer);
+    const contract = getContract2(ERC20Abi, address, network, signer);
     const tokenBalance = await contract.balanceOf(account);
     const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
     setBalance(numeral(value.toString()).format("0,0.[0000]"));
@@ -389,11 +397,12 @@ export const useBalance = (address: string) => {
   const [actualBalance, setActualBalance] = useState("0");
   const { account, ...p } = useWeb3React<Web3Provider>();
   const { slowRefresh, fastRefresh } = useRefresh();
+  const network = useNetwork();
 
   const fetchBalance = useCallback(async () => {
     if (!account) return;
     const signer = getSigner();
-    const contract = getContract(ERC20Abi, address, signer);
+    const contract = getContract2(ERC20Abi, address, network, signer);
     const tokenBalance = await contract.balanceOf(account);
     const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
     setBalance(numeral(value.toString()).format("0,0.[0000]"));
@@ -409,10 +418,11 @@ export const useBalance = (address: string) => {
 
 export const useWTF = () => {
   const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);
+  const network = useNetwork();
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
+      const contractMasterChef = getContract2(MasterChefAbi, MasterChefAddress[NETWORK], network);
       const rewardPerBlock = await contractMasterChef.rewardPerBlock();
       const _weekDistribution = new BigNumber(rewardPerBlock.toString()).dividedBy(BIG_TEN.pow(18)).times(28800 * 7);
       setWeekDistribution(_weekDistribution);
@@ -503,6 +513,19 @@ export const useWeeklyReward = () => {
 };
 export const getContract = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
   const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getRpcUrl());
+  const signerOrProvider = signer ?? simpleRpcProvider;
+  return new ethers.Contract(address, abi, signerOrProvider);
+};
+export const getContract2 = (
+  abi: any,
+  address: string,
+  network: string,
+  signer?: ethers.Signer | ethers.providers.Provider
+) => {
+  const simpleRpcProvider =
+    network === "avax"
+      ? new ethers.providers.JsonRpcProvider(getRpcUrl())
+      : new ethers.providers.JsonRpcProvider(getBscRpcUrl());
   const signerOrProvider = signer ?? simpleRpcProvider;
   return new ethers.Contract(address, abi, signerOrProvider);
 };

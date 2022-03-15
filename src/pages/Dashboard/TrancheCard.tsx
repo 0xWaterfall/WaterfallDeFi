@@ -3,10 +3,10 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { WAVAX, WTFToken } from "assets/images";
+import { BUSD, WAVAX, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
-import { useMarkets, useWTFPrice } from "hooks/useSelectors";
+import { useMarkets, useNetwork, useWTFPrice } from "hooks/useSelectors";
 import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
 import { useHistory } from "react-router";
 import numeral from "numeral";
@@ -194,6 +194,7 @@ const Title = styled.div`
 type TProps = WrappedComponentProps;
 
 const TrancheCard = memo<TProps>(({ intl }) => {
+  const network = useNetwork();
   const markets = useMarkets();
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
@@ -202,11 +203,11 @@ const TrancheCard = memo<TProps>(({ intl }) => {
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   return (
     <Wrapper>
-      <IconWrapper>
-        <WAVAX />
-      </IconWrapper>
+      <IconWrapper>{network === "avax" ? <WAVAX /> : <BUSD />}</IconWrapper>
       <CarouselContainer dotPosition="bottom" autoplay={true}>
         {markets.map((_market: Market, index) => {
+          if (network === "avax" && !_market.isAvax) return null;
+          if (network !== "avax" && _market.isAvax) return null;
           if (!_market.isRetired)
             return (
               <div key={index}>

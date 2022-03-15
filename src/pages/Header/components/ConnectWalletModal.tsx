@@ -9,7 +9,7 @@ import { url } from "config";
 import { useWeb3React as useWeb3ReactCore } from "@web3-react/core";
 import { useTheme } from "@emotion/react";
 import useAuth from "utils/useAuth";
-import { useConnectWalletModalShow } from "hooks/useSelectors";
+import { useConnectWalletModalShow, useNetwork } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
 
@@ -18,7 +18,8 @@ type TProps = WrappedComponentProps;
 const ConnectWalletModal = memo<TProps>(({ intl }) => {
   const { gray, primary } = useTheme();
   const { active } = useWeb3ReactCore();
-  const { login } = useAuth();
+  const network = useNetwork();
+  const { login } = useAuth(network);
   const onConnect = useCallback(async () => {
     if (window.ethereum?.isMetaMask && window.ethereum.request) {
       login("injected");

@@ -9,13 +9,21 @@ import { useSize } from "ahooks";
 import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
 import { Market } from "types";
 import { MarketList } from "config/market";
-import { useMarkets } from "hooks/useSelectors";
+import { useMarkets, useNetwork } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
   const { width } = useSize(document.body);
+  const network = useNetwork();
   const markets = useMarkets();
+  const marketsAvax = markets.filter((m) => m.isAvax);
+  const marketsBNB = markets.filter((m) => !m.isAvax);
+  const [networkFilter, setNetworkFilter] = useState(network);
+  useEffect(() => {
+    setNetworkFilter(network);
+  }, [network]);
+
   return (
     <>
       {Boolean(width && width > 768) && (
@@ -33,18 +41,24 @@ const Markets = memo<TProps>(({ intl }) => {
             <TableHeaderColumn minWidth={80}>{intl.formatMessage({ defaultMessage: "Status" })}</TableHeaderColumn>
             <TableHeaderColumn>{intl.formatMessage({ defaultMessage: "Action" })}</TableHeaderColumn>
           </TableRow>
-          {markets.map((_m, i) => (
-            <MarketItemTableRow key={i} selectId={i} data={_m} />
-          ))}
+          {markets.map((_m, i) => {
+            if (networkFilter === "avax" && !_m.isAvax) return null;
+            if (networkFilter !== "avax" && _m.isAvax) return null;
+            return <MarketItemTableRow key={i} selectId={i} data={_m} />;
+          })}
         </Table>
       )}
       {Boolean(width && width <= 768) && (
         <>
-          {markets.map((_m, i) => (
-            <div key={i}>
-              <MarketItem selectId={i} data={_m} />
-            </div>
-          ))}
+          {markets.map((_m, i) => {
+            if (networkFilter === "avax" && !_m.isAvax) return null;
+            if (networkFilter !== "avax" && _m.isAvax) return null;
+            return (
+              <div key={i}>
+                <MarketItem selectId={i} data={_m} />
+              </div>
+            );
+          })}
         </>
       )}
     </>

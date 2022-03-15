@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import { Logout, Burger, Wallet, WaterFall, WaterFallDark, CaretDown } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
-import React, { memo, useEffect } from "react";
+import { memo } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -19,9 +19,9 @@ import { formatAccountAddress } from "utils/formatAddress";
 import { setConnectWalletModalShow } from "store/showStatus";
 import styled from "@emotion/styled";
 import ActionIconGroup from "./ActionIconGroup";
-import { NETWORK, NETWORKS } from "config";
-import { NetworkStatus } from "@apollo/client";
 import { Menu, Dropdown } from "antd";
+import { useNetwork } from "../../hooks/useSelectors";
+import { setNetwork } from "store/selectedKeys";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -44,7 +44,6 @@ const Network = styled.div`
   align-items: center;
   justify-content: center;
   background: ${({ theme }) => theme.useColorModeValue(theme.gray.light, theme.dark.block)};
-  color: #e84142;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   transform: translateX(10px);
@@ -171,9 +170,10 @@ const Header = memo<TProps>(({ intl }) => {
   const dispatch = useAppDispatch();
 
   const { active, account, chainId } = useWeb3React<Web3Provider>();
-  const { login, logout } = useAuth();
+  const [networkHook, setNetworkHook] = useState(useNetwork());
+  const { login, logout } = useAuth(networkHook);
 
-  useEagerConnect();
+  useEagerConnect(networkHook);
 
   const MENU = [
     { pathname: "/", text: intl.formatMessage({ defaultMessage: "Dashboard" }), checked: undefined },
@@ -202,13 +202,6 @@ const Header = memo<TProps>(({ intl }) => {
       text: intl.formatMessage({ defaultMessage: "User Guide" }),
       target: "_blank"
       // checked: ""
-    },
-    {
-      pathname: "https://bnb.waterfalldefi.org",
-      text: intl.formatMessage({ defaultMessage: "BNB Falls" }),
-      target: "_blank",
-      color: "#F0B90B"
-      // checked: ""
     }
   ];
 
@@ -232,16 +225,61 @@ const Header = memo<TProps>(({ intl }) => {
   const WalletElement = useMemo(() => {
     const menu = (
       <Menu css={{ backgroundColor: colorMode === "dark" ? "#13132C" : "#FAFAFA" }}>
-        <Menu.Item key={"bnb"} css={{ color: "rgb(240, 185, 11);" }}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://bnb.waterfalldefi.org"
-            css={{ fontWeight: 600, paddingLeft: 16 }}
+        {networkHook === "avax" ? (
+          <Menu.Item
+            key={"bnb"}
+            css={{ color: "rgb(240, 185, 11);", fontWeight: 600, paddingLeft: 30 }}
+            onClick={async () => {
+              dispatch(setNetwork("bnb"));
+              setNetworkHook("bnb");
+              const provider = window.ethereum;
+              const chainId = parseInt(process.env.REACT_APP_BNB_CHAIN_ID ?? "", 10);
+              if (provider?.request) {
+                try {
+                  await provider.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [
+                      {
+                        chainId: `0x${chainId.toString(16)}`
+                      }
+                    ]
+                  });
+                } catch (error) {
+                  console.error("Failed to setup the network in Metamask:", error);
+                }
+              }
+            }}
           >
             BNB
-          </a>
-        </Menu.Item>
+          </Menu.Item>
+        ) : (
+          <Menu.Item
+            key={"avax"}
+            css={{ color: "#E84142", fontWeight: 600, paddingLeft: 30 }}
+            onClick={async () => {
+              dispatch(setNetwork("avax"));
+              setNetworkHook("avax");
+              const provider = window.ethereum;
+              const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
+              if (provider?.request) {
+                try {
+                  await provider.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [
+                      {
+                        chainId: `0x${chainId.toString(16)}`
+                      }
+                    ]
+                  });
+                } catch (error) {
+                  console.error("Failed to setup the network in Metamask:", error);
+                }
+              }
+            }}
+          >
+            AVAX
+          </Menu.Item>
+        )}
       </Menu>
     );
 
@@ -257,16 +295,19 @@ const Header = memo<TProps>(({ intl }) => {
         </Button>
       );
     }
-    if (chainId?.toString() !== process.env.REACT_APP_CHAIN_ID) {
+    if (
+      (networkHook === "avax" && chainId?.toString() !== process.env.REACT_APP_CHAIN_ID) ||
+      (networkHook === "bnb" && chainId?.toString() !== process.env.REACT_APP_BNB_CHAIN_ID)
+    ) {
       return <Button type="warn">{intl.formatMessage({ defaultMessage: "Wrong Network" })}</Button>;
     }
     return (
       <WalletWrapper>
-        <Network>
+        <Network css={{ color: networkHook === "avax" ? "#E84142" : "rgb(240, 185, 11);" }}>
           <Dropdown overlay={menu}>
             <div css={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
               <CaretDown />
-              {NETWORK === NETWORKS.MAINNET ? "AVAX" : "AVAX Testnet"}
+              {networkHook === "avax" ? "AVAX" : "BNB"}
             </div>
           </Dropdown>
         </Network>
@@ -279,17 +320,12 @@ const Header = memo<TProps>(({ intl }) => {
         </LogoutWrapper>
       </WalletWrapper>
     );
-  }, [account, active, chainId, colorMode]);
+  }, [account, active, chainId, colorMode, networkHook]);
 
-  const MenuLink = MENU.map(({ pathname, text, target, color }) =>
+  const MenuLink = MENU.map(({ pathname, text, target }) =>
     target ? (
       <MenuBlockWrapper key={pathname}>
-        <LinkWrapper
-          to={{ pathname }}
-          data-selected={location.pathname === pathname}
-          target="_blank"
-          style={color ? { color: color } : undefined}
-        >
+        <LinkWrapper to={{ pathname }} data-selected={location.pathname === pathname} target="_blank">
           {text}
         </LinkWrapper>
       </MenuBlockWrapper>

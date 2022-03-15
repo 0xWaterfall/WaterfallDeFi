@@ -17,7 +17,7 @@ import { ConnectorNames } from "schemas/enum";
 
 const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
 
-const useAuth = () => {
+const useAuth = (network: string) => {
   const { activate, deactivate } = useWeb3React();
 
   const login = useCallback(
@@ -29,7 +29,7 @@ const useAuth = () => {
       if (connector) {
         activate(connector, async (error: Error) => {
           if (error instanceof UnsupportedChainIdError) {
-            const hasSetup = await setupNetwork();
+            const hasSetup = await setupNetwork(network);
             if (hasSetup) {
               activate(connector);
             }
@@ -40,7 +40,9 @@ const useAuth = () => {
               error instanceof UserRejectedRequestErrorInjected ||
               error instanceof UserRejectedRequestErrorWalletConnect
             ) {
+              console.log(error);
               if (connector instanceof WalletConnectConnector) {
+                console.log("connector instance of WalletConnectConnector");
                 const walletConnector = connector as WalletConnectConnector;
                 walletConnector.walletConnectProvider = null;
               }

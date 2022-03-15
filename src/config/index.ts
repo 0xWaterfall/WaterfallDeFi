@@ -56,4 +56,5 @@ export const BLOCK_TIME = (chainId: string) => {
   }
 };
 
-export const BASE_BSC_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://snowtrace.io" : "https://snowtrace.io";
+export const BASE_BSC_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://bscscan.com" : "https://testnet.bscscan.com/";
+export const BASE_AVAX_SCAN_URL = NETWORK === NETWORKS.MAINNET ? "https://snowtrace.io" : "https://snowtrace.io";

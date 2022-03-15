@@ -1,28 +1,31 @@
-import { BASE_BSC_SCAN_URL } from "config";
-import { nodes } from "./getRpcUrl";
+import { BASE_AVAX_SCAN_URL, BASE_BSC_SCAN_URL } from "config";
+import { nodes, BNBnodes } from "./getRpcUrl";
 
 /**
  * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
  * @returns {boolean} true if the setup succeeded, false otherwise
  */
-export const setupNetwork = async () => {
+export const setupNetwork = async (network: string) => {
   const provider = window.ethereum;
   if (provider?.request) {
-    const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
+    const chainId = parseInt(
+      (network === "avax" ? process.env.REACT_APP_CHAIN_ID : process.env.REACT_APP_BNB_CHAIN_ID) ?? "",
+      10
+    );
     try {
       await provider.request({
         method: "wallet_addEthereumChain",
         params: [
           {
             chainId: `0x${chainId.toString(16)}`,
-            chainName: "Avalanche",
+            chainName: network === "avax" ? "Avalanche" : "BNB Chain",
             nativeCurrency: {
-              name: "AVAX",
-              symbol: "AVAX",
+              name: network === "avax" ? "AVAX" : "BNB",
+              symbol: network === "avax" ? "AVAX" : "BNB",
               decimals: 18
             },
-            rpcUrls: nodes,
-            blockExplorerUrls: [`${BASE_BSC_SCAN_URL}/`]
+            rpcUrls: network === "avax" ? nodes : BNBnodes,
+            blockExplorerUrls: [`${network === "avax" ? BASE_AVAX_SCAN_URL : BASE_BSC_SCAN_URL}/`]
           }
         ]
       });
@@ -32,7 +35,7 @@ export const setupNetwork = async () => {
       return false;
     }
   } else {
-    console.error("Can't setup the AVAX network on metamask because window.ethereum is undefined");
+    console.error("Can't setup the " + network + " network on metamask because window.ethereum is undefined");
     return false;
   }
 };

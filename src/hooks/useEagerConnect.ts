@@ -16,8 +16,8 @@ import useAuth from "utils/useAuth";
 //     })
 //   );
 
-const useEagerConnect = () => {
-  const { login } = useAuth();
+const useEagerConnect = (network: string) => {
+  const { login } = useAuth(network);
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorIdv2") as ConnectorNames;

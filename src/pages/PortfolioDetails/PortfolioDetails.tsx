@@ -22,7 +22,9 @@ const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
 
   const market = useSelectedMarket();
-  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
+  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>(
+    market && market.assets.includes("BUSD") ? "BUSD" : "BNB"
+  );
   const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
   return (
     <PortfolioDetailsWrapper>

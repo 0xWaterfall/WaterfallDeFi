@@ -271,3 +271,29 @@ export const AR_sVENUS_Address: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "0x03d64d57F40BFa20841855A1be0FeC562EaA6A89"
   [NETWORKS.MAINNET]: "0xF0aFbA8331EDdc6825f7012d4534599a4542a49C"
 };
+
+export const BNBBUSD_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x317302610ab044Ba3151eb7202079d73e5d0534C"
+};
+export const BNBUSDT_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x875fb36Af9B33b15b1e3BcAE480e655d23036275"
+};
+export const BNB_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xe53e38F14363212fB3B3f596C1Dc51003d3a2Be7"
+};
+export const BNB_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x67169f619C60399EEa18FFa0F0C57866eAbFE69B"
+};
+export const BNB_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+};

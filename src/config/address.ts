@@ -231,7 +231,9 @@ export const AR_TrancheMasterAddress: { [network: string]: string } = {
   //March 1st
   // [NETWORKS.MAINNET]: "0xe8096E793C47Aa13Eb17A6753B0DB45cA35ECa02"
   //March 9th
-  [NETWORKS.MAINNET]: "0x4460c77B12476Bd6bf4cf2576011a4a68Da6Aa19"
+  // [NETWORKS.MAINNET]: "0x4460c77B12476Bd6bf4cf2576011a4a68Da6Aa19"
+  //March 15th
+  [NETWORKS.MAINNET]: "0x3d1c938351201267BAdf49Be50188F8F81F21A20"
 };
 
 //autoroll master WTF contract address
@@ -242,7 +244,9 @@ export const AR_WTFMasterAddress: { [network: string]: string } = {
   //March 1st
   // [NETWORKS.MAINNET]: "0x63bf79762348eeDeB5EAE094837dd9DE820af073"
   //March 9th
-  [NETWORKS.MAINNET]: "0x69496300379ff8D09aB9aF4Cd1dcb9C8C4bb5918"
+  // [NETWORKS.MAINNET]: "0x69496300379ff8D09aB9aF4Cd1dcb9C8C4bb5918"
+  //March 15th
+  [NETWORKS.MAINNET]: "0x3a8c5ee1f0Ff9Df1929b509bddc19CE7417208bf"
 };
 //autoroll ALPACA strategy BUSD lending vault address
 export const AR_sALPACA_Address: { [network: string]: string } = {
@@ -252,7 +256,9 @@ export const AR_sALPACA_Address: { [network: string]: string } = {
   //March 1st
   // [NETWORKS.MAINNET]: "0x7d01CB7DF150eBA703907dCa2cb91E37bf28c085"
   //March 9th
-  [NETWORKS.MAINNET]: "0x4C0179E4e4A30A9e4ae1CE348762BC3841f1AD37"
+  // [NETWORKS.MAINNET]: "0x4C0179E4e4A30A9e4ae1CE348762BC3841f1AD37"
+  //March 15th
+  [NETWORKS.MAINNET]: "0x121b92D6300cB2830C380dda04D5470E04F515AA"
 };
 //autoroll VENUS strategy TUSD lending vault address
 export const AR_sVENUS_Address: { [network: string]: string } = {
@@ -262,5 +268,6 @@ export const AR_sVENUS_Address: { [network: string]: string } = {
   //March 1st
   // [NETWORKS.MAINNET]: "0x2cC5EF4Cb1Ba1080813489563506539A7F100633"
   //March 9th
-  [NETWORKS.MAINNET]: "0x03d64d57F40BFa20841855A1be0FeC562EaA6A89"
+  // [NETWORKS.MAINNET]: "0x03d64d57F40BFa20841855A1be0FeC562EaA6A89"
+  [NETWORKS.MAINNET]: "0x3fdCA46Fbc38Ed44b2464134b0E91827deaAf64D"
 };

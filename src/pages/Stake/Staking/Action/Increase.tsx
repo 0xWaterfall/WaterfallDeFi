@@ -28,7 +28,7 @@ import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
 import numeral from "numeral";
 import { utils } from "ethers";
 import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
-import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
+import { useGetLockingWTF } from "pages/Stake/hooks/useGetLockingWTF";
 import { start } from "repl";
 const Wrapper = styled.div`
   width: 100%;

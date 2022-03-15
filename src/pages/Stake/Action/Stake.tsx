@@ -14,7 +14,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { compareNum } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";
-import useLockAndStakeWTF from "pages/OldStake/hooks/useLockAndStakeWTF";
+import useLockAndStakeWTF from "pages/Stake/hooks/useLockAndStakeWTF";
 import { successNotification } from "utils/notification";
 
 import { useWeb3React } from "@web3-react/core";

@@ -13,7 +13,7 @@ import LiquidfillChart from "./LiquidfillChart";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useStakingPool } from "hooks/useStaking";
-import { useGetLockingWTF } from "pages/OldStake/hooks/useGetLockingWTF";
+import { useGetLockingWTF } from "pages/Stake/hooks/useGetLockingWTF";
 import { useBalance, useBalanceOfOtherAddress, useTotalSupply } from "hooks";
 import numeral from "numeral";
 import dayjs from "dayjs";

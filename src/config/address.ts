@@ -292,8 +292,8 @@ export const BNB_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x67169f619C60399EEa18FFa0F0C57866eAbFE69B"
 };
-export const BNB_Address: { [network: string]: string } = {
+export const WBNB_Address: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+  [NETWORKS.MAINNET]: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
 };

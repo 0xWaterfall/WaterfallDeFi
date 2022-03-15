@@ -23,7 +23,7 @@ const PortfolioDetails = memo<TProps>(() => {
 
   const market = useSelectedMarket();
   const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>(
-    market && market.assets.includes("BUSD") ? "BUSD" : "BNB"
+    market && market.assets.includes("BUSD") ? "BUSD" : "WBNB"
   );
   const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
   return (

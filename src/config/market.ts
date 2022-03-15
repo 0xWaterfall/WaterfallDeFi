@@ -5,7 +5,7 @@ import {
   AR_WTFMasterAddress,
   BNBBUSD_sALPACA_Address,
   BNBUSDT_sALPACA_Address,
-  BNB_Address,
+  WBNB_Address,
   BNB_TrancheMasterAddress,
   BNB_WTFMasterAddress,
   BUSDAddress,
@@ -102,7 +102,7 @@ export const MarketList: Market[] = [
   },
   {
     portfolio: "BNB Test",
-    assets: ["BNB"], //changed to array for multicurrency
+    assets: ["WBNB"], //changed to array for multicurrency
     tokens: [],
     listingDate: "2022/03/15",
     tranches: [],
@@ -117,7 +117,7 @@ export const MarketList: Market[] = [
     pools: [],
     autorollImplemented: false,
     isMulticurrency: false,
-    depositAssetAddress: BNB_Address[NETWORK],
+    depositAssetAddress: WBNB_Address[NETWORK],
     depositAssetAddresses: [],
     depositAssetAbi: WTFAbi,
     // strategyAddress: StrategyAddress[NETWORK],

@@ -55,7 +55,7 @@ export const MarketList: Market[] = [
         apiKey: "alpaca"
       }
     ],
-    subgraphURL: "https://api3.waterfalldefi.org/bsc/subgraphs/name/waterfall/bsc_test_multicurrency"
+    subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_multicurrency"
   },
   {
     portfolio: "Autoroll Test",
@@ -93,6 +93,6 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://api3.waterfalldefi.org/bsc/subgraphs/name/waterfall/bsc_test_autoroll"
+    subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_autoroll"
   }
 ];

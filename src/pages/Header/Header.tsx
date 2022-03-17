@@ -4,7 +4,7 @@ import { useTheme } from "@emotion/react";
 import { Logout, Burger, Wallet, WaterFall, WaterFallDark, CaretDown } from "assets/images";
 import Button from "components/Button/Button";
 import Drawer from "components/Drawer/Drawer";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -172,6 +172,15 @@ const Header = memo<TProps>(({ intl }) => {
   const { active, account, chainId } = useWeb3React<Web3Provider>();
   const [networkHook, setNetworkHook] = useState(useNetwork());
   const { login, logout } = useAuth(networkHook);
+
+  useEffect(() => {
+    if (chainId === 56 && networkHook === "avax") {
+      setNetworkHook("bnb");
+    }
+    if (chainId === 43114 && networkHook === "bnb") {
+      setNetworkHook("avax");
+    }
+  }, [chainId, networkHook]);
 
   useEagerConnect(networkHook);
 

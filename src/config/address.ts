@@ -191,28 +191,19 @@ export const TestLPRewardAddress: { [network: string]: string } = {
 export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  // [NETWORKS.MAINNET]: "0xaA0e3Ff25225017ac08Bb661ecF37EbE5b4Fd707"
-  //March 1st
-  [NETWORKS.MAINNET]: "0xDFB70d59fD73b8115df8921B955c18F35A37610C"
+  [NETWORKS.MAINNET]: "0x47169cb20609370AE1936E233aDFC357b561ed24"
 };
 //multicurrency "masterChef" WTF staking address
 export const MC_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  //before feb 8
-  // [NETWORKS.MAINNET]: "0x98d593a6b74dB1910D960fD8062Cd7b24943Bc4f"
-  //after feb 8
-  // [NETWORKS.MAINNET]: "0x37A234Da3d133CE954BE833228e1efA49959b5A1"
-  //March 1st
-  [NETWORKS.MAINNET]: "0x446cC14dA2e3D9f955a27f244609c2B38D15735b"
+  [NETWORKS.MAINNET]: "0x376A207fd52786A088b4a14cf18384f9425A7474"
 };
 //multicurrency ALPACA strategy BUSD lending vault address
 export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  // [NETWORKS.MAINNET]: "0x025AA421bcedbd67d9D467a379AD5B47F2b711f2"
-  //March 1st
-  [NETWORKS.MAINNET]: "0x63421B07Fc40AF38df3864397125E606db8d2CA8"
+  [NETWORKS.MAINNET]: "0xcBD60865a65c6c8ea6a4A0cd034F3c6dD86D68dC"
 };
 //multicurrency ALPACA strategy TUSD lending vault address
 export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
@@ -220,7 +211,7 @@ export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   // [NETWORKS.MAINNET]: "0x303892A3F5539904913F3C9aB594FB0E0C1b8b3F"
   // March 1st
-  [NETWORKS.MAINNET]: "0xA65DB3dDc91762FB9ec637254efcfCbF5252513f"
+  [NETWORKS.MAINNET]: "0x7aD573186d02481A420A5901d87AD95f78cB5378"
 };
 
 //*TEST* autoroll master tranche contract address

@@ -30,10 +30,10 @@ import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: "Multicurrency 2",
+    portfolio: "Multicurrency 2 (Updated)",
     assets: ["BUSD", "TUSD"], //changed to array for multicurrency
     tokens: [],
-    listingDate: "2022/03/15",
+    listingDate: "2022/03/18",
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",

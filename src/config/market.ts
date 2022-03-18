@@ -3,17 +3,22 @@ import {
   AR_sVENUS_Address,
   AR_TrancheMasterAddress,
   AR_WTFMasterAddress,
-  BNBBUSD_sALPACA_Address,
-  BNBUSDT_sALPACA_Address,
+  BULL_BUSDBNB_sALPACA_Address,
+  BEAR_BNBBUSD_sALPACA_Address,
+  BULL_USDTBNB_sALPACA_Address,
+  BEAR_BNBUSDT_sALPACA_Address,
   WBNB_Address,
-  BNB_TrancheMasterAddress,
-  BNB_WTFMasterAddress,
+  BULL_BNB_TrancheMasterAddress,
+  BEAR_BNB_TrancheMasterAddress,
+  BULL_BNB_WTFMasterAddress,
+  BEAR_BNB_WTFMasterAddress,
   BUSDAddress,
   MC_sALPACA_BUSDAddress,
   MC_sALPACA_TUSDAddress,
   MC_TrancheMasterAddress,
   MC_WTFMasterAddress,
-  TUSDAddress
+  TUSDAddress,
+  USDT_Address
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
@@ -101,7 +106,45 @@ export const MarketList: Market[] = [
     subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_autoroll"
   },
   {
-    portfolio: "BNB Test",
+    portfolio: "BNB Bull Falls Test",
+    assets: ["BUSD", "USDT"],
+    tokens: [],
+    listingDate: "2022/03/15",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: BULL_BNB_TrancheMasterAddress[NETWORK],
+    abi: MC_TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: BULL_BNB_WTFMasterAddress[NETWORK],
+    pools: [],
+    autorollImplemented: false,
+    isMulticurrency: true,
+    depositAssetAddress: "",
+    depositAssetAddresses: [BUSDAddress[NETWORK], USDT_Address[NETWORK]],
+    depositAssetAbi: WTFAbi,
+    // strategyAddress: StrategyAddress[NETWORK],
+    // strategyAbi: StrategyAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD:BNB",
+        shares: 0.5,
+        sAddress: BULL_BUSDBNB_sALPACA_Address[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Alpaca USDT:BNB",
+        shares: 0.5,
+        sAddress: BULL_USDTBNB_sALPACA_Address[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_autoroll"
+  },
+  {
+    portfolio: "BNB Bear Falls Test",
     assets: ["WBNB"], //changed to array for multicurrency
     tokens: [],
     listingDate: "2022/03/15",
@@ -110,10 +153,10 @@ export const MarketList: Market[] = [
     totalTranchesTarget: "",
     status: "",
     nextTime: "",
-    address: BNB_TrancheMasterAddress[NETWORK],
+    address: BEAR_BNB_TrancheMasterAddress[NETWORK],
     abi: TranchesAbi,
     masterChefAbi: MasterChefAbi,
-    masterChefAddress: BNB_WTFMasterAddress[NETWORK],
+    masterChefAddress: BEAR_BNB_WTFMasterAddress[NETWORK],
     pools: [],
     autorollImplemented: false,
     isMulticurrency: false,
@@ -124,15 +167,15 @@ export const MarketList: Market[] = [
     // strategyAbi: StrategyAbi,
     strategyFarms: [
       {
-        farmName: "Alpaca BNB/BUSD",
-        shares: 0.8,
-        sAddress: BNBBUSD_sALPACA_Address[NETWORK],
+        farmName: "Alpaca BNB:BUSD",
+        shares: 0.5,
+        sAddress: BEAR_BNBBUSD_sALPACA_Address[NETWORK],
         apiKey: "alpaca"
       },
       {
-        farmName: "Alpaca BNB/USDT",
-        shares: 0.2,
-        sAddress: BNBUSDT_sALPACA_Address[NETWORK],
+        farmName: "Alpaca BNB:USDT",
+        shares: 0.5,
+        sAddress: BEAR_BNBUSDT_sALPACA_Address[NETWORK],
         apiKey: "venus"
       }
     ],

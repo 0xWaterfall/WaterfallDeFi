@@ -346,7 +346,7 @@ const ApproveCard = memo<TProps>(
     const handleDepositSimul = async () => {
       const _invalids: boolean[] = validateTextSimul && validateTextSimul.map((v) => (v ? v.length > 0 : false));
       if (_invalids.some((v) => v)) return;
-      const _invalids2: boolean[] = balanceInputSimul.map((b) => Number(b) <= 0);
+      const _invalids2: boolean[] = balanceInputSimul.map((b) => Number(b) < 0);
       if (_invalids2.some((v) => v)) return;
       if (selectTrancheIdx === undefined) return;
 

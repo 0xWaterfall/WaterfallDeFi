@@ -218,26 +218,26 @@ export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
 export const AR_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xea45435Cbd83DcBD8959B362814C5b8e3CdB0708"
+  [NETWORKS.MAINNET]: "0xab137023B1174946E3BC71Eb92B9e4f835D799DE"
 };
 
 //autoroll master WTF contract address
 export const AR_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x8bc5dD0EbFEC33d59E968017F7b0821D43968845"
+  [NETWORKS.MAINNET]: "0x4D7e45034cBEc72C0CEf58838A1a7a1B11Ce4a2B"
 };
 //autoroll ALPACA strategy BUSD lending vault address
 export const AR_sALPACA_Address: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xf3C81d0960a0C14afBf9dC252ed4Ae4486c272eD"
+  [NETWORKS.MAINNET]: "0x2CAaE6be892212ff3C4AC7021EC35d2FF24D83Ee"
 };
 //autoroll VENUS strategy TUSD lending vault address
 export const AR_sVENUS_Address: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x8c80E504dCA6eD888494714c289b65b82b3a5532"
+  [NETWORKS.MAINNET]: "0x439c7413b05396a7313622A24A6D809fa6C52495"
 };
 
 export const BULL_BUSDBNB_sALPACA_Address: { [network: string]: string } = {

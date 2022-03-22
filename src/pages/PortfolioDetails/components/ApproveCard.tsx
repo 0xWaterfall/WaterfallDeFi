@@ -10,8 +10,8 @@ import { compareNum, formatNumberSeparator } from "utils/formatNumbers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
-import useCheckApprove from "../hooks/useCheckApprove";
-import useApprove from "../hooks/useApprove";
+import useCheckApprove, { useCheckApproveAll } from "../hooks/useCheckApprove";
+import useApprove, { useMultiApprove } from "../hooks/useApprove";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
@@ -160,8 +160,12 @@ const ApproveCard = memo<TProps>(
     const depositAddress = !data.isMulticurrency
       ? data.depositAssetAddress
       : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
-    const { onCheckApprove } = useCheckApprove(depositAddress, data.address);
+    const { onCheckApprove } = depositAddress
+      ? useCheckApprove(depositAddress, data.address)
+      : { onCheckApprove: () => false };
+    const { onCheckApproveAll } = useCheckApproveAll(data.depositAssetAddresses, data.address);
     const { onApprove } = useApprove(depositAddress, data.address);
+    const { onMultiApprove } = useMultiApprove(data.depositAssetAddresses, data.address);
     const { onInvestDirect } = useInvestDirect(
       data.address,
       data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
@@ -222,11 +226,11 @@ const ApproveCard = memo<TProps>(
     //use effects
     useEffect(() => {
       const checkApproved = async (account: string) => {
-        const approved = await onCheckApprove();
+        const approved = !depositMultipleSimultaneous ? await onCheckApprove() : await onCheckApproveAll();
         setApproved(approved ? true : false);
       };
       if (account) checkApproved(account);
-    }, [account]);
+    }, [account, depositMultipleSimultaneous]);
 
     useEffect(() => {
       setBalanceInput("0");
@@ -245,7 +249,7 @@ const ApproveCard = memo<TProps>(
         })
       );
       try {
-        await onApprove();
+        !depositMultipleSimultaneous ? await onApprove() : await onMultiApprove();
         successNotification("Approve Success", "");
         setApproved(true);
       } catch (e) {
@@ -510,8 +514,8 @@ const ApproveCard = memo<TProps>(
 
         {data.isMulticurrency && depositMultipleSimultaneous
           ? data.assets.map((asset, index) => (
-              <>
-                <div key={asset} css={{ marginTop: index !== 0 ? 50 : 0 }}>
+              <div key={asset}>
+                <div css={{ marginTop: index !== 0 ? 50 : 0 }}>
                   <RowDiv>
                     <div>
                       {isRe
@@ -549,7 +553,7 @@ const ApproveCard = memo<TProps>(
                   />
                 </div>
                 <ValidateText>{!depositLoading && validateTextSimul[index]}</ValidateText>
-              </>
+              </div>
             ))
           : null}
 

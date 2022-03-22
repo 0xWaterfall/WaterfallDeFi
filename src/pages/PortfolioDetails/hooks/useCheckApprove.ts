@@ -26,4 +26,23 @@ const useCheckApprove = (approveTokenAddress: string, trancheMasterAddress: stri
   return { onCheckApprove: handleCheckApprove };
 };
 
+export const useCheckApproveAll = (approveTokenAddresses: string[], trancheMasterAddress: string) => {
+  const dispatch = useDispatch();
+  const { account } = useWeb3React();
+  const contracts = approveTokenAddresses.map((a, i) => useERC20Contract(a));
+
+  const handleCheckApproveAll = useCallback(async () => {
+    if (account) {
+      for (let i = 0; i < approveTokenAddresses.length; i++) {
+        console.log("token approval " + i);
+        const approved = await checkApprove(contracts[i], trancheMasterAddress, account);
+        if (!approved) return false;
+      }
+      return true;
+    }
+  }, [account, dispatch, contracts, approveTokenAddresses]);
+
+  return { onCheckApproveAll: handleCheckApproveAll };
+};
+
 export default useCheckApprove;

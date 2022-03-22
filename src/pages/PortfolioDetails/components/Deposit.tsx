@@ -151,9 +151,11 @@ const Deposit = memo<TProps>(
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
     const returnWidth = (assetIndex: number) =>
       deposited[assetIndex]
-        .dividedBy(tokens.length > 0 ? maxDeposits[assetIndex].toString() : new BigNumber(1))
-        .multipliedBy(100)
-        .toString();
+        ? deposited[assetIndex]
+            .dividedBy(tokens.length > 0 ? maxDeposits[assetIndex].toString() : new BigNumber(1))
+            .multipliedBy(100)
+            .toString()
+        : 0;
     const width = data.isMulticurrency ? returnWidth(data.assets.indexOf(selectedDepositAsset)) : 1;
     const widths = data.isMulticurrency ? data.assets.map((a, i) => returnWidth(i)) : [];
     const marketData = data;
@@ -220,8 +222,13 @@ const Deposit = memo<TProps>(
                   {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
                   <StepName css={{ padding: "1px 6px 0 6px" }}>
                     <span css={{ fontWeight: 900, marginRight: 10 }}>
-                      {deposited[data.assets.indexOf(selectedDepositAsset)].toString()} /{" "}
-                      {maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()}
+                      {deposited[data.assets.indexOf(selectedDepositAsset)]
+                        ? deposited[data.assets.indexOf(selectedDepositAsset)].toString()
+                        : ""}{" "}
+                      /{" "}
+                      {deposited[data.assets.indexOf(selectedDepositAsset)]
+                        ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()
+                        : ""}
                     </span>
                     {selectedDepositAsset} Remaining
                   </StepName>

@@ -141,7 +141,7 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_autoroll"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bull"
   },
   {
     portfolio: "BNB Bear Falls Test",
@@ -179,6 +179,6 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_autoroll"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bear"
   }
 ];

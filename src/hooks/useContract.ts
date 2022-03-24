@@ -41,13 +41,21 @@ export const useAVAXTrancheMasterContract = (trancheMasterAddress: string) => {
 
 export const useMulticurrencyTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(MulticurrencyTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(
+    () => getContract2(MulticurrencyTrancheMasterAbi, trancheMasterAddress, network, signer),
+    [network, signer]
+  );
 };
 
 //TODO: REMEMBER TO FOLD THIS INTO *useTrancheMasterContract*!!! AutorollingTrancheMasterAbi should REPLACE TrancheMasterAbi!!!
 export const useAutorollingTrancheMasterContract = (trancheMasterAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(AutorollingTrancheMasterAbi, trancheMasterAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(
+    () => getContract2(AutorollingTrancheMasterAbi, trancheMasterAddress, network, signer),
+    [network, signer]
+  );
 };
 
 export const useERC20Contract = (address: string) => {

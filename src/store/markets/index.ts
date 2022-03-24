@@ -98,6 +98,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           : await multicall(marketData.abi, calls);
         // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
+        console.log(_tranches);
         const tokenObjs = tokens.map((t: any) => {
           return { addr: t[0], strategy: t[1], percent: t[2] };
         });
@@ -116,6 +117,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         totalTarget = totalTarget.times(expectedAPY);
         _tranches.map((_t, _i) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          console.log(_t.autoPrincipal);
           const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
           const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
 

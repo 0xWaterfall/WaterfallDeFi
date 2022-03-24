@@ -313,7 +313,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: BUSD4_TrancheMaster[NETWORK],
-    abi: TranchesAbi,
+    abi: AR_TranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: BUSD4_MasterWTF[NETWORK],
     pools: [],

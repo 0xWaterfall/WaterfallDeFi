@@ -427,3 +427,25 @@ export const USDT_Address: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x55d398326f99059ff775485246999027b3197955"
 };
+
+//MARCH 25TH 2022 - FIRST LIVE AUTOROLL CONTRACT
+export const BUSD4_TrancheMaster: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x4D364f4e813740D963b03D8c315d6F8c0e6b17E3"
+};
+export const BUSD4_MasterWTF: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xEac915BFe5D32a1DD39Aa2a1fD5Aac98d7d62aBA"
+};
+export const BUSD4_AlpacaStrat: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x3F1557da5638B509d295dc0Ab4139e50757fd38a"
+};
+export const BUSD4_VenusStrat: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xF7ea83A4E4AF2554e883af4e42c026c91644d544"
+};

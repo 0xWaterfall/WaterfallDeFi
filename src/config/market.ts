@@ -41,7 +41,11 @@ import {
   TranchesAddressOracle2,
   MasterChefOracleAddress2,
   MasterChefAddress3,
-  TranchesAddress3
+  TranchesAddress3,
+  BUSD4_TrancheMaster,
+  BUSD4_MasterWTF,
+  BUSD4_AlpacaStrat,
+  BUSD4_VenusStrat
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
@@ -222,7 +226,7 @@ export const MarketList: Market[] = [
     autorollImplemented: false,
     isMulticurrency: false,
     assets: ["BUSD"],
-    listingDate: "2021/01/17",
+    listingDate: "2022/01/17",
     tranches: [],
     tokens: [],
     tvl: "",
@@ -263,7 +267,7 @@ export const MarketList: Market[] = [
     isMulticurrency: false,
     assets: ["BUSD"],
     tokens: [],
-    listingDate: "2021/12/26",
+    listingDate: "2022/12/26",
     tranches: [],
     tvl: "",
     totalTranchesTarget: "",
@@ -293,5 +297,43 @@ export const MarketList: Market[] = [
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3",
     isRetired: true
+  },
+  {
+    portfolio: "BUSD Falls 4",
+    isAvax: false,
+    wrapAvax: false,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["BUSD"],
+    tokens: [],
+    listingDate: "2022/3/25",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: BUSD4_TrancheMaster[NETWORK],
+    abi: TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: BUSD4_MasterWTF[NETWORK],
+    pools: [],
+    depositAssetAddress: BUSDAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Alpaca BUSD",
+        shares: 0.5,
+        sAddress: BUSD4_AlpacaStrat[NETWORK],
+        apiKey: "alpaca"
+      },
+      {
+        farmName: "Venus BUSD",
+        shares: 0.5,
+        sAddress: BUSD4_VenusStrat[NETWORK],
+        apiKey: "venus"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3"
   }
 ];

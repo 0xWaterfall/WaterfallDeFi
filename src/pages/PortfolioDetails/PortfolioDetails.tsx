@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
@@ -22,9 +22,10 @@ const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
 
   const market = useSelectedMarket();
-  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>(
-    market && market.assets.includes("BUSD") ? "BUSD" : "WBNB"
-  );
+  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
+  useEffect(() => {
+    market && setSelectedDepositAsset(market.assets[0]);
+  }, [market]);
   const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
   return (
     <PortfolioDetailsWrapper>

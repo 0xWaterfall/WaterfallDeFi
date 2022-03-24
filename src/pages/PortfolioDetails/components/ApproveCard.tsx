@@ -25,6 +25,7 @@ import Input from "components/Input/Input";
 import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
+import BigNumber from "bignumber.js";
 
 const RowDiv = styled.div`
   font-size: 20px;
@@ -124,7 +125,7 @@ type TProps = WrappedComponentProps & {
   isSoldOut: boolean;
   selectTranche: Tranche | undefined;
   depositMultipleSimultaneous: boolean;
-  remainingSimul: { remaining: string; remainingExact: string }[];
+  remainingSimul: { remaining: string; remainingExact: string; depositableOrInTranche: string }[];
   setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -164,7 +165,7 @@ const ApproveCard = memo<TProps>(
       ? useCheckApprove(depositAddress, data.address)
       : { onCheckApprove: () => false };
     const { onCheckApproveAll } = useCheckApproveAll(data.depositAssetAddresses, data.address);
-    const { onApprove } = useApprove(depositAddress, data.address);
+    const { onApprove } = depositAddress ? useApprove(depositAddress, data.address) : { onApprove: () => false };
     const { onMultiApprove } = useMultiApprove(data.depositAssetAddresses, data.address);
     const { onInvestDirect } = useInvestDirect(
       data.address,
@@ -285,6 +286,10 @@ const ApproveCard = memo<TProps>(
         const _remainings = remainingSimul.map((r) => r.remainingExact.replace(/\,/g, ""));
         const _balanceInputs = balanceInputSimul;
         const _balances = multicurrencyBalances;
+        const _sum: BigNumber = balanceInputSimul.reduce(
+          (acc, next) => acc.plus(new BigNumber(next)),
+          new BigNumber(0)
+        );
         const validateTexts = _balanceInputs.map((b, i) => {
           if (compareNum(b, _balances[i].balance, true)) {
             return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
@@ -295,10 +300,16 @@ const ApproveCard = memo<TProps>(
               { remaining: remaining }
             );
           }
+          if (
+            remainingSimul[i].depositableOrInTranche === "inTranche" &&
+            compareNum(_sum.toString(), _remainings[i], true)
+          ) {
+            return intl.formatMessage({ defaultMessage: "Total deposit amount exceeds tranche allowance" });
+          }
         });
         return validateTexts;
       } else return [];
-    }, [multicurrencyBalances, remainingSimul, balanceInputSimul]);
+    }, [depositMultipleSimultaneous, remainingSimul, balanceInputSimul, multicurrencyBalances]);
 
     const handleDeposit = async () => {
       if (validateText !== undefined && validateText.length > 0) return;
@@ -419,8 +430,18 @@ const ApproveCard = memo<TProps>(
         }
       } else if (compareNum(_balance, _remaining, true)) {
         if (_remaining) {
-          balanceInputSimulCopy[index] = _remaining;
-          setBalanceInputSimul(balanceInputSimulCopy);
+          if (remainingSimul[index].depositableOrInTranche === "inTranche") {
+            const _sum: BigNumber = balanceInputSimulCopy.reduce(
+              (acc, next, i) => (i !== index ? acc.plus(new BigNumber(next)) : acc),
+              new BigNumber(0)
+            );
+            const _remainingInTranche = new BigNumber(_remaining).minus(_sum).toString();
+            balanceInputSimulCopy[index] = _remainingInTranche;
+            setBalanceInputSimul(balanceInputSimulCopy);
+          } else {
+            balanceInputSimulCopy[index] = _remaining;
+            setBalanceInputSimul(balanceInputSimulCopy);
+          }
         }
       }
     };

@@ -167,18 +167,18 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   return result !== "NaN" ? result + "%" : "- -";
 };
 export const getRemaining = (target: string | undefined, principal: string | undefined, decimals = 18) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
+  if (target === undefined) return { remaining: "", remainingExact: "" };
+  if (principal === undefined) return { remaining: "", remainingExact: "" };
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
 
   const result = _target.minus(_principal);
 
-  // return result.toString();
-  // return result.toFormat(18).toString();
-  return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
-  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return {
+    remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),
+    remainingExact: result.toFormat(18).toString()
+  };
 };
 export const getRemainingMulticurrency = (
   target: string | undefined,
@@ -186,49 +186,22 @@ export const getRemainingMulticurrency = (
   remainingDepositable: BigNumber,
   decimals = 18
 ) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
+  if (target === undefined) return { remaining: "", remainingExact: "", depositableOrInTranche: "" };
+  if (principal === undefined) return { remaining: "", remainingExact: "", depositableOrInTranche: "" };
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
   const _remainingDepositable = remainingDepositable;
 
   const remainingInTranche = _target.minus(_principal);
+  const depositableOrInTranche = _remainingDepositable < remainingInTranche ? "depositable" : "inTranche";
   const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
 
-  return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
-};
-export const getRemainingExact = (target: string | undefined, principal: string | undefined, decimals = 18) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
-
-  const _target = new BigNumber(target);
-  const _principal = new BigNumber(principal);
-
-  const result = _target.minus(_principal);
-
-  // return result.toString();
-  return result.toFormat(18).toString();
-  // return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
-  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-};
-export const getRemainingExactMulticurrency = (
-  target: string | undefined,
-  principal: string | undefined,
-  remainingDepositable: BigNumber,
-  decimals = 18
-) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
-
-  const _target = new BigNumber(target);
-  const _principal = new BigNumber(principal);
-  const _remainingDepositable = remainingDepositable;
-
-  const remainingInTranche = _target.minus(_principal);
-  const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
-
-  return result.toFormat(decimals).toString();
+  return {
+    remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),
+    remainingExact: result.toFormat(decimals).toString(),
+    depositableOrInTranche: depositableOrInTranche
+  };
 };
 export const compareNum = (num1: string | number | undefined, num2: string | undefined, largerOnly = false) => {
   if (num1 === undefined) return;

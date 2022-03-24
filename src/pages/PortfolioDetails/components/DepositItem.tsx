@@ -7,13 +7,7 @@ import TranchesCard from "./TranchesCard";
 import ApproveCard from "./ApproveCard";
 // import { useTheme } from "@emotion/react";
 import { Market, PORTFOLIO_STATUS, Tranche } from "types";
-import {
-  compareNum,
-  getRemaining,
-  getRemainingExact,
-  getRemainingExactMulticurrency,
-  getRemainingMulticurrency
-} from "utils/formatNumbers";
+import { compareNum, getRemaining, getRemainingMulticurrency } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
@@ -56,6 +50,25 @@ const DepositItem = memo<TProps>(
 
     const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
     const [selectTranche, setSelectTranche] = useState<Tranche | undefined>(undefined);
+
+    const { remaining, remainingExact } =
+      selectTrancheIdx !== undefined
+        ? !data.isMulticurrency
+          ? getRemaining(
+              data.tranches[selectTrancheIdx]?.target,
+              !data.autorollImplemented
+                ? data.tranches[selectTrancheIdx]?.principal
+                : (
+                    Number(data.tranches[selectTrancheIdx]?.principal) +
+                    Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
+                  ).toString()
+            )
+          : getRemainingMulticurrency(
+              data.tranches[selectTrancheIdx]?.target,
+              data.tranches[selectTrancheIdx]?.principal,
+              remainingDepositable
+            )
+        : { remaining: "", remainingExact: "" };
 
     return (
       <div
@@ -110,12 +123,12 @@ const DepositItem = memo<TProps>(
                             : (
                                 Number(data.tranches[_i]?.principal) + Number(data.tranches[_i]?.autoPrincipal)
                               ).toString()
-                        )
+                        ).remaining
                       : getRemainingMulticurrency(
                           data.tranches[_i]?.target,
                           data.tranches[_i]?.principal,
                           remainingDepositable
-                        )
+                        ).remaining
                   }
                 />
               </div>
@@ -125,62 +138,19 @@ const DepositItem = memo<TProps>(
         <ApproveCard
           selectedDepositAsset={selectedDepositAsset}
           isRe={isRe}
-          remaining={
-            selectTrancheIdx !== undefined
-              ? !data.isMulticurrency
-                ? getRemaining(
-                    data.tranches[selectTrancheIdx]?.target,
-                    !data.autorollImplemented
-                      ? data.tranches[selectTrancheIdx]?.principal
-                      : (
-                          Number(data.tranches[selectTrancheIdx]?.principal) +
-                          Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
-                        ).toString()
-                  )
-                : getRemainingMulticurrency(
-                    data.tranches[selectTrancheIdx]?.target,
-                    data.tranches[selectTrancheIdx]?.principal,
-                    remainingDepositable
-                  )
-              : "0"
-          }
-          remainingExact={
-            selectTrancheIdx !== undefined
-              ? !data.isMulticurrency
-                ? getRemainingExact(
-                    data.tranches[selectTrancheIdx]?.target,
-                    !data.autorollImplemented
-                      ? data.tranches[selectTrancheIdx]?.principal
-                      : (
-                          Number(data.tranches[selectTrancheIdx]?.principal) +
-                          Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
-                        ).toString()
-                  )
-                : getRemainingExactMulticurrency(
-                    data.tranches[selectTrancheIdx]?.target,
-                    data.tranches[selectTrancheIdx]?.principal,
-                    remainingDepositable
-                  )
-              : "0"
-          }
+          remaining={remaining}
+          remainingExact={remainingExact}
           remainingSimul={
             selectTrancheIdx !== undefined && data.isMulticurrency
-              ? remainingDepositableSimul.map((remainingDepositable) => {
-                  return {
-                    remaining: getRemainingMulticurrency(
-                      data.tranches[selectTrancheIdx]?.target,
-                      data.tranches[selectTrancheIdx]?.principal,
-                      remainingDepositable
-                    ),
-                    remainingExact: getRemainingExactMulticurrency(
-                      data.tranches[selectTrancheIdx]?.target,
-                      data.tranches[selectTrancheIdx]?.principal,
-                      remainingDepositable
-                    )
-                  };
-                })
+              ? remainingDepositableSimul.map((remainingDepositable) =>
+                  getRemainingMulticurrency(
+                    data.tranches[selectTrancheIdx]?.target,
+                    data.tranches[selectTrancheIdx]?.principal,
+                    remainingDepositable
+                  )
+                )
               : data.assets.map(() => {
-                  return { remaining: "", remainingExact: "" };
+                  return { remaining: "", remainingExact: "", depositableOrInTranche: "" };
                 })
           }
           enabled={selectTranche !== undefined}

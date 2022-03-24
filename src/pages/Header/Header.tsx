@@ -315,14 +315,24 @@ const Header = memo<TProps>(({ intl }) => {
 
     if (!active) {
       return (
-        <Button
-          type="primary"
-          onClick={() => {
-            dispatch(setConnectWalletModalShow(true));
-          }}
-        >
-          {intl.formatMessage({ defaultMessage: "Connect wallet" })}
-        </Button>
+        <WalletWrapper>
+          <Network css={{ color: networkHook === "avax" ? "#E84142" : "rgb(240, 185, 11);" }}>
+            <Dropdown overlay={menu}>
+              <div css={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+                <CaretDown />
+                {networkHook === "avax" ? "AVAX" : "BNB"}
+              </div>
+            </Dropdown>
+          </Network>
+          <Button
+            type="primary"
+            onClick={() => {
+              dispatch(setConnectWalletModalShow(true));
+            }}
+          >
+            {intl.formatMessage({ defaultMessage: "Connect wallet" })}
+          </Button>
+        </WalletWrapper>
       );
     }
     if (

@@ -127,7 +127,7 @@ const ComingSoonRightBgWrapper = styled(ComingSoonRightBg)`
 
 type TProps = WrappedComponentProps;
 
-const CommingSoon = memo<TProps>(({ intl }) => {
+const ComingSoon = memo<TProps>(({ intl }) => {
   return (
     <Wrapper>
       <CardWrapper>
@@ -144,4 +144,4 @@ const CommingSoon = memo<TProps>(({ intl }) => {
   );
 });
 
-export default injectIntl(CommingSoon);
+export default injectIntl(ComingSoon);

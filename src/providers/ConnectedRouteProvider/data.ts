@@ -1,4 +1,5 @@
 import loadable from "@loadable/component";
+import ComingSoon from "pages/OldStake/ComingSoon";
 
 const Dashboard = loadable(() => import("../../pages/Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
@@ -37,7 +38,7 @@ export const RouteComponents = [
   },
   {
     key: "Stake",
-    component: CommingSoon,
+    component: ComingSoon,
     exact: true,
     path: "/stake"
   },

@@ -166,8 +166,6 @@ const Header = memo<TProps>(({ intl }) => {
   const { gray, white, colorMode } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
-  console.log("LOCATION!");
-  console.log(location);
   const [isDrawerShow, setDrawerShow] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -175,6 +173,16 @@ const Header = memo<TProps>(({ intl }) => {
   const { active, account, chainId } = useWeb3React<Web3Provider>();
   const [networkHook, setNetworkHook] = useState(useNetwork());
   const { login, logout } = useAuth(networkHook);
+
+  useEffect(() => {
+    if (window.location.toString().includes("bnb")) {
+      dispatch(setNetwork("bnb"));
+      setNetworkHook("bnb");
+    } else if (window.location.toString().includes("avax")) {
+      dispatch(setNetwork("avax"));
+      setNetworkHook("avax");
+    }
+  }, []);
 
   useEffect(() => {
     if (chainId === 56 && networkHook === "avax") {

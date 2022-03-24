@@ -1,12 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
-import { useSize } from "ahooks";
 import { WaterFallMountain, Boxes } from "assets/images";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
 import Claim from "./Claim";
-import Airdrop from "./Airdrop";
 
 type TProps = WrappedComponentProps;
 const TitleH1 = styled.h1`

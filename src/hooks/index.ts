@@ -1,19 +1,7 @@
-import {
-  MasterChefAddress,
-  TranchesAddress,
-  WTFAddress,
-  BUSDAddress,
-  StrategyAddress,
-  MulticallAddress,
-  mBUSDAddress,
-  sALPACAAddress,
-  sCREAMAddress,
-  sVENUSAddress,
-  AllTranches
-} from "config/address";
+import { MasterChefAddress, TranchesAddress, MulticallAddress, AllTranches } from "config/address";
 import { ethers } from "ethers";
-import { useEffect, useState, useCallback, useRef } from "react";
-import { Market, PORTFOLIO_STATUS } from "types";
+import { useEffect, useState, useCallback } from "react";
+import { Market, PORTFOLIO_STATUS, Token } from "types";
 import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
 import getRpcUrl, { getBscRpcUrl } from "utils/getRpcUrl";
 import Web3 from "web3";
@@ -21,12 +9,10 @@ import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
-import { abi as StrategyAbi } from "config/abi/Strategy.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import farmsConfig from "config/farms";
 import MultiCallAbi from "config/abi/Multicall.json";
 import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
 import { useMarkets, useNetwork } from "./useSelectors";
@@ -34,7 +20,11 @@ import { NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall, { multicallBSC, multicallNetwork } from "utils/multicall";
 import numeral from "numeral";
-import { useAVAXTrancheMasterContract, useTrancheMasterContract } from "./useContract";
+import {
+  useAVAXTrancheMasterContract,
+  useTrancheMasterContract,
+  useMulticurrencyTrancheMasterContract
+} from "./useContract";
 import { setPendingWTFReward } from "store/position";
 import markets from "store/markets";
 import { MarketList } from "config/market";
@@ -152,6 +142,7 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
   // const [invested, setInvested] = useState(BIG_ZERO);
   const [result, setResult] = useState({
     balance: "",
+    MCbalance: null,
     invested: ""
   });
   const { account } = useWeb3React<Web3Provider>();
@@ -168,6 +159,7 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
 
         setResult({
           balance: result.balance ? new BigNumber(result.balance?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0",
+          MCbalance: null,
           invested: result.invested ? new BigNumber(result.invested?._hex).dividedBy(BIG_TEN.pow(18)).toString() : "0"
         });
       } catch (e) {
@@ -190,6 +182,82 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
   // }, [account]);
 
   return result;
+};
+
+export const useMulticurrencyTrancheBalance = (
+  trancheMasterAddress: string,
+  currencyIdx: number,
+  tokenCount: number
+) => {
+  const preloadedArray: string[] = [];
+  for (let index = 0; index < tokenCount; index++) {
+    preloadedArray.push("");
+  }
+  const [result, setResult] = useState<{ balance: string; MCbalance: string[]; invested: string[] }>({
+    balance: preloadedArray[0],
+    MCbalance: preloadedArray,
+    invested: preloadedArray
+  });
+  const { account } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
+  const fetchBalance = async () => {
+    try {
+      //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
+      const balanceOf = await trancheMasterContract.balanceOf(account);
+
+      setResult({
+        balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())[currencyIdx],
+        MCbalance: balanceOf[0].map((b: any) => b._hex),
+        invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  useEffect(() => {
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
+
+  return {
+    balance: result.balance,
+    MCbalance: result.MCbalance,
+    fetchBalance: fetchBalance,
+    invested: result.invested[currencyIdx]
+  };
+};
+
+export const useAllMulticurrencyTrancheBalance = (trancheMasterAddress: string, tokenCount: number) => {
+  const preloadedArray = [];
+  for (let index = 0; index < tokenCount; index++) {
+    preloadedArray.push("");
+  }
+  const [result, setResult] = useState<{ balance: string[]; invested: string[] }>({
+    balance: preloadedArray,
+    invested: preloadedArray
+  });
+  const { account } = useWeb3React<Web3Provider>();
+  const { fastRefresh } = useRefresh();
+  const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
+        const balanceOf = await trancheMasterContract.balanceOf(account);
+        setResult({
+          balance: balanceOf[0].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString()),
+          invested: balanceOf[1].map((b: any) => new BigNumber(b._hex).dividedBy(BIG_TEN.pow(18)).toString())
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    if (account) fetchBalance();
+  }, [fastRefresh, account]);
+  return {
+    balance: result.balance,
+    invested: result.invested
+  };
 };
 
 //UNUSED
@@ -226,11 +294,6 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
 //       setTrancheSnapshot(result);
 //     };
 
-//     getTrancheSnapshot();
-//   }, [cycle]);
-
-//   return trancheSnapshot;
-// };
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
   const { slowRefresh } = useRefresh();
@@ -240,24 +303,51 @@ export const usePositions = (marketId: string | undefined) => {
       const _result = [];
       for (let i = 0; i < MarketList.length; i++) {
         if (marketId && parseInt(marketId) !== i) continue;
-        const _marketAddress = MarketList[i].address;
-        const calls = [
-          {
-            address: _marketAddress,
-            name: "userInvest",
-            params: [account, 0]
-          },
-          {
-            address: _marketAddress,
-            name: "userInvest",
-            params: [account, 1]
-          },
-          {
-            address: _marketAddress,
-            name: "userInvest",
-            params: [account, 2]
-          }
-        ];
+        const calls = !MarketList[i].isMulticurrency
+          ? [
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 0]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 1]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 2]
+              }
+            ]
+          : [];
+        if (MarketList[i].isMulticurrency) {
+          calls.push({
+            address: MarketList[i].address,
+            name: "userCycle",
+            params: [account]
+          });
+          MarketList[i].depositAssetAddresses.forEach((a) => {
+            calls.push(
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 0, a]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 1, a]
+              },
+              {
+                address: MarketList[i].address,
+                name: "userInvest",
+                params: [account, 2, a]
+              }
+            );
+          });
+        }
         const userInvest = MarketList[i].isAvax
           ? await multicall(MarketList[i].abi, calls)
           : await multicallBSC(MarketList[i].abi, calls);
@@ -351,7 +441,7 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
 // };
 export const useTotalSupply = (address: string) => {
   const [totalSupply, setTotalSupply] = useState("0");
-  const { account, ...p } = useWeb3React<Web3Provider>();
+  const { account } = useWeb3React<Web3Provider>();
   const { fastRefresh } = useRefresh();
   const network = useNetwork();
 

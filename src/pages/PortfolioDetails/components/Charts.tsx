@@ -3,38 +3,28 @@
 import styled from "@emotion/styled";
 import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { useHistory, useLocation } from "react-router-dom";
 import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
-import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 // import { usePendingWTFReward, useTrancheBalance } from "hooks";
-import {
-  formatBalance,
-  formatBigNumber2HexString,
-  formatNumberDisplay,
-  formatNumberSeparator
-} from "utils/formatNumbers";
+import { formatBalance, formatBigNumber2HexString } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
-
-import { AbiItem } from "web3-utils";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import Web3 from "web3";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
 import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
 // import { usePendingWTFReward } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
-import { getPendingWTFReward, getTrancheBalance, setPendingWTFReward } from "store/position";
 import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
-import { ArrowRight2, ToStakeImg } from "assets/images";
 import { setConfirmModal } from "store/showStatus";
-import { usePendingWTFReward, useTrancheBalance } from "hooks";
+import { useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance } from "hooks";
 import ClaimPopup from "./ClaimPopup";
+import useAutoRoll from "../hooks/useAutoRoll";
+import { Switch } from "antd";
 
 const Wrapper = styled.div`
   display: grid;
@@ -116,134 +106,209 @@ const ButtonWrapper = styled(Button)`
 
 type TProps = WrappedComponentProps & {
   data: Market;
+  selectedDepositAsset: string;
+  depositMultipleSimultaneous: boolean;
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Charts = memo<TProps>(({ intl, data }) => {
-  const [claimRewardLoading, setClaimRewardLoading] = useState(false);
-  const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
-  const [showRedeposit, setShowRedeposit] = useState(false);
-  const [showClaim, setShowClaim] = useState(false);
+const Charts = memo<TProps>(
+  ({
+    intl,
+    data,
+    selectedDepositAsset,
+    depositMultipleSimultaneous,
+    setSelectedDepositAsset,
+    setDepositMultipleSimultaneous
+  }) => {
+    const [claimRewardLoading, setClaimRewardLoading] = useState(false);
+    const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
+    const [showRedeposit, setShowRedeposit] = useState(false);
+    const [showClaim, setShowClaim] = useState(false);
 
-  const { push } = useHistory();
+    const [autoRoll, setAutoRoll] = useState(false);
+    const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
+    const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
 
-  const { onWithdraw } = useWithdraw(data.address, data.isAvax);
+    const { onWithdraw } = useWithdraw(data.address, data.isAvax, data.isMulticurrency);
 
-  const { onClaimAll } = useClaimAll(data.masterChefAddress);
+    const { onClaimAll } = useClaimAll(data.masterChefAddress);
 
-  const { balance, invested } = useTrancheBalance(data.address, data.isAvax);
-  const { account } = useWeb3React<Web3Provider>();
+    const { balance, MCbalance, invested } = !data.isMulticurrency
+      ? useTrancheBalance(data.address, data.isAvax)
+      : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
 
-  // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
-  // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
-  const dispatch = useAppDispatch();
-  // useEffect(() => {
-  //   account && dispatch(getPendingWTFReward({ account }));
-  //   // account && dispatch(getTrancheBalance({ account }));
-  // }, [account]);
-  const claimReward = async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
-    setClaimRewardLoading(true);
+    const { account } = useWeb3React<Web3Provider>();
 
-    dispatch(
-      setConfirmModal({
-        isOpen: true,
-        txn: undefined,
-        status: "PENDING",
-        pendingMessage: intl.formatMessage({ defaultMessage: "Claiming " })
-      })
-    );
-    try {
-      await onClaimAll(_lockDurationIfLockNotExists, _lockDurationIfLockExists);
-      successNotification("Claim Success", "");
-    } catch (e) {
-      console.error(e);
-      dispatch(
-        setConfirmModal({
-          isOpen: true,
-          txn: undefined,
-          status: "REJECTED",
-          pendingMessage: intl.formatMessage({ defaultMessage: "Claim Fail " })
-        })
-      );
-    } finally {
-      setShowClaim(false);
+    // const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward();
+    const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
+    const dispatch = useAppDispatch();
+    // useEffect(() => {
+    //   account && dispatch(getPendingWTFReward({ account }));
+    //   // account && dispatch(getTrancheBalance({ account }));
+    // }, [account]);
 
-      setClaimRewardLoading(false);
-    }
-  };
-  const withdrawAll = async () => {
-    setWithdrawAllLoading(true);
+    useEffect(() => {
+      if (data.autorollImplemented) {
+        getAutoRoll().then((res) => {
+          setAutoRoll(res);
+          setAutoRollPending(false);
+        });
+      }
+    }, []);
 
-    dispatch(
-      setConfirmModal({
-        isOpen: true,
-        txn: undefined,
-        status: "PENDING",
-        pendingMessage: intl.formatMessage({ defaultMessage: "Withdrawing" })
-      })
-    );
-    try {
-      if (!balance) return;
-      await onWithdraw(formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))));
-      successNotification("Withdraw All Success", "");
-    } catch (e) {
-      console.error(e);
+    const claimReward = async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
+      setClaimRewardLoading(true);
 
       dispatch(
         setConfirmModal({
           isOpen: true,
           txn: undefined,
-          status: "REJECTED",
-          pendingMessage: intl.formatMessage({ defaultMessage: "Withdraw Fail " })
+          status: "PENDING",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Claiming " })
         })
       );
-    } finally {
-      setWithdrawAllLoading(false);
-    }
-  };
-  const rollDepositPopup = () => {
-    setShowRedeposit(!showRedeposit);
-  };
-  // const claimPopup = () => {
-  //   if (totalPendingReward !== "0") setShowClaim(!showClaim);
-  //   setShowClaim(!showClaim);
-  // };
-  return (
-    <Wrapper>
-      <RecordCard>
-        <section>
-          <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
-          <div>
-            {balance ? numeral(balance.toString()).format("0,0.[0000]") : "--"} {data.assets}
-          </div>
-          <div>
-            <ButtonWrapper
-              type="default"
-              onClick={withdrawAll}
-              loading={withdrawAllLoading}
-              disabled={!account || !+balance}
-              css={{ marginRight: 17 }}
-            >
-              {intl.formatMessage({ defaultMessage: "Withdraw All" })}
-            </ButtonWrapper>
-            <ButtonWrapper
-              type="default"
-              onClick={rollDepositPopup}
-              disabled={!account || !+balance || data?.isRetired}
-            >
-              {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
-            </ButtonWrapper>
-          </div>
-        </section>
-        <section>
-          <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
-          <div>
-            {/* {totalPendingReward
-              ? numeral(new BigNumber(totalPendingReward.toString()).dividedBy(BIG_TEN.pow(18))).format("0,0.[0000]")
-              : "--"}{" "} */}
-            WTF
-          </div>
-          {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
-          <div>
+      try {
+        await onClaimAll(_lockDurationIfLockNotExists, _lockDurationIfLockExists);
+        successNotification("Claim Success", "");
+      } catch (e) {
+        console.error(e);
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Claim Fail " })
+          })
+        );
+      } finally {
+        setShowClaim(false);
+
+        setClaimRewardLoading(false);
+      }
+    };
+    const withdrawAll = async () => {
+      setWithdrawAllLoading(true);
+
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage: intl.formatMessage({ defaultMessage: "Withdrawing" })
+        })
+      );
+      try {
+        if (!balance) return;
+        await onWithdraw(
+          formatBigNumber2HexString(new BigNumber(balance).times(BIG_TEN.pow(18))),
+          MCbalance ? MCbalance : []
+        );
+        successNotification("Withdraw All Success", "");
+      } catch (e) {
+        console.error(e);
+
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Withdraw Fail " })
+          })
+        );
+      } finally {
+        setWithdrawAllLoading(false);
+      }
+    };
+    const rollDepositPopup = () => {
+      setShowRedeposit(!showRedeposit);
+    };
+    const claimPopup = () => {
+      if (totalPendingReward !== "0") setShowClaim(!showClaim);
+      setShowClaim(!showClaim);
+    };
+
+    return (
+      <Wrapper>
+        <RecordCard>
+          <section>
+            <div>{intl.formatMessage({ defaultMessage: "Return Principal + Yield" })}</div>
+            <div css={{ padding: "10px 0" }}>
+              {!data.isMulticurrency
+                ? balance
+                  ? numeral(balance).format("0,0.[0000]")
+                  : "--"
+                : MCbalance
+                ? numeral(
+                    new BigNumber(MCbalance[data.assets.indexOf(selectedDepositAsset)]).dividedBy(BIG_TEN.pow(18))
+                  ).format("0,0.[00000]")
+                : "--"}{" "}
+              {selectedDepositAsset}
+            </div>
+            <div>
+              <ButtonWrapper
+                type="default"
+                onClick={() => {
+                  withdrawAll();
+                }}
+                loading={withdrawAllLoading}
+                disabled={!account || !+balance}
+                css={{ marginRight: 17 }}
+              >
+                {intl.formatMessage({ defaultMessage: "Withdraw All" })}
+              </ButtonWrapper>
+              <ButtonWrapper
+                type="default"
+                onClick={rollDepositPopup}
+                disabled={!account || !+balance || data?.isRetired || autoRoll}
+              >
+                {intl.formatMessage({ defaultMessage: "Roll Deposit" })}
+              </ButtonWrapper>
+            </div>
+            {account && data.autorollImplemented ? (
+              <div css={{ display: "flex", marginTop: 20 }}>
+                <span
+                  css={{
+                    fontSize: 18,
+                    fontWeight: 400,
+                    color: "rgba(51,51,51,0.7)",
+                    marginRight: 12,
+                    paddingTop: "4px"
+                  }}
+                >
+                  Auto Rolling
+                </span>
+                <div css={{ paddingTop: 2.5 }}>
+                  {!autoRollPending ? (
+                    <Switch
+                      checked={autoRoll}
+                      onChange={() => {
+                        setAutoRollPending(true);
+                        changeAutoRoll(!autoRoll).then((res) => {
+                          getAutoRoll().then((res2) => {
+                            setAutoRoll(res2);
+                            setAutoRollPending(false);
+                          });
+                        });
+                      }}
+                    />
+                  ) : (
+                    <div>Transaction Pending...</div>
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </section>
+          <section>
+            <div>{intl.formatMessage({ defaultMessage: "WTF Reward" })}</div>
+            <div>
+              {totalPendingReward
+                ? numeral(new BigNumber(totalPendingReward.toString()).dividedBy(BIG_TEN.pow(18))).format("0,0.[0000]")
+                : "--"}{" "}
+              WTF
+            </div>
+            <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div>
+            {/* <div> */}
             {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
               {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
             </ButtonWrapper> */}
@@ -266,31 +331,36 @@ const Charts = memo<TProps>(({ intl, data }) => {
               {intl.formatMessage({ defaultMessage: "To Stake" })}
               <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
             </ButtonWrapper> */}
-          </div>
-        </section>
-      </RecordCard>
-      <Block>
-        <PortfolioChart strategyFarms={data.strategyFarms} />
-      </Block>
-      <Block>
-        <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
-      </Block>
+            {/* </div> */}
+          </section>
+        </RecordCard>
+        <Block>
+          <PortfolioChart strategyFarms={data.strategyFarms} />
+        </Block>
+        <Block>
+          <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />
+        </Block>
 
-      <ReDeposit
-        visible={showRedeposit}
-        data={data}
-        onCancel={rollDepositPopup}
-        balance={formatBalance(balance.toString())}
-      />
-      {/* <ClaimPopup
-        visible={showClaim}
-        data={data}
-        onCancel={claimPopup}
-        balance={totalPendingReward}
-        claimReward={claimReward}
-      /> */}
-    </Wrapper>
-  );
-});
+        <ReDeposit
+          visible={showRedeposit}
+          data={data}
+          selectedDepositAsset={selectedDepositAsset}
+          onCancel={rollDepositPopup}
+          balance={formatBalance(balance.toString())}
+          depositMultipleSimultaneous={depositMultipleSimultaneous}
+          setSelectedDepositAsset={setSelectedDepositAsset}
+          setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
+        />
+        <ClaimPopup
+          visible={showClaim}
+          data={data}
+          onCancel={claimPopup}
+          balance={totalPendingReward}
+          claimReward={claimReward}
+        />
+      </Wrapper>
+    );
+  }
+);
 
 export default injectIntl(Charts);

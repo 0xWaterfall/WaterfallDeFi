@@ -3,7 +3,6 @@ import { useWeb3React } from "@web3-react/core";
 import { useVeWTFContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
 
 const extendLockTime = async (contract: Contract, duration: number) => {
   const tx = await contract.increaseTimeAndAmount("0", duration);

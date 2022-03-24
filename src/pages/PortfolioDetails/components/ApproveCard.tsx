@@ -1,39 +1,28 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { memo, useMemo } from "react";
+import React, { memo, useMemo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Form, notification } from "antd";
 import Button from "components/Button/Button";
 import Separator from "components/Separator/Separator";
 import { useState } from "react";
-import {
-  compareNum,
-  formatAPY,
-  formatBalance,
-  formatNumberDisplay,
-  formatNumberSeparator,
-  formatRedemptionFee,
-  getRemaining
-} from "utils/formatNumbers";
-import { useEffect } from "react";
-import Web3 from "web3";
-import { AbiItem } from "web3-utils";
+import { compareNum, formatNumberSeparator } from "utils/formatNumbers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { Market, Tranche } from "types";
-import { NotificationApi } from "antd/lib/notification";
-import useCheckApprove from "../hooks/useCheckApprove";
-import useApprove from "../hooks/useApprove";
+import useCheckApprove, { useCheckApproveAll } from "../hooks/useCheckApprove";
+import useApprove, { useMultiApprove } from "../hooks/useApprove";
 import { successNotification } from "utils/notification";
 import useInvestDirect from "../hooks/useInvestDirect";
 import useInvest from "../hooks/useInvest";
+import useInvestDirectMCSimul from "../hooks/useInvestDirectMCSimul";
+import useInvestMCSimul from "../hooks/useInvestMCSimul";
 import { useTheme } from "@emotion/react";
 import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance, useTrancheBalance } from "hooks";
+import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
@@ -41,6 +30,8 @@ import { useWrapAVAXContract } from "hooks/useContract";
 import { parseEther } from "ethers/lib/utils";
 import { ethers } from "ethers";
 import getRpcUrl from "utils/getRpcUrl";
+import BigNumber from "bignumber.js";
+
 const RowDiv = styled.div`
   font-size: 20px;
   line-height: 27px;
@@ -130,51 +121,101 @@ const ImportantNotes = styled.div`
 `;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
-  assets: string;
+  selectedDepositAsset: string;
   remaining: string;
   remainingExact: string;
-  myBalance: string;
   enabled: boolean;
   data: Market;
   selectTrancheIdx?: number;
   isSoldOut: boolean;
   selectTranche: Tranche | undefined;
+  depositMultipleSimultaneous: boolean;
+  remainingSimul: { remaining: string; remainingExact: string; depositableOrInTranche: string }[];
+  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ApproveCard = memo<TProps>(
   ({
     intl,
     isRe,
-    assets,
+    selectedDepositAsset,
     remaining,
     remainingExact,
-    myBalance,
     enabled,
     data,
     selectTrancheIdx,
     isSoldOut,
-    selectTranche
+    selectTranche,
+    depositMultipleSimultaneous,
+    remainingSimul,
+    setSelectedDepositAsset,
+    setDepositMultipleSimultaneous
   }) => {
     const { tags } = useTheme();
-    const [balanceInput, setBalanceInput] = useState("0");
-    const [approved, setApproved] = useState(false);
-    const [depositLoading, setDepositLoading] = useState(false);
-    const [approveLoading, setApproveLoading] = useState(false);
+    //user inputs
+    const [balanceInput, setBalanceInput] = useState<string>("0");
+    const [balanceInputSimul, setBalanceInputSimul] = useState<string[]>([]);
+    //state flags
+    const [approved, setApproved] = useState<boolean>(false);
+    const [depositLoading, setDepositLoading] = useState<boolean>(false);
+    const [approveLoading, setApproveLoading] = useState<boolean>(false);
+    //web3
     const { account } = useWeb3React<Web3Provider>();
-    const { onCheckApprove } = useCheckApprove(data.depositAssetAddress, data.address);
-    const { onApprove } = useApprove(data.depositAssetAddress, data.address);
-    const { onInvestDirect } = useInvestDirect(data.address);
-    const { onInvest } = useInvest(data.address);
     const wrapAvaxContract = useWrapAVAXContract();
     const dispatch = useAppDispatch();
-    const {
-      balance: balanceWallet,
-      fetchBalance,
-      actualBalance: actualBalanceWallet
-    } = useBalance(data.depositAssetAddress);
+    //deposit hooks
+    const depositAddress = !data.isMulticurrency
+      ? data.depositAssetAddress
+      : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
+    const { onCheckApprove } = depositAddress
+      ? useCheckApprove(depositAddress, data.address)
+      : { onCheckApprove: () => false };
+    const { onCheckApproveAll } = useCheckApproveAll(data.depositAssetAddresses, data.address);
+    const { onApprove } = depositAddress ? useApprove(depositAddress, data.address) : { onApprove: () => false };
+    const { onMultiApprove } = useMultiApprove(data.depositAssetAddresses, data.address);
+    const { onInvestDirect } = useInvestDirect(
+      data.address,
+      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.assets.length
+    );
+    const { onInvest } = useInvest(
+      data.address,
+      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.assets.length
+    );
+    const { onInvestDirectMCSimul } = useInvestDirectMCSimul(data.address);
+    const { onInvestMCSimul } = useInvestMCSimul(data.address);
+    //balance hooks
+    const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
+    const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
     const { balance: balanceRe } = useTrancheBalance(data.address, data.isAvax);
+    const multicurrencyBalanceRes = data.depositAssetAddresses.map((address, i) =>
+      useMulticurrencyTrancheBalance(data.address, i, data.assets.length)
+    );
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
+    const multicurrencyBalance = data.isMulticurrency
+      ? isRe === undefined
+        ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
+        : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
+      : "";
+    const tokenButtonColors = useMemo(
+      () =>
+        data.assets.map((a) => {
+          switch (a) {
+            case "BUSD":
+              return "#F0B90B";
+            case "WAVAX":
+              return "#E84142";
+            default:
+              return "#1579FF";
+          }
+        }),
+      []
+    );
+
+    //validation texts
     const notes = [
       intl.formatMessage({
         defaultMessage:
@@ -189,17 +230,21 @@ const ApproveCard = memo<TProps>(
           "When you deposit Junior, you will get a variable rate. However, depending on market changes and the total APR of your portfolio, your effective APR may be lower. Make sure you fully understand the risks."
       })
     ];
-
+    //use effects
     useEffect(() => {
       const checkApproved = async (account: string) => {
-        const approved = await onCheckApprove();
+        const approved = !depositMultipleSimultaneous ? await onCheckApprove() : await onCheckApproveAll();
         setApproved(approved ? true : false);
       };
       if (account) checkApproved(account);
-    }, [account]);
+    }, [account, depositMultipleSimultaneous]);
+
     useEffect(() => {
       setBalanceInput("0");
+      setBalanceInputSimul(data.assets.map(() => "0"));
     }, [enabled]);
+
+    //handlers
     const handleApprove = async () => {
       setApproveLoading(true);
       dispatch(
@@ -211,7 +256,7 @@ const ApproveCard = memo<TProps>(
         })
       );
       try {
-        await onApprove();
+        !depositMultipleSimultaneous ? await onApprove() : await onMultiApprove();
         successNotification("Approve Success", "");
         setApproved(true);
       } catch (e) {
@@ -229,19 +274,48 @@ const ApproveCard = memo<TProps>(
         setApproveLoading(false);
       }
     };
+
     const validateText = useMemo(() => {
-      const _balance = balance.replace(/\,/g, "");
-      // const _remaining = remaining.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
-      if (compareNum(_balanceInput, _remaining, true)) {
+      const _balance = !data.isMulticurrency ? balance : multicurrencyBalance;
+      if (compareNum(_balanceInput, _balance, true)) {
         if (!data.wrapAvax) return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
-        else return;
       }
       if (compareNum(_balanceInput, _remaining, true)) {
         return intl.formatMessage({ defaultMessage: "Maximum deposit amount = {remaining}" }, { remaining: remaining });
       }
-    }, [balance, remaining, balanceInput]);
+    }, [balance, multicurrencyBalance, remaining, remainingExact, balanceInput]);
+
+    const validateTextSimul = useMemo(() => {
+      if (depositMultipleSimultaneous) {
+        const _remainings = remainingSimul.map((r) => r.remainingExact.replace(/\,/g, ""));
+        const _balanceInputs = balanceInputSimul;
+        const _balances = multicurrencyBalances;
+        const _sum: BigNumber = balanceInputSimul.reduce(
+          (acc, next) => acc.plus(new BigNumber(next)),
+          new BigNumber(0)
+        );
+        const validateTexts = _balanceInputs.map((b, i) => {
+          if (compareNum(b, _balances[i].balance, true)) {
+            return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
+          }
+          if (compareNum(b, _remainings[i], true)) {
+            return intl.formatMessage(
+              { defaultMessage: "Maximum deposit amount = {remaining}" },
+              { remaining: remaining }
+            );
+          }
+          if (
+            remainingSimul[i].depositableOrInTranche === "inTranche" &&
+            compareNum(_sum.toString(), _remainings[i], true)
+          ) {
+            return intl.formatMessage({ defaultMessage: "Total deposit amount exceeds tranche allowance" });
+          }
+        });
+        return validateTexts;
+      } else return [];
+    }, [depositMultipleSimultaneous, remainingSimul, balanceInputSimul, multicurrencyBalances]);
 
     const handleWrapAvax = async () => {
       setDepositLoading(true);
@@ -264,7 +338,8 @@ const ApproveCard = memo<TProps>(
           isOpen: true,
           txn: undefined,
           status: "PENDING",
-          pendingMessage: intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + assets
+          pendingMessage:
+            intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + selectedDepositAsset
         })
       );
       const amount = balanceInput.toString();
@@ -279,7 +354,9 @@ const ApproveCard = memo<TProps>(
         }
         setDepositLoading(false);
         setBalanceInput("0");
-        fetchBalance();
+        !data.isMulticurrency
+          ? fetchBalance()
+          : multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
         // if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         dispatch(
@@ -297,49 +374,115 @@ const ApproveCard = memo<TProps>(
       }
     };
 
+    const handleDepositSimul = async () => {
+      const _invalids: boolean[] = validateTextSimul && validateTextSimul.map((v) => (v ? v.length > 0 : false));
+      if (_invalids.some((v) => v)) return;
+      const _invalids2: boolean[] = balanceInputSimul.map((b) => Number(b) < 0);
+      if (_invalids2.some((v) => v)) return;
+      if (selectTrancheIdx === undefined) return;
+
+      setDepositLoading(true);
+      dispatch(
+        setConfirmModal({
+          isOpen: true,
+          txn: undefined,
+          status: "PENDING",
+          pendingMessage: balanceInputSimul
+            .map(
+              (b) => intl.formatMessage({ defaultMessage: "Depositing " }) + " " + b + " " + selectedDepositAsset + ", "
+            )
+            .join()
+        })
+      );
+      const _amount = balanceInputSimul; //feels like .toString() is unnecessary if it's already typed? - 0xA
+      try {
+        const success = !isRe
+          ? await onInvestDirectMCSimul(_amount, selectTrancheIdx.toString())
+          : await onInvestMCSimul(_amount, selectTrancheIdx.toString());
+        if (success) {
+          successNotification("Deposit Success", "");
+        } else {
+          successNotification("Deposit Fail", "");
+        }
+        setDepositLoading(false);
+        setBalanceInputSimul([]);
+        multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
+      } catch (e) {
+        dispatch(
+          setConfirmModal({
+            isOpen: true,
+            txn: undefined,
+            status: "REJECTED",
+            pendingMessage: intl.formatMessage({ defaultMessage: "Deposit Fail " })
+          })
+        );
+        console.error(e);
+      } finally {
+        setDepositLoading(false);
+      }
+    };
+
     const handleMaxInput = () => {
-      const _balance = actualBalanceWallet.replace(/\,/g, "");
-      // const _remaining = remaining.replace(/\,/g, "");
+      const _balance = !data.isMulticurrency
+        ? actualBalanceWallet.replace(/\,/g, "")
+        : multicurrencyBalance.replace(/\,/g, "");
       const _remaining = remainingExact.replace(/\,/g, "");
-      const _balanceInput = balanceInput;
       if (data.wrapAvax) {
         if (_remaining) setBalanceInput(_remaining);
       } else {
-        // let input = 0;
         if (compareNum(_remaining, _balance)) {
-          // if (_balance <= _remaining) {
-          // input = parseFloat(_balance);
-          if (_balance) setBalanceInput(actualBalanceWallet);
+          if (_balance) setBalanceInput(!data.isMulticurrency ? actualBalanceWallet : multicurrencyBalance);
         } else if (compareNum(_balance, _remaining, true)) {
-          // } else if (_balance > _remaining) {
-          // input = parseFloat(_remaining);
           if (_remaining) setBalanceInput(_remaining);
         }
       }
-      // if (input) setBalanceInput(input.toString());
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleMaxInputSimul = (index: number) => {
+      const _balance = multicurrencyBalances[index].balance.replace(/\,/g, "");
+      const _remaining = remainingSimul[index].remaining.replace(/\,/g, "");
+      const balanceInputSimulCopy = [...balanceInputSimul];
+      if (compareNum(_remaining, _balance)) {
+        if (_balance) {
+          balanceInputSimulCopy[index] = _balance;
+          setBalanceInputSimul(balanceInputSimulCopy);
+        }
+      } else if (compareNum(_balance, _remaining, true)) {
+        if (_remaining) {
+          if (remainingSimul[index].depositableOrInTranche === "inTranche") {
+            const _sum: BigNumber = balanceInputSimulCopy.reduce(
+              (acc, next, i) => (i !== index ? acc.plus(new BigNumber(next)) : acc),
+              new BigNumber(0)
+            );
+            const _remainingInTranche = new BigNumber(_remaining).minus(_sum).toString();
+            balanceInputSimulCopy[index] = _remainingInTranche;
+            setBalanceInputSimul(balanceInputSimulCopy);
+          } else {
+            balanceInputSimulCopy[index] = _remaining;
+            setBalanceInputSimul(balanceInputSimulCopy);
+          }
+        }
+      }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
       const { value } = e.target;
       if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
         const d = value.split(".");
         if (d.length === 2 && d[1].length > 18) {
           return;
         }
-
         const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];
         const _decimal = value.includes(".") ? "." : "";
         const _input2 = d[1]?.length > 0 ? d[1] : "";
-        setBalanceInput(_input1 + _decimal + _input2);
+        if (index !== undefined) {
+          const balanceInputSimulCopy = [...balanceInputSimul];
+          balanceInputSimulCopy[index] = _input1 + _decimal + _input2;
+          setBalanceInputSimul(balanceInputSimulCopy);
+        } else {
+          setBalanceInput(_input1 + _decimal + _input2);
+        }
       }
-      // const d = value.split(".");
-      // if (d.length === 2 && d[1].length === 18) {
-      //   return;
-      // }
-      // let input = Number(value);
-      // console.log(input);
-      // if (isNaN(input)) input = 0;
-      // setBalanceInput(input.toString());
     };
 
     const HandleDepositButton = () => (
@@ -347,7 +490,7 @@ const ApproveCard = memo<TProps>(
         <Button
           type="primary"
           css={{ height: 56 }}
-          onClick={handleDeposit}
+          onClick={() => (!depositMultipleSimultaneous ? handleDeposit() : handleDepositSimul())}
           loading={depositLoading}
           disabled={!enabled || isSoldOut || !balanceInput || data?.isRetired}
         >
@@ -358,58 +501,131 @@ const ApproveCard = memo<TProps>(
 
     return (
       <Container css={{ ...(isRe ? { padding: 24 } : {}) }}>
-        {/* {!enabled && <BlockDiv />} */}
-        {/* {isSoldOut && <BlockDiv />} */}
-        <RowDiv>
-          <div>
-            {isRe
-              ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
-              : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
-            :
-          </div>
-          <div>
-            {formatNumberSeparator(balance)} {assets}
-          </div>
-        </RowDiv>
-        <RowDiv>
-          <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
-          <div>
-            {formatNumberSeparator(remaining)} {assets}
-          </div>
-        </RowDiv>
-        {data.wrapAvax &&
-        balanceInput &&
-        Number(balanceInput) > 0 &&
-        Number(balanceInput.toString()) - Number(balance) > 0 ? (
-          <RowDiv>
-            <div>{intl.formatMessage({ defaultMessage: "AVAX Wrapped On Deposit:" })}</div>
+        {!depositMultipleSimultaneous ? (
+          <>
+            <RowDiv>
+              <div>
+                {isRe
+                  ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+                  : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+                :
+              </div>
+              <div>
+                {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)} {selectedDepositAsset}
+              </div>
+            </RowDiv>
+            <RowDiv>
+              <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
+              <div>
+                {formatNumberSeparator(remaining)} {selectedDepositAsset}
+              </div>
+            </RowDiv>
+            {data.wrapAvax &&
+            balanceInput &&
+            Number(balanceInput) > 0 &&
+            Number(balanceInput.toString()) - Number(balance) > 0 ? (
+              <RowDiv>
+                <div>{intl.formatMessage({ defaultMessage: "AVAX Wrapped On Deposit:" })}</div>
+                <div>
+                  {formatNumberSeparator((Number(balanceInput.toString()) - Number(balance)).toString())} AVAX to WAVAX
+                </div>
+              </RowDiv>
+            ) : null}
+            <Separator />
+            <RowDiv>
+              {data.isMulticurrency ? (
+                <div css={{ display: "flex" }}>
+                  {data.assets.map((a, i) => (
+                    <Button
+                      key={a}
+                      css={{
+                        color: tokenButtonColors[i],
+                        fontWeight: 400,
+                        marginRight: 15
+                      }}
+                      disabled={selectedDepositAsset === a}
+                      onClick={() => setSelectedDepositAsset(a)}
+                    >
+                      {a}
+                    </Button>
+                  ))}
+                  <Button css={{ color: "#1579FF" }} onClick={() => setDepositMultipleSimultaneous(true)}>
+                    Multi
+                  </Button>
+                </div>
+              ) : (
+                <div></div>
+              )}
+              <div css={{ color: tokenButtonColors[data.assets.indexOf(selectedDepositAsset)] }}>
+                {selectedDepositAsset}
+              </div>
+            </RowDiv>
             <div>
-              {formatNumberSeparator((Number(balanceInput.toString()) - Number(balance)).toString())} AVAX to WAVAX
+              <Input
+                // type="number"
+                style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
+                placeholder=""
+                // step={0.1}
+                // min={0}
+                value={balanceInput}
+                onChange={handleInputChange}
+                suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
+                disabled={!enabled || isSoldOut}
+              />
             </div>
-          </RowDiv>
+            <ValidateText>{!depositLoading && validateText}</ValidateText>
+            {Number(balanceInput.toString()) - Number(balance) > 0 ? (
+              <ValidateText>
+                Please make sure you have enough AVAX to wrap, or else the transaction will fail!
+              </ValidateText>
+            ) : null}
+          </>
         ) : null}
-        <Separator />
-        <RowDiv>
-          <div>{assets}</div>
-        </RowDiv>
 
-        <div>
-          <Input
-            // type="number"
-            style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
-            placeholder=""
-            // step={0.1}
-            // min={0}
-            value={balanceInput}
-            onChange={handleInputChange}
-            suffix={<Max onClick={handleMaxInput}>{intl.formatMessage({ defaultMessage: "MAX" })}</Max>}
-            disabled={!enabled || isSoldOut}
-          />
-        </div>
-        <ValidateText>{!depositLoading && validateText}</ValidateText>
-        {Number(balanceInput.toString()) - Number(balance) > 0 ? (
-          <ValidateText>Please make sure you have enough AVAX to wrap, or else the transaction will fail!</ValidateText>
-        ) : null}
+        {data.isMulticurrency && depositMultipleSimultaneous
+          ? data.assets.map((asset, index) => (
+              <div key={asset}>
+                <div css={{ marginTop: index !== 0 ? 50 : 0 }}>
+                  <RowDiv>
+                    <div>
+                      {isRe
+                        ? intl.formatMessage({ defaultMessage: "Total Roll-deposit Amount" })
+                        : intl.formatMessage({ defaultMessage: "Wallet Balance" })}
+                      :
+                    </div>
+                    <div>
+                      {formatNumberSeparator(numeral(multicurrencyBalances[index].balance).format("0,0.[0000]"))}{" "}
+                      {asset}
+                    </div>
+                  </RowDiv>
+                  <RowDiv>
+                    <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
+                    <div>
+                      {formatNumberSeparator(remainingSimul[index].remaining)} {asset}
+                    </div>
+                  </RowDiv>
+                  <RowDiv>
+                    <div>{asset}</div>
+                  </RowDiv>
+                  <Input
+                    style={!depositLoading && validateText ? { borderColor: tags.redText } : {}}
+                    placeholder=""
+                    value={balanceInputSimul[index]}
+                    onChange={(e) => {
+                      handleInputChange(e, index);
+                    }}
+                    suffix={
+                      <Max onClick={() => handleMaxInputSimul(index)}>
+                        {intl.formatMessage({ defaultMessage: "MAX" })}
+                      </Max>
+                    }
+                    disabled={!enabled || isSoldOut} //xyzzy
+                  />
+                </div>
+                <ValidateText>{!depositLoading && validateTextSimul[index]}</ValidateText>
+              </div>
+            ))
+          : null}
 
         {selectTranche && (
           <ImportantNotes>

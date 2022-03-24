@@ -2,7 +2,7 @@
 
 import styled from "@emotion/styled";
 import { useStakingPool } from "hooks/useStaking";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { StakingConfig } from "types";
 import { useWeb3React } from "@web3-react/core";
@@ -83,11 +83,7 @@ type TProps = WrappedComponentProps & {
 const StakeCard = memo<TProps>(({ intl, data }) => {
   const { account } = useWeb3React<Web3Provider>();
 
-  const { totalStaked, isPoolActive, totalLocked, userStaked } = useStakingPool(
-    data.rewardTokenAddress,
-    data.earningTokenAddress,
-    account
-  );
+  const { totalLocked, userStaked } = useStakingPool(data.rewardTokenAddress, data.earningTokenAddress, account);
   const earningTokenTotalSupply = useTotalSupply(data.earningTokenAddress);
   return (
     <Card>

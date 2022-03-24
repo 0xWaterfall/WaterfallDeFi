@@ -2,19 +2,14 @@ import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useAVAXTrancheMasterContract, useMasterchefContract, useTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
-import { DEFAULT_GAS_LIMIT } from "config";
-import BigNumber from "bignumber.js";
-import { BIG_TEN } from "utils/bigNumber";
+// import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
-import { getPosition, getTrancheBalance } from "store/position";
-import { useSelectedMarket } from "hooks/useSelectors";
-import { Market } from "types";
 import { getMarkets } from "store/markets";
 import { MarketList } from "config/market";
 
-const options = {
-  gasLimit: DEFAULT_GAS_LIMIT
-};
+// const options = {
+//   gasLimit: DEFAULT_GAS_LIMIT
+// };
 
 const redeem = async (contract: Contract, i: number) => {
   const tx = await contract.redeemDirect(i);

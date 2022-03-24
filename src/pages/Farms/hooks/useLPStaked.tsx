@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { abi as LPTokenAbi } from "config/abi/LPFake.json";
-import { abi as LPRewardsAbi } from "config/abi/WTFLPRewards.json";
 
 import useRefresh from "hooks/useRefresh";
 import BigNumber from "bignumber.js";
@@ -12,7 +10,7 @@ import { useLPRewardsContract } from "hooks/useContract";
 const useLPStaked = (LPRewardsAddress: string) => {
   const [stakedAmount, setStakedAmount] = useState("0");
   const { account } = useWeb3React<Web3Provider>();
-  const { slowRefresh, fastRefresh } = useRefresh();
+  const { fastRefresh } = useRefresh();
   const contract = useLPRewardsContract(LPRewardsAddress);
 
   const fetchBalance = useCallback(async () => {

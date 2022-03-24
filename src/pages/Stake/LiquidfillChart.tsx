@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useMemo } from "react";
 import * as echarts from "echarts/core";
@@ -9,7 +9,6 @@ import styled from "@emotion/styled";
 import "echarts-liquidfill";
 import { Union } from "assets/images";
 import Tooltip from "components/Tooltip/Tooltip";
-import { useSize } from "ahooks";
 
 const Wrapper = styled.div`
   width: 100%;

@@ -3,8 +3,7 @@ import { useWeb3React } from "@web3-react/core";
 
 import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
-import { useVeWTFContract, useWTFRewardsContract } from "hooks/useContract";
+import { useVeWTFContract } from "hooks/useContract";
 
 const unstake = async (contract: Contract, account: string) => {
   // const _amount = utils.parseEther(amount.toString()).toString();

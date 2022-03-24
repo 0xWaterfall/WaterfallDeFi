@@ -1,7 +1,7 @@
 import { getContract, getContract2, getSigner } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Market } from "types";
-import { AbiItem } from "web3-utils";
+// import { AbiItem } from "web3-utils";
 import BigNumber from "bignumber.js";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
@@ -46,6 +46,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
       const signer = getSigner();
       if (!signer) return [];
       const network: string = useNetwork();
+      // const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
 
       const _marketAddress = market.address;
       const calls = [

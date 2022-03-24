@@ -1,9 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useWeb3React } from "@web3-react/core";
+import { useEffect, useState } from "react";
 import { useVeWTFContract } from "hooks/useContract";
-import { useDispatch } from "react-redux";
-import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
 import useRefresh from "hooks/useRefresh";
 import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";

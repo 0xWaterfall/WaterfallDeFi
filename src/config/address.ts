@@ -134,8 +134,17 @@ export const MasterChefAddressTest2: { [network: string]: string } = {
 export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "9Ad6a4A86CAE27024F693C933488070a70b56f5E",
   [NETWORKS.TESTNET]: "8fac0A9CD6489EB1AF0E633ADcc540d4357E69c8",
-  [NETWORKS.MAINNET]: "e9e7cea3dedca5984780bafc599bd69add087d56"
+  [NETWORKS.MAINNET]: "0xe9e7cea3dedca5984780bafc599bd69add087d56"
 };
+//!!!
+//testing multicurrency with TUSD
+export const TUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x14016E85a25aeb13065688cAFB43044C2ef86784"
+};
+//^ testing multicurrency with TUSD
+
 export const WTFAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
@@ -316,4 +325,109 @@ export const MAXIMaximizerStrategyAddress: { [network: string]: string } = {
   //test
   // [NETWORKS.MAINNET]: "0x57c5a9808022aD244E1487F204A01349c90726f9"
   [NETWORKS.MAINNET]: "0x7D98423348Fa076FD07b0B2719Aa702302266c66"
+};
+//*TEST* multicurrency master tranche contract address
+export const MC_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x922aDd8AB5840417CE110A45078Fc5A59c79207a"
+};
+//multicurrency "masterChef" WTF staking address
+export const MC_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x40a85C94DC86A86863aE28053c452a7D977B842F"
+};
+//multicurrency ALPACA strategy BUSD lending vault address
+export const MC_sALPACA_BUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xc02B5BE37d8Ec687D2f22C88CF606538c945c932"
+};
+//multicurrency ALPACA strategy TUSD lending vault address
+export const MC_sALPACA_TUSDAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  // [NETWORKS.MAINNET]: "0x303892A3F5539904913F3C9aB594FB0E0C1b8b3F"
+  // March 1st
+  [NETWORKS.MAINNET]: "0x7CB2D1ac4a83d6CCCa8249232bF2f07CEa554646"
+};
+
+//*TEST* autoroll master tranche contract address
+export const AR_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xab137023B1174946E3BC71Eb92B9e4f835D799DE"
+};
+
+//autoroll master WTF contract address
+export const AR_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x4D7e45034cBEc72C0CEf58838A1a7a1B11Ce4a2B"
+};
+//autoroll ALPACA strategy BUSD lending vault address
+export const AR_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x2CAaE6be892212ff3C4AC7021EC35d2FF24D83Ee"
+};
+//autoroll VENUS strategy TUSD lending vault address
+export const AR_sVENUS_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x439c7413b05396a7313622A24A6D809fa6C52495"
+};
+
+export const BULL_BUSDBNB_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x8Db11C594122BD03d824188a83c36576E27c33C7"
+};
+export const BULL_USDTBNB_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x05cFA583db088661caF3741f114435d08C118437"
+};
+export const BULL_BNB_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x920d4dB1232c08f52710B48B9aD2FF99a28aDC5a"
+};
+export const BULL_BNB_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xb9F79fEa374d191E3Ddf3E6E46243E999b20f786"
+};
+
+export const BEAR_BNBBUSD_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x317302610ab044Ba3151eb7202079d73e5d0534C"
+};
+export const BEAR_BNBUSDT_sALPACA_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x875fb36Af9B33b15b1e3BcAE480e655d23036275"
+};
+export const BEAR_BNB_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xe53e38F14363212fB3B3f596C1Dc51003d3a2Be7"
+};
+export const BEAR_BNB_WTFMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x67169f619C60399EEa18FFa0F0C57866eAbFE69B"
+};
+
+export const WBNB_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+};
+export const USDT_Address: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x55d398326f99059ff775485246999027b3197955"
 };

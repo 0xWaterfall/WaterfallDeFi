@@ -10,6 +10,7 @@ import Tooltip from "components/Tooltip/Tooltip";
 import { useWeeklyReward, useWTF } from "hooks";
 import { formatNumberSeparator } from "utils/formatNumbers";
 import numeral from "numeral";
+// import { useWTF } from "hooks";
 
 type TProps = WrappedComponentProps;
 
@@ -30,6 +31,7 @@ const Claim = memo<TProps>(({ intl }) => {
   const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
   const weeklyReward = useWeeklyReward();
   console.log("weeklyReward", weeklyReward);
+
   return (
     <div
       css={{

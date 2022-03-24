@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { useMarkets } from "hooks/useSelectors";
 import { useTotalTvl } from "hooks";
 
 const Wrapper = styled.div`

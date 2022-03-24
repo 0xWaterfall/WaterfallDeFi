@@ -5,7 +5,7 @@ import useRefresh from "./useRefresh";
 
 export const useEstimateYield = (principal: string, trancheAPY: string, startAt: number, isActiveCycle: boolean) => {
   const [estYield, setEstYield] = useState("");
-  const { slowRefresh, fastRefresh } = useRefresh();
+  const { fastRefresh } = useRefresh();
   useEffect(() => {
     if (isActiveCycle) {
       const now = Math.floor(Date.now() / 1000);

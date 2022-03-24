@@ -7,11 +7,9 @@ import Separator from "components/Separator/Separator";
 import { useTheme } from "@emotion/react";
 import { Market, Tranche } from "types";
 import {
-  formatAPY,
   formatAllocPoint,
   formatTVL,
   formatNumberSeparator,
-  getJuniorAPY,
   getRemaining,
   compareNum,
   getPercentage,
@@ -19,21 +17,23 @@ import {
 } from "utils/formatNumbers";
 import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
-import { useWTFPrice } from "hooks/useSelectors";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useWTF } from "hooks";
+import { BigNumber } from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   color?: string;
+  selectedDepositAsset: string;
   type: "Senior" | "Mezzanine" | "Junior";
   tranche: Tranche;
   // pool: Pool;
   totalAllocPoint: string | undefined;
   trancheIndex: number;
-  assets: string;
+  assets: string[];
   selected: boolean;
   data: Market;
   allocPoint: string;
+  remaining: string;
 };
 
 type ProgressBarProps = {
@@ -95,23 +95,23 @@ const SoldOut = styled.div`
   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   z-index: 11;
 `;
-const ComingSoon = styled.div`
-  font-size: 14px;
-  width: 100px;
-  height: 30px;
-  border: 2px solid ${({ theme }) => theme.tags.redText};
-  color: ${({ theme }) => theme.tags.redText};
-  box-sizing: border-box;
-  border-radius: 4px;
-  transform: rotate(-30deg);
-  position: absolute;
-  left: -20px;
-  top: -9px;
-  text-align: center;
-  line-height: 30px;
-  background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
-  z-index: 11;
-`;
+// const ComingSoon = styled.div`
+//   font-size: 14px;
+//   width: 100px;
+//   height: 30px;
+//   border: 2px solid ${({ theme }) => theme.tags.redText};
+//   color: ${({ theme }) => theme.tags.redText};
+//   box-sizing: border-box;
+//   border-radius: 4px;
+//   transform: rotate(-30deg);
+//   position: absolute;
+//   left: -20px;
+//   top: -9px;
+//   text-align: center;
+//   line-height: 30px;
+//   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
+//   z-index: 11;
+// `;
 const Container = styled.div`
   padding: 20px;
   height: 100%;
@@ -159,7 +159,19 @@ const ProgressBar = styled.div<ProgressBarProps>`
 `;
 
 const TranchesCard = memo<TProps>(
-  ({ intl, type, tranche, totalAllocPoint, assets, selected, data, allocPoint, trancheIndex }) => {
+  ({
+    selectedDepositAsset,
+    intl,
+    type,
+    tranche,
+    totalAllocPoint,
+    assets,
+    selected,
+    data,
+    allocPoint,
+    trancheIndex,
+    remaining
+  }) => {
     const { tags, primary, gray } = useTheme();
     const Types = {
       Senior: {
@@ -178,7 +190,18 @@ const TranchesCard = memo<TProps>(
         riskText: "Multiple Leverage ; Variable"
       }
     };
-    const isSoldout = useMemo(() => compareNum(tranche.principal, tranche.target), [tranche.principal, tranche.target]);
+    const isSoldout = useMemo(
+      () =>
+        !data.autorollImplemented
+          ? compareNum(tranche.principal, tranche.target)
+          : compareNum(
+              new BigNumber(tranche.autoPrincipal ? tranche.autoPrincipal : "0")
+                .plus(new BigNumber(tranche.principal))
+                .toString(),
+              tranche.target
+            ),
+      [tranche.principal, tranche.target, tranche.autoPrincipal]
+    );
     const trancheApr = tranche.apy;
     // const wtfPrice = useWTFPrice();
     const { price: wtfPrice } = useWTFPriceLP();
@@ -217,13 +240,25 @@ const TranchesCard = memo<TProps>(
           <Separator margin={15} />
           <StatusDiv>
             <Text3>
-              TVL: {formatNumberSeparator(formatTVL(tranche.principal))} {assets}
+              TVL: $
+              {formatNumberSeparator(
+                !data.autorollImplemented
+                  ? formatTVL(tranche.principal)
+                  : formatTVL((Number(tranche.principal) + Number(tranche.autoPrincipal)).toString())
+              )}{" "}
             </Text3>
             <Text4>
-              Remaining: {getRemaining(tranche?.target, tranche?.principal)} {assets}
+              Remaining: {remaining} {selectedDepositAsset}
             </Text4>
           </StatusDiv>
-          <ProgressBar color={Types[type].color} percentage={getPercentage(tranche.principal, tranche.target)} />
+          <ProgressBar
+            color={Types[type].color}
+            percentage={
+              !data.autorollImplemented
+                ? getPercentage(tranche.principal, tranche.target)
+                : getPercentage((Number(tranche.principal) + Number(tranche.autoPrincipal)).toString(), tranche.target)
+            }
+          />
         </div>
       </Container>
     );

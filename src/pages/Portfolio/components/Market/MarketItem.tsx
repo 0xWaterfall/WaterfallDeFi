@@ -2,7 +2,7 @@
 
 import { useTheme } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import Button from "components/Button/Button";
@@ -10,18 +10,9 @@ import Tag from "components/Tag/Tag";
 import Tooltip from "components/Tooltip/Tooltip";
 import { Union, WTFToken } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
-import {
-  formatAllocPoint,
-  formatAPY,
-  formatDisplayTVL,
-  formatNumberSeparator,
-  getJuniorAPY,
-  getLockupPeriod,
-  getWTFApr
-} from "utils/formatNumbers";
-import { useMarket, useWTF } from "hooks";
+import { formatAllocPoint, formatNumberSeparator, getLockupPeriod, getWTFApr } from "utils/formatNumbers";
+import { useWTF } from "hooks";
 import Coin from "components/Coin";
-import Column from "antd/lib/table/Column";
 import Countdown from "react-countdown";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useDispatch } from "react-redux";
@@ -163,7 +154,12 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Asset" })}</div>
         <div style={{ display: "flex" }}>
-          <Coin size={18} assetName={marketData.assets} /> <div css={{ paddingLeft: 10 }}>{marketData.assets}</div>
+          {marketData.assets.map((coin, i) => (
+            <div key={i} style={{ paddingRight: "5px" }}>
+              <Coin size={18} assetName={coin} />
+            </div>
+          ))}
+          {marketData.assets.map((coin, i) => (i === marketData.assets.length - 1 ? coin + "" : coin + " / "))}
         </div>
       </RowDiv>
       <RowDiv>
@@ -219,9 +215,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
-        <div>
-          {formatNumberSeparator(marketData.tvl)} {marketData.assets}
-        </div>
+        <div>${formatNumberSeparator(marketData.tvl)}</div>
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>

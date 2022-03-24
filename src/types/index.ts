@@ -1,4 +1,3 @@
-import { AbiItem } from "web3-utils";
 import { Contract } from "web3-eth-contract";
 
 export const PORTFOLIO_STATUS = {
@@ -11,6 +10,8 @@ export interface Tranche {
   fee: string;
   principal: string;
   target: string;
+  autoPrincipal?: string;
+  validPercent?: string;
 }
 export interface Invest {
   cycle: string;
@@ -42,15 +43,19 @@ export interface FarmConfig {
 
 export interface Market {
   portfolio: string;
-  assets: string;
   isAvax: boolean;
   wrapAvax?: boolean;
+  autorollImplemented: boolean;
+  isMulticurrency: boolean;
+  assets: string[];
+  tokens: Token[];
   listingDate: string;
   // lockupPeriod: string;
   duration?: string;
   actualStartAt?: string;
   cycle?: string;
   tranches: Tranche[];
+  trancheInvests?: { type: "BigNumber"; hex: string }[][];
   totalTranchesTarget: string;
   tvl: string;
   status: string;
@@ -65,6 +70,7 @@ export interface Market {
   // pools: Pool[];
   totalAllocPoints?: string;
   depositAssetAddress: string;
+  depositAssetAddresses: string[];
   depositAssetAbi: any;
   depositAssetContract?: Contract;
   // strategyAbi: any;
@@ -75,6 +81,11 @@ export interface Market {
   subgraphURL: string;
   isRetired?: boolean;
 }
+export type Token = {
+  addr: string;
+  strategy: string;
+  percent: { type: "BigNumber"; hex: string };
+};
 export type StrategyFarm = {
   farmName: string;
   shares: number;
@@ -104,4 +115,11 @@ export type UserInvest = {
   tranche: number;
   interest: string;
   earningsAPY: string;
+  MCprincipal?: string[];
+};
+
+export type EthersCall = {
+  address: string;
+  name: string;
+  params: any[];
 };

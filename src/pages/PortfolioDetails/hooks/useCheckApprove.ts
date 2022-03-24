@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useERC20Contract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
-import { DEFAULT_GAS_LIMIT } from "config";
+// import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
 import BigNumber from "bignumber.js";
-const options = {
-  gasLimit: DEFAULT_GAS_LIMIT
-};
+// const options = {
+//   gasLimit: DEFAULT_GAS_LIMIT
+// };
 
 const checkApprove = async (contract: Contract, trancheMasterAddress: string, account: string) => {
   const tx = await contract.allowance(account, trancheMasterAddress);
@@ -24,6 +24,25 @@ const useCheckApprove = (approveTokenAddress: string, trancheMasterAddress: stri
   }, [account, dispatch, contract, approveTokenAddress]);
 
   return { onCheckApprove: handleCheckApprove };
+};
+
+export const useCheckApproveAll = (approveTokenAddresses: string[], trancheMasterAddress: string) => {
+  const dispatch = useDispatch();
+  const { account } = useWeb3React();
+  const contracts = approveTokenAddresses.map((a, i) => useERC20Contract(a));
+
+  const handleCheckApproveAll = useCallback(async () => {
+    if (account) {
+      for (let i = 0; i < approveTokenAddresses.length; i++) {
+        console.log("token approval " + i);
+        const approved = await checkApprove(contracts[i], trancheMasterAddress, account);
+        if (!approved) return false;
+      }
+      return true;
+    }
+  }, [account, dispatch, contracts, approveTokenAddresses]);
+
+  return { onCheckApproveAll: handleCheckApproveAll };
 };
 
 export default useCheckApprove;

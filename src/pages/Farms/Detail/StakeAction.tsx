@@ -160,7 +160,6 @@ const StakeAction = memo<TProps>(({ intl, farm }) => {
     };
     if (account) checkApproved(account);
   }, [account]);
-  console.log(actived);
   const validateText = useMemo(() => {
     let inputBalance = "";
     if (actived === "STAKE") inputBalance = lpTokenActualBalance;

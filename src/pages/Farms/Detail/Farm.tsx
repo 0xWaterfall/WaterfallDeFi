@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import styled from "@emotion/styled";
-import { ArrowLeft, ChevronLeft } from "assets/images";
+import { ChevronLeft } from "assets/images";
 import Farms from "config/farms";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router";
 import { useParams } from "react-router-dom";

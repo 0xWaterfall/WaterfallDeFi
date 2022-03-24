@@ -58,4 +58,19 @@ const useApprove = (approveTokenAddress: string, masterChefAddress: string) => {
   return { onApprove: handleApprove };
 };
 
+export const useMultiApprove = (approveTokenAddresses: string[], masterChefAddress: string) => {
+  const dispatch = useDispatch();
+  const { account } = useWeb3React();
+  const contracts = approveTokenAddresses.map((a, i) => useERC20Contract(a));
+  const handleMultiApprove = useCallback(async () => {
+    if (account) {
+      for (let i = 0; i < contracts.length; i++) {
+        await approve(contracts[i], masterChefAddress, dispatch);
+      }
+    }
+  }, [account, dispatch, approveTokenAddresses, contracts]);
+
+  return { onMultiApprove: handleMultiApprove };
+};
+
 export default useApprove;

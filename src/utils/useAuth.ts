@@ -14,6 +14,7 @@ import { connectorsByName } from "utils/web3React";
 
 import { setupNetwork } from "utils/wallet";
 import { ConnectorNames } from "schemas/enum";
+import { useAppDispatch } from "store";
 
 const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
 

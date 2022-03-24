@@ -3,7 +3,7 @@
 import { ClassNames, useTheme } from "@emotion/react";
 import { DarkIcon, I18n, LightIcon } from "assets/images";
 import Dropdown from "components/Dropdown/Dropdown";
-import React, { memo } from "react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useAppDispatch, useAppSelector } from "store";
 import { fetchI18nMiddleware } from "store/i18n";
@@ -51,7 +51,7 @@ const ThemeIcon = styled.div`
 
 type TProps = WrappedComponentProps;
 
-const ActionIconGroup = memo<TProps>(({ intl, ...props }) => {
+const ActionIconGroup = memo<TProps>(({ ...props }) => {
   const { gray, white, useColorModeValue } = useTheme();
 
   const dispatch = useAppDispatch();

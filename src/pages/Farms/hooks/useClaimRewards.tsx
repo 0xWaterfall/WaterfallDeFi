@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useLPRewardsContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
-import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
 import { setConfirmModal } from "store/showStatus";
 import { Dispatch } from "redux";

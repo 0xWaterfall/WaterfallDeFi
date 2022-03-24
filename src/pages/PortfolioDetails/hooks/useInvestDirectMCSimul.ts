@@ -1,15 +1,18 @@
 import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
-import { useLPRewardsContract } from "hooks/useContract";
+import { useMulticurrencyTrancheMasterContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
 import { Contract } from "@ethersproject/contracts";
-import { utils } from "ethers";
+import { utils, BigNumber } from "ethers";
+import { getMarkets } from "store/markets";
+import { MarketList } from "config/market";
 import { setConfirmModal } from "store/showStatus";
 import { Dispatch } from "redux";
 
-const stake = async (contract: Contract, amount: string, dispatch: Dispatch<any>) => {
-  const _amount = utils.parseEther(amount).toString();
-  const tx = await contract.stake(_amount);
+const _invest = async (contract: Contract, amount: string[], selectTrancheIdx: string, dispatch: Dispatch<any>) => {
+  const _amount = amount.map((a) => BigNumber.from(utils.parseEther(a).toString()).toString());
+  const tx = await contract.investDirect(selectTrancheIdx, _amount, _amount);
+
   dispatch(
     setConfirmModal({
       isOpen: true,
@@ -40,22 +43,25 @@ const stake = async (contract: Contract, amount: string, dispatch: Dispatch<any>
       })
     );
   }
+
   return receipt.status;
 };
 
-const useStake = (LPRewardsAddress: string) => {
+const useInvestDirectMCSimul = (trancheMasterAddress: string) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
-  const contract = useLPRewardsContract(LPRewardsAddress);
-  const handleStake = useCallback(
-    async (amount: string) => {
-      const result = await stake(contract, amount, dispatch);
+  const contract: Contract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
+
+  const handleInvestDirectMCSimul = useCallback(
+    async (amount: string[], selectTrancheIdx: string) => {
+      const result = await _invest(contract, amount, selectTrancheIdx, dispatch);
+      dispatch(getMarkets(MarketList));
       return result;
     },
     [account, dispatch, contract]
   );
 
-  return { onStake: handleStake };
+  return { onInvestDirectMCSimul: handleInvestDirectMCSimul };
 };
 
-export default useStake;
+export default useInvestDirectMCSimul;

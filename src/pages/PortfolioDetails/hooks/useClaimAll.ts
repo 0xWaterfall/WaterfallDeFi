@@ -2,18 +2,13 @@ import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useMasterchefContract } from "hooks/useContract";
 import { useDispatch } from "react-redux";
-import { DEFAULT_GAS_LIMIT } from "config";
-import BigNumber from "bignumber.js";
-import { BIG_TEN } from "utils/bigNumber";
+// import { DEFAULT_GAS_LIMIT } from "config";
 import { Contract } from "@ethersproject/contracts";
-import { getPendingWTFReward, getTrancheBalance } from "store/position";
 import { Dispatch } from "redux";
 import { setConfirmModal } from "store/showStatus";
-import { MasterChefAddress } from "config/address";
-import { utils } from "ethers";
-const options = {
-  gasLimit: DEFAULT_GAS_LIMIT
-};
+// const options = {
+//   gasLimit: DEFAULT_GAS_LIMIT
+// };
 
 const claim = async (
   masterChefContract: Contract,

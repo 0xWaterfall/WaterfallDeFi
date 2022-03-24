@@ -4,10 +4,10 @@ import useRefresh from "./useRefresh";
 import { getContract } from "hooks";
 import PancakeLPAbi from "config/abi/PancakeLP.json";
 import { NETWORK, NETWORKS } from "config";
-import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD, WTFAddress } from "config/address";
 import { abi as WTFAbi } from "config/abi/WTF.json";
 import { BIG_TEN } from "utils/bigNumber";
 import { getPrice, getWTFSupply } from "services/http";
+import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD } from "config/address";
 
 export const useWTFPriceLP = () => {
   const [price, setPrice] = useState("");

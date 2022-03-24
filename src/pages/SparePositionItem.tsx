@@ -1,38 +1,23 @@
 /** @jsxImportSource @emotion/react */
 
-import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useMemo } from "react";
+// import { useTheme } from "@emotion/react";
+import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Button from "components/Button/Button";
 import { useState } from "react";
-import Select, { Option } from "components/Select/Select";
-import { Table, TableColumn, TableHeaderColumn, TableRow } from "components/Table/Table";
-import { CaretDown, Union } from "assets/images";
-import Tooltip from "components/Tooltip/Tooltip";
+import { TableColumn, TableRow } from "components/Table/Table";
+import { CaretDown } from "assets/images";
 import styled from "@emotion/styled";
-import {
-  formatAllocPoint,
-  formatNumberDisplay,
-  formatNumberWithDecimalsDisplay,
-  formatTimestamp,
-  getWTFApr
-} from "utils/formatNumbers";
+import { formatAllocPoint, formatTimestamp, getWTFApr } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
 import { Market, PORTFOLIO_STATUS, TrancheCycle, UserInvest } from "types";
 import Tag from "components/Tag/Tag";
-import NoData from "components/NoData/NoData";
-import { IType } from "./Portfolio/components/MyPortfolio/type";
 import SparePositionFold from "./SparePositionFold";
 // import { usePendingWTFReward, useWTFPrice } from "hooks/useSelectors";
 
 import numeral from "numeral";
-import { dataTool } from "echarts/core";
-import useInvest from "./PortfolioDetails/hooks/useInvest";
-import { BIG_TEN } from "utils/bigNumber";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { useEstimateYield } from "hooks/useEstimateYield";
 import { usePendingWTFReward } from "hooks";
-import { STATUS_CODES } from "http";
 
 const Wrapper = styled.div``;
 
@@ -145,20 +130,32 @@ type TProps = WrappedComponentProps & {
 };
 
 const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle }) => {
-  const { gray, primary, shadow, linearGradient, white } = useTheme();
+  // const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
   const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress);
   let totalAmount = userInvest.principal;
-  if (userInvest.capital !== "0") totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
+  const totalAmounts = userInvest.MCprincipal ? userInvest.MCprincipal : [];
+
+  if (userInvest.capital !== "0") {
+    totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
+  }
 
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
   const isActiveCycle = market && Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;
-  const estimateYield = useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle);
+  //write a new useEstimateYield hook for multicurrency
+  const estimateYield = !market.isMulticurrency
+    ? useEstimateYield(userInvest.principal, trancheAPY, trancheCycle?.startAt, isActiveCycle)
+    : "";
+  const multicurrencyEstimateYield =
+    market.isMulticurrency && userInvest.MCprincipal
+      ? userInvest.MCprincipal.map((p) => useEstimateYield(p, trancheAPY, trancheCycle?.startAt, isActiveCycle))
+      : [];
+
   if (isActiveCycle && isCurrentCycle)
     totalAmount = numeral(new BigNumber(userInvest.principal).plus(new BigNumber(estimateYield)).toString()).format(
       "0,0.[0000]"
@@ -176,6 +173,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
 
   const netAPY = wtfAPY !== "-" ? Number(trancheAPY) + Number(numeral(wtfAPY).value()) : trancheAPY;
   // console.log(+trancheCycle?.startAt + +Number(market?.duration));
+
   return (
     <Wrapper>
       <TableRowWrapper
@@ -183,13 +181,27 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           setFold((fold) => !fold);
         }}
       >
-        <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}>
-          {market?.portfolio}
+        <TableColumnWrapper
+          content={intl.formatMessage({ defaultMessage: "Portfolio Name" })}
+          css={{ flexWrap: "wrap", alignContent: "center" }}
+        >
+          {market?.portfolio.split(" ").map((w, i) => (
+            <span key={i} css={{ margin: "0 0 2px 5px" }}>
+              {w}
+            </span>
+          ))}
         </TableColumnWrapper>
         <TableColumnWrapper minWidth={60} content={intl.formatMessage({ defaultMessage: "Asset" })}>
-          {market?.assets}
+          <div>
+            {market?.assets.map((a) => (
+              <div key={a} css={{ marginBottom: 5 }}>
+                {a}
+                <br />
+              </div>
+            ))}
+          </div>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={200} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
+        <TableColumnWrapper minWidth={180} content={intl.formatMessage({ defaultMessage: "Cycle" })}>
           <CycleWrapper>
             {trancheCycle && trancheCycle?.state !== 0 ? (
               <>
@@ -211,12 +223,12 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             )}
           </CycleWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={80} content={intl.formatMessage({ defaultMessage: "Tranche" })}>
+        <TableColumnWrapper minWidth={60} content={intl.formatMessage({ defaultMessage: "Tranche" })}>
           <div css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             {tranchesDisplayText[userInvest.tranche]}
           </div>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={160} content={intl.formatMessage({ defaultMessage: "APR" })}>
+        <TableColumnWrapper minWidth={140} content={intl.formatMessage({ defaultMessage: "APR" })}>
           <APRWrapper css={{ color: COLORS[tranchesDisplayText[userInvest.tranche]] }}>
             <div>
               <section>
@@ -234,8 +246,24 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
             </div>
           </APRWrapper>
         </TableColumnWrapper>
-        <TableColumnWrapper minWidth={150} content={intl.formatMessage({ defaultMessage: "Principal" })}>
-          {userInvest.principal} {market?.assets}
+        <TableColumnWrapper
+          minWidth={130}
+          content={intl.formatMessage({ defaultMessage: "Principal" })}
+          css={{ flexDirection: "column", alignContent: "center", justifyContent: "center" }}
+        >
+          {!market?.isMulticurrency ? (
+            <span>
+              {userInvest.principal + " "}
+              {market?.assets}
+            </span>
+          ) : userInvest.MCprincipal ? (
+            userInvest.MCprincipal.map((p, i) => (
+              <span key={i} css={{ marginBottom: 5 }}>
+                {p + " "}
+                {market?.assets[i]}
+              </span>
+            ))
+          ) : null}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Status" })}>
           {trancheCycle?.state === 0 && <Tag color="yellow" value="Pending"></Tag>}
@@ -250,12 +278,30 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           {trancheCycle?.state === 2 && <Tag color="red" value="Matured"></Tag>}
         </TableColumnWrapper>
         <TableColumnWrapper content={intl.formatMessage({ defaultMessage: "Yield" })}>
-          {trancheCycle?.state !== 2 && estimateYield}
-          {trancheCycle?.state === 2 && userInvest.interest} {market?.assets}
+          {trancheCycle?.state !== 2 && !market.isMulticurrency ? estimateYield : null}
+          {trancheCycle?.state !== 2 && market.isMulticurrency ? (
+            <div css={{ display: "flex", flexDirection: "column" }}>
+              {multicurrencyEstimateYield.map((y, i) => (
+                <div key={i}>
+                  {y} {market.assets[i]}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          {trancheCycle?.state === 2 ? (
+            <div css={{ display: "flex", flexDirection: "column" }}>
+              {market?.assets.map((a) => (
+                <div key={a} css={{ marginBottom: 5 }}>
+                  {userInvest.interest} {a}
+                  <br />
+                </div>
+              ))}
+            </div>
+          ) : null}
           {/* {trancheCycle?.rate} */}
         </TableColumnWrapper>
         <TableColumnWrapper>
-          <CaretDownWrapper>
+          <CaretDownWrapper css={{ marginLeft: 50 }}>
             <CaretDown
               css={{
                 transition: "transform 0.3s",
@@ -269,6 +315,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
       {isfold && (
         <SparePositionFold
           totalAmount={totalAmount}
+          totalAmounts={totalAmounts}
           assets={market?.assets}
           isCurrentCycle={isCurrentCycle}
           // redeemDirect={redeemDirect}
@@ -280,6 +327,8 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           fee={market.tranches[userInvest.tranche].fee}
           trancheMasterAddress={market.address}
           isAvax={market.isAvax}
+          isMulticurrency={market.isMulticurrency}
+          autorollImplemented={market.autorollImplemented}
         />
       )}
     </Wrapper>

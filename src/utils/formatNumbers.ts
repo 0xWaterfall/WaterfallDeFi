@@ -1,10 +1,7 @@
 import BigNumber from "bignumber.js";
-import { Pool, Tranche } from "types";
-import Web3 from "web3";
+import { Tranche } from "types";
 import { BIG_TEN } from "./bigNumber";
-import moment from "moment";
 import dayjs from "dayjs";
-import { compose } from "redux";
 import numeral from "numeral";
 import { BLOCK_TIME } from "config";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
@@ -142,9 +139,9 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   let expectedAPY = new BigNumber("210000000000000000").dividedBy(BIG_TEN.pow(decimals));
   expectedAPY = expectedAPY.plus(new BigNumber(1));
   const juniorTVL = new BigNumber(tranches[tranches.length - 1].target).dividedBy(BIG_TEN.pow(decimals));
-  const _duration = new BigNumber(86400 * 7);
-  const _durationYear = new BigNumber(365 * 86400);
-  const durationInYear = _duration.dividedBy(_durationYear);
+  // const _duration = new BigNumber(86400 * 7);
+  // const _durationYear = new BigNumber(365 * 86400);
+  // const durationInYear = _duration.dividedBy(_durationYear);
 
   tranches.map((_t, _i) => {
     const _target = new BigNumber(_t.target).dividedBy(BIG_TEN.pow(decimals));
@@ -159,7 +156,7 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
     let _apy = new BigNumber(_t.apy).dividedBy(BIG_TEN.pow(decimals));
     _apy = _apy.plus(new BigNumber(1));
     const _target = new BigNumber(_t.target).dividedBy(BIG_TEN.pow(decimals));
-    const _result = _target.times(_apy);
+    // const _result = _target.times(_apy);
     totalTarget = totalTarget.minus(_apy.times(_target));
   });
   totalTarget = totalTarget.dividedBy(juniorTVL);
@@ -171,32 +168,41 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   return result !== "NaN" ? result + "%" : "- -";
 };
 export const getRemaining = (target: string | undefined, principal: string | undefined, decimals = 18) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
+  if (target === undefined) return { remaining: "", remainingExact: "" };
+  if (principal === undefined) return { remaining: "", remainingExact: "" };
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
 
   const result = _target.minus(_principal);
 
-  // return result.toString();
-  // return result.toFormat(18).toString();
-  return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
-  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return {
+    remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),
+    remainingExact: result.toFormat(18).toString()
+  };
 };
-export const getRemaining2 = (target: string | undefined, principal: string | undefined, decimals = 18) => {
-  if (target === undefined) return "";
-  if (principal === undefined) return "";
+export const getRemainingMulticurrency = (
+  target: string | undefined,
+  principal: string | undefined,
+  remainingDepositable: BigNumber,
+  decimals = 18
+) => {
+  if (target === undefined) return { remaining: "", remainingExact: "", depositableOrInTranche: "" };
+  if (principal === undefined) return { remaining: "", remainingExact: "", depositableOrInTranche: "" };
 
   const _target = new BigNumber(target);
   const _principal = new BigNumber(principal);
+  const _remainingDepositable = remainingDepositable;
 
-  const result = _target.minus(_principal);
+  const remainingInTranche = _target.minus(_principal);
+  const depositableOrInTranche = _remainingDepositable < remainingInTranche ? "depositable" : "inTranche";
+  const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
 
-  // return result.toString();
-  return result.toFormat(18).toString();
-  // return numeral(result.toFormat(4).toString()).format("0,0.[0000]");
-  // .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  return {
+    remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),
+    remainingExact: result.toFormat(decimals).toString(),
+    depositableOrInTranche: depositableOrInTranche
+  };
 };
 export const compareNum = (num1: string | number | undefined, num2: string | undefined, largerOnly = false) => {
   if (num1 === undefined) return;
@@ -285,8 +291,8 @@ export const getNetApr = (
   trancheAPY = trancheAPY.replace("%", "");
   const _wtfAPY = getWTFApr(wtfAPY, tranche, duration, rewardPerBlock, wtfPrice);
   wtfAPY = wtfAPY.replace("+ ", "");
-  const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
-  const fee = new BigNumber(tranche.fee).dividedBy(1000).toString();
+  // const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
+  // const fee = new BigNumber(tranche.fee).dividedBy(1000).toString();
 
   return Number(trancheAPY) + Number(_wtfAPY);
 };

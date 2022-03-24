@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
@@ -20,14 +20,38 @@ type TProps = WrappedComponentProps;
 
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
+
   const market = useSelectedMarket();
+  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
+  useEffect(() => {
+    market && setSelectedDepositAsset(market.assets[0]);
+  }, [market]);
+  const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
   return (
     <PortfolioDetailsWrapper>
       {market && (
         <>
-          <Information data={market} />
-          <Charts data={market} />
-          <ContentCD data={market} />
+          <Information
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
+          />
+          <Charts
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
+          />
+          <ContentCD
+            data={market}
+            selectedDepositAsset={selectedDepositAsset}
+            setSelectedDepositAsset={setSelectedDepositAsset}
+            depositMultipleSimultaneous={depositMultipleSimultaneous}
+            setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
+          />
         </>
       )}
     </PortfolioDetailsWrapper>

@@ -1,7 +1,5 @@
-import { getContract } from "hooks";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Market, Pool, PORTFOLIO_STATUS, Tranche } from "types";
-import Web3 from "web3";
+import { EthersCall, Market, PORTFOLIO_STATUS, Token, Tranche } from "types";
 import BigNumber from "bignumber.js";
 import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
@@ -12,7 +10,6 @@ import { useWTFPrice } from "hooks/useSelectors";
 import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 import { getFarmsAPY } from "services/http";
 import numeral from "numeral";
-import { lte } from "lodash";
 
 const initialState: Market[] = [];
 const calculateJuniorAPY = (tranches: Tranche[], totalTarget: BigNumber, juniorTarget: BigNumber, decimals = 18) => {
@@ -32,13 +29,16 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
   try {
     // if (!Web3.givenProvider) return;
     const _payload: Market[] = JSON.parse(JSON.stringify(payload));
-    const _tt1 = Date.now();
+    // const _tt1 = Date.now();
     const farmsAPYResult = await getFarmsAPY();
 
     const markets = await Promise.all(
       _payload.map(async (marketData, marketId) => {
         const _marketAddress = marketData.address;
-        const calls = [
+        const tokenCalls = !marketData.isMulticurrency
+          ? []
+          : marketData.assets.map((a, i) => ({ address: _marketAddress, name: "tokens", params: [i] }));
+        const callsBasic = [
           {
             address: _marketAddress,
             name: "tranches",
@@ -71,6 +71,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             name: "cycle"
           }
         ];
+        const calls = [...callsBasic, ...tokenCalls];
         // const venusAPY = await getVenusAPY();
         // const creamAPY = await getCreamAPY();
         // const apacaAPY = 0.136;
@@ -92,11 +93,14 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        const [t0, t1, t2, active, duration, actualStartAt, cycle] = !marketData.isAvax
+        const [t0, t1, t2, active, duration, actualStartAt, cycle, ...tokens] = !marketData.isAvax
           ? await multicallBSC(marketData.abi, calls)
           : await multicall(marketData.abi, calls);
         // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
         const _tranches = [t0, t1, t2];
+        const tokenObjs = tokens.map((t: any) => {
+          return { addr: t[0], strategy: t[1], percent: t[2] };
+        });
         let totalTranchesTarget = BIG_ZERO;
         let tvl = BIG_ZERO;
         let totalTarget = BIG_ZERO;
@@ -112,6 +116,8 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         totalTarget = totalTarget.times(expectedAPY);
         _tranches.map((_t, _i) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
@@ -121,9 +127,11 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
               : calculateJuniorAPY(tranches, totalTarget, _target);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
-          tvl = tvl.plus(_principal);
+          tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);
           const __t = {
             principal: _principal.toString(),
+            autoPrincipal: _autoPrincipal.toString(),
+            validPercent: _validPercent.toString(),
             apy: _apy.toString(),
             fee: _fee.toString(),
             target: _target.toString()
@@ -133,10 +141,11 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         const status = active[0] ? PORTFOLIO_STATUS.ACTIVE : PORTFOLIO_STATUS.PENDING;
 
         const originalDuration = duration.toString();
-        const hackDuration = new BigNumber(duration).plus(86400).toString();
+        // const hackDuration = new BigNumber(duration).plus(86400).toString();
         marketData = {
           ...marketData,
           tranches,
+          tokens: tokenObjs,
           // duration: duration.toString(),
           duration: originalDuration,
           actualStartAt: actualStartAt.toString(),
@@ -181,6 +190,33 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         });
         // const totalAllocPoints = getTotalAllocPoints(pools);
         marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
+        if (marketData.isMulticurrency) {
+          const trancheInvestCalls = marketData.depositAssetAddresses.map((addr: string) => [
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 0, addr]
+            },
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 1, addr]
+            },
+            {
+              address: _marketAddress,
+              name: "trancheInvest",
+              params: [cycle[0], 2, addr]
+            }
+          ]);
+          const calls3 = trancheInvestCalls.reduce((acc: EthersCall[], next: EthersCall[]) => [...acc, ...next], []);
+          const trancheInvestsRes = await multicall(marketData.abi, calls3);
+          const trancheInvestsResUnpacked = trancheInvestsRes.map((res: BigNumber[]) => res[0]);
+          const trancheCount = tranches.length;
+          const trancheInvests = tranches.map((t: Tranche, i: number) =>
+            tokenObjs.map((t: Token, j: number) => trancheInvestsResUnpacked[i + trancheCount * j])
+          );
+          marketData = { ...marketData, trancheInvests: trancheInvests };
+        }
         return marketData;
       })
     );

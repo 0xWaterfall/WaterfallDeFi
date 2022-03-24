@@ -27,8 +27,8 @@ const Label = styled.span`
 
 const Claim = memo<TProps>(({ intl }) => {
   const { primary, fonts, white, useColorModeValue, dark } = useTheme();
-  const { weekDistribution } = useWTF();
-  const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
+  // const { weekDistribution } = useWTF();
+  // const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
   const weeklyReward = useWeeklyReward();
   console.log("weeklyReward", weeklyReward);
 

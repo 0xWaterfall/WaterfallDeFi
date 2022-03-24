@@ -1,5 +1,4 @@
 import loadable from "@loadable/component";
-import ComingSoon from "pages/OldStake/ComingSoon";
 
 const Dashboard = loadable(() => import("../../pages/Dashboard/Dashboard"));
 const Portfolio = loadable(() => import("../../pages/Portfolio/Portfolio"));
@@ -10,7 +9,7 @@ const Stake = loadable(() => import("../../pages/Stake/Stake"));
 // const Farm = loadable(() => import("../../pages/OldStake/Farming/Farming"));
 // const Farms = loadable(() => import("../../pages/Farms"));
 const Farm = loadable(() => import("../../pages/Farms/Detail/Farm"));
-// const CommingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
+const ComingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
 export const RouteComponents = [
   // {
   //   key: "Dashboard",
@@ -38,9 +37,15 @@ export const RouteComponents = [
   },
   {
     key: "Stake",
-    component: ComingSoon,
+    component: Stake,
     exact: true,
     path: "/stake"
+  },
+  {
+    key: "ComingSoon",
+    component: ComingSoon,
+    exact: true,
+    path: "/comingsoon"
   },
   // {
   //   key: "Farms",

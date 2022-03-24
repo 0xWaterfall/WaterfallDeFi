@@ -166,6 +166,8 @@ const Header = memo<TProps>(({ intl }) => {
   const { gray, white, colorMode } = useTheme();
   const { push } = useHistory();
   const location = useLocation();
+  console.log("LOCATION!");
+  console.log(location);
   const [isDrawerShow, setDrawerShow] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -197,22 +199,34 @@ const Header = memo<TProps>(({ intl }) => {
       text: intl.formatMessage({ defaultMessage: "My Portfolio" }),
       checked: "/portfolio/my-portfolio"
     },
-    {
-      pathname: "/stake",
-      text: intl.formatMessage({ defaultMessage: "Stake" }),
-      checked: "/stake"
-    },
-    // {
-    //   pathname: "/farms",
-    //   text: intl.formatMessage({ defaultMessage: "Farm" }),
-    //   checked: "/farms"
-    // },
-    {
-      pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
-      text: intl.formatMessage({ defaultMessage: "User Guide" }),
-      target: "_blank"
-      // checked: ""
-    }
+
+    ...(networkHook === "bnb"
+      ? [
+          {
+            pathname: "/stake",
+            text: intl.formatMessage({ defaultMessage: "Stake" }),
+            checked: "/stake"
+          },
+          {
+            pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
+            text: intl.formatMessage({ defaultMessage: "User Guide" }),
+            target: "_blank"
+            // checked: ""
+          }
+        ]
+      : [
+          {
+            pathname: "/comingsoon",
+            text: intl.formatMessage({ defaultMessage: "Stake" }),
+            checked: "/comingsoon"
+          },
+          {
+            pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
+            text: intl.formatMessage({ defaultMessage: "User Guide" }),
+            target: "_blank"
+            // checked: ""
+          }
+        ])
   ];
 
   const WaterFallDeFiLogo =
@@ -239,6 +253,7 @@ const Header = memo<TProps>(({ intl }) => {
           <Menu.Item
             key={"bnb"}
             css={{ color: "rgb(240, 185, 11);", fontWeight: 600, paddingLeft: 30 }}
+            disabled={location.pathname === "/stake"} //disabling network switch from Stake for now
             onClick={async () => {
               dispatch(setNetwork("bnb"));
               setNetworkHook("bnb");
@@ -268,6 +283,7 @@ const Header = memo<TProps>(({ intl }) => {
           <Menu.Item
             key={"avax"}
             css={{ color: "#E84142", fontWeight: 600, paddingLeft: 30 }}
+            disabled={location.pathname === "/stake"} //disabling network switch from Stake for now
             onClick={async () => {
               dispatch(setNetwork("avax"));
               setNetworkHook("avax");
@@ -334,7 +350,7 @@ const Header = memo<TProps>(({ intl }) => {
         </LogoutWrapper>
       </WalletWrapper>
     );
-  }, [account, active, chainId, colorMode, networkHook]);
+  }, [account, active, chainId, colorMode, networkHook, location]);
 
   const MenuLink = MENU.map(({ pathname, text, target }) =>
     target ? (

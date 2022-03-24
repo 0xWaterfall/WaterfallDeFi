@@ -240,12 +240,13 @@ const TranchesCard = memo<TProps>(
           <Separator margin={15} />
           <StatusDiv>
             <Text3>
-              TVL: $
+              TVL: {selectedDepositAsset !== "WBNB" ? "$" : ""}
               {formatNumberSeparator(
                 !data.autorollImplemented
                   ? formatTVL(tranche.principal)
                   : formatTVL((Number(tranche.principal) + Number(tranche.autoPrincipal)).toString())
               )}{" "}
+              {selectedDepositAsset === "WBNB" ? "WBNB" : ""}
             </Text3>
             <Text4>
               Remaining: {remaining} {selectedDepositAsset}

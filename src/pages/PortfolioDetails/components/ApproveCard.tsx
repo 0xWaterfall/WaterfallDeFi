@@ -574,7 +574,7 @@ const ApproveCard = memo<TProps>(
               />
             </div>
             <ValidateText>{!depositLoading && validateText}</ValidateText>
-            {Number(balanceInput.toString()) - Number(balance) > 0 ? (
+            {data.wrapAvax && Number(balanceInput.toString()) - Number(balance) > 0 ? (
               <ValidateText>
                 Please make sure you have enough AVAX to wrap, or else the transaction will fail!
               </ValidateText>

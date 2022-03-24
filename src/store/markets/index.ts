@@ -155,41 +155,44 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           cycle: cycle.toString()
         };
         const _masterchefAddress = marketData.masterChefAddress;
-        const calls2 = [
-          {
-            address: _masterchefAddress,
-            name: "poolInfo",
-            params: [0]
-          },
-          {
-            address: _masterchefAddress,
-            name: "poolInfo",
-            params: [1]
-          },
-          {
-            address: _masterchefAddress,
-            name: "poolInfo",
-            params: [2]
-          },
-          {
-            address: _masterchefAddress,
-            name: "rewardPerBlock"
-          }
-        ];
-        const [p0, p1, p2, _rewardPerBlock] = !marketData.isAvax
-          ? await multicallBSC(marketData.masterChefAbi, calls2)
-          : await multicall(marketData.masterChefAbi, calls2);
-        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
-        const pools: string[] = [];
-        let totalAllocPoints = BIG_ZERO;
-        const _pools = [p0, p1, p2];
-        _pools.map((_p, _i) => {
-          const _allocPoint = _p ? new BigNumber(_p?.allocPoint._hex) : BIG_ZERO;
-          totalAllocPoints = totalAllocPoints.plus(_allocPoint);
-          pools.push(_allocPoint.toString());
-        });
-        // const totalAllocPoints = getTotalAllocPoints(pools);
-        marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
+        //disabling staking calls for avax until avax staking is up
+        if (!marketData.isAvax) {
+          const calls2 = [
+            {
+              address: _masterchefAddress,
+              name: "poolInfo",
+              params: [0]
+            },
+            {
+              address: _masterchefAddress,
+              name: "poolInfo",
+              params: [1]
+            },
+            {
+              address: _masterchefAddress,
+              name: "poolInfo",
+              params: [2]
+            },
+            {
+              address: _masterchefAddress,
+              name: "rewardPerBlock"
+            }
+          ];
+          const [p0, p1, p2, _rewardPerBlock] = !marketData.isAvax
+            ? await multicallBSC(marketData.masterChefAbi, calls2)
+            : await multicall(marketData.masterChefAbi, calls2);
+          const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
+          const pools: string[] = [];
+          let totalAllocPoints = BIG_ZERO;
+          const _pools = [p0, p1, p2];
+          _pools.map((_p, _i) => {
+            const _allocPoint = _p ? new BigNumber(_p?.allocPoint._hex) : BIG_ZERO;
+            totalAllocPoints = totalAllocPoints.plus(_allocPoint);
+            pools.push(_allocPoint.toString());
+          });
+          // const totalAllocPoints = getTotalAllocPoints(pools);
+          marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
+        }
         if (marketData.isMulticurrency) {
           const trancheInvestCalls = marketData.depositAssetAddresses.map((addr: string) => [
             {
@@ -209,7 +212,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             }
           ]);
           const calls3 = trancheInvestCalls.reduce((acc: EthersCall[], next: EthersCall[]) => [...acc, ...next], []);
-          const trancheInvestsRes = await multicall(marketData.abi, calls3);
+          const trancheInvestsRes = !marketData.isAvax
+            ? await multicallBSC(marketData.abi, calls3)
+            : await multicall(marketData.abi, calls3);
           const trancheInvestsResUnpacked = trancheInvestsRes.map((res: BigNumber[]) => res[0]);
           const trancheCount = tranches.length;
           const trancheInvests = tranches.map((t: Tranche, i: number) =>

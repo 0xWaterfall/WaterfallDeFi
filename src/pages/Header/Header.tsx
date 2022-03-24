@@ -256,6 +256,8 @@ const Header = memo<TProps>(({ intl }) => {
                   });
                 } catch (error) {
                   console.error("Failed to setup the network in Metamask:", error);
+                  dispatch(setNetwork("avax"));
+                  setNetworkHook("avax");
                 }
               }
             }}
@@ -283,6 +285,8 @@ const Header = memo<TProps>(({ intl }) => {
                   });
                 } catch (error) {
                   console.error("Failed to setup the network in Metamask:", error);
+                  dispatch(setNetwork("bnb"));
+                  setNetworkHook("bnb");
                 }
               }
             }}

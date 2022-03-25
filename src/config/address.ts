@@ -12,6 +12,10 @@ export const TranchesAddressOracle2: { [network: string]: string } = {
 };
 export const AllTranches = [
   {
+    address: "0x4D364f4e813740D963b03D8c315d6F8c0e6b17E3",
+    network: "BSC"
+  },
+  {
     address: "0x22C6719A53cEAE150f93c225e6BDbF7722B67523",
     network: "BSC"
   },

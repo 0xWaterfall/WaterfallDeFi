@@ -104,6 +104,14 @@ const ButtonWrapper = styled(Button)`
   }
 `;
 
+const AutoRollLabel = styled.div`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
+  margin-right: 12px;
+  padding-top: 4px;
+`;
+
 type TProps = WrappedComponentProps & {
   data: Market;
   selectedDepositAsset: string;
@@ -267,18 +275,8 @@ const Charts = memo<TProps>(
             </div>
             {account && data.autorollImplemented ? (
               <div css={{ display: "flex", marginTop: 20 }}>
-                <span
-                  css={{
-                    fontSize: 18,
-                    fontWeight: 400,
-                    color: "rgba(51,51,51,0.7)",
-                    marginRight: 12,
-                    paddingTop: "4px"
-                  }}
-                >
-                  Auto Rolling
-                </span>
-                <div css={{ paddingTop: 2.5 }}>
+                <AutoRollLabel>Auto Rolling</AutoRollLabel>
+                <div css={{ padding: 1.5, backgroundColor: "#FFFFFF", borderRadius: 10 }}>
                   {!autoRollPending ? (
                     <Switch
                       checked={autoRoll}
@@ -293,7 +291,9 @@ const Charts = memo<TProps>(
                       }}
                     />
                   ) : (
-                    <div>Transaction Pending...</div>
+                    <div css={{ fontSize: 12, padding: 3 }}>
+                      <span css={{ color: "#0066FF" }}>Transaction Pending...</span>
+                    </div>
                   )}
                 </div>
               </div>

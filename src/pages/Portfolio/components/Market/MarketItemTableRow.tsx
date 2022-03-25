@@ -154,7 +154,10 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
               wtfPrice
             );
             const trancheAPR = _t.apy;
-            const totalAPR = wtfAPR !== "0.00" ? Number(trancheAPR) + Number(numeral(wtfAPR).value()) : trancheAPR;
+            const totalAPR =
+              wtfAPR !== "0.00" && wtfAPR !== undefined
+                ? Number(trancheAPR) + Number(numeral(wtfAPR).value())
+                : trancheAPR;
             return (
               // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i}>

@@ -190,10 +190,6 @@ const TranchesCard = memo<TProps>(
         riskText: "Multiple Leverage ; Variable"
       }
     };
-    console.log("tranche target");
-    console.log(tranche.target);
-    console.log(tranche.principal);
-    console.log(tranche.autoPrincipal);
     const isSoldout = useMemo(
       () =>
         !data.autorollImplemented

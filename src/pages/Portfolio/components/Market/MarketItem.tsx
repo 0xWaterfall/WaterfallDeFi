@@ -216,9 +216,9 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "TVL" })}</div>
         <div>
-          {marketData.assets[0] !== "WBNB" ? "$" : ""}
+          {marketData.assets[0] !== "WBNB" && marketData.assets[0] !== "WAVAX" ? "$" : ""}
           {formatNumberSeparator(marketData.tvl.includes("e-") ? "0" : marketData.tvl)}
-          {marketData.assets[0] === "WBNB" ? " WBNB" : ""}
+          {marketData.assets[0] === "WBNB" || marketData.assets[0] === "WAVAX" ? " " + marketData.assets[0] : ""}
         </div>
       </RowDiv>
       <RowDiv>

@@ -202,9 +202,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         </div>
       </TableColumn>
       <TableColumn minWidth={160}>
-        {marketData.assets[0] !== "WBNB" ? "$" : ""}
+        {marketData.assets[0] !== "WBNB" && marketData.assets[0] !== "WAVAX" ? "$" : ""}
         {formatNumberSeparator(marketData.tvl.includes("e-") ? "0" : marketData.tvl)}
-        {marketData.assets[0] === "WBNB" ? " WBNB" : ""}
+        {marketData.assets[0] === "WBNB" || marketData.assets[0] === "WAVAX" ? " " + marketData.assets[0] : ""}
       </TableColumn>
       <TableColumn minWidth={80}>
         {getMarketStatusTag()}

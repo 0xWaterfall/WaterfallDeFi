@@ -417,14 +417,14 @@ const Stake = memo<TProps>(({ intl }) => {
   const { total: lockingWTF, expiryTimestamp, startTimestamp, fetchLockingWTF } = useGetLockingWTF(account);
   const pendingWTFRewards = usePendingReward(stakingConfig.rewardTokenAddress, account);
   const { price: wtfPrice } = useWTFPriceLP();
-  // const { claimRewards } = useClaimRewards();
+  const { claimRewards } = useClaimRewards();
   const { claimFeeRewards } = useClaimFeeRewards();
   const [harvestLoading, setHarvestLoading] = useState(false);
   const [feeRewardsHarvestLoading, setFeeRewardsHarvestLoading] = useState(false);
   const onHarvest = async () => {
     setHarvestLoading(true);
     try {
-      // const result = await claimRewards();
+      const result = await claimRewards();
       // fetchBalance();
       // setBalanceInput(0);
       // fetchLockingWTF();

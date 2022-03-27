@@ -72,8 +72,7 @@ export const useVeWTFContract = () => {
 
 export const useWTFRewardsContract = () => {
   const signer = getSigner();
-  const network = useNetwork();
-  return useMemo(() => getContract2(WTFRewardsAbi, WTFRewardsAddress[NETWORK], network, signer), [network, signer]);
+  return useMemo(() => getContractBNB(WTFRewardsAbi, WTFRewardsAddress[NETWORK], signer), [signer]);
 };
 
 export const useFeeRewardsContract = () => {

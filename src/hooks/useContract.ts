@@ -84,8 +84,7 @@ export const useFeeRewardsContract = () => {
 
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
-  const network = useNetwork();
-  return useMemo(() => getContract2(LPRewardsAbi, LPRewardsAddress, network, signer), [network, signer]);
+  return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
 };
 
 export const useWrapAVAXContract = () => {

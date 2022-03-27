@@ -70,6 +70,7 @@ export const useVeWTFContract = () => {
   return useMemo(() => getContract2(VotingEscrowAbi, VeWTFAddress[NETWORK], network, signer), [network, signer]);
 };
 
+//switch back to getContract2 when AVAX staking is online!
 export const useWTFRewardsContract = () => {
   const signer = getSigner();
   return useMemo(() => getContractBNB(WTFRewardsAbi, WTFRewardsAddress[NETWORK], signer), [signer]);
@@ -81,6 +82,7 @@ export const useFeeRewardsContract = () => {
   return useMemo(() => getContract2(WTFRewardsAbi, FeeRewardsAddress[NETWORK], network, signer), [network, signer]);
 };
 
+//switch back to getContract2 when AVAX staking is online!
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
   return useMemo(() => getContractBNB(LPRewardsAbi, LPRewardsAddress, signer), [signer]);

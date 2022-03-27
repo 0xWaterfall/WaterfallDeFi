@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { getContract, getContract2, getSigner } from "hooks";
+import { getContract, getContract2, getContractBNB, getSigner } from "hooks";
 import {
   FeeRewardsAddress,
   MasterChefAddress,
@@ -84,7 +84,7 @@ export const useFeeRewardsContract = () => {
 
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContract(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
+  return useMemo(() => getContractBNB(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
 };
 
 export const useWrapAVAXContract = () => {

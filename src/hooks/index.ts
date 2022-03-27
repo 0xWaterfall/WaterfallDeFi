@@ -606,6 +606,11 @@ export const getContract = (abi: any, address: string, signer?: ethers.Signer | 
   const signerOrProvider = signer ?? simpleRpcProvider;
   return new ethers.Contract(address, abi, signerOrProvider);
 };
+export const getContractBNB = (abi: any, address: string, signer?: ethers.Signer | ethers.providers.Provider) => {
+  const simpleRpcProvider = new ethers.providers.JsonRpcProvider(getBscRpcUrl());
+  const signerOrProvider = signer ?? simpleRpcProvider;
+  return new ethers.Contract(address, abi, signerOrProvider);
+};
 export const getContract2 = (
   abi: any,
   address: string,

@@ -9,19 +9,24 @@ import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
 import { Market } from "types";
 import { MarketList } from "config/market";
 import { useMarkets, useNetwork } from "hooks/useSelectors";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 type TProps = WrappedComponentProps;
 
 const Markets = memo<TProps>(({ intl }) => {
   const { width } = useSize(document.body);
-  const network = useNetwork();
+  const { active, account, chainId } = useWeb3React<Web3Provider>();
   const markets = useMarkets();
-  const marketsAvax = markets.filter((m) => m.isAvax);
-  const marketsBNB = markets.filter((m) => !m.isAvax);
-  const [networkFilter, setNetworkFilter] = useState(network);
+  const [networkFilter, setNetworkFilter] = useState(chainId === 56 ? "bnb" : "avax");
   useEffect(() => {
-    setNetworkFilter(network);
-  }, [network]);
+    if (chainId === 56 && networkFilter === "avax") {
+      setNetworkFilter("bnb");
+    }
+    if (chainId === 43114 && networkFilter === "bnb") {
+      setNetworkFilter("avax");
+    }
+  }, [chainId]);
 
   return (
     <>

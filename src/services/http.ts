@@ -38,6 +38,25 @@ export const getWTFSupply = async () => {
   }
   return;
 };
+
+export const getAPYHourly = async (date: string, date2: string) => {
+  try {
+    const hourly = await axios.get(
+      "https://supply.waterfalldefi.org/apys-hourly?from=" +
+        date.replace("T", "%24").slice(0, -5) +
+        "&to=" +
+        date2.replace("T", "%24").slice(0, -5)
+    );
+    if (hourly.status === 200) {
+      return hourly.data;
+    }
+  } catch (err) {
+    // Error handling here
+    return;
+  }
+  return;
+};
+
 export const getSubgraphQuery = async (subgraphURL: string, account: string) => {
   try {
     // const res2 = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod", {

@@ -118,6 +118,7 @@ type TProps = WrappedComponentProps & {
   depositMultipleSimultaneous: boolean;
   setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
+  APYData: any[];
 };
 
 const Charts = memo<TProps>(
@@ -127,7 +128,8 @@ const Charts = memo<TProps>(
     selectedDepositAsset,
     depositMultipleSimultaneous,
     setSelectedDepositAsset,
-    setDepositMultipleSimultaneous
+    setDepositMultipleSimultaneous,
+    APYData
   }) => {
     const [claimRewardLoading, setClaimRewardLoading] = useState(false);
     const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
@@ -335,7 +337,7 @@ const Charts = memo<TProps>(
           </section>
         </RecordCard>
         <Block>
-          <PortfolioChart strategyFarms={data.strategyFarms} />
+          <PortfolioChart strategyFarms={data.strategyFarms} APYData={APYData} />
         </Block>
         <Block>
           <TrancheChart tranches={data.tranches} totalTranchesTarget={data.totalTranchesTarget} />

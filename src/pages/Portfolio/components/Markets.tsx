@@ -6,8 +6,6 @@ import MarketItem from "./Market/MarketItem";
 import MarketItemTableRow from "./Market/MarketItemTableRow";
 import { useSize } from "ahooks";
 import { Table, TableHeaderColumn, TableRow } from "components/Table/Table";
-import { Market } from "types";
-import { MarketList } from "config/market";
 import { useMarkets, useNetwork } from "hooks/useSelectors";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
@@ -18,15 +16,24 @@ const Markets = memo<TProps>(({ intl }) => {
   const { width } = useSize(document.body);
   const { active, account, chainId } = useWeb3React<Web3Provider>();
   const markets = useMarkets();
+  const network = useNetwork();
   const [networkFilter, setNetworkFilter] = useState(chainId === 56 ? "bnb" : "avax");
   useEffect(() => {
-    if (chainId === 56 && networkFilter === "avax") {
+    if (chainId === 56) {
       setNetworkFilter("bnb");
     }
-    if (chainId === 43114 && networkFilter === "bnb") {
+    if (chainId === 43114) {
       setNetworkFilter("avax");
     }
   }, [chainId]);
+  useEffect(() => {
+    if (network === "avax") {
+      setNetworkFilter("avax");
+    }
+    if (network === "bnb") {
+      setNetworkFilter("bnb");
+    }
+  }, [network]);
 
   return (
     <>

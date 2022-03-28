@@ -11,6 +11,8 @@ import { CanvasRenderer } from "echarts/renderers";
 // import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
 import { StrategyFarm } from "types";
+import { Button, Modal } from "antd";
+import HistoricalPerformance from "./HistoricalPerformance";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -38,12 +40,20 @@ const WrappetContainer = styled.title`
 
 type TProps = WrappedComponentProps & {
   strategyFarms: StrategyFarm[];
+  APYData: any[];
 };
 
 let chart: echarts.ECharts;
 
-const PortfolioChart = memo<TProps>(({ intl, strategyFarms }) => {
+const PortfolioChart = memo<TProps>(({ intl, strategyFarms, APYData }) => {
   const { white, gray, dark, colorMode } = useTheme();
+
+  const [showHistoricalModal, setShowHistoricalModal] = useState(false);
+  const [selectedStrategy, setSelectedStrategy] = useState("");
+  const [strategyName, setStrategyName] = useState("");
+
+  const strategyTuple = strategyFarms.map((s) => s.apiKey);
+  const strategyNameTuple = strategyFarms.map((s) => s.farmName);
 
   // const result = useStrategyFarm();
 
@@ -104,58 +114,76 @@ const PortfolioChart = memo<TProps>(({ intl, strategyFarms }) => {
       chart.on("mouseout", function () {
         setIndex(-1);
       });
+      chart.on("click", function (e) {
+        setStrategyName(e.name);
+        setSelectedStrategy(strategyTuple[strategyNameTuple.indexOf(e.name)]);
+        setShowHistoricalModal(true);
+      });
     }
   }, [options]);
   return (
-    <Wrapper>
-      <WrappetTitle>{intl.formatMessage({ defaultMessage: "Portfolio Breakdown" })}</WrappetTitle>
-      <WrappetContainer>
-        <div id="portfolio-Chart" style={{ height: 200, width: 200 }} />
-        <div>
-          {payload.map((p, i) => (
-            <div
-              key={p.name}
-              css={{
-                display: "flex",
-                alignItems: "center",
-                padding: "8px 4px",
-                borderRadius: 4,
-                cursor: "pointer",
-                ...(index === i ? { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 } : {}),
-                ":hover": { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 }
-              }}
-              onMouseMove={() => {
-                chart.dispatchAction({
-                  type: "highlight",
-                  name: p.name
-                });
-                chart.dispatchAction({
-                  type: "showTip",
-                  seriesIndex: 0,
-                  dataIndex: i
-                });
-              }}
-              onMouseOut={() => {
-                chart.dispatchAction({
-                  type: "downplay",
-                  name: p.name
-                });
-                chart.dispatchAction({
-                  type: "hideTip",
-                  seriesIndex: 0,
-                  dataIndex: i
-                });
-              }}
-            >
-              <div css={{ width: 8, height: 8, borderRadius: 2, backgroundColor: COLORS[i] }} />
-              <div css={{ marginLeft: 4 }}>
-                {p.name} {p.value}%
+    <>
+      <Modal
+        visible={showHistoricalModal}
+        onCancel={() => setShowHistoricalModal(false)}
+        footer={[
+          <Button key="ok" onClick={() => setShowHistoricalModal(false)}>
+            OK
+          </Button>
+        ]}
+      >
+        <HistoricalPerformance APYData={APYData} strategy={selectedStrategy} strategyName={strategyName} />
+      </Modal>
+      <Wrapper>
+        <WrappetTitle>{intl.formatMessage({ defaultMessage: "Portfolio Breakdown" })}</WrappetTitle>
+        <WrappetContainer>
+          <div id="portfolio-Chart" style={{ height: 200, width: 200 }} />
+          <div>
+            {payload.map((p, i) => (
+              <div
+                key={p.name}
+                css={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "8px 4px",
+                  borderRadius: 4,
+                  cursor: "pointer",
+                  ...(index === i ? { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 } : {}),
+                  ":hover": { backgroundColor: colorMode === "dark" ? white.normal5 : gray.normal04 }
+                }}
+                onMouseMove={() => {
+                  chart.dispatchAction({
+                    type: "highlight",
+                    name: p.name
+                  });
+                  chart.dispatchAction({
+                    type: "showTip",
+                    seriesIndex: 0,
+                    dataIndex: i
+                  });
+                }}
+                onMouseOut={() => {
+                  chart.dispatchAction({
+                    type: "downplay",
+                    name: p.name
+                  });
+                  chart.dispatchAction({
+                    type: "hideTip",
+                    seriesIndex: 0,
+                    dataIndex: i
+                  });
+                }}
+              >
+                <div css={{ width: 8, height: 8, borderRadius: 2, backgroundColor: COLORS[i] }} />
+                <div css={{ marginLeft: 4 }}>
+                  {p.name} {p.value}%
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </WrappetContainer>
-    </Wrapper>
+            ))}
+          </div>
+        </WrappetContainer>
+      </Wrapper>
+    </>
   );
 });
 

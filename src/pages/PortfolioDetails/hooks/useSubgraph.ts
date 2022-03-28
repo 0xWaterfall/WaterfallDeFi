@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
 import { MarketList } from "config/market";
-import { getSubgraphQuery } from "services/http";
+import { getSubgraphQuery, getAPYHourly } from "services/http";
 // export const useHistoryQuery = (account: string | null | undefined) => {
 //   if (!account) account = "";
 //   return useQuery(gql`
@@ -232,4 +232,8 @@ export const useHistoryQuery2 = async (
   }
   // console.log("historyQueryResult result", historyQueryResult);
   return historyQueryResult;
+};
+
+export const useHistoricalAPY = async (earlierDate: string, laterDate: string) => {
+  return await getAPYHourly(earlierDate, laterDate);
 };

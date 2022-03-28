@@ -265,22 +265,24 @@ const Header = memo<TProps>(({ intl }) => {
             onClick={async () => {
               dispatch(setNetwork("bnb"));
               setNetworkHook("bnb");
-              const provider = window.ethereum;
-              const chainId = parseInt(process.env.REACT_APP_BNB_CHAIN_ID ?? "", 10);
-              if (provider?.request) {
-                try {
-                  await provider.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [
-                      {
-                        chainId: `0x${chainId.toString(16)}`
-                      }
-                    ]
-                  });
-                } catch (error) {
-                  console.error("Failed to setup the network in Metamask:", error);
-                  dispatch(setNetwork("avax"));
-                  setNetworkHook("avax");
+              if (account) {
+                const provider = window.ethereum;
+                const chainId = parseInt(process.env.REACT_APP_BNB_CHAIN_ID ?? "", 10);
+                if (provider?.request) {
+                  try {
+                    await provider.request({
+                      method: "wallet_switchEthereumChain",
+                      params: [
+                        {
+                          chainId: `0x${chainId.toString(16)}`
+                        }
+                      ]
+                    });
+                  } catch (error) {
+                    console.error("Failed to setup the network in Metamask:", error);
+                    dispatch(setNetwork("avax"));
+                    setNetworkHook("avax");
+                  }
                 }
               }
             }}
@@ -295,22 +297,24 @@ const Header = memo<TProps>(({ intl }) => {
             onClick={async () => {
               dispatch(setNetwork("avax"));
               setNetworkHook("avax");
-              const provider = window.ethereum;
-              const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
-              if (provider?.request) {
-                try {
-                  await provider.request({
-                    method: "wallet_switchEthereumChain",
-                    params: [
-                      {
-                        chainId: `0x${chainId.toString(16)}`
-                      }
-                    ]
-                  });
-                } catch (error) {
-                  console.error("Failed to setup the network in Metamask:", error);
-                  dispatch(setNetwork("bnb"));
-                  setNetworkHook("bnb");
+              if (account) {
+                const provider = window.ethereum;
+                const chainId = parseInt(process.env.REACT_APP_CHAIN_ID ?? "", 10);
+                if (provider?.request) {
+                  try {
+                    await provider.request({
+                      method: "wallet_switchEthereumChain",
+                      params: [
+                        {
+                          chainId: `0x${chainId.toString(16)}`
+                        }
+                      ]
+                    });
+                  } catch (error) {
+                    console.error("Failed to setup the network in Metamask:", error);
+                    dispatch(setNetwork("bnb"));
+                    setNetworkHook("bnb");
+                  }
                 }
               }
             }}

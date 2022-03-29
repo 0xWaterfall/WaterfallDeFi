@@ -261,7 +261,7 @@ const Header = memo<TProps>(({ intl }) => {
           <Menu.Item
             key={"bnb"}
             css={{ color: "rgb(240, 185, 11);", fontWeight: 600, paddingLeft: 30 }}
-            disabled={location.pathname === "/stake"} //disabling network switch from Stake for now
+            disabled={location.pathname === "/stake" || location.pathname === "/portfolio-details"} //disabling network switch from Stake for now
             onClick={async () => {
               dispatch(setNetwork("bnb"));
               setNetworkHook("bnb");
@@ -293,7 +293,7 @@ const Header = memo<TProps>(({ intl }) => {
           <Menu.Item
             key={"avax"}
             css={{ color: "#E84142", fontWeight: 600, paddingLeft: 30 }}
-            disabled={location.pathname === "/stake"} //disabling network switch from Stake for now
+            disabled={location.pathname === "/stake" || location.pathname === "/portfolio-details"} //disabling network switch from Stake for now
             onClick={async () => {
               dispatch(setNetwork("avax"));
               setNetworkHook("avax");

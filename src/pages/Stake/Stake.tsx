@@ -38,6 +38,7 @@ import {
 import { BUSDAddress, MultiSigAddress } from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
 import { BIG_TEN } from "utils/bigNumber";
+import { useNetwork } from "hooks/useSelectors";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -400,7 +401,10 @@ const Stake = memo<TProps>(({ intl }) => {
   // const { goBack } = useHistory();
   const history = useHistory();
   const { account } = useWeb3React<Web3Provider>();
-  const stakingConfig = Stakings[0];
+
+  const network = useNetwork();
+
+  const stakingConfig = network === "bnb" ? Stakings[0] : Stakings[1];
   if (!stakingConfig) {
     history.push("/");
   }

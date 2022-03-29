@@ -1,11 +1,16 @@
 import { NETWORK } from "config";
 import { StakingConfig } from "types";
-import { WTFRewardsAddress, VeWTFAddress } from "./address";
+import { WTFRewardsAddressBNB, VeWTFAddressBNB, WTFRewardsAddressAVAX, VeWTFAddressAVAX } from "./address";
 const Stakings: StakingConfig[] = [
   {
-    rewardTokenAddress: WTFRewardsAddress[NETWORK],
-    earningTokenAddress: VeWTFAddress[NETWORK],
-    name: "WTF"
+    rewardTokenAddress: WTFRewardsAddressBNB[NETWORK],
+    earningTokenAddress: VeWTFAddressBNB[NETWORK],
+    name: "WTF - BNB"
+  },
+  {
+    rewardTokenAddress: WTFRewardsAddressAVAX[NETWORK],
+    earningTokenAddress: VeWTFAddressAVAX[NETWORK],
+    name: "WTF - AVAX"
   }
 ];
 export default Stakings;

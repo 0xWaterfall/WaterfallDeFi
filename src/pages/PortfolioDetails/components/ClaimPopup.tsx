@@ -15,6 +15,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useTotalSupply } from "hooks";
 import numeral from "numeral";
 import styled from "@emotion/styled";
+import { useNetwork } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {
   visible?: boolean;
@@ -26,7 +27,8 @@ type TProps = WrappedComponentProps & {
 
 const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance, claimReward }) => {
   const { primary, fonts, white, gray, dark, useColorModeValue } = useTheme();
-  const stakingConfig = Stakings[0];
+  const network = useNetwork();
+  const stakingConfig = network === "bnb" ? Stakings[0] : Stakings[1];
   const { account } = useWeb3React<Web3Provider>();
   const { rewardPerBlock } = useStakingPool(
     stakingConfig?.rewardTokenAddress || "",

@@ -1,12 +1,11 @@
-import { useWeb3React } from "@web3-react/core";
-import { getContract, getContract2, getContractBNB, getSigner } from "hooks";
+import { getContract2, getSigner } from "hooks";
 import {
-  FeeRewardsAddress,
-  MasterChefAddress,
-  TranchesAddress,
-  VeWTFAddress,
+  FeeRewardsAddressBNB,
+  VeWTFAddressAVAX,
+  VeWTFAddressBNB,
   WrapAVAXAddress,
-  WTFRewardsAddress
+  WTFRewardsAddressBNB,
+  WTFRewardsAddressAVAX
 } from "config/address";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
@@ -67,25 +66,54 @@ export const useERC20Contract = (address: string) => {
 export const useVeWTFContract = () => {
   const signer = getSigner();
   const network = useNetwork();
-  return useMemo(() => getContract2(VotingEscrowAbi, VeWTFAddress[NETWORK], network, signer), [network, signer]);
+  return useMemo(
+    () =>
+      getContract2(
+        VotingEscrowAbi,
+        network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressAVAX[NETWORK],
+        network,
+        signer
+      ),
+    [network, signer]
+  );
 };
 
-//switch back to getContract2 when AVAX staking is online!
 export const useWTFRewardsContract = () => {
   const signer = getSigner();
-  return useMemo(() => getContractBNB(WTFRewardsAbi, WTFRewardsAddress[NETWORK], signer), [signer]);
+  const network = useNetwork();
+  return useMemo(
+    () =>
+      getContract2(
+        WTFRewardsAbi,
+        network === "bnb" ? WTFRewardsAddressBNB[NETWORK] : WTFRewardsAddressAVAX[NETWORK],
+        network,
+        signer
+      ),
+    [network, signer]
+  );
 };
 
 export const useFeeRewardsContract = () => {
   const signer = getSigner();
   const network = useNetwork();
-  return useMemo(() => getContract2(WTFRewardsAbi, FeeRewardsAddress[NETWORK], network, signer), [network, signer]);
+  return useMemo(
+    () =>
+      getContract2(
+        WTFRewardsAbi,
+        //incoming from Kirill:
+        // network === "avax" ? FeeRewardsAddressBNB[NETWORK] : FeeRewardsAddressAVAX[NETWORK],
+        FeeRewardsAddressBNB[NETWORK],
+        network,
+        signer
+      ),
+    [network, signer]
+  );
 };
 
-//switch back to getContract2 when AVAX staking is online!
 export const useLPRewardsContract = (LPRewardsAddress: string) => {
   const signer = getSigner();
-  return useMemo(() => getContractBNB(LPRewardsAbi, LPRewardsAddress, signer), [signer]);
+  const network = useNetwork();
+  return useMemo(() => getContract2(LPRewardsAbi, LPRewardsAddress, network, signer), [network, signer]);
 };
 
 export const useWrapAVAXContract = () => {

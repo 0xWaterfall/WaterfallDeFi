@@ -7,7 +7,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
 import SelectTimeLimit from "components/SelectTimeLimit/SelectTimeLimit";
 import { NETWORK } from "config";
-import { VeWTFAddress, WTFAddress } from "config/address";
+import { VeWTFAddressBNB, WTFAddressAVAX, WTFAddressBNB } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import { useBalance } from "hooks";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -26,17 +26,14 @@ import { setConnectWalletModalShow } from "store/showStatus";
 import useIncreaseLockAmount from "pages/Stake/hooks/useIncreaseLockAmount";
 import useCheckLocked from "pages/Stake/hooks/useCheckLocked";
 import numeral from "numeral";
-import { utils } from "ethers";
 import useExtendLockTime from "pages/Stake/hooks/useExtendLockTime";
 import { useGetLockingWTF } from "pages/Stake/hooks/useGetLockingWTF";
 import { StakingConfig } from "types";
 import BigNumber from "bignumber.js";
 import { getMultiplier } from "utils/multiplier";
-import { from } from "@apollo/client";
 import { BIG_TEN } from "utils/bigNumber";
 import moment from "moment";
-import { totalmem } from "os";
-import { isPending } from "@reduxjs/toolkit";
+import { useNetwork } from "hooks/useSelectors";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -134,11 +131,16 @@ const Increase = memo<TProps>(
   ({ intl, stakingConfig, fromMasterChef, wtfRewardsBalance, claimReward, rewardPerBlock, totalVeWTF }) => {
     const { tags } = useTheme();
     const { account } = useWeb3React<Web3Provider>();
+    const network = useNetwork();
 
     const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
     const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
     const [balanceInput, setBalanceInput] = useState("0");
-    const { balance: wtfBalance, fetchBalance, actualBalance: actualWtfBalance } = useBalance(WTFAddress[NETWORK]);
+    const {
+      balance: wtfBalance,
+      fetchBalance,
+      actualBalance: actualWtfBalance
+    } = useBalance(network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK]);
     const { increaseLockAmount } = useIncreaseLockAmount();
     const { extendLockTime } = useExtendLockTime();
     const [approved, setApproved] = useState(false);
@@ -153,10 +155,16 @@ const Increase = memo<TProps>(
     const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
 
     const { lockAndStakeWTF } = useLockAndStakeWTF();
-    const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+    const { onCheckApprove } = useCheckApprove(
+      network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
+      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressBNB[NETWORK]
+    );
     const { onCheckLocked } = useCheckLocked();
     const dispatch = useAppDispatch();
-    const { onApprove } = useApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+    const { onApprove } = useApprove(
+      network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
+      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressBNB[NETWORK]
+    );
     const _wtfRewardsBalance =
       wtfRewardsBalance && wtfRewardsBalance !== "0"
         ? new BigNumber(wtfRewardsBalance).dividedBy(BIG_TEN.pow(18)).toString()

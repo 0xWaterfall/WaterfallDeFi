@@ -6,8 +6,9 @@ import styled from "@emotion/styled";
 import { Coingecko, DashboardImage, MetaMask } from "assets/images";
 import numeral from "numeral";
 import { NETWORK } from "config";
-import { WTFAddress } from "config/address";
+import { WTFAddressAVAX, WTFAddressBNB } from "config/address";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
+import { useNetwork } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps;
 
@@ -97,6 +98,7 @@ const IconGroup = styled.div`
 const DashboardCard = memo<TProps>(({ intl }) => {
   // const price = useWTFPrice();
   const { price, marketCap } = useWTFPriceLP();
+  const network = useNetwork();
 
   const addToken = useCallback(async () => {
     const provider = window.ethereum;
@@ -107,7 +109,7 @@ const DashboardCard = memo<TProps>(({ intl }) => {
           params: {
             type: "ERC20",
             options: {
-              address: "0x" + WTFAddress[NETWORK],
+              address: "0x" + network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
               symbol: "WTF",
               decimals: 18,
               image: "https://waterfalldefi.org/wp-content/uploads/2021/04/cropped-favocon_wtf-192x192.png"

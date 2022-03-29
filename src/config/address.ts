@@ -148,30 +148,48 @@ export const TUSDAddress: { [network: string]: string } = {
 };
 //^ testing multicurrency with TUSD
 
-export const WTFAddress: { [network: string]: string } = {
+//BNB staking addresses
+export const WTFAddressBNB: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "7d892AcA63BcABd86C8eDc0a926B0ED344F395A4",
   [NETWORKS.TESTNET]: "4e373228174464cE8bA2946BF54f070fE846fB7a",
   [NETWORKS.MAINNET]: "d73F32833B6D5D9c8070c23e599e283a3039823C" //realWTF (March 24th mainnet)
-  // [NETWORKS.MAINNET]: "c94d4E99966fa6645502Bd2c2B5D80025820D735" // test avax staking
 };
-
-export const WTFRewardsAddress: { [network: string]: string } = {
+export const WTFRewardsAddressBNB: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x9be9bb36848CC9C2C447F9BEe078C4977C4FFd57",
   [NETWORKS.TESTNET]: "0xa6c819f1dd62579dcec2e2173b4ab6e4e22b7594",
-  // [NETWORKS.MAINNET]: "0xC2be3d47FE606Ccb8cA1129d01496E38C4B90B61" // test avax staking
   [NETWORKS.MAINNET]: "0x51CaA3657721cF9A1Fb068c3c01988A6387159ef" // realWTF (March 24th mainnet)
 };
-export const VeWTFAddress: { [network: string]: string } = {
+export const VeWTFAddressBNB: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0xD9c58DEF9280847082144Cd6B72B45b8F16964Ac",
   [NETWORKS.TESTNET]: "0xd7cec07ed863bd6843306cdc4bac8520aaa5db99",
-  // [NETWORKS.MAINNET]: "0x4B8C9a2CE49Bf835BA28c25665752edEE878Ba58" // test avax staking
   [NETWORKS.MAINNET]: "0x4df3Cc03FAfB2BCC139e23CD6fa6073a8F73E7c7" // realWTF (March 24th mainnet)
 };
-export const FeeRewardsAddress: { [network: string]: string } = {
+export const FeeRewardsAddressBNB: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "0x14c4ec080ba871008797f9e6b20068de22756ad1",
   [NETWORKS.TESTNET]: "",
-  // [NETWORKS.MAINNET]: "0x8964aA741BA592090149B4C451897F0Dcf94a150"
   [NETWORKS.MAINNET]: "0x8964aA741BA592090149B4C451897F0Dcf94a150" // realWTF (March 24th mainnet)
+};
+
+//AVAX staking addresses
+export const WTFAddressAVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "c94d4E99966fa6645502Bd2c2B5D80025820D735"
+};
+export const WTFRewardsAddressAVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xC0A4BFF1c2d081198D2EB0680c2fce033Db965d0"
+};
+export const VeWTFAddressAVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xb5558506aAEC8E5961948d4D97504527571fAa61"
+};
+export const FeeRewardsAddressAVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "" //coming soon from Kirill
 };
 
 export const PancakeLPAddress: { [network: string]: string } = {

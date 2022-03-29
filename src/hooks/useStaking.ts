@@ -9,7 +9,7 @@ import BigNumber from "bignumber.js";
 import useRefresh from "./useRefresh";
 import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
-import { FeeRewardsAddress } from "config/address";
+import { FeeRewardsAddressBNB } from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
 import { useNetwork } from "./useSelectors";
 
@@ -69,7 +69,8 @@ export const useStakingPool = (
           params: [account]
         }
       ];
-      const [isPoolActive, pool, user] = await multicallBSC(WTFRewardsABI, calls);
+      const [isPoolActive, pool, user] =
+        network === "avax" ? await multicall(WTFRewardsABI, calls) : await multicallBSC(WTFRewardsABI, calls);
 
       const calls2 = [
         {
@@ -77,7 +78,8 @@ export const useStakingPool = (
           name: "totalLocked"
         }
       ];
-      const [totalLocked] = await multicallBSC(VotingEscrowAbi, calls2);
+      const [totalLocked] =
+        network === "avax" ? await multicall(VotingEscrowAbi, calls2) : await multicallBSC(VotingEscrowAbi, calls2);
       const rewardPerBlock = new BigNumber(pool.rewardPerBlock?._hex).dividedBy(BIG_TEN.pow(18));
       const totalVeWTF = new BigNumber(pool.totalStaked?._hex).dividedBy(BIG_TEN.pow(18));
       const _totalVeWTF = new BigNumber(totalVeWTF).plus(2.4883);
@@ -95,13 +97,15 @@ export const useStakingPool = (
       try {
         const calls3 = [
           {
-            address: FeeRewardsAddress[NETWORK],
+            address: FeeRewardsAddressBNB[NETWORK],
+            // address: network === "bnb" ? FeeRewardsAddressBNB[NETWORK] : FeeRewardsAddressAVAX[NETWORK],
             name: "pendingRewardOf",
             params: [account]
           }
         ];
-        const [pending] =
-          network === "avax" ? await multicall(FeeRewardsAbi, calls3) : await multicallBSC(FeeRewardsAbi, calls3);
+        const [pending] = await multicallBSC(FeeRewardsAbi, calls3);
+        // const [pending] =
+        //   network === "avax" ? await multicall(FeeRewardsAbi, calls3) : await multicallBSC(FeeRewardsAbi, calls3);
         pendingBUSDReward = pending
           ? numeral(new BigNumber(pending.reward?._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[00]")
           : "";

@@ -7,7 +7,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
 import SelectTimeLimit from "components/SelectTimeLimit/SelectTimeLimit";
 import { NETWORK } from "config";
-import { VeWTFAddress, WTFAddress } from "config/address";
+import { VeWTFAddressBNB, WTFAddressBNB, VeWTFAddressAVAX, WTFAddressAVAX } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import { useBalance } from "hooks";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -23,6 +23,7 @@ import useCheckApprove from "pages/PortfolioDetails/hooks/useCheckApprove";
 import useApprove from "pages/PortfolioDetails/hooks/useApprove";
 import { useAppDispatch } from "store";
 import { setConnectWalletModalShow } from "store/showStatus";
+import { useNetwork } from "hooks/useSelectors";
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
@@ -94,20 +95,29 @@ type TProps = WrappedComponentProps;
 
 const Stake = memo<TProps>(({ intl }) => {
   const { tags } = useTheme();
+  const network = useNetwork();
 
   const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
 
   const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
   const [balanceInput, setBalanceInput] = useState("0");
-  const { balance: wtfBalance, fetchBalance } = useBalance(WTFAddress[NETWORK]);
+  const { balance: wtfBalance, fetchBalance } = useBalance(
+    network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK]
+  );
   const { lockAndStakeWTF } = useLockAndStakeWTF();
   const [approved, setApproved] = useState(false);
   const [approveLoading, setApproveLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const { account } = useWeb3React<Web3Provider>();
-  const { onCheckApprove } = useCheckApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  const { onCheckApprove } = useCheckApprove(
+    network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
+    network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressAVAX[NETWORK]
+  );
   const dispatch = useAppDispatch();
-  const { onApprove } = useApprove(WTFAddress[NETWORK], VeWTFAddress[NETWORK]);
+  const { onApprove } = useApprove(
+    network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
+    network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressAVAX[NETWORK]
+  );
   useEffect(() => {
     const checkApproved = async (account: string) => {
       const approved = await onCheckApprove();

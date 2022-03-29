@@ -10,7 +10,6 @@ import { LineChart, PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 // import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
-import { StrategyFarm } from "types";
 import { Button } from "antd";
 
 echarts.use([
@@ -33,9 +32,10 @@ const WrappetTitle = styled.title`
   height: 62px;
   padding: 0 32px;
   border-bottom: 1px solid ${({ theme }) => theme.useColorModeValue("rgba(51, 51, 51, 0.08)", theme.white.normal08)};
-  font-weight: 700;
+  font-weight: 600;
   display: flex;
   align-items: center;
+  font-size: 24px;
 `;
 
 const WrappetContainer = styled.title`
@@ -74,13 +74,16 @@ const HistoricalPerformance = memo<TProps>(({ intl, APYData, strategy, strategyN
   );
   const xAxis7D = lastWeek.map((apy, i) => apy.timeStr.slice(5, 10));
   const xAxis14D = APYData.map((apy, i) => apy.timeStr.slice(5, 10));
-
   const xAxes = [xAxis24Hr, xAxis7D, xAxis14D];
+
+  const timescaleTitles = ["Last 24 Hours", "Last 7 Days", "Last 14 Days"];
 
   const last24HoursData = last24Hours.map((apy, i) => Number(apy[strategy]) * 100);
   const lastWeekData = lastWeek.map((apy, i) => Number(apy[strategy]) * 100);
   const twoWeekData = APYData.map((apy, i) => Number(apy[strategy]) * 100);
   const allData = [last24HoursData, lastWeekData, twoWeekData]; //tuple, index keyed to enum
+  const minima = Math.min(...twoWeekData);
+  const maxima = Math.max(...twoWeekData);
 
   const options = useMemo(() => {
     return {
@@ -94,7 +97,9 @@ const HistoricalPerformance = memo<TProps>(({ intl, APYData, strategy, strategyN
           id: "dataZoomY",
           type: "slider",
           yAxisIndex: [0],
-          filterMode: "empty"
+          filterMode: "empty",
+          start: (minima / maxima) * 100,
+          end: 100
         }
       ],
       series: [
@@ -105,7 +110,7 @@ const HistoricalPerformance = memo<TProps>(({ intl, APYData, strategy, strategyN
         }
       ]
     };
-  }, [APYData, colorMode, strategy, timescale]);
+  }, [APYData, strategy, timescale, allData, xAxes, minima, maxima]); //filling out deps for posterity
 
   useEffect(() => {
     const canvas = document.getElementById("historical-performance");
@@ -114,19 +119,43 @@ const HistoricalPerformance = memo<TProps>(({ intl, APYData, strategy, strategyN
       chart.setOption(options, true);
     }
   }, [options]);
+
   return (
     <Wrapper>
-      <WrappetTitle>{strategyName}</WrappetTitle>
+      <WrappetTitle>{strategyName + " - " + timescaleTitles[timescale]}</WrappetTitle>
       <WrappetContainer>
         <div css={{ display: "flex", flexDirection: "column" }}>
-          <div css={{ display: "flex", paddingLeft: 38 }}>
-            <Button disabled={timescale === Timescale.TwoWeeks} onClick={() => setTimescale(Timescale.TwoWeeks)}>
+          <div
+            css={{
+              display: "flex",
+              paddingLeft: 38,
+              marginTop: 10,
+              width: 210,
+              justifyContent: "space-between"
+            }}
+          >
+            <Button
+              type={"primary"}
+              ghost={true}
+              disabled={timescale === Timescale.TwoWeeks}
+              onClick={() => setTimescale(Timescale.TwoWeeks)}
+            >
               14D
             </Button>
-            <Button disabled={timescale === Timescale.Week} onClick={() => setTimescale(Timescale.Week)}>
+            <Button
+              type={"primary"}
+              ghost={true}
+              disabled={timescale === Timescale.Week}
+              onClick={() => setTimescale(Timescale.Week)}
+            >
               7D
             </Button>
-            <Button disabled={timescale === Timescale.Day} onClick={() => setTimescale(Timescale.Day)}>
+            <Button
+              type={"primary"}
+              ghost={true}
+              disabled={timescale === Timescale.Day}
+              onClick={() => setTimescale(Timescale.Day)}
+            >
               24H
             </Button>
           </div>

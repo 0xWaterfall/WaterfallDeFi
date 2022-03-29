@@ -13,6 +13,7 @@ import styled from "@emotion/styled";
 import { StrategyFarm } from "types";
 import { Button, Modal } from "antd";
 import HistoricalPerformance from "./HistoricalPerformance";
+import { Close } from "assets/images";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 
@@ -54,8 +55,6 @@ const PortfolioChart = memo<TProps>(({ intl, strategyFarms, APYData }) => {
 
   const strategyTuple = strategyFarms.map((s) => s.apiKey);
   const strategyNameTuple = strategyFarms.map((s) => s.farmName);
-
-  // const result = useStrategyFarm();
 
   const payload: any[] = [];
   if (strategyFarms && strategyFarms.length > 0) {
@@ -116,21 +115,31 @@ const PortfolioChart = memo<TProps>(({ intl, strategyFarms, APYData }) => {
       });
       chart.on("click", function (e) {
         setStrategyName(e.name);
+        //e has no instance of apiKey because it's an ECharts instance, not the object it was constructed from
         setSelectedStrategy(strategyTuple[strategyNameTuple.indexOf(e.name)]);
         setShowHistoricalModal(true);
       });
     }
-  }, [options]);
+  }, [options, colorMode]);
+
   return (
     <>
       <Modal
         visible={showHistoricalModal}
         onCancel={() => setShowHistoricalModal(false)}
-        footer={[
-          <Button key="ok" onClick={() => setShowHistoricalModal(false)}>
-            OK
-          </Button>
-        ]}
+        bodyStyle={
+          colorMode === "dark"
+            ? {
+                backgroundColor: "#13132C",
+                color: "rgba(255, 255, 255, .85)"
+              }
+            : {
+                backgroundColor: "#FFFFFF",
+                color: "rgba(51, 51, 51, 0.85)"
+              }
+        }
+        footer={null}
+        closeIcon={<Close color={colorMode === "dark" ? "#FFFFFF" : "rgba(51, 51, 51, 0.08);"} />}
       >
         <HistoricalPerformance APYData={APYData} strategy={selectedStrategy} strategyName={strategyName} />
       </Modal>

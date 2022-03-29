@@ -344,6 +344,7 @@ export const MAXIMaximizerStrategyAddress: { [network: string]: string } = {
   // [NETWORKS.MAINNET]: "0x57c5a9808022aD244E1487F204A01349c90726f9"
   [NETWORKS.MAINNET]: "0x7D98423348Fa076FD07b0B2719Aa702302266c66"
 };
+
 //*TEST* multicurrency master tranche contract address
 export const MC_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
@@ -377,7 +378,6 @@ export const AR_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xab137023B1174946E3BC71Eb92B9e4f835D799DE"
 };
-
 //autoroll master WTF contract address
 export const AR_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
@@ -470,4 +470,31 @@ export const BUSD4_VenusStrat: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xF7ea83A4E4AF2554e883af4e42c026c91644d544"
+};
+
+//March 29th - autoroll on AVAX test
+export const AR_AVAXFallsTrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x969f7A4464e453E972d98c7C60e8bf7916607BDb"
+};
+export const AR_AVAXFallsMasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x70d5e1D4FB02faFf8DCEC321Fd1b9eeCA98FDC8d"
+};
+export const AR_AVAXDepositAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+};
+export const AR_AVAXTraderJoeStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x9Db6EDbDE209eF68D41D355E2F70bf5f85879f60"
+};
+export const AR_AVAXBenqiStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1F310eCFFf08430E6b48Bc5Aa78f10A318990d91"
 };

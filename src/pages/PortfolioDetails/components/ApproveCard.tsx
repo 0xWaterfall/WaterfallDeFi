@@ -22,7 +22,7 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
+import { useBalance, useMetamaskAvaxCBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
 import { getTrancheBalance } from "store/position";
@@ -186,8 +186,13 @@ const ApproveCard = memo<TProps>(
     );
     const { onInvestDirectMCSimul } = useInvestDirectMCSimul(data.address);
     const { onInvestMCSimul } = useInvestMCSimul(data.address);
+
     //balance hooks
-    const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
+    const {
+      balance: balanceWallet,
+      fetchBalance,
+      actualBalance: actualBalanceWallet
+    } = data.assets[0] === "AVAX" ? useMetamaskAvaxCBalance() : useBalance(depositAddress);
     const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
     const { balance: balanceRe } = useTrancheBalance(data.address, data.isAvax);
     const multicurrencyBalanceRes = data.depositAssetAddresses.map((address, i) =>

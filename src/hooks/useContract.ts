@@ -11,6 +11,7 @@ import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
 import { abi as MulticurrencyTrancheMasterAbi } from "config/abi/MC_TrancheMaster.json";
 import { abi as AutorollingTrancheMasterAbi } from "config/abi/AR_TrancheMaster.json";
+import { abi as AVAXAutorollingTrancheMasterAbi } from "config/abi/AR_AVAXTrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import { abi as WTFRewardsAbi } from "config/abi/WTFRewards.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
@@ -52,7 +53,13 @@ export const useAutorollingTrancheMasterContract = (trancheMasterAddress: string
   const signer = getSigner();
   const network = useNetwork();
   return useMemo(
-    () => getContract2(AutorollingTrancheMasterAbi, trancheMasterAddress, network, signer),
+    () =>
+      getContract2(
+        network === "bnb" ? AutorollingTrancheMasterAbi : AVAXAutorollingTrancheMasterAbi,
+        trancheMasterAddress,
+        network,
+        signer
+      ),
     [network, signer]
   );
 };

@@ -506,6 +506,32 @@ export const useBalance = (address: string) => {
   return { balance, fetchBalance, actualBalance };
 };
 
+export const useMetamaskAvaxCBalance = () => {
+  const [balance, setBalance] = useState("0");
+  const [actualBalance, setActualBalance] = useState("0");
+  const { account, ...p } = useWeb3React<Web3Provider>();
+  const { slowRefresh, fastRefresh } = useRefresh();
+
+  const fetchBalance = useCallback(async () => {
+    const provider = window.ethereum;
+    if (provider?.request && account) {
+      const tokenBalance: any = await provider.request({
+        method: "eth_getBalance",
+        params: [account, "latest"]
+      });
+      const value = new BigNumber(tokenBalance.toString()).dividedBy(BIG_TEN.pow(18));
+      setBalance(numeral(value.toString()).format("0,0.[0000]"));
+      setActualBalance(value.toString());
+    }
+  }, [account]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance, fastRefresh]);
+
+  return { balance, fetchBalance, actualBalance };
+};
+
 export const useWTF = () => {
   const [weekDistribution, setWeekDistribution] = useState(BIG_ZERO);
   const network = useNetwork();

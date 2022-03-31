@@ -179,17 +179,17 @@ export const WTFAddressAVAX: { [network: string]: string } = {
 export const WTFRewardsAddressAVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xC0A4BFF1c2d081198D2EB0680c2fce033Db965d0"
+  [NETWORKS.MAINNET]: "0xE94047709e4129D054a392e640953B5934de52d8"
 };
 export const VeWTFAddressAVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xb5558506aAEC8E5961948d4D97504527571fAa61"
+  [NETWORKS.MAINNET]: "0xe3969906806AF7D97D4B483f22eb01EF6E53de8a"
 };
 export const FeeRewardsAddressAVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "" //coming soon from Kirill
+  [NETWORKS.MAINNET]: "0x2c2a57e44320408f37d60E4f872C0757308A5118"
 };
 
 export const PancakeLPAddress: { [network: string]: string } = {

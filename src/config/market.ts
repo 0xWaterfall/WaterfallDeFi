@@ -216,7 +216,7 @@ export const MarketList: Market[] = [
       }
     ],
     //incoming
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
+    subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_qiJoe_avax",
     isRetired: false
   },
   {

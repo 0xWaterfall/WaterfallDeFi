@@ -207,34 +207,17 @@ const Header = memo<TProps>(({ intl }) => {
       text: intl.formatMessage({ defaultMessage: "My Portfolio" }),
       checked: "/portfolio/my-portfolio"
     },
-
-    ...(networkHook === "bnb"
-      ? [
-          {
-            pathname: "/stake",
-            text: intl.formatMessage({ defaultMessage: "Stake" }),
-            checked: "/stake"
-          },
-          {
-            pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
-            text: intl.formatMessage({ defaultMessage: "User Guide" }),
-            target: "_blank"
-            // checked: ""
-          }
-        ]
-      : [
-          {
-            pathname: "/comingsoon",
-            text: intl.formatMessage({ defaultMessage: "Stake" }),
-            checked: "/comingsoon"
-          },
-          {
-            pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
-            text: intl.formatMessage({ defaultMessage: "User Guide" }),
-            target: "_blank"
-            // checked: ""
-          }
-        ])
+    {
+      pathname: "/stake",
+      text: intl.formatMessage({ defaultMessage: "Stake" }),
+      checked: "/stake"
+    },
+    {
+      pathname: "https://waterfall-defi.gitbook.io/waterfall-defi/resources/mainnet-user-guide",
+      text: intl.formatMessage({ defaultMessage: "User Guide" }),
+      target: "_blank"
+      // checked: ""
+    }
   ];
 
   const WaterFallDeFiLogo =

@@ -13,6 +13,7 @@ import numeral from "numeral";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
 import { Carousel } from "antd";
 import { Market } from "types";
+import { useCoingeckoPrices } from "hooks";
 
 const Wrapper = styled.div`
   border-radius: 24px;
@@ -198,7 +199,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
   const markets = useMarkets();
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
-
+  const coingeckoPrices = useCoingeckoPrices();
   const { push } = useHistory();
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
   return (
@@ -220,7 +221,9 @@ const TrancheCard = memo<TProps>(({ intl }) => {
                         _market?.tranches[_i],
                         _market?.duration,
                         _market?.rewardPerBlock,
-                        wtfPrice
+                        wtfPrice,
+                        _market?.assets,
+                        coingeckoPrices
                       )
                     : "-";
 

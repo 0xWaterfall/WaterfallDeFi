@@ -11,7 +11,7 @@ import { useTheme } from "@emotion/react";
 import Button from "components/Button/Button";
 import Tag from "components/Tag/Tag";
 import { useHistory } from "react-router-dom";
-import { useWTF } from "hooks";
+import { useCoingeckoPrices, useWTF } from "hooks";
 import Coin from "components/Coin";
 import Countdown from "react-countdown";
 // import _ from "lodash";
@@ -104,6 +104,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
   const { push } = useHistory();
   const dispatch = useDispatch();
   const { weekDistribution } = useWTF();
+  const coingeckoPrices = useCoingeckoPrices();
   // const isHide = weekDistribution.toString() !== "0" ? "visible" : "hidden";
   const isHide = data.rewardPerBlock !== "0" ? "visible" : "hidden";
 
@@ -151,7 +152,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
               marketData?.tranches[_i],
               marketData.duration,
               marketData.rewardPerBlock,
-              wtfPrice
+              wtfPrice,
+              marketData?.assets,
+              coingeckoPrices
             );
             const trancheAPR = _t.apy;
             const totalAPR =
@@ -184,7 +187,9 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                             marketData?.tranches[_i],
                             marketData.duration,
                             marketData.rewardPerBlock,
-                            wtfPrice
+                            wtfPrice,
+                            marketData?.assets,
+                            coingeckoPrices
                           )}
                           {" %"}
                         </span>

@@ -4,6 +4,7 @@ import { BIG_TEN } from "./bigNumber";
 import dayjs from "dayjs";
 import numeral from "numeral";
 import { BLOCK_TIME } from "config";
+import axios from "axios";
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";
@@ -213,13 +214,14 @@ export const compareNum = (num1: string | number | undefined, num2: string | und
   if (largerOnly) return _num1.comparedTo(_num2) > 0 ? true : false;
   return _num1.comparedTo(_num2) >= 0 ? true : false;
 };
-
 export const getWTFApr = (
   wtfAPY: string | undefined,
   tranche: Tranche | undefined,
   duration: string | undefined,
   rewardPerBlock: string | undefined,
-  wtfPrice: string | null
+  wtfPrice: string | null,
+  assets?: string[] | null,
+  coingeckoPrices?: any
 ) => {
   if (wtfAPY === undefined) return;
   if (tranche === undefined) return;
@@ -227,8 +229,15 @@ export const getWTFApr = (
   if (rewardPerBlock === undefined) return;
   if (wtfPrice === null) return;
   wtfAPY = wtfAPY.replace("+ ", "");
+
   // const wtfPrice = 1;
-  const target = new BigNumber(tranche.target);
+  let target = new BigNumber(tranche.target);
+  console.log("target1", target.toString(), assets, coingeckoPrices);
+  let avaxPrice = 1;
+  if (assets?.includes("WAVAX")) {
+    avaxPrice = coingeckoPrices?.["wrapped-avax"]?.usd;
+    target = target.times(avaxPrice);
+  }
 
   //
   const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");

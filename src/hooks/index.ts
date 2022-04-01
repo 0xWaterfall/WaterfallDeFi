@@ -549,7 +549,16 @@ export const useWTF = () => {
 
   return { weekDistribution };
 };
-
+const getCoingeckoPrices = async () => {
+  const result = await axios.get(
+    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax"
+  );
+  if (result.status === 200) {
+    console.log("getCoingeckoPrices,", result.data);
+    return result.data;
+  }
+  return {};
+};
 const getTotalTVL = async () => {
   let _tvl = BIG_ZERO;
   const result = await axios.get(
@@ -611,6 +620,20 @@ export const useTotalTvl = () => {
   }, [markets, slowRefresh]);
 
   return totalTvl;
+};
+export const useCoingeckoPrices = () => {
+  const [prices, setPrices] = useState({});
+  const markets = useMarkets();
+  const { slowRefresh } = useRefresh();
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const _prices = await getCoingeckoPrices();
+      setPrices(_prices);
+    };
+    fetchBalance();
+  }, [markets, slowRefresh]);
+
+  return prices;
 };
 export const useWeeklyReward = () => {
   const [weeklyReward, setWeeklyReward] = useState("0");

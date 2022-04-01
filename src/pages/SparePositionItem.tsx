@@ -167,7 +167,8 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
           market?.tranches[userInvest.tranche],
           market?.duration,
           market?.rewardPerBlock,
-          wtfPrice
+          wtfPrice,
+          market?.assets
         )
       : "-";
 

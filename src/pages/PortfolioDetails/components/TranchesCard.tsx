@@ -18,7 +18,7 @@ import {
 import { CheckIcon } from "assets/images";
 import { FlexRow } from "styles";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";
-import { useWTF } from "hooks";
+import { useCoingeckoPrices, useWTF } from "hooks";
 import { BigNumber } from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
@@ -202,6 +202,7 @@ const TranchesCard = memo<TProps>(
             ),
       [tranche.principal, tranche.target, tranche.autoPrincipal]
     );
+    const coingeckoPrices = useCoingeckoPrices();
     const trancheApr = tranche.apy;
     // const wtfPrice = useWTFPrice();
     const { price: wtfPrice } = useWTFPriceLP();
@@ -215,7 +216,9 @@ const TranchesCard = memo<TProps>(
           data?.tranches[trancheIndex],
           data?.duration,
           data?.rewardPerBlock,
-          wtfPrice
+          wtfPrice,
+          data?.assets,
+          coingeckoPrices
         )
       : "-";
 

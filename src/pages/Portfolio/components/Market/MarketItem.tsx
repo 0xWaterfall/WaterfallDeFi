@@ -201,7 +201,8 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
                       marketData?.tranches[_i],
                       marketData.duration,
                       marketData.rewardPerBlock,
-                      wtfPrice
+                      wtfPrice,
+                      marketData?.assets
                     )}
                     {" %"}
                   </span>

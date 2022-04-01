@@ -188,11 +188,7 @@ const ApproveCard = memo<TProps>(
     const { onInvestMCSimul } = useInvestMCSimul(data.address);
 
     //balance hooks
-    const {
-      balance: balanceWallet,
-      fetchBalance,
-      actualBalance: actualBalanceWallet
-    } = data.assets[0] === "AVAX" ? useMetamaskAvaxCBalance() : useBalance(depositAddress);
+    const { balance: balanceWallet, fetchBalance, actualBalance: actualBalanceWallet } = useBalance(depositAddress);
     const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
     const { balance: balanceRe } = useTrancheBalance(data.address, data.isAvax);
     const multicurrencyBalanceRes = data.depositAssetAddresses.map((address, i) =>
@@ -237,10 +233,6 @@ const ApproveCard = memo<TProps>(
     ];
     //use effects
     useEffect(() => {
-      if (data.assets[0] === "AVAX") {
-        setApproved(true);
-        return;
-      }
       const checkApproved = async (account: string) => {
         const approved = !depositMultipleSimultaneous ? await onCheckApprove() : await onCheckApproveAll();
         setApproved(approved ? true : false);

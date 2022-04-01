@@ -182,7 +182,7 @@ export const MarketList: Market[] = [
   {
     portfolio: "AVAX Falls Autorolling (Test)",
     isAvax: true,
-    wrapAvax: false,
+    wrapAvax: true,
     autorollImplemented: true,
     isMulticurrency: false,
     assets: ["AVAX"],

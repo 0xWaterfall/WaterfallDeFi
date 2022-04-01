@@ -49,7 +49,12 @@ import {
   WAVAXFallsTrancheMasterAddress2,
   WAVAXFallsMasterWTFAddress2,
   WAVAXBenqiStrategyAddress2,
-  WAVAXTraderJoeStrategyAddress2
+  WAVAXTraderJoeStrategyAddress2,
+  MAXIFallsTrancheMasterAddress2,
+  MAXIFallsMasterWTFAddress2,
+  MAXIBenqiStrategyAddress2,
+  MAXITraderJoeStrategyAddress2,
+  MAXIMaximizerStrategyAddress2
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
@@ -233,10 +238,10 @@ export const MarketList: Market[] = [
     totalTranchesTarget: "",
     status: "",
     nextTime: "",
-    address: MAXIFallsTrancheMasterAddress[NETWORK],
+    address: MAXIFallsTrancheMasterAddress2[NETWORK],
     abi: AVAXTranchesAbi,
     masterChefAbi: MasterChefAbi,
-    masterChefAddress: MAXIFallsMasterWTFAddress[NETWORK],
+    masterChefAddress: MAXIFallsMasterWTFAddress2[NETWORK],
     pools: [],
     depositAssetAddress: DAI_E_DepositAddress[NETWORK],
     depositAssetAddresses: [],
@@ -245,19 +250,19 @@ export const MarketList: Market[] = [
       {
         farmName: "Benqi DAI.e",
         shares: 0.7,
-        sAddress: MAXIBenqiStrategyAddress[NETWORK],
+        sAddress: MAXIBenqiStrategyAddress2[NETWORK],
         apiKey: "qi_avax"
       },
       {
         farmName: "Trader Joe DAI.e",
         shares: 0.25,
-        sAddress: MAXITraderJoeStrategyAddress[NETWORK],
+        sAddress: MAXITraderJoeStrategyAddress2[NETWORK],
         apiKey: "joe_avax"
       },
       {
         farmName: "Maximizer",
         shares: 0.05,
-        sAddress: MAXIMaximizerStrategyAddress[NETWORK],
+        sAddress: MAXIMaximizerStrategyAddress2[NETWORK],
         apiKey: "maximizer"
       }
     ],

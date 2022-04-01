@@ -61,11 +61,12 @@ const Block = styled.div`
 type TProps = WrappedComponentProps & {
   share: string;
   pendingReward: string;
+  pendingRewardWAVAX: string;
 };
 
 let chart: echarts.ECharts;
 
-const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward }) => {
+const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward, pendingRewardWAVAX }) => {
   const { colorMode } = useTheme();
   const network = useNetwork();
 
@@ -118,10 +119,14 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward }) => {
     <Wrapper>
       <div id="liquidfill-Chart" style={{ height: "100%", width: "100%" }} />
       <Block>
-        <p css={{ marginBottom: 5 }}>{pendingReward ? pendingReward : "-"}</p>
+        <p css={{ marginBottom: 5 }}>
+          {pendingReward ? pendingReward : "-"}
+          <br />
+          {network === "avax" && pendingRewardWAVAX ? pendingRewardWAVAX : "-"}
+        </p>
 
         <div css={{ marginBottom: 20 }}>
-          Est. Reward Pool {network === "bnb" ? "(BUSD)" : "(Dai.e + WAVAX)"}
+          Est. Reward Pool {network === "bnb" ? "(BUSD)" : "(Dai.e)"}
           <Tooltip
             overlay={intl.formatMessage({
               defaultMessage:

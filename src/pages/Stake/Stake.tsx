@@ -39,7 +39,8 @@ import {
   AVAXMultiSigAddress,
   AVAXPendingRewardLiquidFillChartAddress,
   BUSDAddress,
-  MultiSigAddress
+  MultiSigAddress,
+  WAVAXDepositAddress
 } from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
 import { BIG_TEN } from "utils/bigNumber";
@@ -422,7 +423,13 @@ const Stake = memo<TProps>(({ intl }) => {
     network === "bnb" ? BUSDAddress[NETWORK] : AVAXPendingRewardLiquidFillChartAddress[NETWORK],
     network === "bnb" ? MultiSigAddress[NETWORK] : AVAXMultiSigAddress[NETWORK]
   );
+  const { actualBalance: pendingRewardWAVAX } =
+    network === "avax"
+      ? useBalanceOfOtherAddress(WAVAXDepositAddress[NETWORK], AVAXMultiSigAddress[NETWORK])
+      : { actualBalance: 0 };
+
   const _pendingReward = numeral(new BigNumber(pendingReward).times(0.8).toString()).format("0,0.[00]");
+  const _pendingRewardWAVAX = numeral(new BigNumber(pendingRewardWAVAX).times(0.8).toString()).format("0,0.[00]");
 
   const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
   const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
@@ -677,7 +684,7 @@ const Stake = memo<TProps>(({ intl }) => {
         </Actions>
 
         <Footer>
-          <LiquidfillChart share={VeWTFRatio} pendingReward={_pendingReward} />
+          <LiquidfillChart share={VeWTFRatio} pendingReward={_pendingReward} pendingRewardWAVAX={_pendingRewardWAVAX} />
 
           {/* <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your veWTF" })}</p>

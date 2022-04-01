@@ -237,6 +237,10 @@ const ApproveCard = memo<TProps>(
     ];
     //use effects
     useEffect(() => {
+      if (data.assets[0] === "AVAX") {
+        setApproved(true);
+        return;
+      }
       const checkApproved = async (account: string) => {
         const approved = !depositMultipleSimultaneous ? await onCheckApprove() : await onCheckApproveAll();
         setApproved(approved ? true : false);

@@ -185,7 +185,7 @@ export const MarketList: Market[] = [
     wrapAvax: true,
     autorollImplemented: true,
     isMulticurrency: false,
-    assets: ["AVAX"],
+    assets: ["WAVAX"],
     tokens: [],
     listingDate: "2022/3/29",
     tranches: [],

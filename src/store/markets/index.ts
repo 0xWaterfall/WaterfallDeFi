@@ -121,13 +121,10 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
-          console.log("defining condition:");
-          console.log(_t && _i !== _tranches.length - 1);
           const _apy =
             _t && _i !== _tranches.length - 1
               ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(16))
               : calculateJuniorAPY(tranches, totalTarget, _target);
-          console.log(_apy.toString());
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
           tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);

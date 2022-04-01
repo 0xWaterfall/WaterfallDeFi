@@ -5,12 +5,12 @@ import React, { memo, useCallback } from "react";
 import styled from "@emotion/styled";
 import { CoimpletedIcon, PendingIcon, RejectedIcon, SubmittedIcon } from "assets/images";
 import Button from "components/Button/Button";
-import { useTransactionModal } from "hooks/useSelectors";
+import { useNetwork, useTransactionModal } from "hooks/useSelectors";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useAppDispatch } from "store";
 import { setConfirmModal } from "store/showStatus";
 import { Spin } from "styles";
-import { BASE_BSC_SCAN_URL } from "config";
+import { BASE_AVAX_SCAN_URL, BASE_BSC_SCAN_URL } from "config";
 
 type TProps = WrappedComponentProps;
 
@@ -58,6 +58,7 @@ const Block = styled.div`
 `;
 
 const TransactionModal = memo<TProps>(({ intl }) => {
+  const network = useNetwork();
   const payload = useTransactionModal();
   const dispatch = useAppDispatch();
 
@@ -90,7 +91,11 @@ const TransactionModal = memo<TProps>(({ intl }) => {
           <SubmittedIcon />
           <Block>
             <h1>{intl.formatMessage({ defaultMessage: "Transaction Submitted" })}</h1>
-            <a href={`${BASE_BSC_SCAN_URL}/tx/${payload?.txn}`} target="_blank" rel="noreferrer">
+            <a
+              href={`${network === "bnb" ? BASE_BSC_SCAN_URL : BASE_AVAX_SCAN_URL}/tx/${payload?.txn}`}
+              target="_blank"
+              rel="noreferrer"
+            >
               {intl.formatMessage({ defaultMessage: "View on Snowtrace" })}
             </a>
             <Button type="primary" onClick={handle}>
@@ -105,7 +110,11 @@ const TransactionModal = memo<TProps>(({ intl }) => {
           <CoimpletedIcon />
           <Block>
             <h1>{intl.formatMessage({ defaultMessage: "Transaction Completed" })}</h1>
-            <a href={`${BASE_BSC_SCAN_URL}/tx/${payload?.txn}`} target="_blank" rel="noreferrer">
+            <a
+              href={`${network === "bnb" ? BASE_BSC_SCAN_URL : BASE_AVAX_SCAN_URL}/tx/${payload?.txn}`}
+              target="_blank"
+              rel="noreferrer"
+            >
               {intl.formatMessage({ defaultMessage: "View on Snowtrace" })}
             </a>
             <Button type="primary" onClick={handle}>

@@ -16,16 +16,17 @@ export const AllTranches = [
     network: "BSC"
   },
   {
-    address: "0x22C6719A53cEAE150f93c225e6BDbF7722B67523",
-    network: "BSC"
+    address: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1",
+    network: "AVAX"
   },
   {
-    address: "0x466D5d69DB51c562A850227ed2081040b408a98D",
-    network: "BSC"
+    address: "0x12D7D07F9A1A659Be4E1E2945c8229B387840D2B",
+    network: "AVAX",
+    coin: "wavax"
   },
   {
-    address: "0x17Dd4D94fCA4f26C23fBa591AD5418260950FD16",
-    network: "BSC"
+    address: "0x17896D84af7af66bdFB3BB1e529596FCd0bf8CE1",
+    network: "AVAX"
   },
   {
     address: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1",
@@ -343,6 +344,74 @@ export const MAXIMaximizerStrategyAddress: { [network: string]: string } = {
   //test
   // [NETWORKS.MAINNET]: "0x57c5a9808022aD244E1487F204A01349c90726f9"
   [NETWORKS.MAINNET]: "0x7D98423348Fa076FD07b0B2719Aa702302266c66"
+};
+
+export const DAIFallsTrancheMasterAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x41EA3e25f4eE30C49657dF20564B3B0F21a172b5"
+};
+export const DAIFallsMasterWTFAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x3bbdC512aA10afDB9c0eB1598aAe7e7A1b9b1b11"
+};
+
+export const DAITraderJoeStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x6e415d39A83A5C542CF20182696Ff1F88094DA8E"
+};
+export const DAIBenqiStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xDb7804D5261E176B55A091bF7EFdc11Ea007828e"
+};
+export const WAVAXFallsTrancheMasterAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x852a59E83FeE95165006d00F83356139aebfCaC4"
+};
+export const WAVAXFallsMasterWTFAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x9cBCbBC0A4C9C877D671a2494310bb94a557D3ce"
+};
+export const WAVAXTraderJoeStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xA3EfCBA04a3CF91a4db28334506DB4020199D43F"
+};
+export const WAVAXBenqiStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x9bD0F0E513C73b15Db787c4D81f5Bb1DECbD3D74"
+};
+
+export const MAXIFallsTrancheMasterAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xd4BcafB934d417D533C5D06f084394205990a6Bc"
+};
+export const MAXIFallsMasterWTFAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x3Cd071B6D8455053AB27AAB423d9B03b66999480"
+};
+export const MAXITraderJoeStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1A02A04516613E97f20e0C9C4F6D3876E847e877"
+};
+export const MAXIBenqiStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1A862aDdb4AD67f20C82eCA5E220885520CA5861"
+};
+export const MAXIMaximizerStrategyAddress2: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xbA926A0200B17E6746518a9b3cE35A0f33c62997"
 };
 
 //*TEST* multicurrency master tranche contract address

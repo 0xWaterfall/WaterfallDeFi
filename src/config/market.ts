@@ -41,7 +41,15 @@ import {
   BEAR_BNB_WTFMasterAddress,
   WBNB_Address,
   BEAR_BNBBUSD_sALPACA_Address,
-  BEAR_BNBUSDT_sALPACA_Address
+  BEAR_BNBUSDT_sALPACA_Address,
+  DAIFallsTrancheMasterAddress2,
+  DAIFallsMasterWTFAddress2,
+  DAIBenqiStrategyAddress2,
+  DAITraderJoeStrategyAddress2,
+  WAVAXFallsTrancheMasterAddress2,
+  WAVAXFallsMasterWTFAddress2,
+  WAVAXBenqiStrategyAddress2,
+  WAVAXTraderJoeStrategyAddress2
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
@@ -56,7 +64,7 @@ import { Market } from "types";
 import { NETWORK } from "config";
 export const MarketList: Market[] = [
   {
-    portfolio: "DAI Falls",
+    portfolio: "DAI Falls (Retired)",
     isAvax: true,
     wrapAvax: false,
     autorollImplemented: false,
@@ -92,10 +100,49 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_dai",
-    isRetired: false
+    isRetired: true
   },
   {
-    portfolio: "AVAX Falls",
+    portfolio: "DAI Falls (Autorolled)",
+    isAvax: true,
+    wrapAvax: false,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["DAI.e"],
+    tokens: [],
+    listingDate: "2022/2/28",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: DAIFallsTrancheMasterAddress2[NETWORK],
+    abi: AVAXTranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: DAIFallsMasterWTFAddress2[NETWORK],
+    pools: [],
+    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Benqi DAI.e",
+        shares: 0.7,
+        sAddress: DAIBenqiStrategyAddress2[NETWORK],
+        apiKey: "qi_dai"
+      },
+      {
+        farmName: "Trader Joe DAI.e",
+        shares: 0.3,
+        sAddress: DAITraderJoeStrategyAddress2[NETWORK],
+        apiKey: "joe_dai_e"
+      }
+    ],
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_dai",
+    isRetired: true
+  },
+  {
+    portfolio: "AVAX Falls (Retired)",
     isAvax: true,
     wrapAvax: true,
     autorollImplemented: false,
@@ -131,56 +178,94 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
+    isRetired: true
+  },
+  {
+    portfolio: "AVAX Falls (Autorolled)",
+    isAvax: true,
+    wrapAvax: true,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["WAVAX"],
+    tokens: [],
+    listingDate: "2022/2/28",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: WAVAXFallsTrancheMasterAddress2[NETWORK],
+    abi: AVAXTranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: WAVAXFallsMasterWTFAddress2[NETWORK],
+    pools: [],
+    depositAssetAddress: WAVAXDepositAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Benqi AVAX",
+        shares: 0.5,
+        sAddress: WAVAXBenqiStrategyAddress2[NETWORK],
+        apiKey: "qi_avax"
+      },
+      {
+        farmName: "Trader Joe AVAX",
+        shares: 0.5,
+        sAddress: WAVAXTraderJoeStrategyAddress2[NETWORK],
+        apiKey: "joe_avax"
+      }
+    ],
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
     isRetired: false
   },
-  //will be redeployed soon
-  // {
-  //   portfolio: "MAXI Falls",
-  //   isAvax: true,
-  //   wrapAvax: false,
-  //   autorollImplemented: false,
-  //   isMulticurrency: false,
-  //   assets: ["DAI.e"],
-  //   tokens: [],
-  //   listingDate: "2022/2/28",
-  //   tranches: [],
-  //   tvl: "",
-  //   totalTranchesTarget: "",
-  //   status: "",
-  //   nextTime: "",
-  //   address: MAXIFallsTrancheMasterAddress[NETWORK],
-  //   abi: AVAXTranchesAbi,
-  //   masterChefAbi: MasterChefAbi,
-  //   masterChefAddress: MAXIFallsMasterWTFAddress[NETWORK],
-  //   pools: [],
-  //   depositAssetAddress: DAI_E_DepositAddress[NETWORK],
-  //   depositAssetAddresses: [],
-  //   depositAssetAbi: WTFAbi,
-  //   strategyFarms: [
-  //     {
-  //       farmName: "Benqi DAI.e",
-  //       shares: 0.7,
-  //       sAddress: MAXIBenqiStrategyAddress[NETWORK],
-  //       apiKey: "qi_avax"
-  //     },
-  //     {
-  //       farmName: "Trader Joe DAI.e",
-  //       shares: 0.25,
-  //       sAddress: MAXITraderJoeStrategyAddress[NETWORK],
-  //       apiKey: "joe_avax"
-  //     },
-  //     {
-  //       farmName: "Maximizer",
-  //       shares: 0.05,
-  //       sAddress: MAXIMaximizerStrategyAddress[NETWORK],
-  //       apiKey: "maximizer"
-  //     }
-  //   ],
-  //   subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxiQiJoe_dai",
-  //   isRetired: false
-  // },
   {
-    portfolio: "AVAX Falls Autorolling (Test)",
+    portfolio: "MAXI Falls (Autorolled)",
+    isAvax: true,
+    wrapAvax: false,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["DAI.e"],
+    tokens: [],
+    listingDate: "2022/2/28",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: MAXIFallsTrancheMasterAddress[NETWORK],
+    abi: AVAXTranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: MAXIFallsMasterWTFAddress[NETWORK],
+    pools: [],
+    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Benqi DAI.e",
+        shares: 0.7,
+        sAddress: MAXIBenqiStrategyAddress[NETWORK],
+        apiKey: "qi_avax"
+      },
+      {
+        farmName: "Trader Joe DAI.e",
+        shares: 0.25,
+        sAddress: MAXITraderJoeStrategyAddress[NETWORK],
+        apiKey: "joe_avax"
+      },
+      {
+        farmName: "Maximizer",
+        shares: 0.05,
+        sAddress: MAXIMaximizerStrategyAddress[NETWORK],
+        apiKey: "maximizer"
+      }
+    ],
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxiQiJoe_dai",
+    isRetired: false
+  },
+  {
+    portfolio: "AVAX Falls (Autorolled)",
     isAvax: true,
     wrapAvax: true,
     autorollImplemented: true,
@@ -256,203 +341,202 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4"
-  },
-  {
-    portfolio: "BUSD Falls 1 (Expired)",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["BUSD"],
-    tokens: [],
-    listingDate: "2022/01/16",
-    tranches: [],
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: TranchesAddressOracle1[NETWORK],
-    abi: TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: MasterChefOracleAddress1[NETWORK],
-    pools: [],
-    depositAssetAddress: BUSDAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BUSD",
-        shares: 0.8,
-        sAddress: sALPACAAddress[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Venus BUSD",
-        shares: 0.2,
-        sAddress: sVENUSAddress[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls1new",
-    isRetired: true
-  },
-  {
-    portfolio: "BUSD Falls 2 (Expired)",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["BUSD"],
-    listingDate: "2022/01/17",
-    tranches: [],
-    tokens: [],
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: TranchesAddressOracle2[NETWORK],
-    abi: TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: MasterChefOracleAddress2[NETWORK],
-    pools: [],
-    depositAssetAddress: BUSDAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BUSD",
-        shares: 0.8,
-        sAddress: sALPACAAddress[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Venus BUSD",
-        shares: 0.2,
-        sAddress: sVENUSAddress[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2new",
-    isRetired: true
-  },
-
-  {
-    portfolio: "BUSD Falls 3 (Expired)",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["BUSD"],
-    tokens: [],
-    listingDate: "2022/12/26",
-    tranches: [],
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: TranchesAddress3[NETWORK],
-    abi: TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: MasterChefAddress3[NETWORK],
-    pools: [],
-    depositAssetAddress: BUSDAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BUSD",
-        shares: 0.7,
-        sAddress: sALPACAAddress[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Venus BUSD",
-        shares: 0.3,
-        sAddress: sVENUSAddress[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3",
-    isRetired: true
-  },
-  {
-    portfolio: "BNB Bull Falls Test",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: true,
-    assets: ["BUSD", "USDT"],
-    tokens: [],
-    listingDate: "2022/03/15",
-    tranches: [],
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: BULL_BNB_TrancheMasterAddress[NETWORK],
-    abi: MC_TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: BULL_BNB_WTFMasterAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: "",
-    depositAssetAddresses: [BUSDAddress[NETWORK], USDT_Address[NETWORK]],
-    depositAssetAbi: WTFAbi,
-    // strategyAddress: StrategyAddress[NETWORK],
-    // strategyAbi: StrategyAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BUSD:BNB",
-        shares: 0.5,
-        sAddress: BULL_BUSDBNB_sALPACA_Address[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Alpaca USDT:BNB",
-        shares: 0.5,
-        sAddress: BULL_USDTBNB_sALPACA_Address[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bull"
-  },
-  {
-    portfolio: "BNB Bear Falls Test",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["WBNB"], //changed to array for multicurrency
-    tokens: [],
-    listingDate: "2022/03/15",
-    tranches: [],
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: BEAR_BNB_TrancheMasterAddress[NETWORK],
-    abi: TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: BEAR_BNB_WTFMasterAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: WBNB_Address[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    // strategyAddress: StrategyAddress[NETWORK],
-    // strategyAbi: StrategyAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BNB:BUSD",
-        shares: 0.5,
-        sAddress: BEAR_BNBBUSD_sALPACA_Address[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Alpaca BNB:USDT",
-        shares: 0.5,
-        sAddress: BEAR_BNBUSDT_sALPACA_Address[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bear"
   }
+  // {
+  //   portfolio: "BUSD Falls 1 (Expired)",
+  //   isAvax: false,
+  //   wrapAvax: false,
+  //   autorollImplemented: false,
+  //   isMulticurrency: false,
+  //   assets: ["BUSD"],
+  //   tokens: [],
+  //   listingDate: "2022/01/16",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddressOracle1[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefOracleAddress1[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.8,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.2,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls1new",
+  //   isRetired: true
+  // },
+  // {
+  //   portfolio: "BUSD Falls 2 (Expired)",
+  //   isAvax: false,
+  //   wrapAvax: false,
+  //   autorollImplemented: false,
+  //   isMulticurrency: false,
+  //   assets: ["BUSD"],
+  //   listingDate: "2022/01/17",
+  //   tranches: [],
+  //   tokens: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddressOracle2[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefOracleAddress2[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.8,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.2,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls2new",
+  //   isRetired: true
+  // },
+  // {
+  //   portfolio: "BUSD Falls 3 (Expired)",
+  //   isAvax: false,
+  //   wrapAvax: false,
+  //   autorollImplemented: false,
+  //   isMulticurrency: false,
+  //   assets: ["BUSD"],
+  //   tokens: [],
+  //   listingDate: "2022/12/26",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: TranchesAddress3[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: MasterChefAddress3[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: BUSDAddress[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD",
+  //       shares: 0.7,
+  //       sAddress: sALPACAAddress[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Venus BUSD",
+  //       shares: 0.3,
+  //       sAddress: sVENUSAddress[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls3",
+  //   isRetired: true
+  // }
+  // {
+  //   portfolio: "BNB Bull Falls Test",
+  //   isAvax: false,
+  //   wrapAvax: false,
+  //   autorollImplemented: false,
+  //   isMulticurrency: true,
+  //   assets: ["BUSD", "USDT"],
+  //   tokens: [],
+  //   listingDate: "2022/03/15",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: BULL_BNB_TrancheMasterAddress[NETWORK],
+  //   abi: MC_TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: BULL_BNB_WTFMasterAddress[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: "",
+  //   depositAssetAddresses: [BUSDAddress[NETWORK], USDT_Address[NETWORK]],
+  //   depositAssetAbi: WTFAbi,
+  //   // strategyAddress: StrategyAddress[NETWORK],
+  //   // strategyAbi: StrategyAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BUSD:BNB",
+  //       shares: 0.5,
+  //       sAddress: BULL_BUSDBNB_sALPACA_Address[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Alpaca USDT:BNB",
+  //       shares: 0.5,
+  //       sAddress: BULL_USDTBNB_sALPACA_Address[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bull"
+  // },
+  // {
+  //   portfolio: "BNB Bear Falls Test",
+  //   isAvax: false,
+  //   wrapAvax: false,
+  //   autorollImplemented: false,
+  //   isMulticurrency: false,
+  //   assets: ["WBNB"], //changed to array for multicurrency
+  //   tokens: [],
+  //   listingDate: "2022/03/15",
+  //   tranches: [],
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: BEAR_BNB_TrancheMasterAddress[NETWORK],
+  //   abi: TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: BEAR_BNB_WTFMasterAddress[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: WBNB_Address[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   // strategyAddress: StrategyAddress[NETWORK],
+  //   // strategyAbi: StrategyAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Alpaca BNB:BUSD",
+  //       shares: 0.5,
+  //       sAddress: BEAR_BNBBUSD_sALPACA_Address[NETWORK],
+  //       apiKey: "alpaca"
+  //     },
+  //     {
+  //       farmName: "Alpaca BNB:USDT",
+  //       shares: 0.5,
+  //       sAddress: BEAR_BNBUSDT_sALPACA_Address[NETWORK],
+  //       apiKey: "venus"
+  //     }
+  //   ],
+  //   subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-alpaca-bear"
+  // }
 ];

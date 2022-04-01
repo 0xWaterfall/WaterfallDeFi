@@ -105,7 +105,7 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_dai",
-    isRetired: true
+    isRetired: false
   },
   {
     portfolio: "AVAX Falls (Autorolled)",

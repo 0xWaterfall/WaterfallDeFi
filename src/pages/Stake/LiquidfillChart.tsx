@@ -121,12 +121,14 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward, pendingRewar
       <Block>
         <p css={{ marginBottom: 5 }}>
           {pendingReward ? pendingReward : "-"}
+          {network === "avax" ? " Dai.e" : "BUSD"}
           <br />
           {network === "avax" && pendingRewardWAVAX ? pendingRewardWAVAX : "-"}
+          {network === "avax" ? " WAVAX" : ""}
         </p>
 
         <div css={{ marginBottom: 20 }}>
-          Est. Reward Pool {network === "bnb" ? "(BUSD)" : "(Dai.e)"}
+          Est. Reward Pool
           <Tooltip
             overlay={intl.formatMessage({
               defaultMessage:

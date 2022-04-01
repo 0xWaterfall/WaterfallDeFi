@@ -35,7 +35,12 @@ import {
   Tooltip,
   Legend
 } from "chart.js";
-import { BUSDAddress, MultiSigAddress } from "config/address";
+import {
+  AVAXMultiSigAddress,
+  AVAXPendingRewardLiquidFillChartAddress,
+  BUSDAddress,
+  MultiSigAddress
+} from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
 import { BIG_TEN } from "utils/bigNumber";
 import { useNetwork } from "hooks/useSelectors";
@@ -413,8 +418,11 @@ const Stake = memo<TProps>(({ intl }) => {
     stakingConfig?.earningTokenAddress || "",
     account
   );
-  const { actualBalance: pendingBUSDReward } = useBalanceOfOtherAddress(BUSDAddress[NETWORK], MultiSigAddress[NETWORK]);
-  const _pendingBUSDReward = numeral(new BigNumber(pendingBUSDReward).times(0.8).toString()).format("0,0.[00]");
+  const { actualBalance: pendingReward } = useBalanceOfOtherAddress(
+    network === "bnb" ? BUSDAddress[NETWORK] : AVAXPendingRewardLiquidFillChartAddress[NETWORK],
+    network === "bnb" ? MultiSigAddress[NETWORK] : AVAXMultiSigAddress[NETWORK]
+  );
+  const _pendingReward = numeral(new BigNumber(pendingReward).times(0.8).toString()).format("0,0.[00]");
 
   const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);
   const VeWTFTotalSupply = useTotalSupply(stakingConfig.earningTokenAddress);
@@ -669,7 +677,7 @@ const Stake = memo<TProps>(({ intl }) => {
         </Actions>
 
         <Footer>
-          <LiquidfillChart share={VeWTFRatio} pendingBUSDReward={_pendingBUSDReward} />
+          <LiquidfillChart share={VeWTFRatio} pendingReward={_pendingReward} />
 
           {/* <VeWTF>
               <p>{intl.formatMessage({ defaultMessage: "Your veWTF" })}</p>

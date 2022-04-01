@@ -140,6 +140,11 @@ export const BUSDAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "8fac0A9CD6489EB1AF0E633ADcc540d4357E69c8",
   [NETWORKS.MAINNET]: "0xe9e7cea3dedca5984780bafc599bd69add087d56"
 };
+export const AVAXPendingRewardLiquidFillChartAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1ACC14EAf24F87835A9cc2F1F2DBcEEd1C7Fc324"
+};
 //!!!
 //testing multicurrency with TUSD
 export const TUSDAddress: { [network: string]: string } = {
@@ -208,6 +213,11 @@ export const MultiSigAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x46D0C754463E3Bd07c1451CF4a683fEcD507d36B"
+};
+export const AVAXMultiSigAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1ACC14EAf24F87835A9cc2F1F2DBcEEd1C7Fc324"
 };
 
 export const MulticallAddress: { [network: string]: string } = {

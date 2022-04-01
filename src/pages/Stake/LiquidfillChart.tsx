@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import "echarts-liquidfill";
 import { Union } from "assets/images";
 import Tooltip from "components/Tooltip/Tooltip";
+import { useNetwork } from "hooks/useSelectors";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -59,13 +60,14 @@ const Block = styled.div`
 
 type TProps = WrappedComponentProps & {
   share: string;
-  pendingBUSDReward: string;
+  pendingReward: string;
 };
 
 let chart: echarts.ECharts;
 
-const LiquidfillChart = memo<TProps>(({ intl, share, pendingBUSDReward }) => {
+const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward }) => {
   const { colorMode } = useTheme();
+  const network = useNetwork();
 
   const options = useMemo(() => {
     return {
@@ -116,10 +118,10 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingBUSDReward }) => {
     <Wrapper>
       <div id="liquidfill-Chart" style={{ height: "100%", width: "100%" }} />
       <Block>
-        <p css={{ marginBottom: 5 }}>{pendingBUSDReward ? pendingBUSDReward : "-"}</p>
+        <p css={{ marginBottom: 5 }}>{pendingReward ? pendingReward : "-"}</p>
 
         <div css={{ marginBottom: 20 }}>
-          Est. Reward Pool（BUSD）
+          Est. Reward Pool {network === "bnb" ? "(BUSD)" : "(Dai.e + WAVAX)"}
           <Tooltip
             overlay={intl.formatMessage({
               defaultMessage:

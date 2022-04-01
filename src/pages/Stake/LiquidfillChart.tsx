@@ -119,11 +119,11 @@ const LiquidfillChart = memo<TProps>(({ intl, share, pendingReward, pendingRewar
     <Wrapper>
       <div id="liquidfill-Chart" style={{ height: "100%", width: "100%" }} />
       <Block>
-        <p css={{ marginBottom: 5 }}>
+        <p css={{ marginBottom: 5, textAlign: "center" }}>
           {pendingReward ? pendingReward : "-"}
-          {network === "avax" ? " Dai.e" : "BUSD"}
+          {network === "avax" ? " Dai.e" : " BUSD"}
           <br />
-          {network === "avax" && pendingRewardWAVAX ? pendingRewardWAVAX : "-"}
+          {network === "avax" && pendingRewardWAVAX ? pendingRewardWAVAX : ""}
           {network === "avax" ? " WAVAX" : ""}
         </p>
 

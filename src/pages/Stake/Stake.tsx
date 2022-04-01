@@ -39,6 +39,7 @@ import {
   AVAXMultiSigAddress,
   AVAXPendingRewardLiquidFillChartAddress,
   BUSDAddress,
+  DaiEPendingRewardLiquidFillChartAddress,
   MultiSigAddress,
   WAVAXDepositAddress
 } from "config/address";
@@ -420,15 +421,17 @@ const Stake = memo<TProps>(({ intl }) => {
     account
   );
   const { actualBalance: pendingReward } = useBalanceOfOtherAddress(
-    network === "bnb" ? BUSDAddress[NETWORK] : AVAXPendingRewardLiquidFillChartAddress[NETWORK],
+    network === "bnb" ? BUSDAddress[NETWORK] : DaiEPendingRewardLiquidFillChartAddress[NETWORK],
     network === "bnb" ? MultiSigAddress[NETWORK] : AVAXMultiSigAddress[NETWORK]
   );
+
   const { actualBalance: pendingRewardWAVAX } =
     network === "avax"
       ? useBalanceOfOtherAddress(WAVAXDepositAddress[NETWORK], AVAXMultiSigAddress[NETWORK])
       : { actualBalance: 0 };
 
   const _pendingReward = numeral(new BigNumber(pendingReward).times(0.8).toString()).format("0,0.[00]");
+
   const _pendingRewardWAVAX = numeral(new BigNumber(pendingRewardWAVAX).times(0.8).toString()).format("0,0.[00]");
 
   const { balance: VeWTFBalance } = useBalance(stakingConfig.earningTokenAddress);

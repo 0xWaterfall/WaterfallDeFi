@@ -145,6 +145,11 @@ export const AVAXPendingRewardLiquidFillChartAddress: { [network: string]: strin
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x1ACC14EAf24F87835A9cc2F1F2DBcEEd1C7Fc324"
 };
+export const DaiEPendingRewardLiquidFillChartAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x1ACC14EAf24F87835A9cc2F1F2DBcEEd1C7Fc324"
+};
 //!!!
 //testing multicurrency with TUSD
 export const TUSDAddress: { [network: string]: string } = {

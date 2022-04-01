@@ -148,7 +148,7 @@ export const AVAXPendingRewardLiquidFillChartAddress: { [network: string]: strin
 export const DaiEPendingRewardLiquidFillChartAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x1ACC14EAf24F87835A9cc2F1F2DBcEEd1C7Fc324"
+  [NETWORKS.MAINNET]: "0xd586E7F844cEa2F87f50152665BCbc2C279D8d70"
 };
 //!!!
 //testing multicurrency with TUSD

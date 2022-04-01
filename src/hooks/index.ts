@@ -16,7 +16,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import MultiCallAbi from "config/abi/Multicall.json";
 import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
 import { useMarkets, useNetwork } from "./useSelectors";
-import { NETWORK } from "config";
+import { BLOCK_TIME, NETWORK } from "config";
 import useRefresh from "./useRefresh";
 import multicall, { multicallBSC, multicallNetwork } from "utils/multicall";
 import numeral from "numeral";
@@ -619,10 +619,13 @@ export const useWeeklyReward = () => {
   const { slowRefresh } = useRefresh();
   useEffect(() => {
     markets.forEach((m) => {
+      if (m?.isRetired) return;
       const _rpb = new BigNumber(m.rewardPerBlock || 0);
       _rewardPerBlock = _rewardPerBlock.plus(_rpb);
     });
-    setWeeklyReward(_rewardPerBlock.times((86400 / 3) * 7).toString());
+
+    const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
+    setWeeklyReward(_rewardPerBlock.times((86400 / blockTime) * 7).toString());
   }, [markets, slowRefresh]);
 
   return weeklyReward;

@@ -64,6 +64,7 @@ import { abi as AR_AVAXTrancheMasterAbi } from "./abi/AR_AVAXTrancheMaster.json"
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
 import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
+import AVAXTrancheMasterAutorollABI from "./abi/AVAXTrancheMasterAutoroll.json";
 // import { abi as StrategyAbi } from "./abi/Strategy.json";
 import { Market } from "types";
 import { NETWORK } from "config";
@@ -83,7 +84,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: DAIFallsTrancheMasterAddress2[NETWORK],
-    abi: AVAXTranchesAbi,
+    abi: AVAXTrancheMasterAutorollABI,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: DAIFallsMasterWTFAddress2[NETWORK],
     pools: [],
@@ -122,7 +123,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: WAVAXFallsTrancheMasterAddress2[NETWORK],
-    abi: AVAXTranchesAbi,
+    abi: AVAXTrancheMasterAutorollABI,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: WAVAXFallsMasterWTFAddress2[NETWORK],
     pools: [],
@@ -161,7 +162,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: MAXIFallsTrancheMasterAddress2[NETWORK],
-    abi: AVAXTranchesAbi,
+    abi: AVAXTrancheMasterAutorollABI,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: MAXIFallsMasterWTFAddress2[NETWORK],
     pools: [],
@@ -305,7 +306,8 @@ export const MarketList: Market[] = [
         apiKey: "venus"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
+    isRetired: true
   }
   // {
   //   portfolio: "BUSD Falls 1 (Expired)",

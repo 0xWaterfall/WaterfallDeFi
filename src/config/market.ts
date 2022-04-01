@@ -174,13 +174,13 @@ export const MarketList: Market[] = [
         farmName: "Benqi DAI.e",
         shares: 0.7,
         sAddress: MAXIBenqiStrategyAddress2[NETWORK],
-        apiKey: "qi_avax"
+        apiKey: "qi_dai"
       },
       {
         farmName: "Trader Joe DAI.e",
         shares: 0.25,
         sAddress: MAXITraderJoeStrategyAddress2[NETWORK],
-        apiKey: "joe_avax"
+        apiKey: "joe_dai_e"
       },
       {
         farmName: "Maximizer",

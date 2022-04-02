@@ -7,7 +7,7 @@ import DatePicker from "components/DatePicker/DatePicker";
 import StakeInput from "components/Input/StakeInput";
 import SelectTimeLimit from "components/SelectTimeLimit/SelectTimeLimit";
 import { NETWORK } from "config";
-import { VeWTFAddressBNB, WTFAddressAVAX, WTFAddressBNB } from "config/address";
+import { VeWTFAddressAVAX, VeWTFAddressBNB, WTFAddressAVAX, WTFAddressBNB } from "config/address";
 import dayjs, { Dayjs, OpUnitType } from "dayjs";
 import { useBalance } from "hooks";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -132,7 +132,7 @@ const Increase = memo<TProps>(
     const { tags } = useTheme();
     const { account } = useWeb3React<Web3Provider>();
     const network = useNetwork();
-
+    console.log("increase", network, stakingConfig);
     const [selectedValue, setSelectedValue] = useState<{ value: number; unit?: OpUnitType }>();
     const [datePickerValue, setDatePickerValue] = useState<Dayjs>();
     const [balanceInput, setBalanceInput] = useState("0");
@@ -163,7 +163,7 @@ const Increase = memo<TProps>(
     const dispatch = useAppDispatch();
     const { onApprove } = useApprove(
       network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
-      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressBNB[NETWORK]
+      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressAVAX[NETWORK]
     );
     const _wtfRewardsBalance =
       wtfRewardsBalance && wtfRewardsBalance !== "0"

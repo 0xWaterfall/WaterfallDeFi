@@ -23,6 +23,7 @@ import { Menu, Dropdown } from "antd";
 import { useNetwork } from "../../hooks/useSelectors";
 import { setNetwork } from "store/selectedKeys";
 import { NETWORK, NETWORKS } from "config";
+import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 const Wrapper = styled.div`
   height: 64px;
@@ -181,23 +182,16 @@ const Header = memo<TProps>(({ intl }) => {
     } else if (window.location.toString().includes("avax.waterfalldefi.org")) {
       dispatch(setNetwork("avax"));
       setNetworkHook("avax");
-    } else if (window.location.toString().includes("app.waterfalldefi.org")) {
-      if (chainId === 56) {
-        dispatch(setNetwork("bnb"));
-        setNetworkHook("bnb");
-      }
-      if (chainId === 43114) {
-        dispatch(setNetwork("avax"));
-        setNetworkHook("avax");
-      }
     }
   }, []);
 
   useEffect(() => {
-    if (chainId === 56 && networkHook === "avax") {
+    if (chainId === 56 && networkHook !== "bnb") {
+      dispatch(setNetwork("bnb"));
       setNetworkHook("bnb");
     }
-    if (chainId === 43114 && networkHook === "bnb") {
+    if (chainId === 43114 && networkHook !== "avax") {
+      dispatch(setNetwork("avax"));
       setNetworkHook("avax");
     }
   }, [chainId, networkHook]);

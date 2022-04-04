@@ -8,6 +8,7 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
 import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
+import { abi as TrancheMasterAutorollABI } from "config/abi/AR_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
@@ -591,7 +592,7 @@ const getTotalTVL = async () => {
         }
       ];
 
-      const [t0, t1, t2] = await multicallNetwork(_tranche?.network, TrancheMasterAbi, calls);
+      const [t0, t1, t2] = await multicallNetwork(_tranche?.network, _tranche?.abi, calls);
       const _tranches = [t0, t1, t2];
 
       _tranches.map((_t, _i) => {
@@ -601,6 +602,7 @@ const getTotalTVL = async () => {
           rate = avaxPrice;
         }
         const _principalInUSD = _principal.times(rate);
+        console.log("_principalInUSD", _marketAddress, _principal.toString(), rate, _principalInUSD.toString());
         _tvl = _tvl.plus(_principalInUSD);
       });
     })

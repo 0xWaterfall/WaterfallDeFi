@@ -94,13 +94,13 @@ export const MarketList: Market[] = [
     strategyFarms: [
       {
         farmName: "Benqi DAI.e",
-        shares: 0.7,
+        shares: 0.91,
         sAddress: DAIBenqiStrategyAddress2[NETWORK],
         apiKey: "qi_dai"
       },
       {
         farmName: "Trader Joe DAI.e",
-        shares: 0.3,
+        shares: 0.09,
         sAddress: DAITraderJoeStrategyAddress2[NETWORK],
         apiKey: "joe_dai_e"
       }
@@ -307,7 +307,7 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
-    isRetired: true
+    isRetired: false
   }
   // {
   //   portfolio: "BUSD Falls 1 (Expired)",

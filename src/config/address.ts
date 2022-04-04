@@ -1,4 +1,6 @@
 import { NETWORKS } from "config";
+import { abi as AR_TranchesAbi } from "./abi/AR_TrancheMaster.json";
+import AVAXTrancheMasterAutorollABI from "./abi/AVAXTrancheMasterAutoroll.json";
 
 export const TranchesAddressOracle1: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
@@ -13,33 +15,26 @@ export const TranchesAddressOracle2: { [network: string]: string } = {
 export const AllTranches = [
   {
     address: "0x4D364f4e813740D963b03D8c315d6F8c0e6b17E3",
-    network: "BSC"
+    network: "BSC",
+    abi: AR_TranchesAbi
   },
+
   {
-    address: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1",
-    network: "AVAX"
-  },
-  {
-    address: "0x12D7D07F9A1A659Be4E1E2945c8229B387840D2B",
+    address: "0x41EA3e25f4eE30C49657dF20564B3B0F21a172b5", //DAI Falls
     network: "AVAX",
-    coin: "wavax"
+    abi: AVAXTrancheMasterAutorollABI
   },
+
   {
-    address: "0x17896D84af7af66bdFB3BB1e529596FCd0bf8CE1",
-    network: "AVAX"
-  },
-  {
-    address: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1",
-    network: "AVAX"
-  },
-  {
-    address: "0x12D7D07F9A1A659Be4E1E2945c8229B387840D2B",
+    address: "0x852a59E83FeE95165006d00F83356139aebfCaC4", //AVAX Falls
     network: "AVAX",
-    coin: "wavax"
+    coin: "wavax",
+    abi: AVAXTrancheMasterAutorollABI
   },
   {
-    address: "0x17896D84af7af66bdFB3BB1e529596FCd0bf8CE1",
-    network: "AVAX"
+    address: "0xd4BcafB934d417D533C5D06f084394205990a6Bc", //MAXI Falss
+    network: "AVAX",
+    abi: AVAXTrancheMasterAutorollABI
   }
 ];
 export const TranchesAddress: { [network: string]: string } = {

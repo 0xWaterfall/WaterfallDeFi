@@ -25,6 +25,7 @@ import { useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance 
 import ClaimPopup from "./ClaimPopup";
 import useAutoRoll from "../hooks/useAutoRoll";
 import { Switch } from "antd";
+import { ArrowRight2 } from "assets/images";
 
 const Wrapper = styled.div`
   display: grid;
@@ -309,19 +310,19 @@ const Charts = memo<TProps>(
               WTF
             </div>
             <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div>
-            {/* <div> */}
-            {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
-              {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
-            </ButtonWrapper> */}
-            {/* <ButtonWrapper
-              type="default"
-              onClick={() => claimReward()}
-              loading={claimRewardLoading}
-              disabled={!account || !+totalPendingReward}
-            >
-              {intl.formatMessage({ defaultMessage: "Claim" })}
-            </ButtonWrapper>
-            <ButtonWrapper
+            <div>
+              {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
+                {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
+              </ButtonWrapper> */}
+              {/* <ButtonWrapper
+                type="default"
+                onClick={() => claimReward()}
+                loading={claimRewardLoading}
+                disabled={!account || !+totalPendingReward}
+              >
+                {intl.formatMessage({ defaultMessage: "Claim" })}
+              </ButtonWrapper> */}
+              {/* <ButtonWrapper
               type="default"
               css={{ marginLeft: 17, position: "relative" }}
               style={{ width: 90 }}
@@ -332,7 +333,7 @@ const Charts = memo<TProps>(
               {intl.formatMessage({ defaultMessage: "To Stake" })}
               <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
             </ButtonWrapper> */}
-            {/* </div> */}
+            </div>
           </section>
         </RecordCard>
         <Block>

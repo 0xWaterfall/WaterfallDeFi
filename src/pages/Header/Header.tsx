@@ -175,12 +175,21 @@ const Header = memo<TProps>(({ intl }) => {
   const { login, logout } = useAuth(networkHook);
 
   useEffect(() => {
-    if (window.location.toString().includes("bnb")) {
+    if (window.location.toString().includes("bnb.waterfalldefi.org")) {
       dispatch(setNetwork("bnb"));
       setNetworkHook("bnb");
-    } else if (window.location.toString().includes("avax")) {
+    } else if (window.location.toString().includes("avax.waterfalldefi.org")) {
       dispatch(setNetwork("avax"));
       setNetworkHook("avax");
+    } else if (window.location.toString().includes("app.waterfalldefi.org")) {
+      if (chainId === 56) {
+        dispatch(setNetwork("bnb"));
+        setNetworkHook("bnb");
+      }
+      if (chainId === 43114) {
+        dispatch(setNetwork("avax"));
+        setNetworkHook("avax");
+      }
     }
   }, []);
 

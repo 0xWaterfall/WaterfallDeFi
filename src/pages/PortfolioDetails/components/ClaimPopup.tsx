@@ -44,7 +44,7 @@ const Claim = memo<TProps>(({ intl, visible, onCancel, data, balance, claimRewar
       visible={visible}
       width={1000}
       onCancel={onCancel?.bind(null, false)}
-      bodyStyle={{ padding: "20px 34px", backgroundColor: useColorModeValue(gray.normal85, dark.basic) }}
+      bodyStyle={{ padding: "20px 34px", backgroundColor: useColorModeValue(white.normal85, dark.basic) }}
     >
       <title
         css={{

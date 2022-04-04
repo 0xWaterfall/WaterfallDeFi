@@ -157,7 +157,7 @@ const Increase = memo<TProps>(
     const { lockAndStakeWTF } = useLockAndStakeWTF();
     const { onCheckApprove } = useCheckApprove(
       network === "bnb" ? WTFAddressBNB[NETWORK] : WTFAddressAVAX[NETWORK],
-      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressBNB[NETWORK]
+      network === "bnb" ? VeWTFAddressBNB[NETWORK] : VeWTFAddressAVAX[NETWORK]
     );
     const { onCheckLocked } = useCheckLocked();
     const dispatch = useAppDispatch();
@@ -357,13 +357,17 @@ const Increase = memo<TProps>(
       if (!totalVeWTF) return "";
       if (!rewardPerBlock) return "";
       if (receivedVeWTF === "0") return "-";
+
+      let _balanceInput = balanceInput;
+      if (fromMasterChef) _balanceInput = new BigNumber(wtfRewardsBalance || 0).dividedBy(BIG_TEN.pow(18)).toString();
+
       return (
         numeral(
           new BigNumber(receivedVeWTF.replace(/,/g, ""))
             .dividedBy(totalVeWTF)
             .times(rewardPerBlock)
             .times(20 * 60 * 24 * 365 * 100)
-            .dividedBy(balanceInput !== "0" ? balanceInput : lockingWTF)
+            .dividedBy(_balanceInput !== "0" ? _balanceInput : lockingWTF)
             .toString()
         ).format("0,0.[00]") + "%"
       );
@@ -371,9 +375,12 @@ const Increase = memo<TProps>(
     const convertRatio = useMemo(() => {
       if (!receivedVeWTF) return;
       const _receivedVeWTF = receivedVeWTF.replace(/,/g, "");
-      if (balanceInput !== "0") {
-        console.log("convert ratio", balanceInput, Number(_receivedVeWTF) / Number(balanceInput));
-        return numeral(Number(_receivedVeWTF) / Number(balanceInput)).format("0,0.[0000]");
+      let _balanceInput = balanceInput;
+      if (fromMasterChef) _balanceInput = new BigNumber(wtfRewardsBalance || 0).dividedBy(BIG_TEN.pow(18)).toString();
+      console.log("convertRatio", _balanceInput);
+      if (_balanceInput !== "0") {
+        console.log("convert ratio", _balanceInput, Number(_receivedVeWTF) / Number(_balanceInput));
+        return numeral(Number(_receivedVeWTF) / Number(_balanceInput)).format("0,0.[0000]");
       } else {
         if (locked) {
           console.log("convert ratio2", lockingWTF, Number(_receivedVeWTF) / Number(lockingWTF));

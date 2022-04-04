@@ -235,7 +235,7 @@ const Charts = memo<TProps>(
     };
     const claimPopup = () => {
       if (totalPendingReward !== "0") setShowClaim(!showClaim);
-      setShowClaim(!showClaim);
+      // setShowClaim(!showClaim);
     };
 
     return (
@@ -309,11 +309,11 @@ const Charts = memo<TProps>(
                 : "--"}{" "}
               WTF
             </div>
-            <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div>
+            {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
             <div>
-              {/* <ButtonWrapper type="default" onClick={() => claimPopup()}>
+              <ButtonWrapper type="default" onClick={() => claimPopup()}>
                 {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
-              </ButtonWrapper> */}
+              </ButtonWrapper>
               {/* <ButtonWrapper
                 type="default"
                 onClick={() => claimReward()}

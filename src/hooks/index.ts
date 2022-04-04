@@ -594,15 +594,14 @@ const getTotalTVL = async () => {
 
       const [t0, t1, t2] = await multicallNetwork(_tranche?.network, _tranche?.abi, calls);
       const _tranches = [t0, t1, t2];
-
       _tranches.map((_t, _i) => {
         const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+        const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
         let rate = 1;
         if (_tranche?.coin === "wavax") {
           rate = avaxPrice;
         }
-        const _principalInUSD = _principal.times(rate);
-        console.log("_principalInUSD", _marketAddress, _principal.toString(), rate, _principalInUSD.toString());
+        const _principalInUSD = _principal.plus(_autoPrincipal).times(rate);
         _tvl = _tvl.plus(_principalInUSD);
       });
     })

@@ -19,10 +19,11 @@ const invest = async (
   selectTrancheIdx: string,
   dispatch: Dispatch<any>,
   multicurrencyIdx: number,
-  multicurrencyTokenCount: number
+  multicurrencyTokenCount: number,
+  isUSDC: boolean
 ) => {
-  const _amount = utils.parseEther(amount);
-  const _zero = utils.parseEther("0");
+  const _amount = !isUSDC ? utils.parseEther(amount) : utils.parseUnits(amount, 6);
+  const _zero = !isUSDC ? utils.parseEther("0") : utils.parseUnits("0", 6);
   let tx;
   if (multicurrencyIdx === -1) {
     tx = await contract.invest(selectTrancheIdx, _amount.toString(), false);
@@ -67,7 +68,12 @@ const invest = async (
   return receipt.status;
 };
 
-const useInvest = (trancheMasterAddress: string, multicurrencyIdx: number, multicurrencyTokenCount: number) => {
+const useInvest = (
+  trancheMasterAddress: string,
+  multicurrencyIdx: number,
+  multicurrencyTokenCount: number,
+  isUSDC: boolean
+) => {
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   let contract: Contract;
@@ -84,7 +90,8 @@ const useInvest = (trancheMasterAddress: string, multicurrencyIdx: number, multi
         selectTrancheIdx,
         dispatch,
         multicurrencyIdx,
-        multicurrencyTokenCount
+        multicurrencyTokenCount,
+        isUSDC
       );
       dispatch(getMarkets(MarketList));
       return result;

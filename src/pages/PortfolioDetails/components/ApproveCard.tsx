@@ -177,12 +177,14 @@ const ApproveCard = memo<TProps>(
     const { onInvestDirect } = useInvestDirect(
       data.address,
       data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
-      data.assets.length
+      data.assets.length,
+      data.assets[0] === "USDC"
     );
     const { onInvest } = useInvest(
       data.address,
       data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
-      data.assets.length
+      data.assets.length,
+      data.assets[0] === "USDC"
     );
     const { onInvestDirectMCSimul } = useInvestDirectMCSimul(data.address);
     const { onInvestMCSimul } = useInvestMCSimul(data.address);
@@ -470,7 +472,7 @@ const ApproveCard = memo<TProps>(
       const { value } = e.target;
       if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
         const d = value.split(".");
-        if (d.length === 2 && d[1].length > 18) {
+        if (d.length === 2 && d[1].length > (data.assets[0] !== "USDC" ? 18 : 6)) {
           return;
         }
         const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];

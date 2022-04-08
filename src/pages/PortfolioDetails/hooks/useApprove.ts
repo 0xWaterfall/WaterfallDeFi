@@ -13,7 +13,13 @@ const options = {
 };
 
 const approve = async (contract: Contract, address: string, dispatch: Dispatch<any>) => {
-  const tx = await contract.approve(address, utils.parseEther("999999999").toString());
+  const tx = await contract.approve(
+    address,
+    //USDC
+    address === "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+      ? utils.parseUnits("999999999", 6)
+      : utils.parseEther("999999999").toString()
+  );
   dispatch(
     setConfirmModal({
       isOpen: true,

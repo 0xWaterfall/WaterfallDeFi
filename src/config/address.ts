@@ -582,3 +582,31 @@ export const AR_AVAXBenqiStrategyAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x1F310eCFFf08430E6b48Bc5Aa78f10A318990d91"
 };
+
+//april 8th, stargate contract test
+export const STG_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x3c545a3983f88726d597904131f5F656bf929828"
+};
+export const STG_MasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x7Ac342cBf51386201B5C0cA61c08B732Ca0b9F43"
+};
+
+export const STG_TraderJoeStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x5Be7aCe9DC6B222B4cD7eb6Cef210474582DCBC6"
+};
+export const STG_StargateStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xce6b612fba5c2c06Cf296fBf0Fea0F10748aeE9e"
+};
+export const USDCAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+};

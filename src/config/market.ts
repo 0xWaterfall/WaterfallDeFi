@@ -54,7 +54,12 @@ import {
   MAXIFallsMasterWTFAddress2,
   MAXIBenqiStrategyAddress2,
   MAXITraderJoeStrategyAddress2,
-  MAXIMaximizerStrategyAddress2
+  MAXIMaximizerStrategyAddress2,
+  STG_TrancheMasterAddress,
+  STG_MasterWTFAddress,
+  STG_TraderJoeStrategyAddress,
+  STG_StargateStrategyAddress,
+  USDCAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
@@ -308,7 +313,47 @@ export const MarketList: Market[] = [
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
     isRetired: true
+  },
+  {
+    portfolio: "Stargate Falls (Autorolled) TEST",
+    isAvax: true,
+    wrapAvax: false,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["USDC"],
+    tokens: [],
+    listingDate: "2022/4/08",
+    tranches: [],
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: STG_TrancheMasterAddress[NETWORK],
+    abi: AR_AVAXTrancheMasterAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: STG_MasterWTFAddress[NETWORK],
+    pools: [],
+    depositAssetAddress: USDCAddress[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Trader Joe AVAX",
+        shares: 0.5,
+        sAddress: STG_TraderJoeStrategyAddress[NETWORK],
+        apiKey: "joe_avax"
+      },
+      {
+        farmName: "Stargate",
+        shares: 0.5,
+        sAddress: STG_StargateStrategyAddress[NETWORK],
+        apiKey: "stargate"
+      }
+    ],
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
+    isRetired: false
   }
+
   // {
   //   portfolio: "BUSD Falls 1 (Expired)",
   //   isAvax: false,

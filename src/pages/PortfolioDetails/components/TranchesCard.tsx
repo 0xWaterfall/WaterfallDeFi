@@ -246,8 +246,11 @@ const TranchesCard = memo<TProps>(
               TVL: {data.assets[0] !== "WBNB" && data.assets[0] !== "WAVAX" ? "$" : ""}
               {formatNumberSeparator(
                 !data.autorollImplemented
-                  ? formatTVL(tranche.principal)
-                  : formatTVL((Number(tranche.principal) + Number(tranche.autoPrincipal)).toString())
+                  ? formatTVL(tranche.principal, data.assets[0] === "USDC" ? 6 : 18)
+                  : formatTVL(
+                      (Number(tranche.principal) + Number(tranche.autoPrincipal)).toString(),
+                      data.assets[0] === "USDC" ? 6 : 18
+                    )
               )}{" "}
               {data.assets[0] === "WBNB" || data.assets[0] === "WAVAX" ? data.assets[0] : ""}
             </Text3>

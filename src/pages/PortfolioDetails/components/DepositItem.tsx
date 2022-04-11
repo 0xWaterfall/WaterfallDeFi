@@ -61,7 +61,8 @@ const DepositItem = memo<TProps>(
                 : (
                     Number(data.tranches[selectTrancheIdx]?.principal) +
                     Number(data.tranches[selectTrancheIdx]?.autoPrincipal)
-                  ).toString()
+                  ).toString(),
+              data.assets[0] === "USDC" ? 6 : 18
             )
           : getRemainingMulticurrency(
               data.tranches[selectTrancheIdx]?.target,
@@ -122,7 +123,8 @@ const DepositItem = memo<TProps>(
                             ? data.tranches[_i]?.principal
                             : (
                                 Number(data.tranches[_i]?.principal) + Number(data.tranches[_i]?.autoPrincipal)
-                              ).toString()
+                              ).toString(),
+                          data.assets[0] === "USDC" ? 6 : 18
                         ).remaining
                       : getRemainingMulticurrency(
                           data.tranches[_i]?.target,

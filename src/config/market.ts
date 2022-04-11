@@ -350,7 +350,7 @@ export const MarketList: Market[] = [
         apiKey: "stargate"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
+    subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_joeStarUsdc",
     isRetired: false
   }
 

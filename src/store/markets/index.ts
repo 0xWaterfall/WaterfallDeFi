@@ -109,22 +109,23 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
         expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
+        const decimals = marketData.assets[0] === "USDC" ? 6 : 18;
         _tranches.map((_t, _i) => {
-          const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18));
+          const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals));
           totalTarget = totalTarget.plus(_target);
         });
         totalTarget = totalTarget.times(expectedAPY);
         _tranches.map((_t, _i) => {
-          const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
-          const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
-          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
+          const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
+          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
-          const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
+          const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _apy =
             _t && _i !== _tranches.length - 1
-              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(16))
-              : calculateJuniorAPY(tranches, totalTarget, _target);
+              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(decimals - 2))
+              : calculateJuniorAPY(tranches, totalTarget, _target, decimals);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
           tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);
@@ -179,7 +180,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         const [p0, p1, p2, _rewardPerBlock] = !marketData.isAvax
           ? await multicallBSC(marketData.masterChefAbi, calls2)
           : await multicall(marketData.masterChefAbi, calls2);
-        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
+        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(decimals)).toString();
         const pools: string[] = [];
         let totalAllocPoints = BIG_ZERO;
         const _pools = [p0, p1, p2];

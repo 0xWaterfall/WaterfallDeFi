@@ -188,7 +188,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
           {marketData?.tranches.map((_t, _i) => {
             return (
               // <div css={{ display: "flex" }} key={_i}>
-              <APYStyled2 key={_i}>
+              <APYStyled2 key={_i} style={marketData?.tranches[_i]?.target === "0" ? { visibility: "hidden" } : {}}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <span css={{ color: tranchesDisplayColor[_i] }}>{_t.apy} %</span>
                 {!isHide && (

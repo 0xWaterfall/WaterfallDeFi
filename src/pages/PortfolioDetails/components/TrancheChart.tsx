@@ -92,7 +92,8 @@ const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
                       fontSize: 12,
                       color: white.normal,
                       height: `${p.value}%`,
-                      marginBottom: 3
+                      marginBottom: 3,
+                      visibility: p.value === "0.00" ? "hidden" : "visible"
                     }}
                   >
                     {p.value}%
@@ -111,7 +112,10 @@ const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
           }}
         >
           {payload.map((p) => (
-            <div key={p.key} css={{ display: "flex", alignItems: "center" }}>
+            <div
+              key={p.key}
+              css={{ display: "flex", alignItems: "center", visibility: p.value === "0.00" ? "hidden" : "visible" }}
+            >
               <div css={{ width: 8, height: 8, borderRadius: 2, backgroundColor: COLORS[p.key] }} />
               <div css={{ marginLeft: 4 }}>{p.name}</div>
             </div>

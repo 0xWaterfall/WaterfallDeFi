@@ -223,7 +223,11 @@ const TranchesCard = memo<TProps>(
       : "-";
 
     return (
-      <Container data-selected={selected} data-disabled={isSoldout}>
+      <Container
+        data-selected={selected}
+        data-disabled={isSoldout}
+        style={tranche.target === "0" ? { visibility: "hidden" } : {}}
+      >
         {isSoldout ? <SoldOut>{intl.formatMessage({ defaultMessage: "Sold out" })}</SoldOut> : null}
         {/* {data?.portfolio === "BUSD Falls 2" ? (
           <ComingSoon>{intl.formatMessage({ defaultMessage: "Coming Soon" })}</ComingSoon>

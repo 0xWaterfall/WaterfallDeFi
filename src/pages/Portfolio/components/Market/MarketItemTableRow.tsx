@@ -163,7 +163,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                 : trancheAPR;
             return (
               // <div css={{ display: "flex" }} key={_i}>
-              <APYStyled2 key={_i}>
+              <APYStyled2 key={_i} style={marketData?.tranches[_i]?.target === "0" ? { visibility: "hidden" } : {}}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <div css={{ color: tranchesDisplayColor[_i] }}>
                   <Tooltip

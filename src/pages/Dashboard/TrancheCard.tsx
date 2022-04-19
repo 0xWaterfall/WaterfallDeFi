@@ -202,6 +202,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
   const coingeckoPrices = useCoingeckoPrices();
   const { push } = useHistory();
   const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+  const tranchesDisplayText2 = ["Fixed", "Variable"];
   return (
     <Wrapper>
       <IconWrapper>{network === "avax" ? <WAVAX /> : <BUSD />}</IconWrapper>
@@ -213,7 +214,7 @@ const TrancheCard = memo<TProps>(({ intl }) => {
             return (
               <div key={index}>
                 <Title>{_market.portfolio}</Title>
-                {tranchesDisplayText.map((trancheText, _i) => {
+                {(_market.trancheCount === 3 ? tranchesDisplayText : tranchesDisplayText2).map((trancheText, _i) => {
                   const trancheApr = _market && _market.tranches ? _market.tranches[_i].apy : "-";
                   const wtfApr = _market
                     ? getWTFApr(

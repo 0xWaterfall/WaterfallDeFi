@@ -55,6 +55,7 @@ export interface Market {
   actualStartAt?: string;
   cycle?: string;
   tranches: Tranche[];
+  trancheCount: number;
   trancheInvests?: { type: "BigNumber"; hex: string }[][];
   totalTranchesTarget: string;
   tvl: string;

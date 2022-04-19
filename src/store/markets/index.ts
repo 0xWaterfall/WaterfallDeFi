@@ -38,22 +38,16 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         const tokenCalls = !marketData.isMulticurrency
           ? []
           : marketData.assets.map((a, i) => ({ address: _marketAddress, name: "tokens", params: [i] }));
+        const trancheCalls = [];
+        for (let i = 0; i < marketData.trancheCount; i++) {
+          trancheCalls.push({
+            address: _marketAddress,
+            name: "tranches",
+            params: [i]
+          });
+        }
         const callsBasic = [
-          {
-            address: _marketAddress,
-            name: "tranches",
-            params: [0]
-          },
-          {
-            address: _marketAddress,
-            name: "tranches",
-            params: [1]
-          },
-          {
-            address: _marketAddress,
-            name: "tranches",
-            params: [2]
-          },
+          ...trancheCalls,
           {
             address: _marketAddress,
             name: "active"

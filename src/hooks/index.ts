@@ -591,7 +591,7 @@ const getTotalTVL = async () => {
         }
       ];
 
-      const [t0, t1, t2] = await multicallNetwork(_tranche?.network, TrancheMasterAbi, calls);
+      const [t0, t1, t2] = await multicallNetwork(_tranche?.network, _tranche?.abi, calls);
       const _tranches = [t0, t1, t2];
 
       _tranches.map((_t, _i) => {

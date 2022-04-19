@@ -239,9 +239,11 @@ export const getWTFApr = (
     target = target.times(avaxPrice);
   }
 
-  //
-  const blockTime = BLOCK_TIME(process.env.REACT_APP_CHAIN_ID || "");
-
+  const chainId =
+    assets?.includes("BUSD") || assets?.includes("WBNB")
+      ? process.env.REACT_APP_BNB_CHAIN_ID
+      : process.env.REACT_APP_CHAIN_ID;
+  const blockTime = BLOCK_TIME(chainId || "");
   const blocksInDuration = new BigNumber(duration).dividedBy(blockTime);
   const tokensInDuration = new BigNumber(blocksInDuration).times(rewardPerBlock);
   // (100 * 1) / 100000 * (365 * 86400) / 60018:27

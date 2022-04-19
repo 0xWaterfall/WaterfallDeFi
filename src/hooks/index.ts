@@ -363,7 +363,7 @@ export const usePositions = (marketId: string | undefined) => {
 
   return result;
 };
-export const usePendingWTFReward = (masterChefAddress: string) => {
+export const usePendingWTFReward = (masterChefAddress: string, trancheCount: number) => {
   const { account } = useWeb3React<Web3Provider>();
   const [totalPendingReward, setTotalPendingReward] = useState("0");
   const [tranchesPendingReward, setTranchesPendingReward] = useState<string[]>([]);
@@ -372,23 +372,14 @@ export const usePendingWTFReward = (masterChefAddress: string) => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const calls = [
-        {
+      const calls = [];
+      for (let i = 0; i < trancheCount; i++) {
+        calls.push({
           address: masterChefAddress,
           name: "pendingReward",
-          params: [account, 0]
-        },
-        {
-          address: masterChefAddress,
-          name: "pendingReward",
-          params: [account, 1]
-        },
-        {
-          address: masterChefAddress,
-          name: "pendingReward",
-          params: [account, 2]
-        }
-      ];
+          params: [account, i]
+        });
+      }
       const result =
         network === "avax" ? await multicall(MasterChefAbi, calls) : await multicallBSC(MasterChefAbi, calls);
       let _pendingReward = new BigNumber(0);

@@ -151,7 +151,10 @@ const Charts = memo<TProps>(
 
     const { account } = useWeb3React<Web3Provider>();
 
-    const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(data.masterChefAddress);
+    const { totalPendingReward, tranchesPendingReward } = usePendingWTFReward(
+      data.masterChefAddress,
+      data.trancheCount
+    );
     const dispatch = useAppDispatch();
     // useEffect(() => {
     //   account && dispatch(getPendingWTFReward({ account }));

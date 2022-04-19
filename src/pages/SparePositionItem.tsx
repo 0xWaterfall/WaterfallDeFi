@@ -135,7 +135,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
   const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
-  const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress);
+  const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress, market.trancheCount);
   let totalAmount = userInvest.principal;
   const totalAmounts = userInvest.MCprincipal ? userInvest.MCprincipal : [];
 

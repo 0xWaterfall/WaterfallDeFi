@@ -118,14 +118,16 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         _tranches.map((_t, _i) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
-          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
+
+          //validPercent doesn't seem to be used right now
+          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _apy =
             _t && _i !== _tranches.length - 1
-              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(decimals - 2))
-              : calculateJuniorAPY(tranches, totalTarget, _target, decimals);
+              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(16))
+              : calculateJuniorAPY(tranches, totalTarget, _target);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
           tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);

@@ -24,7 +24,7 @@ import { BigNumber } from "bignumber.js";
 type TProps = WrappedComponentProps & {
   color?: string;
   selectedDepositAsset: string;
-  type: "Senior" | "Mezzanine" | "Junior";
+  type: "Senior" | "Mezzanine" | "Junior" | "Fixed" | "Variable";
   tranche: Tranche;
   // pool: Pool;
   totalAllocPoint: string | undefined;
@@ -179,6 +179,11 @@ const TranchesCard = memo<TProps>(
         text: intl.formatMessage({ defaultMessage: "Senior" }),
         riskText: "Low Risk ; Fixed"
       },
+      Fixed: {
+        color: tags.yellowText,
+        text: intl.formatMessage({ defaultMessage: "Fixed" }),
+        riskText: "Low Risk ; Fixed"
+      },
       Mezzanine: {
         color: tags.greenText,
         text: intl.formatMessage({ defaultMessage: "Mezzanine" }),
@@ -187,6 +192,11 @@ const TranchesCard = memo<TProps>(
       Junior: {
         color: primary.deep,
         text: intl.formatMessage({ defaultMessage: "Junior" }),
+        riskText: "Multiple Leverage ; Variable"
+      },
+      Variable: {
+        color: primary.deep,
+        text: intl.formatMessage({ defaultMessage: "Variable" }),
         riskText: "Multiple Leverage ; Variable"
       }
     };

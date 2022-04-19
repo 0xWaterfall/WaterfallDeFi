@@ -114,8 +114,8 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
     dispatch(setMarketKey(selectId.toString()));
     push({ pathname: "/portfolio-details", state: { id: selectId } });
   };
-  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
-  const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
+  const tranchesDisplayText = data.trancheCount === 3 ? ["Senior", "Mezzanine", "Junior"] : ["Fixed", "Variable"];
+  const tranchesDisplayColor = [warn.normal, data.trancheCount === 3 ? green.normal : primary.deep, primary.deep];
   const getMarketStatusTag = () => {
     if (marketData?.isRetired) return <Tag color="red" value={"Expired"} />;
     if (marketData.status === PORTFOLIO_STATUS.PENDING) return <Tag color="yellow" value={"Pending"} />;

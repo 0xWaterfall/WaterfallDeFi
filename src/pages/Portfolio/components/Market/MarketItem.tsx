@@ -131,8 +131,8 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
   //   fetchData();
   // }, []);
 
-  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
-  const tranchesDisplayColor = [warn.normal, green.normal, primary.deep];
+  const tranchesDisplayText = data.trancheCount === 3 ? ["Senior", "Mezzanine", "Junior"] : ["Fixed", "Variable"];
+  const tranchesDisplayColor = [warn.normal, data.trancheCount === 3 ? green.normal : primary.deep, primary.deep];
   const dispatch = useDispatch();
 
   const navigateMarketDetail = () => {

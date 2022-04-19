@@ -46,24 +46,44 @@ type TProps = WrappedComponentProps & {
 
 const TrancheChart = memo<TProps>(({ intl, tranches, totalTranchesTarget }) => {
   const { white } = useTheme();
-  const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
-  const payload = [
-    {
-      key: "Senior",
-      name: intl.formatMessage({ defaultMessage: "Senior" }),
-      value: getPercentage(tranches[0]?.target, totalTranchesTarget)
-    },
-    {
-      key: "Mezzanine",
-      name: intl.formatMessage({ defaultMessage: "Mezzanine" }),
-      value: getPercentage(tranches[1]?.target, totalTranchesTarget)
-    },
-    {
-      key: "Junior",
-      name: intl.formatMessage({ defaultMessage: "Junior" }),
-      value: getPercentage(tranches[2]?.target, totalTranchesTarget)
-    }
-  ];
+  const COLORS: { [key: string]: string } = {
+    Senior: "#FCB500",
+    Mezzanine: "#00A14A",
+    Junior: "#0066FF",
+    Fixed: "#FCB500",
+    Variable: "#0066FF"
+  };
+  const payload =
+    tranches.length === 3
+      ? [
+          {
+            key: "Senior",
+            name: intl.formatMessage({ defaultMessage: "Senior" }),
+            value: getPercentage(tranches[0]?.target, totalTranchesTarget)
+          },
+          {
+            key: "Mezzanine",
+            name: intl.formatMessage({ defaultMessage: "Mezzanine" }),
+            value: getPercentage(tranches[1]?.target, totalTranchesTarget)
+          },
+          {
+            key: "Junior",
+            name: intl.formatMessage({ defaultMessage: "Junior" }),
+            value: getPercentage(tranches[2]?.target, totalTranchesTarget)
+          }
+        ]
+      : [
+          {
+            key: "Fixed",
+            name: intl.formatMessage({ defaultMessage: "Fixed" }),
+            value: getPercentage(tranches[0]?.target, totalTranchesTarget)
+          },
+          {
+            key: "Variable",
+            name: intl.formatMessage({ defaultMessage: "Variable" }),
+            value: getPercentage(tranches[1]?.target, totalTranchesTarget)
+          }
+        ];
 
   return (
     <Wrapper>

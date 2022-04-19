@@ -132,7 +132,13 @@ type TProps = WrappedComponentProps & {
 const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle }) => {
   // const { gray, primary, shadow, linearGradient, white } = useTheme();
   const [isfold, setFold] = useState(false);
-  const COLORS: { [key: string]: string } = { Senior: "#FCB500", Mezzanine: "#00A14A", Junior: "#0066FF" };
+  const COLORS: { [key: string]: string } = {
+    Senior: "#FCB500",
+    Mezzanine: "#00A14A",
+    Junior: "#0066FF",
+    Fixed: "#FCB500",
+    Variable: "#0066FF"
+  };
   // const wtfPrice = useWTFPrice();
   const { price: wtfPrice } = useWTFPriceLP();
   const { tranchesPendingReward } = usePendingWTFReward(market.masterChefAddress, market.trancheCount);
@@ -143,7 +149,7 @@ const SparePositionItem = memo<TProps>(({ intl, market, userInvest, trancheCycle
     totalAmount = new BigNumber(userInvest.capital).toFormat(4).toString();
   }
 
-  const tranchesDisplayText = ["Senior", "Mezzanine", "Junior"];
+  const tranchesDisplayText = market.trancheCount === 3 ? ["Senior", "Mezzanine", "Junior"] : ["Fixed", "Variable"];
   const isCurrentCycle = market && market?.cycle !== undefined && market?.cycle === userInvest.cycle.toString();
   const trancheAPY = market && isCurrentCycle ? market?.tranches[userInvest.tranche].apy : userInvest.earningsAPY;
   const isActiveCycle = market && Number(market.cycle) === trancheCycle?.cycle && trancheCycle?.state === 1;

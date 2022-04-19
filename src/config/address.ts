@@ -489,12 +489,14 @@ export const BULL_USDTBNB_sALPACA_Address: { [network: string]: string } = {
 export const BULL_BNB_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x920d4dB1232c08f52710B48B9aD2FF99a28aDC5a"
+  // [NETWORKS.MAINNET]: "0x920d4dB1232c08f52710B48B9aD2FF99a28aDC5a"
+  [NETWORKS.MAINNET]: "0xCe7E8d95e1b6C4891a610BED1A612D2Ab2D3bf90"
 };
 export const BULL_BNB_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xb9F79fEa374d191E3Ddf3E6E46243E999b20f786"
+  // [NETWORKS.MAINNET]: "0xb9F79fEa374d191E3Ddf3E6E46243E999b20f786"
+  [NETWORKS.MAINNET]: "0x97038a88718947d06D1b6d5520C9a21bA94C0f04"
 };
 
 export const BEAR_BNBBUSD_sALPACA_Address: { [network: string]: string } = {
@@ -510,12 +512,14 @@ export const BEAR_BNBUSDT_sALPACA_Address: { [network: string]: string } = {
 export const BEAR_BNB_TrancheMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0xe53e38F14363212fB3B3f596C1Dc51003d3a2Be7"
+  // [NETWORKS.MAINNET]: "0xe53e38F14363212fB3B3f596C1Dc51003d3a2Be7"
+  [NETWORKS.MAINNET]: "0xA124C3b6418FEd23aAc8c35B5C652b79281e5De9"
 };
 export const BEAR_BNB_WTFMasterAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "0x67169f619C60399EEa18FFa0F0C57866eAbFE69B"
+  // [NETWORKS.MAINNET]: "0x67169f619C60399EEa18FFa0F0C57866eAbFE69B"
+  [NETWORKS.MAINNET]: "0x98C68d53CB9862Ee5A0bBF24A7B8EF2fB243c73E"
 };
 
 export const WBNB_Address: { [network: string]: string } = {

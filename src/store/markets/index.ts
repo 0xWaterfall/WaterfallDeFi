@@ -47,7 +47,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           });
         }
         const callsBasic = [
-          ...trancheCalls,
           {
             address: _marketAddress,
             name: "active"
@@ -63,7 +62,8 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           {
             address: _marketAddress,
             name: "cycle"
-          }
+          },
+          ...trancheCalls
         ];
         const calls = [...callsBasic, ...tokenCalls];
         // const venusAPY = await getVenusAPY();
@@ -87,12 +87,17 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        const [t0, t1, t2, active, duration, actualStartAt, cycle, ...tokens] = !marketData.isAvax
+        console.log(calls);
+
+        const [active, duration, actualStartAt, cycle, ...tranchesAndTokens] = !marketData.isAvax
           ? await multicallBSC(marketData.abi, calls)
           : await multicall(marketData.abi, calls);
-        // console.log("cycle", _marketAddress, new BigNumber(cycle[0]._hex).toString(), cycle.toString());
-        const _tranches = [t0, t1, t2];
-        const tokenObjs = tokens.map((t: any) => {
+
+        console.log(tranchesAndTokens);
+
+        const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
+        const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
+        const tokenObjs = _tokens.map((t: any) => {
           return { addr: t[0], strategy: t[1], percent: t[2] };
         });
         let totalTranchesTarget = BIG_ZERO;
@@ -104,12 +109,12 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
         const decimals = marketData.assets[0] === "USDC" ? 6 : 18;
-        _tranches.map((_t, _i) => {
+        _tranches.map((_t: any, _i: number) => {
           const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals));
           totalTarget = totalTarget.plus(_target);
         });
         totalTarget = totalTarget.times(expectedAPY);
-        _tranches.map((_t, _i) => {
+        _tranches.map((_t: any, _i: number) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;

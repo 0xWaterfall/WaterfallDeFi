@@ -24,6 +24,8 @@ type TProps = WrappedComponentProps & {
 
 type Tranches = "Senior" | "Mezzanine" | "Junior";
 
+type Tranches2 = "Fixed" | "Variable";
+
 // const Box2 = styled.div`
 //   border: ${({ theme }) => theme.table.border};
 //   box-sizing: border-box;
@@ -46,6 +48,7 @@ const DepositItem = memo<TProps>(
   }) => {
     // const { primary } = useTheme();
     const tranchesDisplayText: Array<Tranches> = ["Senior", "Mezzanine", "Junior"];
+    const tranchesDisplayText2: Array<Tranches2> = ["Fixed", "Variable"];
     const [marketData] = useState(data);
 
     const [selectTrancheIdx, setSelectTrancheIdx] = useState<number | undefined>(undefined);
@@ -107,7 +110,7 @@ const DepositItem = memo<TProps>(
                 <TranchesCard
                   key={_i}
                   selectedDepositAsset={selectedDepositAsset}
-                  type={tranchesDisplayText[_i]}
+                  type={data.trancheCount === 3 ? tranchesDisplayText[_i] : tranchesDisplayText2[_i]}
                   allocPoint={data.pools?.[_i]}
                   tranche={data.tranches?.[_i]}
                   totalAllocPoint={data?.totalAllocPoints}

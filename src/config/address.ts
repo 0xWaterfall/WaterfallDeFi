@@ -18,6 +18,7 @@ export const AllTranches = [
     network: "BSC",
     abi: AR_TranchesAbi
   },
+
   {
     address: "0x41EA3e25f4eE30C49657dF20564B3B0F21a172b5", //DAI Falls
     network: "AVAX",

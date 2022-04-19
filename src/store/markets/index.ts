@@ -155,35 +155,29 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           cycle: cycle.toString()
         };
         const _masterchefAddress = marketData.masterChefAddress;
+        const poolCalls = [];
+        for (let i = 0; i < marketData.trancheCount; i++) {
+          poolCalls.push({
+            address: _masterchefAddress,
+            name: "poolInfo",
+            params: [i]
+          });
+        }
         const calls2 = [
           {
             address: _masterchefAddress,
-            name: "poolInfo",
-            params: [0]
-          },
-          {
-            address: _masterchefAddress,
-            name: "poolInfo",
-            params: [1]
-          },
-          {
-            address: _masterchefAddress,
-            name: "poolInfo",
-            params: [2]
-          },
-          {
-            address: _masterchefAddress,
             name: "rewardPerBlock"
-          }
+          },
+          ...poolCalls
         ];
-        const [p0, p1, p2, _rewardPerBlock] = !marketData.isAvax
+        const [_rewardPerBlock, ...poolCallsResponse] = !marketData.isAvax
           ? await multicallBSC(marketData.masterChefAbi, calls2)
           : await multicall(marketData.masterChefAbi, calls2);
         const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(decimals)).toString();
         const pools: string[] = [];
         let totalAllocPoints = BIG_ZERO;
-        const _pools = [p0, p1, p2];
-        _pools.map((_p, _i) => {
+        const _pools = poolCallsResponse.slice(0, marketData.trancheCount);
+        _pools.map((_p: any, _i: any) => {
           const _allocPoint = _p ? new BigNumber(_p?.allocPoint._hex) : BIG_ZERO;
           totalAllocPoints = totalAllocPoints.plus(_allocPoint);
           pools.push(_allocPoint.toString());

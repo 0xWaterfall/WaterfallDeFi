@@ -545,7 +545,6 @@ const getCoingeckoPrices = async () => {
     "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax"
   );
   if (result.status === 200) {
-    console.log("getCoingeckoPrices,", result.data);
     return result.data;
   }
   return {};
@@ -559,7 +558,6 @@ const getTotalTVL = async () => {
   if (result.status === 200) {
     avaxPrice = result.data["wrapped-avax"]?.usd;
   }
-  console.log("avaxPrice", avaxPrice);
   //
   await Promise.all(
     AllTranches.map(async (_tranche) => {

@@ -15,7 +15,6 @@ const walletconnect = new WalletConnectConnector({
   bridge: "https://bridge.walletconnect.org"
   // pollingInterval: POLLING_INTERVAL
 });
-console.log("walletconnect", walletconnect);
 const injected = new InjectedConnector({ supportedChainIds: [chainId, bnbChainId] });
 export const connectorsByName = {
   ["injected"]: injected,

@@ -74,6 +74,9 @@ const DepositItem = memo<TProps>(
             )
         : { remaining: "", remainingExact: "" };
 
+    console.log(remainingDepositable.toString());
+    console.log(getRemainingMulticurrency(data.tranches[1]?.target, data.tranches[1]?.principal, remainingDepositable));
+
     return (
       <div
         css={{

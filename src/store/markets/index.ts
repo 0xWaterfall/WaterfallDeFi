@@ -87,15 +87,13 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        console.log(calls);
-
         const [active, duration, actualStartAt, cycle, ...tranchesAndTokens] = !marketData.isAvax
           ? await multicallBSC(marketData.abi, calls)
           : await multicall(marketData.abi, calls);
 
-        console.log(tranchesAndTokens);
-
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
+        console.log(_tranches.map((t: any) => t.target.toString()));
+        console.log(_tranches.map((t: any) => t.principal.toString()));
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
         const tokenObjs = _tokens.map((t: any) => {
           return { addr: t[0], strategy: t[1], percent: t[2] };

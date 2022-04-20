@@ -21,7 +21,6 @@ const useEagerConnect = (network: string) => {
 
   useEffect(() => {
     const connectorId = window.localStorage.getItem("connectorIdv2") as ConnectorNames;
-    console.log("connectorId", connectorId);
     if (connectorId) {
       //   const isConnectorBinanceChain = connectorId === ConnectorNames.BSC;
       //   const isBinanceChainDefined = Reflect.has(window, "BinanceChain");

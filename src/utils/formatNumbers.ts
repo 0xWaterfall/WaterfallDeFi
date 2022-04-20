@@ -196,8 +196,8 @@ export const getRemainingMulticurrency = (
   const _remainingDepositable = remainingDepositable;
 
   const remainingInTranche = _target.minus(_principal);
-  const depositableOrInTranche = _remainingDepositable < remainingInTranche ? "depositable" : "inTranche";
-  const result = _remainingDepositable < remainingInTranche ? _remainingDepositable : remainingInTranche;
+  const depositableOrInTranche = _remainingDepositable > remainingInTranche ? "depositable" : "inTranche";
+  const result = _remainingDepositable > remainingInTranche ? _remainingDepositable : remainingInTranche;
 
   return {
     remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),
@@ -231,7 +231,6 @@ export const getWTFApr = (
 
   // const wtfPrice = 1;
   let target = new BigNumber(tranche.target);
-  console.log("target1", target.toString(), assets, coingeckoPrices);
   let avaxPrice = 1;
   if (assets?.includes("WAVAX")) {
     avaxPrice = coingeckoPrices?.["wrapped-avax"]?.usd;

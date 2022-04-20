@@ -271,6 +271,8 @@ export const getWTFApr = (
       // blocksInDuration.toString(),
       tokensInDuration.toString(),
 
+      wtfAPY,
+
       new BigNumber(wtfAPY)
         .dividedBy(new BigNumber(100))
         .times(tokensInDuration)

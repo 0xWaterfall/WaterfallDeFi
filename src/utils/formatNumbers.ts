@@ -228,6 +228,7 @@ export const getWTFApr = (
   if (duration === undefined) return;
   if (rewardPerBlock === undefined) return;
   if (wtfPrice === null) return;
+  wtfAPY = wtfAPY.replace("+ ", "");
 
   // const wtfPrice = 1;
   let target = new BigNumber(tranche.target);

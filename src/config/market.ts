@@ -320,46 +320,46 @@ export const MarketList: Market[] = [
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
     isRetired: true
   },
-  {
-    portfolio: "Stargate Falls (Autorolled) TEST",
-    isAvax: true,
-    wrapAvax: false,
-    autorollImplemented: true,
-    isMulticurrency: false,
-    assets: ["USDC"],
-    tokens: [],
-    listingDate: "2022/4/08",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: STG_TrancheMasterAddress[NETWORK],
-    abi: AR_AVAXTrancheMasterAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: STG_MasterWTFAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: USDCAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Trader Joe AVAX",
-        shares: 0.5,
-        sAddress: STG_TraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_avax"
-      },
-      {
-        farmName: "Stargate",
-        shares: 0.5,
-        sAddress: STG_StargateStrategyAddress[NETWORK],
-        apiKey: "stargate"
-      }
-    ],
-    subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_joeStarUsdc",
-    isRetired: false
-  },
+  // {
+  //   portfolio: "Stargate Falls (Autorolled) TEST",
+  //   isAvax: true,
+  //   wrapAvax: false,
+  //   autorollImplemented: true,
+  //   isMulticurrency: false,
+  //   assets: ["USDC"],
+  //   tokens: [],
+  //   listingDate: "2022/4/08",
+  //   tranches: [],
+  //   trancheCount: 3,
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: STG_TrancheMasterAddress[NETWORK],
+  //   abi: AR_AVAXTrancheMasterAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: STG_MasterWTFAddress[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: USDCAddress[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "Trader Joe AVAX",
+  //       shares: 0.5,
+  //       sAddress: STG_TraderJoeStrategyAddress[NETWORK],
+  //       apiKey: "joe_avax"
+  //     },
+  //     {
+  //       farmName: "Stargate",
+  //       shares: 0.5,
+  //       sAddress: STG_StargateStrategyAddress[NETWORK],
+  //       apiKey: "stargate"
+  //     }
+  //   ],
+  //   subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_joeStarUsdc",
+  //   isRetired: false
+  // },
   {
     portfolio: "BNB Bull Falls",
     isAvax: false,

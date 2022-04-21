@@ -579,11 +579,15 @@ const getTotalTVL = async () => {
           name: "tranches",
           params: [1]
         },
-        {
-          address: _marketAddress,
-          name: "tranches",
-          params: [2]
-        }
+        ...(_tranche.trancheCount === 3
+          ? [
+              {
+                address: _marketAddress,
+                name: "tranches",
+                params: [2]
+              }
+            ]
+          : [])
       ];
 
       const [t0, t1, t2] = await multicallNetwork(_tranche?.network, _tranche?.abi, calls);

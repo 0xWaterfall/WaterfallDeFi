@@ -140,13 +140,13 @@ export const MarketList: Market[] = [
     strategyFarms: [
       {
         farmName: "Benqi AVAX",
-        shares: 0.5,
+        shares: 0.7,
         sAddress: WAVAXBenqiStrategyAddress2[NETWORK],
         apiKey: "qi_avax"
       },
       {
         farmName: "Trader Joe AVAX",
-        shares: 0.5,
+        shares: 0.3,
         sAddress: WAVAXTraderJoeStrategyAddress2[NETWORK],
         apiKey: "joe_avax"
       }

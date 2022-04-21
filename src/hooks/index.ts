@@ -1,21 +1,18 @@
-import { MasterChefAddress, TranchesAddress, MulticallAddress } from "config/address";
+import { MasterChefAddress, MulticallAddress } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
-import { Market, PORTFOLIO_STATUS, Token } from "types";
+import { Market, PORTFOLIO_STATUS } from "types";
 import { formatBalance, getPortfolioTvl, getPortfolioTotalTarget } from "utils/formatNumbers";
 import getRpcUrl, { getBscRpcUrl } from "utils/getRpcUrl";
 import Web3 from "web3";
 import { AbiItem } from "web3-utils/types";
 import { abi as MasterChefAbi } from "config/abi/MasterChef.json";
-import { abi as TrancheMasterAbi } from "config/abi/TrancheMaster.json";
-import { abi as TrancheMasterAutorollABI } from "config/abi/AR_TrancheMaster.json";
 import { abi as ERC20Abi } from "config/abi/WTF.json";
 import BigNumber from "bignumber.js";
 import { BIG_ZERO, BIG_TEN } from "utils/bigNumber";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import MultiCallAbi from "config/abi/Multicall.json";
-import { abi as SingleStrategyTokenAbi } from "config/abi/SingleStrategyToken.json";
 import { useMarkets, useNetwork } from "./useSelectors";
 import { BLOCK_TIME, NETWORK } from "config";
 import useRefresh from "./useRefresh";
@@ -26,11 +23,7 @@ import {
   useTrancheMasterContract,
   useMulticurrencyTrancheMasterContract
 } from "./useContract";
-import { setPendingWTFReward } from "store/position";
-import markets from "store/markets";
 import { MarketList } from "config/market";
-import useActiveWeb3React from "./useActiveWeb3React";
-import { stringify } from "querystring";
 import axios from "axios";
 
 export const useMarket = async (marketData: Market) => {

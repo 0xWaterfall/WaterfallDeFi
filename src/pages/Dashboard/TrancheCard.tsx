@@ -3,11 +3,11 @@
 import React, { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { BUSD, WAVAX, WTFToken } from "assets/images";
+import { BUSD, WAVAX } from "assets/images";
 import Button from "components/Button/Button";
 import Tooltip from "components/Tooltip/Tooltip";
-import { useMarkets, useNetwork, useWTFPrice } from "hooks/useSelectors";
-import { formatAllocPoint, formatAPY, getJuniorAPY, getNetApr, getWTFApr } from "utils/formatNumbers";
+import { useMarkets, useNetwork } from "hooks/useSelectors";
+import { formatAllocPoint, getWTFApr } from "utils/formatNumbers";
 import { useHistory } from "react-router";
 import numeral from "numeral";
 import { useWTFPriceLP } from "hooks/useWTFfromLP";

@@ -22,8 +22,6 @@ import ActionIconGroup from "./ActionIconGroup";
 import { Menu, Dropdown } from "antd";
 import { useNetwork } from "../../hooks/useSelectors";
 import { setNetwork } from "store/selectedKeys";
-import { NETWORK, NETWORKS } from "config";
-import { createNoSubstitutionTemplateLiteral } from "typescript";
 
 const Wrapper = styled.div`
   height: 64px;

@@ -14,6 +14,48 @@ export const TranchesAddressOracle2: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "466D5d69DB51c562A850227ed2081040b408a98D"
 };
+export const AllTranches = [
+  {
+    address: "0x4D364f4e813740D963b03D8c315d6F8c0e6b17E3",
+    network: "BSC",
+    abi: AR_TranchesAbi,
+    trancheCount: 3
+  },
+  {
+    address: "0x41EA3e25f4eE30C49657dF20564B3B0F21a172b5", //DAI Falls
+    network: "AVAX",
+    abi: AVAXTrancheMasterAutorollABI,
+    trancheCount: 3
+  },
+
+  {
+    address: "0x852a59E83FeE95165006d00F83356139aebfCaC4", //AVAX Falls
+    network: "AVAX",
+    coin: "wavax",
+    abi: AVAXTrancheMasterAutorollABI,
+    trancheCount: 3
+  },
+  {
+    address: "0xd4BcafB934d417D533C5D06f084394205990a6Bc", //MAXI Falss
+    network: "AVAX",
+    abi: AVAXTrancheMasterAutorollABI,
+    trancheCount: 3
+  },
+  {
+    address: "0xCe7E8d95e1b6C4891a610BED1A612D2Ab2D3bf90", //BNB Bull
+    network: "BSC",
+    coin: "wbnb",
+    abi: MC_TranchesAbi,
+    trancheCount: 2
+  },
+  {
+    address: "0xA124C3b6418FEd23aAc8c35B5C652b79281e5De9", //BNB Bear
+    network: "BSC",
+    coin: "wbnb",
+    abi: TranchesAbi,
+    trancheCount: 2
+  }
+];
 export const TranchesAddress: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "54952856D5AAd556fB455fEdf5031C82D9f14889",
   [NETWORKS.TESTNET]: "d641dD6B44534bda3c7abbB718eC4e53947Dd994",

@@ -3,7 +3,7 @@
 import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import styled from "@emotion/styled";
-import { Sticker, WTFCoin, Pancake, ArrowRight, ComingSoonTopBg, ComingSoonRightBg } from "assets/images";
+import { Sticker, ComingSoonTopBg, ComingSoonRightBg } from "assets/images";
 import Button from "components/Button/Button";
 
 const Wrapper = styled.div`

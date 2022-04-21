@@ -1,13 +1,8 @@
 import BigNumber from "bignumber.js";
 import { useEffect, useState } from "react";
 import useRefresh from "./useRefresh";
-import { getContract } from "hooks";
-import PancakeLPAbi from "config/abi/PancakeLP.json";
-import { NETWORK, NETWORKS } from "config";
-import { abi as WTFAbi } from "config/abi/WTF.json";
-import { BIG_TEN } from "utils/bigNumber";
+import { NETWORK } from "config";
 import { getPrice, getWTFSupply } from "services/http";
-import { PancakeLPAddress, PancakeLPAddress_WBNBBUSD } from "config/address";
 
 export const useWTFPriceLP = () => {
   const [price, setPrice] = useState("");

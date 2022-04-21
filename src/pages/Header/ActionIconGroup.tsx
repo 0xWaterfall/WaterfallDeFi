@@ -10,7 +10,6 @@ import { fetchI18nMiddleware } from "store/i18n";
 import { languages } from "config";
 import styled from "@emotion/styled";
 import { setTheme } from "store/selectedKeys";
-import { useNetwork } from "hooks/useSelectors";
 
 const Wrapper = styled.div`
   display: grid;

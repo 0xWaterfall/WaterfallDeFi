@@ -3,7 +3,7 @@ import { abi as VEWTFAbi } from "config/abi/VEWTF.json";
 import { abi as VotingEscrowAbi } from "config/abi/VotingEscrow.json";
 import { abi as FeeRewardsAbi } from "config/abi/FeeRewards.json";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import multicall, { multicallBSC } from "utils/multicall";
 import BigNumber from "bignumber.js";
 import useRefresh from "./useRefresh";

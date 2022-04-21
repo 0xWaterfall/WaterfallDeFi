@@ -22,14 +22,12 @@ import { Union } from "assets/images";
 import { useAppDispatch } from "store";
 import { setConfirmModal, setConnectWalletModalShow } from "store/showStatus";
 import Input from "components/Input/Input";
-import { useBalance, useMetamaskAvaxCBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
+import { useBalance, useMulticurrencyTrancheBalance, useTrancheBalance } from "hooks";
 // import { useTrancheBalance } from "hooks/useSelectors";
 import numeral from "numeral";
-import { getTrancheBalance } from "store/position";
 import { useWrapAVAXContract } from "hooks/useContract";
 import { parseEther } from "ethers/lib/utils";
-import { ethers } from "ethers";
-import getRpcUrl from "utils/getRpcUrl";
+
 import BigNumber from "bignumber.js";
 
 const RowDiv = styled.div`

@@ -180,7 +180,7 @@ export const FeeRewardsAddressBNB: { [network: string]: string } = {
 export const WTFAddressAVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
-  [NETWORKS.MAINNET]: "873801Ae2ff12d816Db9a7B082F5796BEC64C82C"
+  [NETWORKS.MAINNET]: "0x873801Ae2ff12d816Db9a7B082F5796BEC64C82C"
 };
 export const WTFRewardsAddressAVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",

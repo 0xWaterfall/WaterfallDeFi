@@ -307,7 +307,7 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
-    isRetired: false
+    isRetired: true
   }
   // {
   //   portfolio: "BUSD Falls 1 (Expired)",

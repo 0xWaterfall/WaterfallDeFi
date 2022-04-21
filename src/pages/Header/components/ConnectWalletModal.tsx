@@ -128,7 +128,10 @@ const ConnectWalletModal = memo<TProps>(({ intl }) => {
               borderColor: primary.deep
             }
           }}
-          onClick={() => login("walletconnect")}
+          onClick={() => {
+            if (network === "avax") login("walletconnect");
+            if (network === "bnb") login("walletconnect2");
+          }}
         >
           <div>
             <span>WalletConnect</span>

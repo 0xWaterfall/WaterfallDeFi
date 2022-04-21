@@ -67,20 +67,20 @@ const HistoricalPerformance = memo<TProps>(({ intl, APYData, strategy, strategyN
   const last24Hours = APYData.slice(-24);
   const lastWeek = APYData.slice(-168);
 
-  const xAxis24Hr = last24Hours.map((apy, i) =>
+  const xAxis24Hr = last24Hours.map((apy) =>
     Number(apy.timeStr.slice(11, 13)) > 12
       ? (Number(apy.timeStr.slice(11, 13)) - 12).toString() + "PM"
       : Number(apy.timeStr.slice(11, 13)).toString() + "AM"
   );
-  const xAxis7D = lastWeek.map((apy, i) => apy.timeStr.slice(5, 10));
-  const xAxis14D = APYData.map((apy, i) => apy.timeStr.slice(5, 10));
+  const xAxis7D = lastWeek.map((apy) => apy.timeStr.slice(5, 10));
+  const xAxis14D = APYData.map((apy) => apy.timeStr.slice(5, 10));
   const xAxes = [xAxis24Hr, xAxis7D, xAxis14D];
 
   const timescaleTitles = ["Last 24 Hours", "Last 7 Days", "Last 14 Days"];
 
-  const last24HoursData = last24Hours.map((apy, i) => Number(apy[strategy]) * 100);
-  const lastWeekData = lastWeek.map((apy, i) => Number(apy[strategy]) * 100);
-  const twoWeekData = APYData.map((apy, i) => Number(apy[strategy]) * 100);
+  const last24HoursData = last24Hours.map((apy) => Number(apy[strategy]) * 100);
+  const lastWeekData = lastWeek.map((apy) => Number(apy[strategy]) * 100);
+  const twoWeekData = APYData.map((apy) => Number(apy[strategy]) * 100);
   const allData = [last24HoursData, lastWeekData, twoWeekData]; //tuple, index keyed to enum
   const minima = Math.min(...twoWeekData);
   const maxima = Math.max(...twoWeekData);

@@ -8,7 +8,6 @@ import * as echarts from "echarts/core";
 import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-import { sample } from "lodash";
 import { COLORS } from "styles/theme";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);

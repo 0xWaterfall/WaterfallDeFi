@@ -1,9 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
 import { useTheme } from "@emotion/react";
-import React, { memo, useEffect, useMemo } from "react";
+import React, { memo, useMemo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import Button from "components/Button/Button";
 import { useState } from "react";
 import { IType } from "./type";
 import Select, { Option } from "components/Select/Select";
@@ -16,9 +15,8 @@ import { useSize } from "ahooks";
 import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { MarketList } from "config/market";
-import { formatNumberDisplay, formatNumberWithDecimalsDisplay, formatTimestamp } from "utils/formatNumbers";
+import { formatNumberDisplay, formatTimestamp } from "utils/formatNumbers";
 import BigNumber from "bignumber.js";
-import { TrancheCycle } from "types";
 import Tag from "components/Tag/Tag";
 import { useHistoryQuery } from "pages/PortfolioDetails/hooks/useSubgraph";
 import NoData from "components/NoData/NoData";

@@ -5,7 +5,7 @@ import { Bulb, WTFToken } from "assets/images";
 import Button from "components/Button/Button";
 import Stakings from "config/staking";
 import useScrollTop from "hooks/useScrollTop";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useHistory } from "react-router-dom";
 import Action from "./Action/Action";
@@ -37,14 +37,12 @@ import {
 } from "chart.js";
 import {
   AVAXMultiSigAddress,
-  AVAXPendingRewardLiquidFillChartAddress,
   BUSDAddress,
   DaiEPendingRewardLiquidFillChartAddress,
   MultiSigAddress,
   WAVAXDepositAddress
 } from "config/address";
 import { BLOCK_TIME, NETWORK } from "config";
-import { BIG_TEN } from "utils/bigNumber";
 import { useNetwork } from "hooks/useSelectors";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

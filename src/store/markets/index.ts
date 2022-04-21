@@ -2,12 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EthersCall, Market, PORTFOLIO_STATUS, Token, Tranche } from "types";
 import BigNumber from "bignumber.js";
 import { BIG_TEN, BIG_ZERO } from "utils/bigNumber";
-import { useWeb3React } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import multicall, { multicallBSC } from "utils/multicall";
-import { formatAPY } from "utils/formatNumbers";
-import { useWTFPrice } from "hooks/useSelectors";
-import { abi as WTFRewardsABI } from "config/abi/WTFRewards.json";
 import { getFarmsAPY } from "services/http";
 import numeral from "numeral";
 

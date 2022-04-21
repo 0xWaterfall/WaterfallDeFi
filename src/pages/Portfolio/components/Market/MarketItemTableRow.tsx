@@ -3,8 +3,8 @@
 import { TableColumn, TableRow } from "components/Table/Table";
 import styled from "@emotion/styled";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import React, { memo, useState, useEffect } from "react";
-import { Star, Union, WTFToken } from "assets/images";
+import React, { memo, useState } from "react";
+import { Union } from "assets/images";
 import { Market, PORTFOLIO_STATUS } from "types";
 import { formatAllocPoint, formatNumberSeparator, getLockupPeriod, getWTFApr } from "utils/formatNumbers";
 import { useTheme } from "@emotion/react";

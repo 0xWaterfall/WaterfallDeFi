@@ -9,7 +9,6 @@ import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 import { COLORS } from "styles/theme";
-import { sample } from "lodash";
 
 echarts.use([TooltipComponent, LegendComponent, PieChart, CanvasRenderer]);
 

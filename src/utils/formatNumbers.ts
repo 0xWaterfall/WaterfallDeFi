@@ -4,7 +4,7 @@ import { BIG_TEN } from "./bigNumber";
 import dayjs from "dayjs";
 import numeral from "numeral";
 import { BLOCK_TIME } from "config";
-import axios from "axios";
+
 export const formatAPY = (apy: string | undefined, decimals = 16) => {
   if (!apy) return "- -";
   return new BigNumber(apy).dividedBy(BIG_TEN.pow(decimals)).toString() + " %";

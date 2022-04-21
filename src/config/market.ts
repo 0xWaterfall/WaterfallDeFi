@@ -368,7 +368,7 @@ export const MarketList: Market[] = [
     isMulticurrency: true,
     assets: ["BUSD", "USDT"],
     tokens: [],
-    listingDate: "2022/03/15",
+    listingDate: "2022/04/20",
     tranches: [],
     trancheCount: 2,
     tvl: "",
@@ -390,13 +390,13 @@ export const MarketList: Market[] = [
         farmName: "Alpaca BUSD:BNB",
         shares: 0.5,
         sAddress: BULL_BUSDBNB_sALPACA_Address[NETWORK],
-        apiKey: "alpaca"
+        apiKey: "alpaca_pcs_bnb_busd"
       },
       {
         farmName: "Alpaca USDT:BNB",
         shares: 0.5,
         sAddress: BULL_USDTBNB_sALPACA_Address[NETWORK],
-        apiKey: "venus"
+        apiKey: "alpaca_pcs_usdt_bnb"
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/alpaca-bull-prod"
@@ -409,7 +409,7 @@ export const MarketList: Market[] = [
     isMulticurrency: false,
     assets: ["WBNB"], //changed to array for multicurrency
     tokens: [],
-    listingDate: "2022/03/15",
+    listingDate: "2022/04/20",
     tranches: [],
     trancheCount: 2,
     tvl: "",
@@ -431,13 +431,13 @@ export const MarketList: Market[] = [
         farmName: "Alpaca BNB:BUSD",
         shares: 0.5,
         sAddress: BEAR_BNBBUSD_sALPACA_Address[NETWORK],
-        apiKey: "alpaca"
+        apiKey: "alpaca_pcs_bnb_busd"
       },
       {
         farmName: "Alpaca BNB:USDT",
         shares: 0.5,
         sAddress: BEAR_BNBUSDT_sALPACA_Address[NETWORK],
-        apiKey: "venus"
+        apiKey: "alpaca_pcs_usdt_bnb"
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/alpaca-bear-prod"

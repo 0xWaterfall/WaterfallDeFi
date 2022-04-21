@@ -542,7 +542,7 @@ export const useWTF = () => {
 };
 const getCoingeckoPrices = async () => {
   const result = await axios.get(
-    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax"
+    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax,wbnb"
   );
   if (result.status === 200) {
     return result.data;
@@ -552,11 +552,16 @@ const getCoingeckoPrices = async () => {
 const getTotalTVL = async () => {
   let _tvl = BIG_ZERO;
   const result = await axios.get(
-    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax"
+    "https://api.coingecko.com/api/v3/simple/price?vs_currencies=USD&ids=binancecoin,avalanche-2,wrapped-avax,wbnb"
   );
   let avaxPrice = 1;
   if (result.status === 200) {
     avaxPrice = result.data["wrapped-avax"]?.usd;
+  }
+
+  let wbnbPrice = 1;
+  if (result.status === 200) {
+    wbnbPrice = result.data["wbnb"]?.usd;
   }
   //
   await Promise.all(
@@ -588,6 +593,10 @@ const getTotalTVL = async () => {
         let rate = 1;
         if (_tranche?.coin === "wavax") {
           rate = avaxPrice;
+        }
+
+        if (_tranche?.coin === "wbnb") {
+          rate = wbnbPrice;
         }
         const _principalInUSD = _principal.times(rate);
         _tvl = _tvl.plus(_principalInUSD);

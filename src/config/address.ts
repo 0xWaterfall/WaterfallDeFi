@@ -1,6 +1,7 @@
 import { NETWORKS } from "config";
 import { abi as AR_TranchesAbi } from "./abi/AR_TrancheMaster.json";
 import AVAXTrancheMasterAutorollABI from "./abi/AVAXTrancheMasterAutoroll.json";
+import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 
 export const TranchesAddressOracle1: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
@@ -35,6 +36,12 @@ export const AllTranches = [
     address: "0xd4BcafB934d417D533C5D06f084394205990a6Bc", //MAXI Falss
     network: "AVAX",
     abi: AVAXTrancheMasterAutorollABI
+  },
+  {
+    address: "0xA124C3b6418FEd23aAc8c35B5C652b79281e5De9", //BNB Bear
+    network: "BSC",
+    coin: "wbnb",
+    abi: TranchesAbi
   }
 ];
 export const TranchesAddress: { [network: string]: string } = {

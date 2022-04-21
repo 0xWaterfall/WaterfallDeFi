@@ -233,9 +233,15 @@ export const getWTFApr = (
   // const wtfPrice = 1;
   let target = new BigNumber(tranche.target);
   let avaxPrice = 1;
+  let wbnbPrice = 1;
   if (assets?.includes("WAVAX")) {
     avaxPrice = coingeckoPrices?.["wrapped-avax"]?.usd;
     target = target.times(avaxPrice);
+  }
+
+  if (assets?.includes("WBNB")) {
+    wbnbPrice = coingeckoPrices?.["wbnb"]?.usd;
+    target = target.times(wbnbPrice);
   }
 
   const chainId =

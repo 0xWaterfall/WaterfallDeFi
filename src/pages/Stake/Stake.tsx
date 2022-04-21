@@ -473,7 +473,6 @@ const Stake = memo<TProps>(({ intl }) => {
   const VeWTFRatio =
     VeWTFTotalSupply && VeWTFBalance ? numeral((_VeWTFBalance / _VeWTFTotalSupply) * 100).format("0,0.[0000]") : "-";
   const VeWTFRatioPercentage = VeWTFTotalSupply && VeWTFBalance ? _VeWTFBalance / _VeWTFTotalSupply : 0;
-  console.log("VeWTFRatioPercentage", VeWTFRatioPercentage);
 
   const currentAPR = useMemo(() => {
     if (!rewardPerBlock) return "";

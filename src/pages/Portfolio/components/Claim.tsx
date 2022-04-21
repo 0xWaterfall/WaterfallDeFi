@@ -30,7 +30,6 @@ const Claim = memo<TProps>(({ intl }) => {
   // const { weekDistribution } = useWTF();
   // const isHide = weekDistribution.toString() === "0" ? "hidden" : "visible";
   const weeklyReward = useWeeklyReward();
-  console.log("weeklyReward", weeklyReward);
 
   return (
     <div

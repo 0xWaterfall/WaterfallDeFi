@@ -23,10 +23,7 @@ const useAuth = (network: string) => {
 
   const login = useCallback(
     (connectorID: string) => {
-      let connector: InjectedConnector | WalletConnectConnector = connectorsByName.injected;
-      if (connectorID === "walletconnect") connector = connectorsByName.walletconnect;
-      if (connectorID === "walletconnect2") connector = connectorsByName.walletconnect2;
-      console.log("login", connectorsByName.walletconnect);
+      const connector = connectorID === "injected" ? connectorsByName.injected : connectorsByName.walletconnect;
       window.localStorage.setItem("connectorIdv2", connectorID);
       // const connector = new InjectedConnector({ supportedChainIds: [chainId] });
       if (connector) {
@@ -45,7 +42,6 @@ const useAuth = (network: string) => {
             ) {
               console.log(error);
               if (connector instanceof WalletConnectConnector) {
-                console.log("connector instance of WalletConnectConnector");
                 const walletConnector = connector as WalletConnectConnector;
                 walletConnector.walletConnectProvider = null;
               }

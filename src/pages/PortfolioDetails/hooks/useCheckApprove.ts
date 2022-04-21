@@ -34,7 +34,6 @@ export const useCheckApproveAll = (approveTokenAddresses: string[], trancheMaste
   const handleCheckApproveAll = useCallback(async () => {
     if (account) {
       for (let i = 0; i < approveTokenAddresses.length; i++) {
-        console.log("token approval " + i);
         const approved = await checkApprove(contracts[i], trancheMasterAddress, account);
         if (!approved) return false;
       }

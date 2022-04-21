@@ -87,13 +87,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           // }
         }
 
-        console.log(calls);
-
         const [active, duration, actualStartAt, cycle, ...tranchesAndTokens] = !marketData.isAvax
           ? await multicallBSC(marketData.abi, calls)
           : await multicall(marketData.abi, calls);
-
-        console.log(tranchesAndTokens);
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
@@ -117,7 +113,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         _tranches.map((_t: any, _i: number) => {
           const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
           const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
-          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
+
+          //validPercent doesn't seem to be used right now
+          const _validPercent = _t ? new BigNumber(_t.validPercent?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;

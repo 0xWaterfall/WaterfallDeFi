@@ -318,7 +318,7 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
-    isRetired: true
+    isRetired: false
   },
   // {
   //   portfolio: "Stargate Falls (Autorolled) TEST",

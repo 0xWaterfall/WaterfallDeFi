@@ -690,7 +690,9 @@ const ApproveCard = memo<TProps>(
 
         {enabled && (
           <RedemptionFee>
-            {selectTrancheIdx === (0 || 1) ? "(Principal + Yield)" : "Withdrawal fee: All yield of the current cycle x"}{" "}
+            {selectTrancheIdx === 0 || (data.trancheCount === 3 && selectTrancheIdx === 1)
+              ? "Withdrawal Fee: All principal + yield of the current cycle * "
+              : "Withdrawal Fee: All yield of the current cycle * "}
             <span>{selectTranche && selectTranche.fee + "%"}</span>
           </RedemptionFee>
         )}

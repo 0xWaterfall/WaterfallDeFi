@@ -1,4 +1,4 @@
-import { MasterChefAddress, TranchesAddress, MulticallAddress, AllTranches } from "config/address";
+import { MasterChefAddress, TranchesAddress, MulticallAddress } from "config/address";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
 import { Market, PORTFOLIO_STATUS, Token } from "types";
@@ -566,7 +566,8 @@ const getTotalTVL = async () => {
   }
   //
   await Promise.all(
-    AllTranches.map(async (_tranche) => {
+    MarketList.map(async (_tranche, __id) => {
+      if (_tranche.isRetired) return;
       const _marketAddress = _tranche?.address;
       const calls = [
         {
@@ -590,21 +591,25 @@ const getTotalTVL = async () => {
           : [])
       ];
 
-      const [t0, t1, t2] = await multicallNetwork(_tranche?.network, _tranche?.abi, calls);
+      const [t0, t1, t2] = await multicallNetwork(_tranche?.isAvax ? "AVAX" : "BSC", _tranche?.abi, calls);
       const _tranches = [t0, t1, t2];
       _tranches.map((_t, _i) => {
         const _principal = _t ? new BigNumber(_t.principal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
         const _autoPrincipal = _t ? new BigNumber(_t.autoPrincipal?._hex).dividedBy(BIG_TEN.pow(18)) : BIG_ZERO;
         let rate = 1;
-        if (_tranche?.coin === "wavax") {
+        if (_tranche?.assets?.includes("WAVAX")) {
           rate = avaxPrice;
         }
 
-        if (_tranche?.coin === "wbnb") {
+        if (_tranche?.assets?.includes("WBNB")) {
           rate = wbnbPrice;
         }
-        const _principalInUSD = _principal.times(rate);
-        _tvl = _tvl.plus(_principalInUSD);
+        // const _principalInUSD = _principal.times(rate);
+        const _principalInUSD = _tranche?.autorollImplemented
+          ? _principal.plus(_autoPrincipal).times(rate)
+          : _principal.times(rate);
+
+        if (!_principalInUSD.isNaN()) _tvl = _tvl.plus(_principalInUSD);
       });
     })
   );

@@ -83,8 +83,8 @@ const Assets = styled.span`
 
 type TProps = WrappedComponentProps & {
   data: Market;
-  selectedDepositAsset: string;
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  selectedDepositAssetIndex: number;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   depositMultipleSimultaneous: boolean;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -92,8 +92,8 @@ type TProps = WrappedComponentProps & {
 const Information = memo<TProps>(
   ({
     data,
-    selectedDepositAsset,
-    setSelectedDepositAsset,
+    selectedDepositAssetIndex,
+    setSelectedDepositAssetIndex,
     depositMultipleSimultaneous,
     setDepositMultipleSimultaneous
   }) => {
@@ -141,7 +141,7 @@ const Information = memo<TProps>(
                 ":hover": { backgroundColor: "rgb(51,51,51,0.1)" }
               }}
               onClick={() => {
-                setSelectedDepositAsset(a);
+                setSelectedDepositAssetIndex(i);
               }}
             >
               <div css={{ display: "flex" }}>
@@ -196,8 +196,8 @@ const Information = memo<TProps>(
             >
               {!depositMultipleSimultaneous ? (
                 <>
-                  <Coin assetName={selectedDepositAsset} size={24} />
-                  <div css={{ padding: "1px 0 0 5px" }}>{selectedDepositAsset}</div>
+                  <Coin assetName={data?.assets[selectedDepositAssetIndex]} size={24} />
+                  <div css={{ padding: "1px 0 0 5px" }}>{data?.assets[selectedDepositAssetIndex]}</div>
                 </>
               ) : (
                 <>

@@ -23,12 +23,8 @@ type TProps = WrappedComponentProps;
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
 
-  const network = useNetwork();
   const market = useSelectedMarket();
-  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>(network === "avax" ? "USDC" : "BUSD");
-  useEffect(() => {
-    market && setSelectedDepositAsset(market.assets[0]);
-  }, [market]);
+  const [selectedDepositAssetIndex, setSelectedDepositAssetIndex] = useState<number>(0);
   const [depositMultipleSimultaneous, setDepositMultipleSimultaneous] = useState<boolean>(false);
 
   const today = new Date();
@@ -49,23 +45,23 @@ const PortfolioDetails = memo<TProps>(() => {
         <>
           <Information
             data={market}
-            selectedDepositAsset={selectedDepositAsset}
-            setSelectedDepositAsset={setSelectedDepositAsset}
+            selectedDepositAssetIndex={selectedDepositAssetIndex}
+            setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
             setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
           <Charts
             data={market}
-            selectedDepositAsset={selectedDepositAsset}
+            selectedDepositAssetIndex={selectedDepositAssetIndex}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
-            setSelectedDepositAsset={setSelectedDepositAsset}
+            setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
             setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
             APYData={APYData}
           />
           <ContentCD
             data={market}
-            selectedDepositAsset={selectedDepositAsset}
-            setSelectedDepositAsset={setSelectedDepositAsset}
+            selectedDepositAssetIndex={selectedDepositAssetIndex}
+            setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
             setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />

@@ -14,9 +14,9 @@ type TProps = WrappedComponentProps & {
   onCancel?: (e: boolean) => void;
   data: Market;
   balance: string;
-  selectedDepositAsset: string;
+  selectedDepositAssetIndex: number;
   depositMultipleSimultaneous: boolean;
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -27,9 +27,9 @@ const Claim = memo<TProps>(
     onCancel,
     data,
     balance,
-    selectedDepositAsset,
+    selectedDepositAssetIndex,
     depositMultipleSimultaneous,
-    setSelectedDepositAsset,
+    setSelectedDepositAssetIndex,
     setDepositMultipleSimultaneous
   }) => {
     const { primary, fonts, white, gray } = useTheme();
@@ -54,8 +54,8 @@ const Claim = memo<TProps>(
       new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(t.percent.hex).dividedBy(BIG_TEN.pow(5)))
     );
 
-    const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
-      deposited[data.assets.indexOf(selectedDepositAsset)]
+    const remainingDepositable = new BigNumber(maxDeposits[selectedDepositAssetIndex]).minus(
+      deposited[selectedDepositAssetIndex]
     );
 
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
@@ -68,12 +68,12 @@ const Claim = memo<TProps>(
         <DepositItem
           isRe={true}
           data={data}
-          selectedDepositAsset={selectedDepositAsset}
+          selectedDepositAssetIndex={selectedDepositAssetIndex}
           redepositBalance={balance}
           remainingDepositable={remainingDepositable}
           depositMultipleSimultaneous={depositMultipleSimultaneous}
           remainingDepositableSimul={remainingDepositableSimul}
-          setSelectedDepositAsset={setSelectedDepositAsset}
+          setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
           setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
         />
       </Modal>

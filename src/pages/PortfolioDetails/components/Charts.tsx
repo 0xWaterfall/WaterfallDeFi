@@ -115,9 +115,9 @@ const AutoRollLabel = styled.div`
 
 type TProps = WrappedComponentProps & {
   data: Market;
-  selectedDepositAsset: string;
+  selectedDepositAssetIndex: number;
   depositMultipleSimultaneous: boolean;
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
   APYData: any[];
 };
@@ -126,9 +126,9 @@ const Charts = memo<TProps>(
   ({
     intl,
     data,
-    selectedDepositAsset,
+    selectedDepositAssetIndex,
     depositMultipleSimultaneous,
-    setSelectedDepositAsset,
+    setSelectedDepositAssetIndex,
     setDepositMultipleSimultaneous,
     APYData
   }) => {
@@ -149,7 +149,7 @@ const Charts = memo<TProps>(
 
     const { balance, MCbalance, invested } = !data.isMulticurrency
       ? useTrancheBalance(data.address, data.isAvax)
-      : useMulticurrencyTrancheBalance(data.address, data.assets.indexOf(selectedDepositAsset), data.assets.length);
+      : useMulticurrencyTrancheBalance(data.address, selectedDepositAssetIndex, data.assets.length);
 
     const { account } = useWeb3React<Web3Provider>();
 
@@ -272,11 +272,11 @@ const Charts = memo<TProps>(
                   ? numeral(balance).format("0,0.[0000]")
                   : "--"
                 : MCbalance
-                ? numeral(
-                    new BigNumber(MCbalance[data.assets.indexOf(selectedDepositAsset)]).dividedBy(BIG_TEN.pow(18))
-                  ).format("0,0.[00000]")
+                ? numeral(new BigNumber(MCbalance[selectedDepositAssetIndex]).dividedBy(BIG_TEN.pow(18))).format(
+                    "0,0.[00000]"
+                  )
                 : "--"}{" "}
-              {selectedDepositAsset}
+              {data.assets[selectedDepositAssetIndex]}
             </div>
             <div>
               <ButtonWrapper
@@ -372,11 +372,11 @@ const Charts = memo<TProps>(
         <ReDeposit
           visible={showRedeposit}
           data={data}
-          selectedDepositAsset={selectedDepositAsset}
+          selectedDepositAssetIndex={selectedDepositAssetIndex}
           onCancel={rollDepositPopup}
           balance={formatBalance(balance.toString())}
           depositMultipleSimultaneous={depositMultipleSimultaneous}
-          setSelectedDepositAsset={setSelectedDepositAsset}
+          setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
           setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
         />
         <ClaimPopup

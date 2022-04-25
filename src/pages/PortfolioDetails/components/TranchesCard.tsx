@@ -23,7 +23,7 @@ import { BigNumber } from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   color?: string;
-  selectedDepositAsset: string;
+  selectedDepositAssetIndex: number;
   type: "Senior" | "Mezzanine" | "Junior" | "Fixed" | "Variable";
   tranche: Tranche;
   // pool: Pool;
@@ -160,7 +160,7 @@ const ProgressBar = styled.div<ProgressBarProps>`
 
 const TranchesCard = memo<TProps>(
   ({
-    selectedDepositAsset,
+    selectedDepositAssetIndex,
     intl,
     type,
     tranche,
@@ -269,7 +269,7 @@ const TranchesCard = memo<TProps>(
               {data.assets[0] === "WBNB" || data.assets[0] === "WAVAX" ? data.assets[0] : ""}
             </Text3>
             <Text4>
-              Remaining: {remaining} {selectedDepositAsset}
+              Remaining: {remaining} {data.assets[selectedDepositAssetIndex]}
             </Text4>
           </StatusDiv>
           <ProgressBar

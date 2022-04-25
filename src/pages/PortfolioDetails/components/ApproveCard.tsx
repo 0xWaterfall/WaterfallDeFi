@@ -119,7 +119,7 @@ const ImportantNotes = styled.div`
 `;
 type TProps = WrappedComponentProps & {
   isRe?: boolean;
-  selectedDepositAsset: string;
+  selectedDepositAssetIndex: number;
   remaining: string;
   remainingExact: string;
   enabled: boolean;
@@ -129,7 +129,7 @@ type TProps = WrappedComponentProps & {
   selectTranche: Tranche | undefined;
   depositMultipleSimultaneous: boolean;
   remainingSimul: { remaining: string; remainingExact: string; depositableOrInTranche: string }[];
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -137,7 +137,7 @@ const ApproveCard = memo<TProps>(
   ({
     intl,
     isRe,
-    selectedDepositAsset,
+    selectedDepositAssetIndex,
     remaining,
     remainingExact,
     enabled,
@@ -147,7 +147,7 @@ const ApproveCard = memo<TProps>(
     selectTranche,
     depositMultipleSimultaneous,
     remainingSimul,
-    setSelectedDepositAsset,
+    setSelectedDepositAssetIndex,
     setDepositMultipleSimultaneous
   }) => {
     const { tags } = useTheme();
@@ -165,7 +165,7 @@ const ApproveCard = memo<TProps>(
     //deposit hooks
     const depositAddress = !data.isMulticurrency
       ? data.depositAssetAddress
-      : data.depositAssetAddresses[data.assets.indexOf(selectedDepositAsset)];
+      : data.depositAssetAddresses[selectedDepositAssetIndex];
     const { onCheckApprove } = depositAddress
       ? useCheckApprove(depositAddress, data.address)
       : { onCheckApprove: () => false };
@@ -174,13 +174,13 @@ const ApproveCard = memo<TProps>(
     const { onMultiApprove } = useMultiApprove(data.depositAssetAddresses, data.address);
     const { onInvestDirect } = useInvestDirect(
       data.address,
-      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.isMulticurrency ? selectedDepositAssetIndex : -1,
       data.assets.length,
       data.assets[0] === "USDC"
     );
     const { onInvest } = useInvest(
       data.address,
-      data.isMulticurrency ? data.assets.indexOf(selectedDepositAsset) : -1,
+      data.isMulticurrency ? selectedDepositAssetIndex : -1,
       data.assets.length,
       data.assets[0] === "USDC"
     );
@@ -198,8 +198,8 @@ const ApproveCard = memo<TProps>(
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");
     const multicurrencyBalance = data.isMulticurrency
       ? isRe === undefined
-        ? numeral(multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
-        : numeral(multicurrencyBalanceRes[data.assets.indexOf(selectedDepositAsset)].balance).format("0,0.[0000]")
+        ? numeral(multicurrencyBalances[selectedDepositAssetIndex].balance).format("0,0.[0000]")
+        : numeral(multicurrencyBalanceRes[selectedDepositAssetIndex].balance).format("0,0.[0000]")
       : "";
     const tokenButtonColors = useMemo(
       () =>
@@ -340,7 +340,11 @@ const ApproveCard = memo<TProps>(
           txn: undefined,
           status: "PENDING",
           pendingMessage:
-            intl.formatMessage({ defaultMessage: "Depositing " }) + " " + balanceInput + " " + selectedDepositAsset
+            intl.formatMessage({ defaultMessage: "Depositing " }) +
+            " " +
+            balanceInput +
+            " " +
+            data.assets[selectedDepositAssetIndex]
         })
       );
       const amount = balanceInput.toString();
@@ -355,9 +359,7 @@ const ApproveCard = memo<TProps>(
         }
         setDepositLoading(false);
         setBalanceInput("0");
-        !data.isMulticurrency
-          ? fetchBalance()
-          : multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
+        !data.isMulticurrency ? fetchBalance() : multicurrencyBalances[selectedDepositAssetIndex].fetchBalance();
         // if (account) dispatch(getTrancheBalance({ account }));
       } catch (e) {
         dispatch(
@@ -390,7 +392,13 @@ const ApproveCard = memo<TProps>(
           status: "PENDING",
           pendingMessage: balanceInputSimul
             .map(
-              (b) => intl.formatMessage({ defaultMessage: "Depositing " }) + " " + b + " " + selectedDepositAsset + ", "
+              (b) =>
+                intl.formatMessage({ defaultMessage: "Depositing " }) +
+                " " +
+                b +
+                " " +
+                data.assets[selectedDepositAssetIndex] +
+                ", "
             )
             .join()
         })
@@ -407,7 +415,7 @@ const ApproveCard = memo<TProps>(
         }
         setDepositLoading(false);
         setBalanceInputSimul([]);
-        multicurrencyBalances[data.assets.indexOf(selectedDepositAsset)].fetchBalance();
+        multicurrencyBalances[selectedDepositAssetIndex].fetchBalance();
       } catch (e) {
         dispatch(
           setConfirmModal({
@@ -512,13 +520,14 @@ const ApproveCard = memo<TProps>(
                 :
               </div>
               <div>
-                {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)} {selectedDepositAsset}
+                {formatNumberSeparator(!data.isMulticurrency ? balance : multicurrencyBalance)}{" "}
+                {data.assets[selectedDepositAssetIndex]}
               </div>
             </RowDiv>
             <RowDiv>
               <div>{intl.formatMessage({ defaultMessage: "Remaining" })}:</div>
               <div>
-                {formatNumberSeparator(remaining)} {selectedDepositAsset}
+                {formatNumberSeparator(remaining)} {data.assets[selectedDepositAssetIndex]}
               </div>
             </RowDiv>
             {data.wrapAvax &&
@@ -544,8 +553,8 @@ const ApproveCard = memo<TProps>(
                         fontWeight: 400,
                         marginRight: 15
                       }}
-                      disabled={selectedDepositAsset === a}
-                      onClick={() => setSelectedDepositAsset(a)}
+                      disabled={selectedDepositAssetIndex === i}
+                      onClick={() => setSelectedDepositAssetIndex(i)}
                     >
                       {a}
                     </Button>
@@ -557,8 +566,8 @@ const ApproveCard = memo<TProps>(
               ) : (
                 <div></div>
               )}
-              <div css={{ color: tokenButtonColors[data.assets.indexOf(selectedDepositAsset)] }}>
-                {selectedDepositAsset}
+              <div css={{ color: tokenButtonColors[selectedDepositAssetIndex] }}>
+                {data.assets[selectedDepositAssetIndex]}
               </div>
             </RowDiv>
             <div>

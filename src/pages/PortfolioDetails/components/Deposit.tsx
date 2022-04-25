@@ -17,8 +17,8 @@ import { BIG_TEN } from "utils/bigNumber";
 
 type TProps = WrappedComponentProps & {
   data: Market;
-  selectedDepositAsset: string;
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  selectedDepositAssetIndex: number;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   depositMultipleSimultaneous: boolean;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -125,8 +125,8 @@ const Deposit = memo<TProps>(
   ({
     intl,
     data,
-    selectedDepositAsset,
-    setSelectedDepositAsset,
+    selectedDepositAssetIndex,
+    setSelectedDepositAssetIndex,
     depositMultipleSimultaneous,
     setDepositMultipleSimultaneous
   }) => {
@@ -145,8 +145,8 @@ const Deposit = memo<TProps>(
     const maxDeposits = tokens.map((t) =>
       new BigNumber(data.totalTranchesTarget).multipliedBy(new BigNumber(t.percent.hex).dividedBy(BIG_TEN.pow(5)))
     );
-    const remainingDepositable = new BigNumber(maxDeposits[data.assets.indexOf(selectedDepositAsset)]).minus(
-      deposited[data.assets.indexOf(selectedDepositAsset)]
+    const remainingDepositable = new BigNumber(maxDeposits[selectedDepositAssetIndex]).minus(
+      deposited[selectedDepositAssetIndex]
     );
     const remainingDepositableSimul = maxDeposits.map((md, i) => new BigNumber(md).minus(deposited[i]));
     const returnWidth = (assetIndex: number) =>
@@ -156,7 +156,7 @@ const Deposit = memo<TProps>(
             .multipliedBy(100)
             .toString()
         : 0;
-    const width = data.isMulticurrency ? returnWidth(data.assets.indexOf(selectedDepositAsset)) : 1;
+    const width = data.isMulticurrency ? returnWidth(selectedDepositAssetIndex) : 1;
     const widths = data.isMulticurrency ? data.assets.map((a, i) => returnWidth(i)) : [];
     const marketData = data;
     const handleReminder = (startTime: Number, endTime: Number) => {
@@ -219,20 +219,15 @@ const Deposit = memo<TProps>(
             <SelectDepositAsset>
               {!depositMultipleSimultaneous ? (
                 <div css={{ display: "flex", paddingTop: "3.5px" }}>
-                  {selectedDepositAsset !== "" ? <Coin assetName={selectedDepositAsset} size={24} /> : null}
+                  <Coin assetName={data.assets[selectedDepositAssetIndex]} size={24} />
                   <StepName css={{ padding: "1px 6px 0 6px" }}>
                     <span css={{ fontWeight: 900, marginRight: 10 }}>
-                      {deposited[data.assets.indexOf(selectedDepositAsset)]
-                        ? deposited[data.assets.indexOf(selectedDepositAsset)].toString()
-                        : ""}{" "}
-                      /{" "}
-                      {deposited[data.assets.indexOf(selectedDepositAsset)]
-                        ? maxDeposits[data.assets.indexOf(selectedDepositAsset)].toString()
-                        : ""}
+                      {deposited[selectedDepositAssetIndex] ? deposited[selectedDepositAssetIndex].toString() : ""} /{" "}
+                      {deposited[selectedDepositAssetIndex] ? maxDeposits[selectedDepositAssetIndex].toString() : ""}
                     </span>
-                    {selectedDepositAsset} Remaining
+                    {data.assets[selectedDepositAssetIndex]} Remaining
                   </StepName>
-                  {deposited && maxDeposits && selectedDepositAsset && data.assets ? (
+                  {deposited && maxDeposits && selectedDepositAssetIndex && data.assets ? (
                     <RemainingDepositableOuter>
                       <RemainingDepositableInner css={{ width: width + "%" }} />
                     </RemainingDepositableOuter>
@@ -257,11 +252,11 @@ const Deposit = memo<TProps>(
                 </div>
               )}
               <Select
-                value={depositMultipleSimultaneous ? "multi" : selectedDepositAsset}
+                value={depositMultipleSimultaneous ? "multi" : data.assets[selectedDepositAssetIndex]}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                   if (e.toString() !== "multi") {
                     setDepositMultipleSimultaneous(false);
-                    setSelectedDepositAsset(e.toString());
+                    setSelectedDepositAssetIndex(data.assets.indexOf(e.toString()));
                   } else {
                     setDepositMultipleSimultaneous(true);
                   }
@@ -292,11 +287,11 @@ const Deposit = memo<TProps>(
         {marketData && (
           <DepositItem
             data={marketData}
-            selectedDepositAsset={selectedDepositAsset}
+            selectedDepositAssetIndex={selectedDepositAssetIndex}
             remainingDepositable={remainingDepositable}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
             remainingDepositableSimul={remainingDepositableSimul}
-            setSelectedDepositAsset={setSelectedDepositAsset}
+            setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
             setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />
         )}

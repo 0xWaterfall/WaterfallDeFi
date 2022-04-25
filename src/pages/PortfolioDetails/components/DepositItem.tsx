@@ -12,13 +12,13 @@ import BigNumber from "bignumber.js";
 
 type TProps = WrappedComponentProps & {
   data: Market;
-  selectedDepositAsset: string;
+  selectedDepositAssetIndex: number;
   isRe?: boolean;
   redepositBalance?: string;
   remainingDepositable: BigNumber;
   depositMultipleSimultaneous: boolean;
   remainingDepositableSimul: BigNumber[];
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -35,7 +35,7 @@ type Tranches2 = "Fixed" | "Variable";
 
 const DepositItem = memo<TProps>(
   ({
-    selectedDepositAsset,
+    selectedDepositAssetIndex,
     intl,
     isRe,
     data,
@@ -43,7 +43,7 @@ const DepositItem = memo<TProps>(
     remainingDepositable,
     depositMultipleSimultaneous,
     remainingDepositableSimul,
-    setSelectedDepositAsset,
+    setSelectedDepositAssetIndex,
     setDepositMultipleSimultaneous
   }) => {
     // const { primary } = useTheme();
@@ -112,7 +112,7 @@ const DepositItem = memo<TProps>(
               >
                 <TranchesCard
                   key={_i}
-                  selectedDepositAsset={selectedDepositAsset}
+                  selectedDepositAssetIndex={selectedDepositAssetIndex}
                   type={data.trancheCount === 3 ? tranchesDisplayText[_i] : tranchesDisplayText2[_i]}
                   allocPoint={data.pools?.[_i]}
                   tranche={data.tranches?.[_i]}
@@ -144,7 +144,7 @@ const DepositItem = memo<TProps>(
           })}
         </div>
         <ApproveCard
-          selectedDepositAsset={selectedDepositAsset}
+          selectedDepositAssetIndex={selectedDepositAssetIndex}
           isRe={isRe}
           remaining={remaining}
           remainingExact={remainingExact}
@@ -179,7 +179,7 @@ const DepositItem = memo<TProps>(
               : false
           }
           depositMultipleSimultaneous={depositMultipleSimultaneous}
-          setSelectedDepositAsset={setSelectedDepositAsset}
+          setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
           setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
         />
       </div>

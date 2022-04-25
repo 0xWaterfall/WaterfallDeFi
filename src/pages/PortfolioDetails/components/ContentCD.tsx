@@ -10,8 +10,8 @@ import SparePositions from "pages/SparePositions";
 
 type TProps = WrappedComponentProps & {
   data: Market;
-  selectedDepositAsset: string;
-  setSelectedDepositAsset: React.Dispatch<React.SetStateAction<string>>;
+  selectedDepositAssetIndex: number;
+  setSelectedDepositAssetIndex: React.Dispatch<React.SetStateAction<number>>;
   depositMultipleSimultaneous: boolean;
   setDepositMultipleSimultaneous: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -20,8 +20,8 @@ const ContentCD = memo<TProps>(
   ({
     intl,
     data,
-    selectedDepositAsset,
-    setSelectedDepositAsset,
+    selectedDepositAssetIndex,
+    setSelectedDepositAssetIndex,
     depositMultipleSimultaneous,
     setDepositMultipleSimultaneous
   }) => {
@@ -33,8 +33,8 @@ const ContentCD = memo<TProps>(
         component: (
           <Deposit
             data={data}
-            selectedDepositAsset={selectedDepositAsset}
-            setSelectedDepositAsset={setSelectedDepositAsset}
+            selectedDepositAssetIndex={selectedDepositAssetIndex}
+            setSelectedDepositAssetIndex={setSelectedDepositAssetIndex}
             depositMultipleSimultaneous={depositMultipleSimultaneous}
             setDepositMultipleSimultaneous={setDepositMultipleSimultaneous}
           />

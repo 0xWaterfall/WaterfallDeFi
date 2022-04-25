@@ -192,7 +192,7 @@ const ApproveCard = memo<TProps>(
     const multicurrencyBalances = data.depositAssetAddresses.map((address) => useBalance(address));
     const { balance: balanceRe } = useTrancheBalance(data.address, data.isAvax);
     const multicurrencyBalanceRes = data.depositAssetAddresses.map((address, i) =>
-      useMulticurrencyTrancheBalance(data.address, i, data.assets.length)
+      useMulticurrencyTrancheBalance(address, i, data.assets.length)
     );
     const balance =
       isRe === undefined ? numeral(balanceWallet).format("0,0.[0000]") : numeral(balanceRe).format("0,0.[0000]");

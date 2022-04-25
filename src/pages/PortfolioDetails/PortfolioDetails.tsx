@@ -6,7 +6,7 @@ import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
 import Information from "./components/Information";
 import styled from "@emotion/styled";
-import { useSelectedMarket } from "hooks/useSelectors";
+import { useNetwork, useSelectedMarket } from "hooks/useSelectors";
 import useScrollTop from "hooks/useScrollTop";
 import { getAPYHourly } from "services/http";
 import { useHistoricalAPY } from "./hooks/useSubgraph";
@@ -23,8 +23,9 @@ type TProps = WrappedComponentProps;
 const PortfolioDetails = memo<TProps>(() => {
   useScrollTop();
 
+  const network = useNetwork();
   const market = useSelectedMarket();
-  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>("BUSD");
+  const [selectedDepositAsset, setSelectedDepositAsset] = useState<string>(network === "avax" ? "USDC" : "BUSD");
   useEffect(() => {
     market && setSelectedDepositAsset(market.assets[0]);
   }, [market]);

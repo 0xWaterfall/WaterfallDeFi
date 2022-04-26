@@ -88,6 +88,8 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
+        console.log("tokens");
+        console.log(_tokens);
         const tokenObjs = _tokens.map((t: any) => {
           return { addr: t[0], strategy: t[1], percent: t[2] };
         });

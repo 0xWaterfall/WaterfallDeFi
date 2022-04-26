@@ -16,7 +16,6 @@ import {
   BUSD4_VenusStrat,
   BULL_BNB_TrancheMasterAddress,
   BULL_BNB_WTFMasterAddress,
-  USDT_Address,
   BULL_BUSDBNB_sALPACA_Address,
   BULL_USDTBNB_sALPACA_Address,
   BEAR_BNB_TrancheMasterAddress,
@@ -41,7 +40,7 @@ import {
   STG_MasterWTFAddress,
   STG_TraderJoeStrategyAddress,
   STG_StargateStrategyAddress,
-  USDCAddress
+  USDT_Address_BNB
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
@@ -362,7 +361,7 @@ export const MarketList: Market[] = [
     masterChefAddress: BULL_BNB_WTFMasterAddress[NETWORK],
     pools: [],
     depositAssetAddress: "",
-    depositAssetAddresses: [BUSDAddress[NETWORK], USDT_Address[NETWORK]],
+    depositAssetAddresses: [BUSDAddress[NETWORK], USDT_Address_BNB[NETWORK]],
     depositAssetAbi: WTFAbi,
     // strategyAddress: StrategyAddress[NETWORK],
     // strategyAbi: StrategyAbi,

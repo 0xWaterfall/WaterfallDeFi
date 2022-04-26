@@ -67,70 +67,7 @@ export const useMarket = async (marketData: Market) => {
 
   return marketData;
 };
-// export const useStrategyFarm = () => {
-//   const [result, setResult] = useState<any>([]);
 
-//   const getFarmResult = (shares: BigNumber, addr: string) => {
-//     return {
-//       shares: new BigNumber(shares.toString()).dividedBy(BIG_TEN.pow(16)).toNumber().toFixed(0),
-//       farmName: farmsConfig[addr]
-//     };
-//   };
-//   useEffect(() => {
-//     const fetchFarms = async () => {
-//       if (!mBUSDAddress[NETWORK]) return;
-//       const farms = [sALPACAAddress[NETWORK], sVENUSAddress[NETWORK], sCREAMAddress[NETWORK]];
-//       const calls = [
-//         {
-//           address: sALPACAAddress[NETWORK],
-//           name: "balanceOf",
-//           params: [mBUSDAddress[NETWORK]]
-//         },
-//         {
-//           address: sVENUSAddress[NETWORK],
-//           name: "balanceOf",
-//           params: [mBUSDAddress[NETWORK]]
-//         },
-//         {
-//           address: sCREAMAddress[NETWORK],
-//           name: "balanceOf",
-//           params: [mBUSDAddress[NETWORK]]
-//         }
-//       ];
-
-//       const result = await multicall(SingleStrategyTokenAbi, calls);
-//       const _result = [];
-//       let total = BIG_ZERO;
-//       for (let i = 0; i < result.length; i++) {
-//         const f = result[i];
-//         total = new BigNumber(total).plus(new BigNumber(f[0]._hex));
-//       }
-//       for (let i = 0; i < result.length; i++) {
-//         const f = result[i];
-//         const percentage = new BigNumber(f[0]._hex).dividedBy(new BigNumber(total)).times(BIG_TEN.pow(18));
-//         if (f) _result.push(getFarmResult(percentage, farms[i]));
-//       }
-//       setResult(_result);
-
-//       // try {
-//       //   const farm0 = await contractStrategy.farms(0);
-//       //   if (farm0) _result.push(getFarmResult(farm0.shares, farm0.addr));
-//       //   const farm1 = await contractStrategy.farms(1);
-//       //   if (farm1) _result.push(getFarmResult(farm1.shares, farm1.addr));
-//       //   const farm2 = await contractStrategy.farms(2);
-//       //   if (farm2) _result.push(getFarmResult(farm2.shares, farm2.addr));
-//       //   setResult(_result);
-//       //   console.log(_result);
-//       // } catch (e) {
-//       //   console.error(e);
-//       // }
-//     };
-
-//     fetchFarms();
-//   }, []);
-
-//   return result;
-// };
 export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean) => {
   // const [balance, setBalance] = useState(BIG_ZERO);
   // const [invested, setInvested] = useState(BIG_ZERO);
@@ -197,7 +134,6 @@ export const useMulticurrencyTrancheBalance = (
   const trancheMasterContract = useMulticurrencyTrancheMasterContract(trancheMasterAddress);
   const fetchBalance = async () => {
     try {
-      //interface is not named right now, but if you look at the code, the first array are the balances, the second array are the invests
       const balanceOf = await trancheMasterContract.balanceOf(account);
 
       setResult({
@@ -253,40 +189,6 @@ export const useAllMulticurrencyTrancheBalance = (trancheMasterAddress: string, 
     invested: result.invested
   };
 };
-
-//UNUSED
-// export const useTrancheSnapshot = (cycle: string | undefined, network: Network) => {
-//   const [trancheSnapshot, setTrancheSnapshot] = useState([]);
-
-//   useEffect(() => {
-//     const getTrancheSnapshot = async () => {
-//       if (!cycle || cycle === "0") return;
-//       cycle = (Number(cycle) - 1).toString();
-//       // const contractTrancheMaster = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
-//       // console.log(contractTrancheMaster);
-//       // const result = await contractTrancheMaster.trancheSnapshots(cycle, 1);
-
-//       const _address = TranchesAddress[NETWORK];
-//       const calls = [
-//         {
-//           address: _address,
-//           name: "trancheSnapshots",
-//           params: [cycle, 0]
-//         },
-//         {
-//           address: _address,
-//           name: "trancheSnapshots",
-//           params: [cycle, 1]
-//         },
-//         {
-//           address: _address,
-//           name: "trancheSnapshots",
-//           params: [cycle, 2]
-//         }
-//       ];
-//       const result = await multicall(TrancheMasterAbi, calls);
-//       setTrancheSnapshot(result);
-//     };
 
 export const usePositions = (marketId: string | undefined) => {
   const { account } = useWeb3React<Web3Provider>();
@@ -389,41 +291,7 @@ export const usePendingWTFReward = (masterChefAddress: string, trancheCount: num
 
   return { totalPendingReward, tranchesPendingReward };
 };
-// export const usePendingWTFReward = (poolId?: number) => {
-//   const [pendingReward, setPendingReward] = useState(BIG_ZERO);
-//   const { account } = useWeb3React<Web3Provider>();
-//   const allPool = poolId == undefined ? true : false;
-//   useEffect(() => {
-//     const fetchPendingReward = async () => {
-//       try {
-//         if (!account) return;
-//         const contractMasterChef = getContract(MasterChefAbi, MasterChefAddress[NETWORK]);
-//         let _pendingReward = new BigNumber(0);
 
-//         if (poolId == 0 || allPool) {
-//           const pendingReward0 = await contractMasterChef.pendingReward(account, 0);
-//           if (!pendingReward0.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward0.toString()));
-//         }
-//         if (poolId == 1 || allPool) {
-//           const pendingReward1 = await contractMasterChef.pendingReward(account, 1);
-//           if (!pendingReward1.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward1.toString()));
-//         }
-//         if (poolId == 2 || allPool) {
-//           const pendingReward2 = await contractMasterChef.pendingReward(account, 2);
-//           if (!pendingReward2.isZero()) _pendingReward = _pendingReward.plus(new BigNumber(pendingReward2.toString()));
-//         }
-
-//         if (!_pendingReward.isZero()) setPendingReward(_pendingReward);
-//       } catch (e) {
-//         console.error(e);
-//       }
-//     };
-
-//     fetchPendingReward();
-//   }, [account]);
-
-//   return pendingReward;
-// };
 export const useTotalSupply = (address: string) => {
   const [totalSupply, setTotalSupply] = useState("0");
   const { account } = useWeb3React<Web3Provider>();

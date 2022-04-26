@@ -546,7 +546,7 @@ export const WBNB_Address: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
 };
-export const USDT_Address: { [network: string]: string } = {
+export const USDT_Address_BNB: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x55d398326f99059ff775485246999027b3197955"
@@ -623,8 +623,13 @@ export const STG_StargateStrategyAddress: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xce6b612fba5c2c06Cf296fBf0Fea0F10748aeE9e"
 };
-export const USDCAddress: { [network: string]: string } = {
+export const USDC_Address_AVAX: { [network: string]: string } = {
   [NETWORKS.DEVNET]: "",
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"
+};
+export const USDT_Address_AVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7"
 };

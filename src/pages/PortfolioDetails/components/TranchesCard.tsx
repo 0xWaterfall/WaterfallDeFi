@@ -10,7 +10,6 @@ import {
   formatAllocPoint,
   formatTVL,
   formatNumberSeparator,
-  getRemaining,
   compareNum,
   getPercentage,
   getWTFApr
@@ -95,23 +94,7 @@ const SoldOut = styled.div`
   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
   z-index: 11;
 `;
-// const ComingSoon = styled.div`
-//   font-size: 14px;
-//   width: 100px;
-//   height: 30px;
-//   border: 2px solid ${({ theme }) => theme.tags.redText};
-//   color: ${({ theme }) => theme.tags.redText};
-//   box-sizing: border-box;
-//   border-radius: 4px;
-//   transform: rotate(-30deg);
-//   position: absolute;
-//   left: -20px;
-//   top: -9px;
-//   text-align: center;
-//   line-height: 30px;
-//   background-color: ${({ theme }) => theme.useColorModeValue(theme.white.normal, theme.dark.block)};
-//   z-index: 11;
-// `;
+
 const Container = styled.div`
   padding: 20px;
   height: 100%;

@@ -73,7 +73,6 @@ const Action = memo<TProps>(({ intl, stakingConfig, totalVeWTF, rewardPerBlock }
           </Block>
         ))}
       </Segement>
-      {/* {activedKey === "STAKE" && <Stake />} */}
       {activedKey === "STAKE" && (
         <Increase
           stakingConfig={stakingConfig}

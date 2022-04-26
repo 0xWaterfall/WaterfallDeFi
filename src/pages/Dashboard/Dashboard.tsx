@@ -43,14 +43,6 @@ type TProps = WrappedComponentProps;
 const Dashboard = memo<TProps>(() => {
   return (
     <>
-      {/* <div style={{ position: "fixed", top: 10, left: "50%", zIndex: 9999 }}>
-        {account && (
-          <Button type="default" onClick={() => handleConfirmClick(account)}>
-            stop cycle
-          </Button>
-        )}
-      </div> */}
-
       <Wrapper>
         <DashboardCard />
         <LockedCard />

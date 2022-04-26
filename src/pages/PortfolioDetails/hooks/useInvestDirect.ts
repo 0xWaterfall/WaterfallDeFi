@@ -41,7 +41,6 @@ const invest = async (
       pendingMessage: "Deposit Submitted"
     })
   );
-  // return tx.hash;
   const receipt = await tx.wait();
 
   if (receipt.status) {
@@ -63,9 +62,6 @@ const invest = async (
       })
     );
   }
-  // console.log(tx.hash);
-  // const receipt = await tx.wait();
-  // console.log(receipt.transactionHash);
   return receipt.status;
 };
 

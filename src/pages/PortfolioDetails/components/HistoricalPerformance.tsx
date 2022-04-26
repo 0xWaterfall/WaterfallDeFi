@@ -8,7 +8,6 @@ import * as echarts from "echarts/core";
 import { TooltipComponent, LegendComponent, GridComponent, DataZoomSliderComponent } from "echarts/components";
 import { LineChart, PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-// import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
 import { Button } from "antd";
 

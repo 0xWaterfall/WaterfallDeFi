@@ -7,7 +7,6 @@ import { Market } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
 import Button from "components/Button/Button";
-// import { usePendingWTFReward, useTrancheBalance } from "hooks";
 import { formatBalance, formatBigNumber2HexString } from "utils/formatNumbers";
 import { successNotification } from "utils/notification";
 import { useWeb3React } from "@web3-react/core";
@@ -15,7 +14,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import useClaimAll from "../hooks/useClaimAll";
 import useWithdraw from "../hooks/useWithdraw";
 import ReDeposit from "pages/Portfolio/components/ReDeposit/ReDeposit";
-// import { usePendingWTFReward } from "hooks/useSelectors";
 import { useAppDispatch } from "store";
 import BigNumber from "bignumber.js";
 import numeral from "numeral";
@@ -158,10 +156,6 @@ const Charts = memo<TProps>(
       data.trancheCount
     );
     const dispatch = useAppDispatch();
-    // useEffect(() => {
-    //   account && dispatch(getPendingWTFReward({ account }));
-    //   // account && dispatch(getTrancheBalance({ account }));
-    // }, [account]);
 
     useEffect(() => {
       if (data.autorollImplemented) {
@@ -335,30 +329,10 @@ const Charts = memo<TProps>(
                 : "--"}{" "}
               WTF
             </div>
-            {/* <div>{intl.formatMessage({ defaultMessage: "Claim Coming Soon" })}</div> */}
             <div>
               <ButtonWrapper type="default" onClick={() => claimPopup()}>
                 {intl.formatMessage({ defaultMessage: "Claim" })} <ArrowRight2 />
               </ButtonWrapper>
-              {/* <ButtonWrapper
-                type="default"
-                onClick={() => claimReward()}
-                loading={claimRewardLoading}
-                disabled={!account || !+totalPendingReward}
-              >
-                {intl.formatMessage({ defaultMessage: "Claim" })}
-              </ButtonWrapper> */}
-              {/* <ButtonWrapper
-              type="default"
-              css={{ marginLeft: 17, position: "relative" }}
-              style={{ width: 90 }}
-              onClick={() => {
-                push("/stake");
-              }}
-            >
-              {intl.formatMessage({ defaultMessage: "To Stake" })}
-              <ToStakeImg css={{ position: "absolute", top: -5, left: -5 }} />
-            </ButtonWrapper> */}
             </div>
           </section>
         </RecordCard>

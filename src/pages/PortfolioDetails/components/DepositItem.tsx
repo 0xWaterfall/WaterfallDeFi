@@ -26,13 +26,6 @@ type Tranches = "Senior" | "Mezzanine" | "Junior";
 
 type Tranches2 = "Fixed" | "Variable";
 
-// const Box2 = styled.div`
-//   border: ${({ theme }) => theme.table.border};
-//   box-sizing: border-box;
-//   border-radius: 8px;
-//   background: ${({ theme }) => theme.white.normal};
-// `;
-
 const DepositItem = memo<TProps>(
   ({
     selectedDepositAssetIndex,
@@ -96,12 +89,6 @@ const DepositItem = memo<TProps>(
                 key={_i}
                 onClick={() => {
                   if (data.status === PORTFOLIO_STATUS.PENDING) {
-                    // if (selectTranche) {
-                    //   setSelectTrancheIdx(undefined);
-                    //   setSelectTranche(undefined);
-                    // } else {
-
-                    // }
                     //not sold out
                     if (!compareNum(_d.principal, _d.target)) {
                       setSelectTrancheIdx(_i);

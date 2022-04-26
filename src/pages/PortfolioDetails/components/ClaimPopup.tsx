@@ -4,7 +4,6 @@ import { memo } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useTheme } from "@emotion/react";
 import Modal from "components/Modal/Modal";
-// import DepositItem from "pages/PortfolioDetails/components/DepositItem";
 import { Market } from "types";
 import Increase from "pages/Stake/Action/Increase";
 import Stakings from "config/staking";
@@ -14,7 +13,6 @@ import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import { useTotalSupply } from "hooks";
 import numeral from "numeral";
-import styled from "@emotion/styled";
 import { useNetwork } from "hooks/useSelectors";
 
 type TProps = WrappedComponentProps & {

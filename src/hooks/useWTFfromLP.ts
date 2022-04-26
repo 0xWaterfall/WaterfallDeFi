@@ -10,28 +10,11 @@ export const useWTFPriceLP = () => {
   const { slowRefresh } = useRefresh();
   useEffect(() => {
     const fetchPrice = async () => {
-      // const contractLP = getContract(PancakeLPAbi, PancakeLPAddress[NETWORK]);
-      // const reserves = await contractLP.getReserves();
-      // let price = "0";
-      // if (NETWORK !== NETWORKS.MAINNET) {
-      //   price = (reserves[1] / reserves[0]).toFixed(2);
-      // }
-
-      // //mainnet
-      // if (NETWORK === NETWORKS.MAINNET) {
-      //   const contractLP_WBNBBUSD = getContract(PancakeLPAbi, PancakeLPAddress_WBNBBUSD[NETWORK]);
-      //   const reserves2 = await contractLP_WBNBBUSD.getReserves();
-      //   const _price = new BigNumber(reserves[0]?._hex).dividedBy(new BigNumber(reserves[1]?._hex));
-      //   const _price_WBNBBUSD = new BigNumber(reserves2[1]?._hex).dividedBy(new BigNumber(reserves2[0]?._hex));
-      //   price = _price.times(_price_WBNBBUSD).toFormat(2).toString();
-      // }
       const price = await getPrice();
       setPrice(price);
 
       const supply = await getWTFSupply();
 
-      // const contractWTF = getContract(WTFAbi, WTFAddress[NETWORK]);
-      // const totalSupply = await contractWTF.totalSupply();
       setMarketCap(new BigNumber(supply).times(price).toFormat(0).toString());
     };
     fetchPrice();

@@ -133,19 +133,8 @@ const Positions = memo<TProps>(({ intl }) => {
           <NoData isNoData={!payload?.length}>
             {payload?.map((_userInvest: any, _idx: number) => {
               const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-              // if (_userInvest.principal == "0") return;
-              // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
-              // if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
-
               return (
-                <div
-                  key={_idx}
-                  css={{
-                    ":hover": {
-                      // boxShadow: "0px 0px 20px rgba(0, 108, 253, 0.1)"
-                    }
-                  }}
-                >
+                <div key={_idx}>
                   <TableRow
                     css={{
                       color: gray.normal85,
@@ -354,11 +343,6 @@ const Positions = memo<TProps>(({ intl }) => {
         <NoData isNoData={!payload.length}>
           {payload.map((_userInvest: any, _idx: number) => {
             const trancheCycleId = _userInvest.tranche + "-" + _userInvest.cycle;
-            // if (_userInvest.principal == "0") return;
-            // // if (trancheCycles[trancheCycleId].state === 0) return;
-            // if (selectedTranche > -1 && selectedTranche !== _userInvest.tranche) return;
-            // if (selectedStatus > -1 && selectedStatus !== trancheCycles[trancheCycleId].state) return;
-            // console.log("render");
 
             return (
               <div key={_idx}>

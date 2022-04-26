@@ -15,10 +15,6 @@ export const getI18nMessages = async (locale: string) => {
 };
 
 export const getPrice = async () => {
-  // const r = await axios.get("https://ascendex.com/api/pro/v1/ticker?symbol=BNB/USDT", {
-  //   headers: { "x-auth-timestamp": dayjs().valueOf(), "x-auth-key": "1" }
-  // });
-
   //BSC price
   const pancake = await axios.get(
     "https://api.pancakeswap.info/api/v2/tokens/0xd73f32833b6d5d9c8070c23e599e283a3039823c"
@@ -59,18 +55,6 @@ export const getAPYHourly = async (date: string, date2: string) => {
 
 export const getSubgraphQuery = async (subgraphURL: string, account: string) => {
   try {
-    // const res2 = await axios.post("https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-prod", {
-    //   query: `
-
-    //  {
-    //     tranches(first:5) {
-    //        apy
-    //        fee
-    //        cycle
-    //     }
-    //   }`
-    // });
-    // console.log(res2);
     const res = await axios.post(subgraphURL, {
       query: `{
       trancheCycles(first:1000,orderBy: id, orderDirection: asc) {
@@ -119,29 +103,6 @@ export const getFarmsAPY = async () => {
   }
   return;
 };
-// export const getVenusAPY = async () => {
-//   const venusFarmAddress = "0x95c78222b3d6e262426483d42cfa53685a67ab9d";
-//   const url = "https://api.venus.io/api/vtoken?addresses=" + venusFarmAddress;
-//   const result = await axios.get(url);
-//   if (result.status === 200) {
-//     return parseFloat(result?.data?.data?.markets[0].supplyApy) / 100;
-//   }
-//   return;
-// };
-// export const getCreamAPY = async () => {
-//   const creamFarmAddress = "0x2Bc4eb013DDee29D37920938B96d353171289B7C";
-//   const url = "https://api.cream.finance/api/v1/crtoken?comptroller=bsc";
-//   const result = await axios.get(url);
-//   if (result.status === 200) {
-//     if (result.data.length > 0) {
-//       const a = result.data.find((d: any) => {
-//         return d.token_address == creamFarmAddress;
-//       });
-//       return parseFloat(a.supply_apy.value);
-//     }
-//   }
-//   return;
-// };
 
 export const getMarketCap = async () => {
   const coingecko = await axios.get(

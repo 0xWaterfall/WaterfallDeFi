@@ -68,15 +68,11 @@ export interface Market {
   masterChefAbi: any;
   masterChefContract?: Contract;
   pools: string[];
-  // pools: Pool[];
   totalAllocPoints?: string;
   depositAssetAddress: string;
   depositAssetAddresses: string[];
   depositAssetAbi: any;
   depositAssetContract?: Contract;
-  // strategyAbi: any;
-  // strategyAddress: string;
-  // strategyContract?: Contract;
   rewardPerBlock?: string;
   strategyFarms: StrategyFarm[];
   subgraphURL: string;

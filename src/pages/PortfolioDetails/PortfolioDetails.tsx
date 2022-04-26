@@ -6,9 +6,8 @@ import ContentCD from "./components/ContentCD";
 import Charts from "./components/Charts";
 import Information from "./components/Information";
 import styled from "@emotion/styled";
-import { useNetwork, useSelectedMarket } from "hooks/useSelectors";
+import { useSelectedMarket } from "hooks/useSelectors";
 import useScrollTop from "hooks/useScrollTop";
-import { getAPYHourly } from "services/http";
 import { useHistoricalAPY } from "./hooks/useSubgraph";
 
 const PortfolioDetailsWrapper = styled.div`

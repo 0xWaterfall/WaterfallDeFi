@@ -46,7 +46,6 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
       const signer = getSigner();
       if (!signer) return [];
       const network: string = useNetwork();
-      // const contractTrancheMaster = getContract(market.abi as AbiItem[], market.address, signer);
 
       const _marketAddress = market.address;
       const calls = [
@@ -68,11 +67,7 @@ export const getPosition = createAsyncThunk<any, { market: Market; account: stri
       ];
       const userInvest =
         network === "avax" ? await multicall(market.abi, calls) : await multicallBSC(market.abi, calls);
-      // const userInvest = await Promise.all([
-      //   contractTrancheMaster.userInvest(account, 0),
-      //   contractTrancheMaster.userInvest(account, 1),
-      //   contractTrancheMaster.userInvest(account, 2)
-      // ]);
+
       return JSON.parse(JSON.stringify(userInvest));
     } catch (e) {
       console.error(e);
@@ -85,7 +80,6 @@ export const getPendingWTFReward = createAsyncThunk<
   { account: string }
 >("position/getPendingWTFReward", async ({ account }) => {
   try {
-    // const allPool = poolId == undefined ? true : false;
     if (!account) return;
     const network = useNetwork();
     const contractMasterChef = getContract2(MasterChefAbi, MasterChefAddress[NETWORK], network);

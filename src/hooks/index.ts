@@ -100,18 +100,6 @@ export const useTrancheBalance = (trancheMasterAddress: string, isAvax: boolean)
     if (account) fetchBalance();
   }, [fastRefresh, account]);
 
-  // useEffect(() => {
-  //   const fetchBalance = async () => {
-  //     if (!account) return;
-  //     const contractMasterChef = getContract(TrancheMasterAbi, TranchesAddress[NETWORK]);
-  //     const result = await contractMasterChef.balanceOf(account);
-  //     setBalance(result.balance ? new BigNumber(result.balance?._hex) : BIG_ZERO);
-  //     setInvested(result.invested);
-  //   };
-
-  //   fetchBalance();
-  // }, [account]);
-
   return result;
 };
 

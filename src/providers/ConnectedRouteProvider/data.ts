@@ -7,12 +7,6 @@ const Stake = loadable(() => import("../../pages/Stake/Stake"));
 const Farm = loadable(() => import("../../pages/Farms/Detail/Farm"));
 const ComingSoon = loadable(() => import("../../pages/OldStake/ComingSoon"));
 export const RouteComponents = [
-  // {
-  //   key: "Dashboard",
-  //   component: ComingSoon,
-  //   exact: true,
-  //   path: "/"
-  // }
   {
     key: "Dashboard",
     component: Dashboard,
@@ -43,12 +37,6 @@ export const RouteComponents = [
     exact: true,
     path: "/comingsoon"
   },
-  // {
-  //   key: "Farms",
-  //   component: Farms,
-  //   exact: true,
-  //   path: "/farms"
-  // },
   {
     key: "Farm",
     component: Farm,

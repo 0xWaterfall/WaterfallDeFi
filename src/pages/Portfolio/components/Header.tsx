@@ -95,20 +95,6 @@ const Header = memo<TProps>(({ intl }) => {
         <div css={{}}>
           <Claim />
         </div>
-        {/* <div
-          css={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridColumnGap: 16,
-            "@media screen and (max-width: 1024px)": {
-              gridTemplateColumns: "none",
-              gridRowGap: 16
-            }
-          }}
-        >
-          <Claim />
-          <Airdrop />
-        </div> */}
       </div>
     </Wrapper>
   );

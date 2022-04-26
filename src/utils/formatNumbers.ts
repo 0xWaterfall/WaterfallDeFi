@@ -82,14 +82,6 @@ export const getPortfolioTotalTarget = (tranches: Tranche[]) => {
   return totalTarget.toString();
 };
 
-// export const getTotalAllocPoints = (pools: Pool[]) => {
-//   let totalAllocPoints = 0;
-//   pools.map((p) => {
-//     totalAllocPoints += parseInt(p.allocPoint);
-//   });
-//   return totalAllocPoints;
-// };
-
 export const getLockupPeriod = (duration: string) => {
   const lockupPeriod = Number(duration) / 86400;
   //for testing
@@ -140,9 +132,6 @@ export const getJuniorAPY = (tranches?: Tranche[], numbersOnly = false) => {
   let expectedAPY = new BigNumber("210000000000000000").dividedBy(BIG_TEN.pow(decimals));
   expectedAPY = expectedAPY.plus(new BigNumber(1));
   const juniorTVL = new BigNumber(tranches[tranches.length - 1].target).dividedBy(BIG_TEN.pow(decimals));
-  // const _duration = new BigNumber(86400 * 7);
-  // const _durationYear = new BigNumber(365 * 86400);
-  // const durationInYear = _duration.dividedBy(_durationYear);
 
   tranches.map((_t, _i) => {
     const _target = new BigNumber(_t.target).dividedBy(BIG_TEN.pow(decimals));
@@ -266,15 +255,6 @@ export const getWTFApr = (
   if (tokensInDuration.toString() !== "0")
     console.log(
       "wtfapr",
-      // wtfAPY.toString(),
-      // tokensInDuration.toString(),
-      // wtfPrice,
-      // target.toString(),
-      // 86400 * 365,
-      // duration,
-      // duration,
-      // rewardPerBlock.toString(),
-      // blocksInDuration.toString(),
       tokensInDuration.toString(),
 
       wtfAPY,
@@ -309,8 +289,6 @@ export const getNetApr = (
   trancheAPY = trancheAPY.replace("%", "");
   const _wtfAPY = getWTFApr(wtfAPY, tranche, duration, rewardPerBlock, wtfPrice);
   wtfAPY = wtfAPY.replace("+ ", "");
-  // const target = new BigNumber(tranche.target).dividedBy(BIG_TEN.pow(18));
-  // const fee = new BigNumber(tranche.fee).dividedBy(1000).toString();
 
   return Number(trancheAPY) + Number(_wtfAPY);
 };

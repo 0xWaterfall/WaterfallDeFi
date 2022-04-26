@@ -14,8 +14,6 @@ import { MarketList } from "config/market";
 import { getPosition } from "store/position";
 import { Dispatch } from "redux";
 import { setConfirmModal } from "store/showStatus";
-import BigNumber from "bignumber.js";
-import { formatBigNumber2HexString } from "utils/formatNumbers";
 
 // const options = {
 //   gasLimit: DEFAULT_GAS_LIMIT
@@ -27,7 +25,6 @@ const withdraw = async (
   multicurrencyAmount: string[],
   dispatch: Dispatch<any>
 ) => {
-  // const tx = await trancheContract.withdraw(new BigNumber(amount).times(BIG_TEN.pow(decimals)).toString(), options);
   const tx = await trancheContract.withdraw(multicurrencyAmount.length > 0 ? multicurrencyAmount : amount);
   dispatch(
     setConfirmModal({
@@ -37,7 +34,7 @@ const withdraw = async (
       pendingMessage: "Withdraw Submitted"
     })
   );
-  // return tx.hash;
+
   const receipt = await tx.wait();
 
   if (receipt.status) {
@@ -70,8 +67,9 @@ const useWithdraw = (trancheMasterAddress: string, isAvax: boolean, isMulticurre
     ? isMulticurrency
       ? useMulticurrencyTrancheMasterContract(trancheMasterAddress)
       : useTrancheMasterContract(trancheMasterAddress)
+    : isMulticurrency
+    ? useMulticurrencyTrancheMasterContract(trancheMasterAddress)
     : useAVAXTrancheMasterContract(trancheMasterAddress);
-  //handle AVAX multicurrency later, like when an AVAX MC falls is actually released
 
   const market = useSelectedMarket();
   const handleWithdraw = useCallback(

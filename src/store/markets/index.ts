@@ -61,9 +61,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           ...trancheCalls
         ];
         const calls = [...callsBasic, ...tokenCalls];
-        // const venusAPY = await getVenusAPY();
-        // const creamAPY = await getCreamAPY();
-        // const apacaAPY = 0.136;
+
         let farmsAPY = 0;
         if (farmsAPYResult) {
           for (let i = 0; i < marketData.strategyFarms.length; i++) {
@@ -71,15 +69,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             if (!sf || !sf.shares || !farmsAPYResult[sf.apiKey]) continue;
             farmsAPY += sf.shares * farmsAPYResult[sf.apiKey];
           }
-          // if (farmsAPYResult?.venus) {
-          //   farmsAPY += 0.3 * farmsAPYResult?.venus;
-          // }
-          // if (farmsAPYResult?.cream) {
-          //   farmsAPY += 0.3 * farmsAPYResult?.cream;
-          // }
-          // if (farmsAPYResult?.alpaca) {
-          //   farmsAPY += 0.4 * farmsAPYResult?.alpaca;
-          // }
         }
 
         const [active, duration, actualStartAt, cycle, ...tranchesAndTokens] = !marketData.isAvax
@@ -88,8 +77,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
-        console.log("tokens");
-        console.log(_tokens);
+
         const tokenObjs = _tokens.map((t: any) => {
           return { addr: t[0], strategy: t[1], percent: t[2] };
         });

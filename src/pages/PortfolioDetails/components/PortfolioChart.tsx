@@ -8,10 +8,9 @@ import * as echarts from "echarts/core";
 import { TooltipComponent, LegendComponent } from "echarts/components";
 import { PieChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
-// import { useStrategyFarm } from "hooks";
 import styled from "@emotion/styled";
 import { StrategyFarm } from "types";
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import HistoricalPerformance from "./HistoricalPerformance";
 import { Close } from "assets/images";
 

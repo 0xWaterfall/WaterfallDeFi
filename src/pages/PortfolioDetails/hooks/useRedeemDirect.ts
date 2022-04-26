@@ -30,10 +30,6 @@ const useRedeemDirect = (trancheMasterAddress: string, isAvax: boolean) => {
       dispatch(getMarkets(MarketList));
 
       return result;
-
-      // account && dispatch(getTrancheBalance({ account }));
-      // market && account && dispatch(getPosition({ market, account }));
-      //   dispatch(updateUserStakedBalance(sousId, account));
     },
     [account, dispatch, contract]
   );

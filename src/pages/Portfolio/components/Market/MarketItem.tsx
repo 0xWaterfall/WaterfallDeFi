@@ -224,11 +224,7 @@ const MarketItem = memo<TProps>(({ intl, data, selectId }) => {
       </RowDiv>
       <RowDiv>
         <div>{intl.formatMessage({ defaultMessage: "Status" })}</div>
-        <div>
-          {getMarketStatusTag()}
-          {/* {marketData.status === PORTFOLIO_STATUS.PENDING ? <Tag color="yellow" value={"Pending"}></Tag> : null}
-          {marketData.status === PORTFOLIO_STATUS.ACTIVE ? <Tag color="green" value={"Active"}></Tag> : null} */}
-        </div>
+        <div>{getMarketStatusTag()}</div>
       </RowDiv>
 
       <ButtonDiv>

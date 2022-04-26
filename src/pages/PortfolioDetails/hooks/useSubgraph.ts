@@ -4,40 +4,6 @@ import { BIG_TEN } from "utils/bigNumber";
 import numeral from "numeral";
 import { MarketList } from "config/market";
 import { getSubgraphQuery, getAPYHourly } from "services/http";
-// export const useHistoryQuery = (account: string | null | undefined) => {
-//   if (!account) account = "";
-//   return useQuery(gql`
-//     {
-//       trancheCycles(orderBy: id, orderDirection: asc) {
-//         id
-//         cycle
-//         state
-//         principal
-//         capital
-//         rate
-//         startAt
-//         endAt
-//       }
-//       tranches {
-//         id
-//         cycle
-//         target
-//         apy
-//         fee
-//       }
-//       userInvests(orderBy: cycle, orderDirection: desc ,where: { owner: "${account}" }) {
-//         id
-//         owner
-//         tranche
-//         cycle
-//         principal
-//         capital
-//         investAt
-//         harvestAt
-//       }
-//     }
-//   `);
-// };
 
 export const useHistoryQuery = (
   account: string | null | undefined,
@@ -56,7 +22,6 @@ export const useHistoryQuery = (
   MarketList.map(async (p) => {
     if (!account) return;
     const res = await getSubgraphQuery(p.subgraphURL, account);
-    // console.log(res);
     if (res) return res.data.data;
   });
   const _userInvests: UserInvest[] = [];
@@ -131,11 +96,7 @@ export const useHistoryQuery2 = async (
   decimals = 18
 ) => {
   if (!account) return [];
-  // const data = {
-  //   trancheCycles: [],
-  //   tranches: [],
-  //   userInvests: []
-  // };
+
   const historyQueryResult: any = [];
   const subgraphResult: any = [];
 
@@ -162,11 +123,7 @@ export const useHistoryQuery2 = async (
       userInvests: _userInvests,
       trancheCycles: _trancheCycles
     };
-    // if (!data)
-    //   return {
-    //     userInvests: _userInvests,
-    //     trancheCycles: _trancheCycles
-    //   };
+
     const { trancheCycles, tranches, userInvests } = _subgraphResult;
     if (trancheCycles) {
       for (let i = 0; i < trancheCycles.length; i++) {
@@ -176,7 +133,6 @@ export const useHistoryQuery2 = async (
     }
     if (userInvests) {
       for (let i = 0; i < userInvests.length; i++) {
-        // console.log(userInvests[i]);
         const { capital, cycle, harvestAt, id, investAt, owner, principal, tranche } = userInvests[i];
         const trancheCycleId = tranche + "-" + cycle;
         const _farmDuration =
@@ -230,7 +186,6 @@ export const useHistoryQuery2 = async (
     };
     historyQueryResult[marketIdx] = returnData;
   }
-  // console.log("historyQueryResult result", historyQueryResult);
   return historyQueryResult;
 };
 

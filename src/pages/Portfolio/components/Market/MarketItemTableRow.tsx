@@ -29,12 +29,7 @@ const APYStyled = styled.div`
   display: flex;
   flex-direction: column;
 `;
-// const APYStyled2 = styled.div`
-//   display: flex;
-//   & > span:nth-of-type(1) {
-//     width: 90px;
-//   }
-// `;
+
 const APYStyled2 = styled.div`
   display: flex;
   font-size: 12px;
@@ -162,7 +157,6 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                 ? Number(trancheAPR) + Number(numeral(wtfAPR).value())
                 : trancheAPR;
             return (
-              // <div css={{ display: "flex" }} key={_i}>
               <APYStyled2 key={_i} style={marketData?.tranches[_i]?.target === "0" ? { visibility: "hidden" } : {}}>
                 <span>{tranchesDisplayText[_i]}</span>
                 <div css={{ color: tranchesDisplayColor[_i] }}>
@@ -178,10 +172,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                           {_t.apy} %
                         </span>
                         <span style={{ display: "flex", visibility: isHide }}>
-                          <div style={{ width: 100 }}>
-                            {/* <WTFToken /> */}
-                            WTF APR:
-                          </div>
+                          <div style={{ width: 100 }}>WTF APR:</div>
                           {getWTFApr(
                             formatAllocPoint(marketData?.pools[_i], marketData?.totalAllocPoints),
                             marketData?.tranches[_i],
@@ -203,8 +194,6 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
                   </Tooltip>
                 </div>
               </APYStyled2>
-              /* {_i !== marketData?.tranches.length - 1 ? <div>&nbsp;→&nbsp;</div> : null} */
-              // </div>
             );
           })}
         </div>
@@ -214,13 +203,7 @@ const MarketItemTableRow = memo<TProps>(({ intl, selectId, data }) => {
         {formatNumberSeparator(marketData.tvl.includes("e-") ? "0" : marketData.tvl)}
         {marketData.assets[0] === "WBNB" || marketData.assets[0] === "WAVAX" ? " " + marketData.assets[0] : ""}
       </TableColumn>
-      <TableColumn minWidth={80}>
-        {getMarketStatusTag()}
-
-        {/* <Tag color="red" value={"Matured"}></Tag> */}
-        {/* {i === 2 ? <Tag color="yellow" value={"Pending"}></Tag> : null} */}
-        {/* {i === 3 ? <Tag color="green" value={"Active"}></Tag> : null} */}
-      </TableColumn>
+      <TableColumn minWidth={80}>{getMarketStatusTag()}</TableColumn>
       <TableColumn>
         <APYStyled>
           <Button type="primary" onClick={navigateMarketDetail}>

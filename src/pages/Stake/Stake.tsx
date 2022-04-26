@@ -58,67 +58,6 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
-// const Unclaim = styled.div`
-//   padding: 0 30px;
-//   display: flex;
-//   align-items: flex-start;
-//   margin-bottom: 40px;
-//   @media screen and (max-width: 768px) {
-//     width: fit-content;
-//     display: grid;
-//     grid-auto-flow: row;
-//     gap: 20px;
-//   }
-//   & > section {
-//     margin-right: 44px;
-//     p {
-//       font-weight: 500;
-//       font-size: 16px;
-//       line-height: 21px;
-//       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
-//       margin-bottom: 6px;
-//     }
-
-//     span {
-//       font-size: 12px;
-//       line-height: 16px;
-//       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
-//     }
-//   }
-//   button {
-//     width: fit-content;
-//     background: ${({ theme }) => theme.primary.lightBrown};
-//     color: ${({ theme }) => theme.primary.normal};
-//     font-weight: 500;
-//     font-size: 14px;
-//     line-height: 125%;
-//     margin-right: 10px;
-//     height: 32px;
-//     box-shadow: none;
-//     :hover,
-//     :focus {
-//       background: ${({ theme }) => theme.primary.lightBrown};
-//       color: ${({ theme }) => theme.primary.normal};
-//     }
-//   }
-//   & > div {
-//     padding: 0 12px;
-//     height: 32px;
-//     background: ${({ theme }) => theme.useColorModeValue(theme.primary.lightBrown, theme.dark.block)};
-//     border-radius: 8px;
-//     display: grid;
-//     gap: 6.5px;
-//     grid-auto-flow: column;
-//     align-items: center;
-
-//     span {
-//       font-size: 12px;
-//       line-height: 16px;
-//       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-//     }
-//   }
-// `;
-
 const BodyWrapper = styled.div``;
 
 const APYCard = styled.div`
@@ -349,55 +288,6 @@ const VeWTF = styled.div`
   }
 `;
 
-// const WeeklyWrapper = styled.div`
-//   padding-left: 30px;
-//   display: grid;
-//   gap: 76px;
-//   grid-auto-flow: column;
-//   width: fit-content;
-//   @media screen and (max-width: 560px) {
-//     grid-auto-flow: row;
-//   }
-//   & > div {
-//     p {
-//       font-size: 14px;
-//       line-height: 18px;
-//       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal5, theme.white.normal5)};
-//       margin-bottom: 18px;
-//     }
-//     div {
-//       margin-bottom: 11px;
-//       font-weight: 500;
-//       font-size: 24px;
-//       line-height: 31px;
-//       color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal85, theme.white.normal85)};
-
-//       span {
-//         font-weight: normal;
-//         font-size: 16px;
-//         line-height: 12px;
-//         color: ${({ theme }) => theme.useColorModeValue(theme.gray.normal7, theme.white.normal7)};
-//       }
-//     }
-//     & > span {
-//       font-size: 12px;
-//       line-height: 16px;
-//       color: ${({ theme }) => theme.warn.normal};
-//     }
-//     button {
-//       &[dataType="primaryLine"] {
-//         height: 32px;
-//         font-weight: 500;
-//         font-size: 14px;
-//         line-height: 125%;
-//         padding: 7px 12px;
-//         width: fit-content;
-//         background: ${({ theme }) => theme.primary.lightBrown};
-//       }
-//     }
-//   }
-// `;
-
 type TProps = WrappedComponentProps;
 
 const Stake = memo<TProps>(({ intl }) => {
@@ -455,17 +345,7 @@ const Stake = memo<TProps>(({ intl }) => {
       setHarvestLoading(false);
     }
   };
-  // const onFeeRewardsHarvest = async () => {
-  //   setFeeRewardsHarvestLoading(true);
-  //   try {
-  //     const result = await claimFeeRewards();
-  //     successNotification("Claim Reward Success", "");
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setFeeRewardsHarvestLoading(false);
-  //   }
-  // };
+
   const _VeWTFBalance = numeral(VeWTFBalance).value() || 0;
   const _VeWTFTotalSupply = numeral(VeWTFTotalSupply).value() || 0;
   const VeWTFRatio =
@@ -537,21 +417,8 @@ const Stake = memo<TProps>(({ intl }) => {
     };
   }, [maxAPR]);
 
-  // if (!stakingConfig) return <Wrapper />;
   return (
     <Wrapper>
-      {/* <Unclaim>
-        <section>
-          <p>{intl.formatMessage({ defaultMessage: "Your unclaim WTF" })}: 123.321</p>
-          <span>({intl.formatMessage({ defaultMessage: "From portfolio reward" })})</span>
-        </section>
-        <Button>{intl.formatMessage({ defaultMessage: "Claim" })}</Button>
-        <div>
-          <Bulb />
-          <span>{intl.formatMessage({ defaultMessage: "Claim to the wallet first, then stake WTF." })}</span>
-        </div>
-      </Unclaim> */}
-
       <BodyWrapper>
         <APYCard>
           <div>
@@ -578,7 +445,6 @@ const Stake = memo<TProps>(({ intl }) => {
             {intl.formatMessage({ defaultMessage: "Total veWTF minted" })}:{" "}
             {numeral(_VeWTFTotalSupply).format("0,0.[0000]")}
           </div>
-          {/* <span>{intl.formatMessage({ defaultMessage: "Average lock duration" })}: 4.0 months</span> */}
         </Total>
 
         <Actions>
@@ -602,12 +468,6 @@ const Stake = memo<TProps>(({ intl }) => {
                   <Bulb />
                   <div>
                     <span>{intl.formatMessage({ defaultMessage: "Stake WTF get veWTF" })}</span>
-                    {/* <span>
-                      {intl.formatMessage({
-                        defaultMessage:
-                          "veWTF holders can get dividends from the transaction fee income in each cycle. Rewards will be available for withdrawal after the end of each period."
-                      })}
-                    </span> */}
                   </div>
                 </div>
               </VeWTF>
@@ -685,46 +545,6 @@ const Stake = memo<TProps>(({ intl }) => {
 
         <Footer>
           <LiquidfillChart share={VeWTFRatio} pendingReward={_pendingReward} pendingRewardWAVAX={_pendingRewardWAVAX} />
-
-          {/* <VeWTF>
-              <p>{intl.formatMessage({ defaultMessage: "Your veWTF" })}</p>
-              <p>{VeWTFBalance ? numeral(_VeWTFBalance).format("0,0.[0000]") : "-"}</p>
-              <span>
-                {VeWTFBalance !== "0" &&
-                  `(1 veWTF= ${numeral(Number(lockingWTF) / Number(_VeWTFBalance)).format("0,0.[0000]")} WTF)`}
-              </span>
-              <div>
-                <Bulb />
-                <div>
-                  <span>{intl.formatMessage({ defaultMessage: "Stake WTF get veWTF" })}</span>
-                  <span>
-                    {intl.formatMessage({
-                      defaultMessage:
-                        "veWTF holders can get dividends from the transaction fee income in each cycle. Rewards will be available for withdrawal after the end of each period."
-                    })}
-                  </span>
-                </div>
-              </div>
-            </VeWTF>
-            <div /> */}
-          {/* <WeeklyWrapper>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Est. weekly dividends:" })}</p>
-                <div>
-                  10 <span>BUSD</span>
-                </div>
-                <span>Allocated time at 2D 12:56:56</span>
-              </div>
-              <div>
-                <p>{intl.formatMessage({ defaultMessage: "Est. weekly dividends:" })}</p>
-                <div>
-                  {pendingBUSDReward} <span>BUSD</span>
-                </div>
-                <Button type="primaryLine" onClick={onFeeRewardsHarvest} loading={feeRewardsHarvestLoading}>
-                  {intl.formatMessage({ defaultMessage: "Harvest" })}&nbsp;&nbsp;🐳
-                </Button>
-              </div>
-            </WeeklyWrapper> */}
         </Footer>
       </BodyWrapper>
     </Wrapper>

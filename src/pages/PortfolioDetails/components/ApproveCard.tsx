@@ -170,7 +170,12 @@ const ApproveCard = memo<TProps>(
       ? useCheckApprove(depositAddress, data.address)
       : { onCheckApprove: () => false };
     const { onCheckApproveAll } = useCheckApproveAll(data.depositAssetAddresses, data.address);
-    const { onApprove } = depositAddress ? useApprove(depositAddress, data.address) : { onApprove: () => false };
+    const { onApprove } = !depositMultipleSimultaneous
+      ? useApprove(
+          !data.isMulticurrency ? depositAddress : data.depositAssetAddresses[selectedDepositAssetIndex],
+          data.address
+        )
+      : { onApprove: () => false };
     const { onMultiApprove } = useMultiApprove(data.depositAssetAddresses, data.address);
     const { onInvestDirect } = useInvestDirect(
       data.address,

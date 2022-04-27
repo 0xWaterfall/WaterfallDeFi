@@ -185,8 +185,12 @@ export const getRemainingMulticurrency = (
   const _remainingDepositable = remainingDepositable;
 
   const remainingInTranche = _target.minus(_principal);
-  const depositableOrInTranche = _remainingDepositable > remainingInTranche ? "depositable" : "inTranche";
-  const result = _remainingDepositable > remainingInTranche ? _remainingDepositable : remainingInTranche;
+  const depositableOrInTranche = compareNum(remainingInTranche.toString(), _remainingDepositable.toString())
+    ? "depositable"
+    : "inTranche";
+  const result = compareNum(remainingInTranche.toString(), _remainingDepositable.toString())
+    ? _remainingDepositable
+    : remainingInTranche;
 
   return {
     remaining: numeral(result.toFormat(4).toString()).format("0,0.[0000]"),

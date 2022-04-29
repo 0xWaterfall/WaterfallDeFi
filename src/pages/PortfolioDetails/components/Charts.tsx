@@ -21,7 +21,7 @@ import BigNumber from "bignumber.js";
 import numeral from "numeral";
 import { BIG_TEN } from "utils/bigNumber";
 import { setConfirmModal } from "store/showStatus";
-import { useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance } from "hooks";
+import { useCoingeckoPrices, useMulticurrencyTrancheBalance, usePendingWTFReward, useTrancheBalance } from "hooks";
 import ClaimPopup from "./ClaimPopup";
 import useAutoRoll from "../hooks/useAutoRoll";
 import { Switch } from "antd";
@@ -136,10 +136,12 @@ const Charts = memo<TProps>(
     const [withdrawAllLoading, setWithdrawAllLoading] = useState(false);
     const [showRedeposit, setShowRedeposit] = useState(false);
     const [showClaim, setShowClaim] = useState(false);
+    const coingeckoPrices: any = useCoingeckoPrices();
 
     const [autoRoll, setAutoRoll] = useState(false);
     const [autoRollPending, setAutoRollPending] = useState<boolean>(true);
-    const { getAutoRoll, changeAutoRoll } = useAutoRoll(data.address);
+    const [autoRollBalance, setAutoRollBalance] = useState("0");
+    const { getAutoRoll, changeAutoRoll, getAutoRollBalance } = useAutoRoll(data.address);
 
     const { onWithdraw } = useWithdraw(data.address, data.isAvax, data.isMulticurrency);
 
@@ -169,6 +171,24 @@ const Charts = memo<TProps>(
         });
       }
     }, []);
+    useEffect(() => {
+      if (data.autorollImplemented) {
+        getAutoRollBalance().then((res) => {
+          if (res?.invested) {
+            let rate = 1;
+            if (data?.assets[0] === "WAVAX" && coingeckoPrices) {
+              rate = coingeckoPrices?.["wrapped-avax"]?.usd;
+            }
+            const _autoRollBalance = new BigNumber(res?.invested?._hex || "0")
+              .dividedBy(BIG_TEN.pow(18))
+              .times(rate)
+              .toString();
+
+            setAutoRollBalance(numeral(_autoRollBalance).format("0,0.[00]"));
+          }
+        });
+      }
+    }, [coingeckoPrices]);
 
     const claimReward = async (_lockDurationIfLockNotExists: string, _lockDurationIfLockExists: string) => {
       setClaimRewardLoading(true);
@@ -279,27 +299,30 @@ const Charts = memo<TProps>(
               </ButtonWrapper>
             </div>
             {account && data.autorollImplemented ? (
-              <div css={{ display: "flex", marginTop: 20 }}>
-                <AutoRollLabel>Auto Rolling</AutoRollLabel>
-                <div css={{ padding: 1.5, backgroundColor: "#FFFFFF", borderRadius: 10 }}>
-                  {!autoRollPending ? (
-                    <Switch
-                      checked={autoRoll}
-                      onChange={() => {
-                        setAutoRollPending(true);
-                        changeAutoRoll(!autoRoll).then((res) => {
-                          getAutoRoll().then((res2) => {
-                            setAutoRoll(res2);
-                            setAutoRollPending(false);
+              <div>
+                {autoRollBalance !== "0" && <div style={{ marginTop: 10 }}>Autoroll Balance: ${autoRollBalance}</div>}
+                <div css={{ display: "flex", marginTop: autoRollBalance !== "0" ? 10 : 20 }}>
+                  <AutoRollLabel>Auto Rolling</AutoRollLabel>
+                  <div css={{ padding: 1.5, backgroundColor: "#FFFFFF", borderRadius: 10 }}>
+                    {!autoRollPending ? (
+                      <Switch
+                        checked={autoRoll}
+                        onChange={() => {
+                          setAutoRollPending(true);
+                          changeAutoRoll(!autoRoll).then((res) => {
+                            getAutoRoll().then((res2) => {
+                              setAutoRoll(res2);
+                              setAutoRollPending(false);
+                            });
                           });
-                        });
-                      }}
-                    />
-                  ) : (
-                    <div css={{ fontSize: 12, padding: 3 }}>
-                      <span css={{ color: "#0066FF" }}>Transaction Pending...</span>
-                    </div>
-                  )}
+                        }}
+                      />
+                    ) : (
+                      <div css={{ fontSize: 12, padding: 3 }}>
+                        <span css={{ color: "#0066FF" }}>Transaction Pending...</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ) : null}

@@ -8,6 +8,11 @@ const getAutoRoll = async (contract: Contract, account: string | null | undefine
   return autoRoll.isAuto;
 };
 
+const getAutoRollBalance = async (contract: Contract, account: string | null | undefined) => {
+  const autoRollBalance = await contract.balanceOf(account);
+  return autoRollBalance;
+};
+
 const autoRoll = async (contract: Contract, autoState: boolean) => {
   const tx = await contract.switchAuto(autoState);
   const receipt = await tx.wait();
@@ -23,6 +28,11 @@ const useAutoRoll = (trancheMasterAddress: string) => {
     return result;
   }, [account, contract]);
 
+  const handleGetAutoRollBalance = useCallback(async () => {
+    const result = await getAutoRollBalance(contract, account);
+    return result;
+  }, [account, contract]);
+
   const handleChangeAutoRoll = useCallback(
     async (autoState: boolean) => {
       try {
@@ -35,7 +45,11 @@ const useAutoRoll = (trancheMasterAddress: string) => {
     [account, contract]
   );
 
-  return { getAutoRoll: handleGetAutoRoll, changeAutoRoll: handleChangeAutoRoll };
+  return {
+    getAutoRoll: handleGetAutoRoll,
+    changeAutoRoll: handleChangeAutoRoll,
+    getAutoRollBalance: handleGetAutoRollBalance
+  };
 };
 
 export default useAutoRoll;

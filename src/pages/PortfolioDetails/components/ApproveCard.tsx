@@ -285,7 +285,7 @@ const ApproveCard = memo<TProps>(
       const _remaining = remainingExact.replace(/\,/g, "");
       const _balanceInput = balanceInput;
       const _balance = !data.isMulticurrency ? balance : multicurrencyBalance;
-      if (compareNum(_balanceInput, _balance, true)) {
+      if (compareNum(_balanceInput, actualBalanceWallet, true)) {
         if (!data.wrapAvax) return intl.formatMessage({ defaultMessage: "Insufficient Balance" });
       }
       if (compareNum(_balanceInput, _remaining, true)) {

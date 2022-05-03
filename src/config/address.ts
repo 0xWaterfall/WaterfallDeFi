@@ -633,3 +633,31 @@ export const USDT_Address_AVAX: { [network: string]: string } = {
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7"
 };
+
+//april 28th stargate + alpaca + venus falls
+export const BUSDTripleStratTrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xf23D0b80Ca2e61F837B990c8D390F1327376E361"
+};
+export const BUSDTripleStratMasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xFccE0005423Ed8c5EC37Cb315CF0c9ef597250EB"
+};
+
+export const BUSDTriple_AlpacaStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xbF6Edb397f3bF899b1D8463FD4aAf15C5502e0EE"
+};
+export const BUSDTriple_VenusStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x46dd0Dc25918730bb8528994B1E8abFd58fb9c8e"
+};
+export const BUSDTriple_StargateStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xfF106F62855984D474c8360E680D06350e3ca898"
+};

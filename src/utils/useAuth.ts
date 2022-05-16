@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import {
+  InjectedConnector,
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from "@web3-react/injected-connector";
@@ -17,7 +18,10 @@ const useAuth = (network: string) => {
 
   const login = useCallback(
     (connectorID: string) => {
-      const connector = connectorID === "injected" ? connectorsByName.injected : connectorsByName.walletconnect;
+      let connector: InjectedConnector | WalletConnectConnector = connectorsByName.injected;
+      if (connectorID === "walletconnect") connector = connectorsByName.walletconnect;
+      if (connectorID === "walletconnect2") connector = connectorsByName.walletconnect2;
+
       window.localStorage.setItem("connectorIdv2", connectorID);
       // const connector = new InjectedConnector({ supportedChainIds: [chainId] });
       if (connector) {

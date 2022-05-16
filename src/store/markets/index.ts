@@ -104,6 +104,9 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
           const _fee = _t ? new BigNumber(_t.fee?._hex).dividedBy(1000) : BIG_ZERO;
           const _target = _t ? new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals)) : BIG_ZERO;
+
+          //MAY GAMEPLAN
+          //TODO: add logic to handle falls that have all variable tranches
           const _apy =
             _t && _i !== _tranches.length - 1
               ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(decimals - 2))
@@ -168,29 +171,28 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         // const totalAllocPoints = getTotalAllocPoints(pools);
         marketData = { ...marketData, pools, totalAllocPoints: totalAllocPoints.toString(), rewardPerBlock };
         if (marketData.isMulticurrency) {
-          const trancheInvestCalls = marketData.depositAssetAddresses.map((addr: string) => [
-            {
-              address: _marketAddress,
-              name: "trancheInvest",
-              params: [cycle[0], 0, addr]
-            },
-            {
-              address: _marketAddress,
-              name: "trancheInvest",
-              params: [cycle[0], 1, addr]
-            },
-            {
-              address: _marketAddress,
-              name: "trancheInvest",
-              params: [cycle[0], 2, addr]
+          const trancheInvestCalls = marketData.depositAssetAddresses.map((addr: string) => {
+            const _callMap = [];
+            for (let i = 0; i < marketData.trancheCount; i++) {
+              _callMap.push({
+                address: _marketAddress,
+                name: "trancheInvest",
+                params: [cycle[0], i, addr]
+              });
             }
-          ]);
+            return _callMap;
+          });
           const calls3 = trancheInvestCalls.reduce((acc: EthersCall[], next: EthersCall[]) => [...acc, ...next], []);
           const trancheInvestsRes = !marketData.isAvax
             ? await multicallBSC(marketData.abi, calls3)
             : await multicall(marketData.abi, calls3);
           const trancheInvestsResUnpacked = trancheInvestsRes.map((res: BigNumber[]) => res[0]);
+
+          //!!! PULLING TRANCHECOUNT FROM BACKEND IS POSSIBLE, REPLACE marketData.trancheCount WITH THIS!!!
           const trancheCount = tranches.length;
+          //!!!
+          console.log(trancheCount);
+
           const trancheInvests = tranches.map((t: Tranche, i: number) =>
             tokenObjs.map((t: Token, j: number) => trancheInvestsResUnpacked[i + trancheCount * j])
           );

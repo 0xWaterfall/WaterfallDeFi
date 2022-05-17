@@ -140,52 +140,6 @@ export const MarketList: Market[] = [
     isRetired: false
   },
   {
-    portfolio: "MAXI Falls (Autorolled)",
-    isAvax: true,
-    wrapAvax: false,
-    autorollImplemented: true,
-    isMulticurrency: false,
-    assets: ["DAI.e"],
-    tokens: [],
-    listingDate: "2022/2/28",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: MAXIFallsTrancheMasterAddress2[NETWORK],
-    abi: AVAXTrancheMasterAutorollABI,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: MAXIFallsMasterWTFAddress2[NETWORK],
-    pools: [],
-    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Benqi DAI.e",
-        shares: 0.33,
-        sAddress: MAXIBenqiStrategyAddress2[NETWORK],
-        apiKey: "qi_dai"
-      },
-      {
-        farmName: "Trader Joe DAI.e",
-        shares: 0.33,
-        sAddress: MAXITraderJoeStrategyAddress2[NETWORK],
-        apiKey: "joe_dai_e"
-      },
-      {
-        farmName: "Maximizer",
-        shares: 0.33,
-        sAddress: MAXIMaximizerStrategyAddress2[NETWORK],
-        apiKey: "maximizer"
-      }
-    ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/maxiQiJoe_dai",
-    isRetired: false
-  },
-  {
     portfolio: "DAI Falls (Retired)",
     isAvax: true,
     wrapAvax: false,

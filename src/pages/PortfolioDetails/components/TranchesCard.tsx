@@ -252,7 +252,7 @@ const TranchesCard = memo<TProps>(
               {data.assets[0] === "WBNB" || data.assets[0] === "WAVAX" ? data.assets[0] : ""}
             </Text3>
             <Text4>
-              Remaining: {remaining} {data.assets[selectedDepositAssetIndex]}
+              Remaining: {Number(remaining) > 0 ? remaining : "0"} {data.assets[selectedDepositAssetIndex]}
             </Text4>
           </StatusDiv>
           <ProgressBar

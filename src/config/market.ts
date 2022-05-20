@@ -408,7 +408,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: StargateBenqi_TrancheMasterAddress[NETWORK],
-    abi: AR_TranchesAbi,
+    abi: AVAXTrancheMasterAutorollABI,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: StargateBenqi_MasterWTFAddress[NETWORK],
     pools: [],

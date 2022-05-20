@@ -107,10 +107,11 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
           //MAY GAMEPLAN
           //TODO: add logic to handle falls that have all variable tranches
+
           const _apy =
             _t && _i !== _tranches.length - 1
-              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(decimals - 2))
-              : calculateJuniorAPY(tranches, totalTarget, _target, decimals);
+              ? new BigNumber(_t.apy?._hex).dividedBy(BIG_TEN.pow(18 - 2))
+              : calculateJuniorAPY(tranches, totalTarget, _target, 18);
 
           totalTranchesTarget = totalTranchesTarget.plus(_target);
           tvl = marketData.autorollImplemented ? tvl.plus(_principal).plus(_autoPrincipal) : tvl.plus(_principal);
@@ -159,7 +160,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
         const [_rewardPerBlock, ...poolCallsResponse] = !marketData.isAvax
           ? await multicallBSC(marketData.masterChefAbi, calls2)
           : await multicall(marketData.masterChefAbi, calls2);
-        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(decimals)).toString();
+        const rewardPerBlock = new BigNumber(_rewardPerBlock[0]._hex).dividedBy(BIG_TEN.pow(18)).toString();
         const pools: string[] = [];
         let totalAllocPoints = BIG_ZERO;
         const _pools = poolCallsResponse.slice(0, marketData.trancheCount);

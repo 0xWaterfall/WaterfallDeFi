@@ -45,7 +45,12 @@ import {
   BUSDTripleStratMasterWTFAddress,
   BUSDTriple_AlpacaStrategyAddress,
   BUSDTriple_VenusStrategyAddress,
-  BUSDTriple_StargateStrategyAddress
+  BUSDTriple_StargateStrategyAddress,
+  StargateBenqi_TrancheMasterAddress,
+  StargateBenqi_MasterWTFAddress,
+  USDC_Address_AVAX,
+  StargateBenqi_StargateStrategyAddress,
+  StargateBenqi_BenqiStrategyAddress
 } from "./address";
 import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
@@ -385,6 +390,46 @@ export const MarketList: Market[] = [
       }
     ],
     subgraphURL: "https://apitest2.waterfalldefi.org/subgraphs/name/waterfall/bsc_test_alpVeStar",
+    isRetired: false
+  },
+  {
+    portfolio: "USDC Falls",
+    isAvax: true,
+    wrapAvax: false,
+    autorollImplemented: true,
+    isMulticurrency: false,
+    assets: ["USDC"],
+    tokens: [],
+    listingDate: "2022/5/20",
+    tranches: [],
+    trancheCount: 3,
+    tvl: "",
+    totalTranchesTarget: "",
+    status: "",
+    nextTime: "",
+    address: StargateBenqi_TrancheMasterAddress[NETWORK],
+    abi: AR_TranchesAbi,
+    masterChefAbi: MasterChefAbi,
+    masterChefAddress: StargateBenqi_MasterWTFAddress[NETWORK],
+    pools: [],
+    depositAssetAddress: USDC_Address_AVAX[NETWORK],
+    depositAssetAddresses: [],
+    depositAssetAbi: WTFAbi,
+    strategyFarms: [
+      {
+        farmName: "Stargate USDC",
+        shares: 0.7,
+        sAddress: StargateBenqi_StargateStrategyAddress[NETWORK],
+        apiKey: "stargate_avax_usdc"
+      },
+      {
+        farmName: "Benqi USDC",
+        shares: 0.3,
+        sAddress: StargateBenqi_BenqiStrategyAddress[NETWORK],
+        apiKey: "qi_usdc"
+      }
+    ],
+    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiStarUsdc",
     isRetired: false
   }
 ];

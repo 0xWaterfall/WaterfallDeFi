@@ -661,3 +661,25 @@ export const BUSDTriple_StargateStrategyAddress: { [network: string]: string } =
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0xfF106F62855984D474c8360E680D06350e3ca898"
 };
+
+//may 20th stargate + benqi falls
+export const StargateBenqi_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x38179F0262812682FC679852B54e48bb10a11ab9"
+};
+export const StargateBenqi_MasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x734cB7d32DE1726f4642A535339a2Edee2D238b8"
+};
+export const StargateBenqi_StargateStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x486c1c21EbeA566A21e39217317c32Fe112Fc949"
+};
+export const StargateBenqi_BenqiStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x24929175d25Bc48957A999764a00400AdB95EFEe"
+};

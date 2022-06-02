@@ -1,12 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
-import styled from "@emotion/styled";
 import moment from "moment";
 import { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
 import { useLocation } from "react-router-dom";
 import "./blog_detail.css";
-// import "./blog_detail_mobile.css";e
 
 type TProps = WrappedComponentProps;
 type MediumItem = {
@@ -20,8 +18,8 @@ type MediumItem = {
   content: string;
   categories: string[];
 };
-const BlogDetail = memo<TProps>(({ intl }) => {
-  const { state, pathname } = useLocation<{ data: MediumItem }>();
+const BlogDetail = memo<TProps>(() => {
+  const { state } = useLocation<{ data: MediumItem }>();
   const [data, setData] = useState<MediumItem>();
 
   useEffect(() => {

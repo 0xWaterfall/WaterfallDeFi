@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 
-import styled from "@emotion/styled";
 import moment from "moment";
 import { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -23,7 +22,7 @@ type MediumItem = {
   categories: string[];
 };
 
-const Blog = memo<TProps>(({ intl }) => {
+const Blog = memo<TProps>(() => {
   const { push } = useHistory();
   const [mediumData, setMediumData] = useState<MediumItem[]>([]);
   useEffect(() => {

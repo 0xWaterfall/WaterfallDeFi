@@ -218,6 +218,11 @@ const Header = memo<TProps>(({ intl }) => {
       text: intl.formatMessage({ defaultMessage: "User Guide" }),
       target: "_blank"
       // checked: ""
+    },
+    {
+      pathname: "/blog",
+      text: intl.formatMessage({ defaultMessage: "Blog" }),
+      checked: "/blog"
     }
   ];
 

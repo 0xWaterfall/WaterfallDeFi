@@ -1,0 +1,139 @@
+.blogDetailTitle {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 42px;
+  line-height: 126.9%;
+  color: #333;
+}
+.blogDetailAuthor {
+  color: #9b9ea1;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 147.4%;
+}
+.blogDetailByAuthor {
+  color: #9b9ea1;
+  display: inline;
+}
+.blogDetailDate {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 147.4%;
+  color: #333;
+
+  display: inline-block;
+  opacity: 0.5;
+}
+.blogDetailDate > span {
+  position: relative;
+  content: "";
+  height: 4px;
+  width: 4px;
+  background: #091d40;
+  border-radius: 50000px;
+  display: inline-block;
+  line-height: 40px;
+  margin: 5px;
+}
+.blogDetailContainer img {
+  max-width: 100%;
+}
+.blogDetailDesc h1,
+.blogDetailDesc h2,
+.blogDetailDesc h3,
+.blogDetailDesc h4,
+.blogDetailDesc h5,
+.blogDetailDesc h6,
+strong {
+  color: #333;
+}
+.blogDetailDesc {
+  line-height: 1.74;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 500;
+  visibility: visible;
+  color: #333;
+}
+.blogDetailDesc strong {
+  font-weight: 800;
+}
+.blogDetailDesc li {
+  font-weight: 400;
+}
+.blogDetailDesc h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.blogDetailDesc h2 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.blogDetailDesc h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.blogDetailDesc h4 {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.blogDetailDesc h5 {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+
+.blogDetailDesc h6 {
+  font-size: 16px;
+  font-weight: 800;
+  margin: 30px 0;
+  text-transform: uppercase;
+}
+.blogDetailDesc {
+  font-style: normal;
+  font-size: 16px;
+  line-height: 160.4%;
+  color: #333;
+}
+.blogDetailDesc a {
+  color: #333;
+  text-decoration: underline;
+}
+.blogDetailDesc a:hover {
+  color: #333;
+}
+.blogDetailContainer {
+  max-width: 1024px;
+  padding: 40px;
+}
+.blogDetailDesc figure {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 30px;
+}
+.blogDetailDesc figure img {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.blogDetailDesc p {
+  margin: 20px 0 !important;
+}
+.blogDetail #footer {
+  padding-right: 0;
+  padding-left: 0;
+}

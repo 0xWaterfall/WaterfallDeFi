@@ -1,0 +1,28 @@
+@media screen and (max-width: 768px) {
+  .featureBlogContainer {
+    flex-direction: column;
+  }
+  .featureBlogContainer > div {
+    width: 100%;
+    padding-left: 0 !important;
+  }
+
+  .featureBlogContainer .blogThumbnail {
+    height: calc((100vw - 80px) / 16 * 9);
+    max-height: calc((100vw - 80px) / 16 * 9);
+  }
+  .featureBlogContainer .blogPubDate {
+    margin-top: 10px;
+  }
+  .blogThumbnail {
+    border-radius: 15px;
+    height: calc(((96vw - 80px) / 2) / 16 * 9);
+    max-height: calc(((96vw - 80px) / 2) / 16 * 9);
+  }
+  .blogContainer {
+    width: 48%;
+  }
+  .blogArea {
+    margin-top: 0;
+  }
+}

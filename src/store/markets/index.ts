@@ -89,7 +89,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
         expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
-        const decimals = marketData.assets[0] === "USDC" ? 6 : 18;
+        const decimals = marketData.assets[0] === "USDC" || marketData.assets[0] === "USDC.e" ? 6 : 18;
         _tranches.map((_t: any, _i: number) => {
           const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals));
           totalTarget = totalTarget.plus(_target);

@@ -454,7 +454,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: USDC_Falls_TrancheMasterAddress[NETWORK],
-    abi: TranchesAbi,
+    abi: AR_TranchesAbi,
     masterChefAbi: MasterChefAbi,
     masterChefAddress: USDC_Falls_MasterWTFAddress[NETWORK],
     pools: [],

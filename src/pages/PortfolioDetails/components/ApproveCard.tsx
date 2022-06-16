@@ -181,13 +181,13 @@ const ApproveCard = memo<TProps>(
       data.address,
       data.isMulticurrency ? selectedDepositAssetIndex : -1,
       data.assets.length,
-      data.assets[0] === "USDC"
+      data.assets[0] === "USDC" || data.assets[0] === "USDC.e"
     );
     const { onInvest } = useInvest(
       data.address,
       data.isMulticurrency ? selectedDepositAssetIndex : -1,
       data.assets.length,
-      data.assets[0] === "USDC"
+      data.assets[0] === "USDC" || data.assets[0] === "USDC.e"
     );
     const { onInvestDirectMCSimul } = useInvestDirectMCSimul(data.address);
     const { onInvestMCSimul } = useInvestMCSimul(data.address);

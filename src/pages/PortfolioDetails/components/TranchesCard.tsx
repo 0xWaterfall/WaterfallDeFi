@@ -191,7 +191,7 @@ const TranchesCard = memo<TProps>(
               new BigNumber(tranche.autoPrincipal ? tranche.autoPrincipal : "0")
                 .plus(new BigNumber(tranche.principal))
                 .toString(),
-              tranche.target
+              new BigNumber(tranche.target).minus(0.5).toString()
             ),
       [tranche.principal, tranche.target, tranche.autoPrincipal]
     );

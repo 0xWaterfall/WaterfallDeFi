@@ -158,8 +158,7 @@ const SparePositions = memo<TProps>(({ intl }) => {
         _cycle = new BigNumber(_position[0][0]._hex).toString();
 
         //multicurrency, j = individual tranche
-        //assume three tranches for now
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < _market.trancheCount; j++) {
           _MCprincipals.push(
             _market.depositAssetAddresses.map((a, tokenIdx) =>
               numeral(

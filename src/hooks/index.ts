@@ -199,11 +199,15 @@ export const usePositions = (marketId: string | undefined) => {
                 name: "userInvest",
                 params: [account, 1]
               },
-              {
-                address: MarketList[i].address,
-                name: "userInvest",
-                params: [account, 2]
-              }
+              ...(MarketList[i].trancheCount === 3
+                ? [
+                    {
+                      address: MarketList[i].address,
+                      name: "userInvest",
+                      params: [account, 2]
+                    }
+                  ]
+                : [])
             ]
           : [];
         if (MarketList[i].isMulticurrency) {
@@ -224,11 +228,15 @@ export const usePositions = (marketId: string | undefined) => {
                 name: "userInvest",
                 params: [account, 1, a]
               },
-              {
-                address: MarketList[i].address,
-                name: "userInvest",
-                params: [account, 2, a]
-              }
+              ...(MarketList[i].trancheCount === 3
+                ? [
+                    {
+                      address: MarketList[i].address,
+                      name: "userInvest",
+                      params: [account, 2, a]
+                    }
+                  ]
+                : [])
             );
           });
         }

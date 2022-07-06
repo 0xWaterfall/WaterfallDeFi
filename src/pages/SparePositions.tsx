@@ -162,7 +162,9 @@ const SparePositions = memo<TProps>(({ intl }) => {
           _MCprincipals.push(
             _market.depositAssetAddresses.map((a, tokenIdx) =>
               numeral(
-                new BigNumber(_position[j + 1 + tokenIdx * 3][0]._hex).dividedBy(BIG_TEN.pow(18)).toString()
+                new BigNumber(_position[j + 1 + tokenIdx * _market.trancheCount][0]._hex)
+                  .dividedBy(BIG_TEN.pow(18))
+                  .toString()
               ).format("0,0.[0000]")
             )
           );

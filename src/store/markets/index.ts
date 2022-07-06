@@ -76,8 +76,6 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           : await multicall(marketData.abi, calls);
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
-        console.log(marketData.portfolio);
-        console.log(_tranches);
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
 
         const tokenObjs = _tokens.map((t: any) => {

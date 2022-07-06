@@ -22,8 +22,7 @@ export const usePendingReward = (rewardTokenAddress: string, account: string | n
           params: [account]
         }
       ];
-      const [pendingReward] =
-        network === "avax" ? await multicall(WTFRewardsABI, calls) : await multicallBSC(WTFRewardsABI, calls);
+      const [pendingReward] = network === "avax" ? [{ reward: { _hex: 0 } }] : await multicallBSC(WTFRewardsABI, calls);
       setResult(
         numeral(new BigNumber(pendingReward.reward._hex).dividedBy(BIG_TEN.pow(18)).toString()).format("0,0.[0000]")
       );

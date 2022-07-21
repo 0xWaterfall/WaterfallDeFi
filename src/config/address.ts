@@ -716,3 +716,27 @@ export const USDC_Falls_EchidnaStrategyAddress: { [network: string]: string } = 
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x002A92F660008c75B6de2A61A28Dd7aa320F8d86"
 };
+
+export const BNB_Only_Falls_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x114c522410d11A25903a71c39D858Bc4d2b0a50f"
+};
+
+export const BNB_Only_Falls_MasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xcFbe7dA7E01A14Df8c36C71524317aa56D2c4452"
+};
+
+export const BNB_Only_Falls_AlpacaStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xa4c83781f8CC63F7dF5Aef5C8C11e873f50eBe80"
+};
+
+export const BNB_Only_Falls_VenusStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x0804699874C25F6746938280E51d7273D6bC035d"
+};

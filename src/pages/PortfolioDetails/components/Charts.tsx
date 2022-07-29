@@ -3,7 +3,7 @@
 import styled from "@emotion/styled";
 import React, { memo, useEffect, useState } from "react";
 import { injectIntl, WrappedComponentProps } from "react-intl";
-import { Market } from "types";
+import { Market, PORTFOLIO_STATUS } from "types";
 import PortfolioChart from "./PortfolioChart";
 import TrancheChart from "./TrancheChart";
 import Button from "components/Button/Button";
@@ -301,6 +301,7 @@ const Charts = memo<TProps>(
                     {!autoRollPending ? (
                       <Switch
                         checked={autoRoll}
+                        disabled={!autoRoll && data.status !== PORTFOLIO_STATUS.PENDING}
                         onChange={() => {
                           setAutoRollPending(true);
                           changeAutoRoll(!autoRoll).then((res) => {

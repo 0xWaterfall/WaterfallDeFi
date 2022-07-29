@@ -41,6 +41,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             params: [i]
           });
         }
+
         const callsBasic = [
           {
             address: _marketAddress,
@@ -76,6 +77,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           : await multicall(marketData.abi, calls);
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
+
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
 
         const tokenObjs = _tokens.map((t: any) => {

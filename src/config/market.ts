@@ -503,7 +503,7 @@ export const MarketList: Market[] = [
     status: "",
     nextTime: "",
     address: BNB_Only_Falls_TrancheMasterAddress[NETWORK],
-    abi: TranchesAbi,
+    abi: AR_TranchesAbi, //tranches has autoPrincipal even though autoroll not enabled, so must use autoroll ABI
     masterChefAbi: MasterChefAbi,
     masterChefAddress: BNB_Only_Falls_MasterWTFAddress[NETWORK],
     pools: [],

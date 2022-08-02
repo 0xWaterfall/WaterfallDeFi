@@ -491,7 +491,7 @@ export const MarketList: Market[] = [
     portfolio: "(Test) BNB Falls",
     isAvax: false,
     wrapAvax: false,
-    autorollImplemented: false,
+    autorollImplemented: true,
     isMulticurrency: false,
     assets: ["WBNB"], //changed to array for multicurrency
     tokens: [],

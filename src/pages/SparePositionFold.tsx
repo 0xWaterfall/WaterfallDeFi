@@ -297,6 +297,7 @@ const SparePositionFold = memo<TProps>(
                   {!autoRollPending ? (
                     <Switch
                       checked={autoRoll}
+                      disabled={!autoRoll && !isPending}
                       onChange={() => {
                         setAutoRollPending(true);
                         changeAutoRoll(!autoRoll).then((res) => {

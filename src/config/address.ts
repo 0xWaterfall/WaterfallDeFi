@@ -683,3 +683,60 @@ export const StargateBenqi_BenqiStrategyAddress: { [network: string]: string } =
   [NETWORKS.TESTNET]: "",
   [NETWORKS.MAINNET]: "0x24929175d25Bc48957A999764a00400AdB95EFEe"
 };
+
+export const USDC_Bridged_Address_AVAX: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664"
+};
+
+//june 1st AVAX USDC Falls
+export const USDC_Falls_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x9eF5742536e84BFE59139263Bca0589c4bE0a047"
+};
+export const USDC_Falls_MasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xa0f79A1619B90964C6bCa725627F1BD2B82BD125"
+};
+export const USDC_Falls_TraderJoeStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xc65a6aA176306B5F7cAdfe24eFA0516d0f83749D"
+};
+export const USDC_Falls_BenqiStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xcF7557811830EDDb26EE14745C10A6Cd1764821a"
+};
+export const USDC_Falls_EchidnaStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x002A92F660008c75B6de2A61A28Dd7aa320F8d86"
+};
+
+export const BNB_Only_Falls_TrancheMasterAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x57B505d46a7B88e78C3C5b165DE7A7068cc4E0Da"
+};
+
+export const BNB_Only_Falls_MasterWTFAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xb56DCf1FF9fd986548B55DB65B215acc896f143E"
+};
+
+export const BNB_Only_Falls_AlpacaStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0xa32290f53Fd616e1a0B2B2dFcfB843a112e959d1"
+};
+
+export const BNB_Only_Falls_VenusStrategyAddress: { [network: string]: string } = {
+  [NETWORKS.DEVNET]: "",
+  [NETWORKS.TESTNET]: "",
+  [NETWORKS.MAINNET]: "0x4961446Bd81c1420bd6901E50F951eeaCc5aC1d7"
+};

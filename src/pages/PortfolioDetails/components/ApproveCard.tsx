@@ -483,7 +483,7 @@ const ApproveCard = memo<TProps>(
       const { value } = e.target;
       if (value.match("^[0-9]*[.]?[0-9]*$") != null) {
         const d = value.split(".");
-        if (d.length === 2 && d[1].length > (data.assets[0] !== "USDC" ? 18 : 6)) {
+        if (d.length === 2 && d[1].length > (data.assets[0] === "USDC" || data.assets[0] === "USDC.e" ? 6 : 18)) {
           return;
         }
         const _input1 = d[0].length > 1 ? d[0].replace(/^0+/, "") : d[0];

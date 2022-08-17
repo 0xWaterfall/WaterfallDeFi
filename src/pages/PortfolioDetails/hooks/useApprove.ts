@@ -14,8 +14,8 @@ import { setConfirmModal } from "store/showStatus";
 const approve = async (contract: Contract, address: string, dispatch: Dispatch<any>) => {
   const tx = await contract.approve(
     address,
-    //USDC
-    address === "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+    //USDC || USDC.e
+    address === "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d" || address === "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664"
       ? utils.parseUnits("999999999", 6)
       : utils.parseEther("999999999").toString()
   );

@@ -121,6 +121,8 @@ const SparePositions = memo<TProps>(({ intl }) => {
     const _MCprincipals: string[][] = [];
 
     if (_position) {
+      console.log(_market.portfolio);
+      console.log(_position);
       //single currency
       if (!_market.isMulticurrency) {
         for (let i = 0; i < _position.length; i++) {

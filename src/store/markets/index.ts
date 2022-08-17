@@ -41,6 +41,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
             params: [i]
           });
         }
+
         const callsBasic = [
           {
             address: _marketAddress,
@@ -76,6 +77,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
           : await multicall(marketData.abi, calls);
 
         const _tranches = tranchesAndTokens.slice(0, marketData.trancheCount);
+
         const _tokens = tranchesAndTokens.slice(marketData.trancheCount);
 
         const tokenObjs = _tokens.map((t: any) => {
@@ -89,7 +91,7 @@ export const getMarkets = createAsyncThunk<Market[] | undefined, Market[]>("mark
 
         expectedAPY = expectedAPY.plus(new BigNumber(1));
         const tranches: Tranche[] = [];
-        const decimals = marketData.assets[0] === "USDC" ? 6 : 18;
+        const decimals = marketData.assets[0] === "USDC" || marketData.assets[0] === "USDC.e" ? 6 : 18;
         _tranches.map((_t: any, _i: number) => {
           const _target = new BigNumber(_t.target?._hex).dividedBy(BIG_TEN.pow(decimals));
           totalTarget = totalTarget.plus(_target);

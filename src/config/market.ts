@@ -1,14 +1,6 @@
 import {
-  DAIFallsTrancheMasterAddress,
-  DAIFallsMasterWTFAddress,
   DAI_E_DepositAddress,
-  DAITraderJoeStrategyAddress,
-  WAVAXFallsTrancheMasterAddress,
-  WAVAXFallsMasterWTFAddress,
   WAVAXDepositAddress,
-  WAVAXTraderJoeStrategyAddress,
-  WAVAXBenqiStrategyAddress,
-  DAIBenqiStrategyAddress,
   BUSDAddress,
   BUSD4_TrancheMaster,
   BUSD4_MasterWTF,
@@ -42,12 +34,6 @@ import {
   USDC_Address_AVAX,
   StargateBenqi_StargateStrategyAddress,
   StargateBenqi_BenqiStrategyAddress,
-  USDC_Falls_TrancheMasterAddress,
-  USDC_Falls_MasterWTFAddress,
-  USDC_Bridged_Address_AVAX,
-  USDC_Falls_EchidnaStrategyAddress,
-  USDC_Falls_BenqiStrategyAddress,
-  USDC_Falls_TraderJoeStrategyAddress,
   BNB_Only_Falls_TrancheMasterAddress,
   BNB_Only_Falls_MasterWTFAddress,
   BNB_Only_Falls_AlpacaStrategyAddress,
@@ -57,10 +43,8 @@ import { abi as TranchesAbi } from "./abi/TrancheMaster.json";
 //we will need this
 import { abi as MC_TranchesAbi } from "./abi/MC_TrancheMaster.json";
 import { abi as AR_TranchesAbi } from "./abi/AR_TrancheMaster.json";
-import { abi as AR_AVAXTrancheMasterAbi } from "./abi/AR_AVAXTrancheMaster.json";
 import { abi as MasterChefAbi } from "./abi/MasterChef.json";
 import { abi as WTFAbi } from "./abi/WTF.json";
-import { abi as AVAXTranchesAbi } from "./abi/AVAXTrancheMaster.json";
 import AVAXTrancheMasterAutorollABI from "./abi/AVAXTrancheMasterAutoroll.json";
 import { Market } from "types";
 import { NETWORK } from "config";
@@ -144,86 +128,6 @@ export const MarketList: Market[] = [
     ],
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
     isRetired: false
-  },
-  {
-    portfolio: "DAI Falls (Retired)",
-    isAvax: true,
-    wrapAvax: false,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["DAI.e"],
-    tokens: [],
-    listingDate: "2022/2/28",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: DAIFallsTrancheMasterAddress[NETWORK],
-    abi: AVAXTranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: DAIFallsMasterWTFAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: DAI_E_DepositAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Benqi DAI.e",
-        shares: 0.7,
-        sAddress: DAIBenqiStrategyAddress[NETWORK],
-        apiKey: "qi_dai"
-      },
-      {
-        farmName: "Trader Joe DAI.e",
-        shares: 0.3,
-        sAddress: DAITraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_dai_e"
-      }
-    ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_dai",
-    isRetired: true
-  },
-  {
-    portfolio: "AVAX Falls (Retired)",
-    isAvax: true,
-    wrapAvax: true,
-    autorollImplemented: false,
-    isMulticurrency: false,
-    assets: ["WAVAX"],
-    tokens: [],
-    listingDate: "2022/2/28",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: WAVAXFallsTrancheMasterAddress[NETWORK],
-    abi: AVAXTranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: WAVAXFallsMasterWTFAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: WAVAXDepositAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Benqi AVAX",
-        shares: 0.5,
-        sAddress: WAVAXBenqiStrategyAddress[NETWORK],
-        apiKey: "qi_avax"
-      },
-      {
-        farmName: "Trader Joe AVAX",
-        shares: 0.5,
-        sAddress: WAVAXTraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_avax"
-      }
-    ],
-    subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiJoe_avax",
-    isRetired: true
   },
   {
     portfolio: "BUSD Falls (Autorolled)",
@@ -433,53 +337,53 @@ export const MarketList: Market[] = [
     subgraphURL: "https://api3.waterfalldefi.org/subgraphs/name/waterfall/qiStarUsdc",
     isRetired: false
   },
+  // {
+  //   portfolio: "USDC.e Falls",
+  //   isAvax: true,
+  //   wrapAvax: false,
+  //   autorollImplemented: true,
+  //   isMulticurrency: false,
+  //   assets: ["USDC.e"],
+  //   tokens: [],
+  //   listingDate: "2022/06/01",
+  //   tranches: [],
+  //   trancheCount: 3,
+  //   tvl: "",
+  //   totalTranchesTarget: "",
+  //   status: "",
+  //   nextTime: "",
+  //   address: USDC_Falls_TrancheMasterAddress[NETWORK],
+  //   abi: AR_TranchesAbi,
+  //   masterChefAbi: MasterChefAbi,
+  //   masterChefAddress: USDC_Falls_MasterWTFAddress[NETWORK],
+  //   pools: [],
+  //   depositAssetAddress: USDC_Bridged_Address_AVAX[NETWORK],
+  //   depositAssetAddresses: [],
+  //   depositAssetAbi: WTFAbi,
+  //   strategyFarms: [
+  //     {
+  //       farmName: "USDC.e Echidna",
+  //       shares: 0.34,
+  //       sAddress: USDC_Falls_EchidnaStrategyAddress[NETWORK],
+  //       apiKey: "echidna_usdce"
+  //     },
+  //     {
+  //       farmName: "USDC.e Benqi",
+  //       shares: 0.33,
+  //       sAddress: USDC_Falls_BenqiStrategyAddress[NETWORK],
+  //       apiKey: "qi_usdce"
+  //     },
+  //     {
+  //       farmName: "USDC.e Trader Joe",
+  //       shares: 0.33,
+  //       sAddress: USDC_Falls_TraderJoeStrategyAddress[NETWORK],
+  //       apiKey: "joe_usdce"
+  //     }
+  //   ],
+  //   subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_qiJoeEchiUsdce"
+  // },
   {
-    portfolio: "USDC.e Falls",
-    isAvax: true,
-    wrapAvax: false,
-    autorollImplemented: true,
-    isMulticurrency: false,
-    assets: ["USDC.e"],
-    tokens: [],
-    listingDate: "2022/06/01",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: USDC_Falls_TrancheMasterAddress[NETWORK],
-    abi: AR_TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: USDC_Falls_MasterWTFAddress[NETWORK],
-    pools: [],
-    depositAssetAddress: USDC_Bridged_Address_AVAX[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "USDC.e Echidna",
-        shares: 0.34,
-        sAddress: USDC_Falls_EchidnaStrategyAddress[NETWORK],
-        apiKey: "echidna_usdce"
-      },
-      {
-        farmName: "USDC.e Benqi",
-        shares: 0.33,
-        sAddress: USDC_Falls_BenqiStrategyAddress[NETWORK],
-        apiKey: "qi_usdce"
-      },
-      {
-        farmName: "USDC.e Trader Joe",
-        shares: 0.33,
-        sAddress: USDC_Falls_TraderJoeStrategyAddress[NETWORK],
-        apiKey: "joe_usdce"
-      }
-    ],
-    subgraphURL: "https://apitest.waterfalldefi.org/subgraphs/name/waterfall/avax_test_qiJoeEchiUsdce"
-  },
-  {
-    portfolio: "(Test Aug 15) BNB Falls",
+    portfolio: "(New) BNB Falls",
     isAvax: false,
     wrapAvax: false,
     autorollImplemented: true,

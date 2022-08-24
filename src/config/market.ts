@@ -421,6 +421,6 @@ export const MarketList: Market[] = [
         apiKey: "venus_bnb"
       }
     ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/bsc_alpVeBnb"
+    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/bsc-alpVeBnb"
   }
 ];

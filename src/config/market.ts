@@ -171,7 +171,7 @@ export const MarketList: Market[] = [
     isRetired: false
   },
   {
-    portfolio: "BUSD Falls (Autorolled) 2",
+    portfolio: "BUSD Falls",
     isAvax: false,
     wrapAvax: false,
     autorollImplemented: true,

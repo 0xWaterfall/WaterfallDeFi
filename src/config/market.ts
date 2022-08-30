@@ -171,46 +171,6 @@ export const MarketList: Market[] = [
     isRetired: false
   },
   {
-    portfolio: "BUSD Falls (Autorolled)",
-    isAvax: false,
-    wrapAvax: false,
-    autorollImplemented: true,
-    isMulticurrency: false,
-    assets: ["BUSD"],
-    tokens: [],
-    listingDate: "2022/3/25",
-    tranches: [],
-    trancheCount: 3,
-    tvl: "",
-    totalTranchesTarget: "",
-    status: "",
-    nextTime: "",
-    address: BUSD4_TrancheMaster[NETWORK],
-    abi: AR_TranchesAbi,
-    masterChefAbi: MasterChefAbi,
-    masterChefAddress: BUSD4_MasterWTF[NETWORK],
-    pools: [],
-    depositAssetAddress: BUSDAddress[NETWORK],
-    depositAssetAddresses: [],
-    depositAssetAbi: WTFAbi,
-    strategyFarms: [
-      {
-        farmName: "Alpaca BUSD",
-        shares: 0.5,
-        sAddress: BUSD4_AlpacaStrat[NETWORK],
-        apiKey: "alpaca"
-      },
-      {
-        farmName: "Venus BUSD",
-        shares: 0.5,
-        sAddress: BUSD4_VenusStrat[NETWORK],
-        apiKey: "venus"
-      }
-    ],
-    subgraphURL: "https://api2.waterfalldefi.org/subgraphs/name/waterfall/waterfall-subgraph-busdfalls4",
-    isRetired: false
-  },
-  {
     portfolio: "BUSD Falls (Autorolled) 2",
     isAvax: false,
     wrapAvax: false,

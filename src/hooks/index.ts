@@ -271,7 +271,7 @@ export const usePendingWTFReward = (masterChefAddress: string, trancheCount: num
           params: [account, i]
         });
       }
-      const result = network === "avax" ? [{ _hex: 0 }] : await multicallBSC(MasterChefAbi, calls);
+      const result = await multicallNetwork(network, MasterChefAbi, calls);
       let _pendingReward = new BigNumber(0);
       const _tranchesPendingReward = [];
       for (let i = 0; i < result.length; i++) {

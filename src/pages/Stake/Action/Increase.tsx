@@ -570,13 +570,13 @@ const Increase = memo<TProps>(
         />
         {validateTextLockTime && <ValidateText>{validateTextLockTime}</ValidateText>}
         {account && approved && locked && !isExpired && !fromMasterChef && (
-          <ButtonWrapper type="primary" onClick={onExtendLockTime} loading={extendLockTimeLoading}>
-            {intl.formatMessage({ defaultMessage: "Extend Lock Time" })}
+          <ButtonWrapper type="primary" disabled={true} onClick={onExtendLockTime} loading={extendLockTimeLoading}>
+            {intl.formatMessage({ defaultMessage: "Extend Lock Time Disabled" })}
           </ButtonWrapper>
         )}
         {account && approved && (!locked || isExpired) && !fromMasterChef && (
-          <ButtonWrapper type="primaryLine" onClick={onConfirm} loading={loading}>
-            {intl.formatMessage({ defaultMessage: "Lock & Stake WTF" })}
+          <ButtonWrapper type="primaryLine" disabled={true} onClick={onConfirm} loading={loading}>
+            {intl.formatMessage({ defaultMessage: "Lock & Stake WTF Disabled" })}
           </ButtonWrapper>
         )}
         {account && !approved && (

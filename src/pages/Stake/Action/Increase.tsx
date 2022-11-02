@@ -266,25 +266,28 @@ const Increase = memo<TProps>(
     }, [duration, expiryTimestamp]);
 
     const onConfirmLockWTFRewards = async () => {
-      if (!fromMasterChef) return;
-      if (!claimReward) return;
-      if (!locked && !duration) return;
-      console.log("A", duration, locked);
-      const _duration = duration ? duration.toString() : "0";
-      setLockWTFRewardsLoading(true);
-      try {
-        if (!locked) await claimReward(_duration, "0");
-        if (locked) {
-          //if expired , need to set new duration
-          await claimReward("0", _duration);
-        }
-        // fetchBalance();
-        // successNotification("Lock Rewards Success", "");
-      } catch (e) {
-        console.error(e);
-      } finally {
-        setLockWTFRewardsLoading(false);
-      }
+      //disabling users from locking to claim WTF rewards as we reboot staking contract
+      return;
+      // if (!fromMasterChef) return;
+      // if (!claimReward) return;
+      // if (!locked && !duration) return;
+      // console.log("A", duration, locked);
+      // const _duration = duration ? duration.toString() : "0";
+      // setLockWTFRewardsLoading(true);
+      // // console.log(_duration);
+      // try {
+      //   if (!locked) await claimReward(_duration, "0");
+      //   if (locked) {
+      //     //if expired , need to set new duration
+      //     await claimReward("0", _duration);
+      //   }
+      //   // fetchBalance();
+      //   // successNotification("Lock Rewards Success", "");
+      // } catch (e) {
+      //   console.error(e);
+      // } finally {
+      //   setLockWTFRewardsLoading(false);
+      // }
     };
 
     const receivedVeWTF = useMemo(() => {
